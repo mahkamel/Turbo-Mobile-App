@@ -4,7 +4,7 @@ import '../theming/colors.dart';
 import '../theming/fonts.dart';
 
 Widget defaultLoading({
-  Color color = AppColors.yellow,
+  Color color = AppColors.black,
 }) {
   return CircularProgressIndicator(
     color: color,

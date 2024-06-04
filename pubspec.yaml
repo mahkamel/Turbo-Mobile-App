@@ -35,12 +35,15 @@ dependencies:
   rxdart: ^0.27.7
   bloc_concurrency: ^0.2.5
   flutter_secure_storage: ^9.2.2
+  dots_indicator: ^3.0.0
+  geolocator: ^12.0.0
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  build_runner:
+  build_runner: any
   freezed: ^2.5.2
   flutter_lints: ^4.0.0
 
@@ -48,15 +51,12 @@ flutter:
   generate: true
   uses-material-design: true
 
-localizations:
-  arb-dir: lib\l10n
-  template-arb-file: app_en.arb
-  output-localization-file: app_localizations.dart
-  untranslated-messages-file: l10n_errors.txt
-
   assets:
-    - lib/l10n/
     - assets/fonts/SFPro/
+    - lang/
+    - assets/images/
+    - assets/images/icons/nav_bar_icons/
+    - .env
 
   fonts:
     - family: SFPro
@@ -67,4 +67,3 @@ localizations:
           style: italic
         - asset: assets/fonts/SFPro/SFPro-Bold.OTF
           weight: 700
-

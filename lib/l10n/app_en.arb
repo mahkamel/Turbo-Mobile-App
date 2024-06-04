@@ -1,8 +1,0 @@
-{
- "@@locale":"en",
-  "title": "Hello World",
-  "message": "Welcome to Flutter",
-  "test": "test",
-  "test2": "test2",
-  "test3": "test3"
-}

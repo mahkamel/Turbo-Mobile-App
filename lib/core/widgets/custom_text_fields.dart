@@ -121,14 +121,14 @@ class EmailTextField extends StatelessWidget {
                     OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
                       borderSide: const BorderSide(
-                        color: AppColors.greyBorder,
+                        color: AppColors.black,
                       ),
                     ),
                 focusedBorder: border ??
                     OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
                       borderSide: const BorderSide(
-                        color: AppColors.greyBorder,
+                        color: AppColors.black,
                       ),
                     ),
                 fillColor: AppColors.white,
@@ -145,7 +145,7 @@ class EmailTextField extends StatelessWidget {
                         OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7),
                           borderSide: const BorderSide(
-                            color: AppColors.greyBorder,
+                            color: AppColors.black,
                           ),
                         ),
               ),
@@ -201,7 +201,7 @@ class PasswordTextField extends StatelessWidget {
     required this.fieldValidation,
     required this.onIconPress,
     required this.suffixIcon,
-    this.suffixIconColor = AppColors.grey,
+    this.suffixIconColor = AppColors.black,
     this.isObscureText = true,
     this.textInputAction = TextInputAction.next,
     this.enabled = true,
@@ -275,10 +275,10 @@ class PasswordTextField extends StatelessWidget {
                     highlightColor: Colors.transparent,
                     icon: Icon(
                       suffixIcon,
-                      color: AppColors.darkGrey,
+                      color: AppColors.black,
                     ),
                     onPressed: onIconPress,
-                    color: AppColors.grey,
+                    color: AppColors.black,
                   ),
                 ),
                 hintText: hintText ?? "Password",
@@ -299,7 +299,7 @@ class PasswordTextField extends StatelessWidget {
                     : OutlineInputBorder(
                         borderRadius: BorderRadius.circular(7),
                         borderSide: const BorderSide(
-                          color: AppColors.greyBorder,
+                          color: AppColors.black,
                         ),
                       ),
                 focusedBorder: (fieldValidation == TextFieldValidation.notValid)
@@ -312,7 +312,7 @@ class PasswordTextField extends StatelessWidget {
                     : OutlineInputBorder(
                         borderRadius: BorderRadius.circular(7),
                         borderSide: const BorderSide(
-                          color: AppColors.greyBorder,
+                          color: AppColors.black,
                         ),
                       ),
                 fillColor: AppColors.white,
@@ -328,7 +328,7 @@ class PasswordTextField extends StatelessWidget {
                     : OutlineInputBorder(
                         borderRadius: BorderRadius.circular(7),
                         borderSide: const BorderSide(
-                          color: AppColors.greyBorder,
+                          color: AppColors.black,
                         ),
                       ),
               ),
@@ -497,7 +497,7 @@ class CustomTextField extends StatelessWidget {
                       OutlineInputBorder(
                         borderRadius: BorderRadius.circular(7),
                         borderSide: const BorderSide(
-                          color: AppColors.greyBorder,
+                          color: AppColors.black,
                         ),
                       ),
                   focusedBorder:
@@ -512,7 +512,7 @@ class CustomTextField extends StatelessWidget {
                               OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
                                 borderSide: const BorderSide(
-                                  color: AppColors.greyBorder,
+                                  color: AppColors.black,
                                 ),
                               ),
                   fillColor: fillColor,
@@ -530,7 +530,7 @@ class CustomTextField extends StatelessWidget {
                               OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
                                 borderSide: const BorderSide(
-                                  color: AppColors.greyBorder,
+                                  color: AppColors.black,
                                 ),
                               ),
                   enabledBorder:
@@ -545,7 +545,7 @@ class CustomTextField extends StatelessWidget {
                               OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
                                 borderSide: const BorderSide(
-                                  color: AppColors.greyBorder,
+                                  color: AppColors.black,
                                 ),
                               ),
                 ),

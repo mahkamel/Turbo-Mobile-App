@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../blocs/localization/localization/app_localization.dart';
 import 'constants.dart';
 
 extension StringExtension on String {
@@ -13,11 +13,9 @@ extension StringExtension on String {
   String removeWhiteSpaces() {
     return replaceAll(RegExp(r'\s+'), '');
   }
-}
 
-extension ContextExtention on BuildContext {
-  AppLocalizations get loc {
-    return AppLocalizations.of(this)!;
+  String getLocale(BuildContext context) {
+    return AppLocalizations.of(context)?.translate(this) ?? this;
   }
 }
 
