@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/core/routing/routes.dart';
+
+import '../../blocs/layout/layout_cubit.dart';
+import '../../presentation/layout/layout_screen.dart';
+import '../../presentation/onboarding/onboarding_screen.dart';
+import '../di/dependency_injection.dart';
 
 class AppRouter {
   static final Map<String, Widget Function(BuildContext, dynamic)> _routes = {
@@ -7,7 +13,11 @@ class AppRouter {
     //       create: (context) => getIt<OnboardingCubit>(),
     //       child: const OnBoardingScreen(),
     //     ),
-    Routes.onBoardingScreen: (context, _) => const Placeholder(),
+    Routes.onBoardingScreen: (context, _) => const OnboardingScreen(),
+    Routes.layoutScreen: (context, _) => BlocProvider(
+      create: (context) => getIt<LayoutCubit>(),
+      child: const LayoutScreen(),
+    ),
   };
 
   Route? generateRoute(RouteSettings settings) {

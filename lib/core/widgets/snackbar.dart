@@ -42,7 +42,7 @@ Widget defaultErrorSnackBar({
     message: message,
     title: title,
     onTap: () {},
-    borderColor: AppColors.buttonGreyBorder.withOpacity(0.4),
+    borderColor: AppColors.errorRed.withOpacity(0.4),
     backgroundColor: AppColors.errorRed,
   );
 }
@@ -58,7 +58,7 @@ Widget defaultSuccessSnackBar({
     message: message,
     title: title,
     onTap: onTap,
-    borderColor: AppColors.buttonGreyBorder.withOpacity(0.4),
+    borderColor: AppColors.primaryGreen.withOpacity(0.4),
     backgroundColor: AppColors.primaryGreen,
   );
 }
