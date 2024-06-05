@@ -18,7 +18,7 @@ class LayoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
-      BlocProvider(
+      BlocProvider<HomeCubit>(
         create: (context) => getIt<HomeCubit>()..getCurrentUserLocation(),
         child: const HomeScreen(),
       ),
@@ -44,9 +44,9 @@ class LayoutScreen extends StatelessWidget {
           return SizedBox(
             height: Platform.isIOS ? 87 : 72,
             child: BottomNavigationBar(
-              backgroundColor: AppColors.black,
+              backgroundColor: AppColors.navBarBlack,
               selectedItemColor: AppColors.white,
-              unselectedItemColor: AppColors.subTextGrey,
+              unselectedItemColor: AppColors.navBarUnSelected,
               selectedLabelStyle: AppFonts.sfPro12Black400.copyWith(
                 fontWeight: FontWeight.w500,
                 fontSize: 13,
@@ -73,7 +73,7 @@ class LayoutScreen extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/bill_nav_icon.svg",
+                    "assets/images/icons/nav_bar_icons/home_nav_icon.svg",
                     colorFilter: ColorFilter.mode(
                       context.watch<LayoutCubit>().navBarIndex == 1
                           ? AppColors.white
@@ -85,7 +85,7 @@ class LayoutScreen extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/support_nav_icon.svg",
+                    "assets/images/icons/nav_bar_icons/home_nav_icon.svg",
                     colorFilter: ColorFilter.mode(
                       context.watch<LayoutCubit>().navBarIndex == 2
                           ? AppColors.white
@@ -97,7 +97,7 @@ class LayoutScreen extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/profile_nav_icon.svg",
+                    "assets/images/icons/nav_bar_icons/home_nav_icon.svg",
                     colorFilter: ColorFilter.mode(
                       context.watch<LayoutCubit>().navBarIndex == 3
                           ? AppColors.white

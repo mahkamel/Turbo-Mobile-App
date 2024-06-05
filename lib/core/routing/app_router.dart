@@ -14,7 +14,7 @@ class AppRouter {
     //       child: const OnBoardingScreen(),
     //     ),
     Routes.onBoardingScreen: (context, _) => const OnboardingScreen(),
-    Routes.layoutScreen: (context, _) => BlocProvider(
+    Routes.layoutScreen: (context, _) => BlocProvider<LayoutCubit>(
       create: (context) => getIt<LayoutCubit>(),
       child: const LayoutScreen(),
     ),

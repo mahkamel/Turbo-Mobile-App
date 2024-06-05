@@ -2,10 +2,8 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
-import 'package:turbo/core/services/location_services.dart';
 
 import '../../core/routing/routes.dart';
-import '../../core/services/local/cache_helper.dart';
 import '../../core/theming/colors.dart';
 import '../../core/theming/fonts.dart';
 import '../../core/theming/locale_keys.dart';
@@ -22,16 +20,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _next() async {
     if (_currentIndex == 2) {
-      await LocationServices.handleLocationPermission().then((_) {
-        CacheHelper.setData(
-          key: "isFirstTime",
-          value: false,
-        );
-        context.pushNamedAndRemoveUntil(Routes.layoutScreen,
-            predicate: (Route<dynamic> route) {
-          return false;
-        });
-      });
+      context.pushNamedAndRemoveUntil(Routes.layoutScreen,
+          predicate: (Route<dynamic> route) {
+            return false;
+          });
     } else {
       setState(() {
         _currentIndex = _currentIndex + 1;
@@ -132,7 +124,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   onPressed: _next,
                   child: Text(
-                    _currentIndex == 2 ? "Continue" : 'Next',
+                    _currentIndex == 2 ? "Get Started" : 'Continue',
                     style: AppFonts.sfPro18SubTextGrey400.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
