@@ -16,10 +16,9 @@ class HomeScreen extends StatelessWidget {
       "Class C",
     ];
     return Padding(
-      padding: const EdgeInsets.only(
+      padding: const EdgeInsetsDirectional.only(
         top: 20.0,
-        left: 20.0,
-        right: 20.0,
+        start: 20.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

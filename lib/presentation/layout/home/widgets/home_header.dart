@@ -38,7 +38,7 @@ class HomeHeader extends StatelessWidget {
             ),
             BlocBuilder<HomeCubit, HomeState>(
               buildWhen: (previous, current) =>
-              current is GetCurrentUserLocationState,
+                  current is GetCurrentUserLocationState,
               builder: (context, state) {
                 return Text(
                   // getIt<AuthRepository>().currentAddress ?? "",
@@ -50,7 +50,23 @@ class HomeHeader extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        const Icon(Icons.notifications_none_rounded)
+        IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                  ),
+                ),
+              ),
+            );
+          },
+          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+        )
       ],
     );
   }

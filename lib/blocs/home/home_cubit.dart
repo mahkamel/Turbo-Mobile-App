@@ -11,21 +11,4 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this._authRepository) : super(const HomeState.initial());
 
   int selectedCategoryIndex = 0;
-
-  void getCurrentUserLocation() async {
-    await _authRepository.getCurrentUserLocation();
-    emit(
-      HomeState.getCurrentUserLocation(
-        _authRepository.currentAddress ?? "",
-      ),
-    );
-  }
-
-  void changeCategoryIndex(int newIndex){
-    emit(
-      HomeState.getCurrentUserLocation(
-        _authRepository.currentAddress ?? "",
-      ),
-    );
-  }
 }

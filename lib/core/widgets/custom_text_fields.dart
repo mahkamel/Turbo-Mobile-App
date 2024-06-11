@@ -77,7 +77,7 @@ class EmailTextField extends StatelessWidget {
             height: 48,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(7),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: TextFormField(
               expands: true,
@@ -119,14 +119,14 @@ class EmailTextField extends StatelessWidget {
                 ),
                 border: border ??
                     OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
                         color: AppColors.black,
                       ),
                     ),
                 focusedBorder: border ??
                     OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
                         color: AppColors.black,
                       ),
@@ -139,11 +139,11 @@ class EmailTextField extends StatelessWidget {
                         borderSide: const BorderSide(
                           color: AppColors.errorRed,
                         ),
-                        borderRadius: BorderRadius.circular(7),
+                        borderRadius: BorderRadius.circular(8),
                       )
                     : border ??
                         OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7),
+                          borderRadius: BorderRadius.circular(8),
                           borderSide: const BorderSide(
                             color: AppColors.black,
                           ),
@@ -160,7 +160,7 @@ class EmailTextField extends StatelessWidget {
               ),
               child: Text(
                 validateText,
-                style: AppFonts.sfPro12Black400,
+                style: AppFonts.sfPro14ErrorRed400,
               ),
             ),
         ],
@@ -246,7 +246,7 @@ class PasswordTextField extends StatelessWidget {
             height: 48,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(7),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: TextFormField(
               focusNode: focusNode,
@@ -294,25 +294,25 @@ class PasswordTextField extends StatelessWidget {
                         borderSide: const BorderSide(
                           color: AppColors.errorRed,
                         ),
-                        borderRadius: BorderRadius.circular(7),
+                        borderRadius: BorderRadius.circular(8),
                       )
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7),
-                        borderSide: const BorderSide(
-                          color: AppColors.black,
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: AppColors.black.withOpacity(0.5),
                         ),
                       ),
                 focusedBorder: (fieldValidation == TextFieldValidation.notValid)
                     ? OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: AppColors.errorRed,
+                        borderSide: BorderSide(
+                          color: AppColors.black.withOpacity(0.5),
                         ),
-                        borderRadius: BorderRadius.circular(7),
+                        borderRadius: BorderRadius.circular(8),
                       )
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7),
-                        borderSide: const BorderSide(
-                          color: AppColors.black,
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: AppColors.black.withOpacity(0.5),
                         ),
                       ),
                 fillColor: AppColors.white,
@@ -323,12 +323,12 @@ class PasswordTextField extends StatelessWidget {
                         borderSide: const BorderSide(
                           color: AppColors.errorRed,
                         ),
-                        borderRadius: BorderRadius.circular(7),
+                        borderRadius: BorderRadius.circular(8),
                       )
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7),
-                        borderSide: const BorderSide(
-                          color: AppColors.black,
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: AppColors.black.withOpacity(0.5),
                         ),
                       ),
               ),
@@ -345,7 +345,7 @@ class PasswordTextField extends StatelessWidget {
                 ),
                 child: Text(
                   validateText ?? '',
-                  style: AppFonts.sfPro12Black400,
+                  style: AppFonts.sfPro14ErrorRed400,
                 ),
               ),
             ),
@@ -469,7 +469,10 @@ class CustomTextField extends StatelessWidget {
                 keyboardType: textInputType,
                 textInputAction: textInputAction,
                 onFieldSubmitted: onSubmit,
-                style: AppFonts.sfPro12Black400,
+                style: AppFonts.sfPro12Black400.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
                 controller: textEditingController,
                 onTapOutside: (pointerDownEvent) {
                   if (onTapOutside != null) {
@@ -495,9 +498,9 @@ class CustomTextField extends StatelessWidget {
                       ),
                   border: border ??
                       OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7),
-                        borderSide: const BorderSide(
-                          color: AppColors.black,
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: AppColors.black.withOpacity(0.5),
                         ),
                       ),
                   focusedBorder:
@@ -506,13 +509,13 @@ class CustomTextField extends StatelessWidget {
                               borderSide: const BorderSide(
                                 color: AppColors.errorRed,
                               ),
-                              borderRadius: BorderRadius.circular(7),
+                              borderRadius: BorderRadius.circular(8),
                             )
                           : border ??
                               OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(7),
-                                borderSide: const BorderSide(
-                                  color: AppColors.black,
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: AppColors.black.withOpacity(0.5),
                                 ),
                               ),
                   fillColor: fillColor,
@@ -524,13 +527,13 @@ class CustomTextField extends StatelessWidget {
                               borderSide: const BorderSide(
                                 color: AppColors.errorRed,
                               ),
-                              borderRadius: BorderRadius.circular(7),
+                              borderRadius: BorderRadius.circular(8),
                             )
                           : border ??
                               OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(7),
-                                borderSide: const BorderSide(
-                                  color: AppColors.black,
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: AppColors.black.withOpacity(0.5),
                                 ),
                               ),
                   enabledBorder:
@@ -539,13 +542,13 @@ class CustomTextField extends StatelessWidget {
                               borderSide: const BorderSide(
                                 color: AppColors.errorRed,
                               ),
-                              borderRadius: BorderRadius.circular(7),
+                              borderRadius: BorderRadius.circular(8),
                             )
                           : border ??
                               OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(7),
-                                borderSide: const BorderSide(
-                                  color: AppColors.black,
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: AppColors.black.withOpacity(0.5),
                                 ),
                               ),
                 ),
@@ -562,7 +565,7 @@ class CustomTextField extends StatelessWidget {
                   validateText.isNotEmpty
                       ? validateText
                       : "This field cannot be empty",
-                  style: AppFonts.sfPro12Black400,
+                  style: AppFonts.sfPro14ErrorRed400,
                 ),
               ),
           ],
@@ -613,7 +616,7 @@ Widget codeTextField({
         hintText: hint,
         hintStyle: AppFonts.sfPro12Black400,
         // isDense: true,
-        contentPadding: const EdgeInsets.only(bottom: 24, left: 4),
+        contentPadding: const EdgeInsetsDirectional.only(bottom: 24, start: 4),
         border: OutlineInputBorder(
           borderSide: const BorderSide(
             color: AppColors.codeFieldBorder,

@@ -53,11 +53,11 @@ class DefaultButton extends StatelessWidget {
     return Container(
       height: height,
       width: width,
-      margin: EdgeInsets.only(
+      margin: EdgeInsetsDirectional.only(
         top: marginTop,
         bottom: marginBottom,
-        right: marginRight,
-        left: marginLeft,
+        end: marginRight,
+        start: marginLeft,
       ),
       alignment: Alignment.center,
       clipBehavior: Clip.antiAlias,
@@ -79,12 +79,15 @@ class DefaultButton extends StatelessWidget {
           child: loading
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: defaultLoading(color: color == Colors.transparent ? AppColors.primaryGreen:Colors.white),
+                  child: defaultLoading(
+                      color: color == Colors.transparent
+                          ? AppColors.primaryGreen
+                          : Colors.white),
                 )
               : textWidget ??
                   Text(
                     text,
-                    style: AppFonts.sfPro12Black400.copyWith(
+                    style: AppFonts.sfPro18White500.copyWith(
                       color: textColor,
                       fontWeight: fontWeight,
                       fontSize: fontSize,

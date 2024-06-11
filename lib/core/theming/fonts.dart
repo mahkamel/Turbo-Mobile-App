@@ -35,6 +35,35 @@ class AppFonts {
           color: AppColors.white,
         );
 
+  static TextStyle sfPro18Black500 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 18.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w500,
+          color: AppColors.black,
+        )
+      : const TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: AppColors.black,
+        );
+
+  static TextStyle sfPro18White500 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 18.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w500,
+          color: AppColors.white,
+        )
+      : const TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: AppColors.white,
+        );
   static TextStyle sfPro18SubTextGrey400 =
       navigatorKey.currentContext != null &&
               AppConstants.screenWidth(navigatorKey.currentContext!) < 600
@@ -82,6 +111,50 @@ class AppFonts {
           color: AppColors.black,
         );
 
+  static TextStyle sfPro16Black400 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 16.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w400,
+          color: AppColors.black,
+        )
+      : const TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: AppColors.black,
+        );
+
+  static TextStyle sfPro15Black400 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 15.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w400,
+          color: AppColors.black,
+        )
+      : const TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+          color: AppColors.black,
+        );
+  static TextStyle sfPro15buttonGreyBorder400 =
+      navigatorKey.currentContext != null &&
+              AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+          ? TextStyle(
+              fontFamily: 'SFPro',
+              fontSize: 15.0.sp(navigatorKey.currentContext!),
+              fontWeight: FontWeight.w400,
+              color: AppColors.buttonGreyBorder)
+          : const TextStyle(
+              fontFamily: 'SFPro',
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              color: AppColors.buttonGreyBorder,
+            );
+
   static TextStyle sfPro14White500 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(
@@ -95,6 +168,35 @@ class AppFonts {
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.white,
+        );
+
+  static TextStyle sfPro14Black400 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 14.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w400,
+          color: AppColors.black,
+        )
+      : const TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: AppColors.black,
+        );
+  static TextStyle sfPro14ErrorRed400 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 14.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w400,
+          color: AppColors.errorRed,
+        )
+      : const TextStyle(
+          fontFamily: 'SFPro',
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: AppColors.errorRed,
         );
 
   static TextStyle sfPro12Grey400 = navigatorKey.currentContext != null &&

@@ -13,9 +13,15 @@ class AppConstants {
         ? MediaQuery.sizeOf(context).height * (height / 844)
         : height;
   }
+
   static double widthBasedOnFigmaDevice(BuildContext context, double width) =>
       MediaQuery.sizeOf(context).width * (width / 390) >= width
           ? MediaQuery.sizeOf(context).width * (width / 390)
           : width;
 
+  static String fcmToken = '';
+
+  //env keys
+  static String baseUrl = "BASE_URL";
+  static String customerData = "CUSTOMER_KEY";
 }
