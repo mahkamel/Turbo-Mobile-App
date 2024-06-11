@@ -13,7 +13,8 @@ class DefaultHeader extends StatelessWidget {
     this.alignment = MainAxisAlignment.start,
     this.textAlignment,
     this.isShowPrefixIcon = true,
-    this.textLeftPadding = 0, this.suffixIcon,
+    this.textLeftPadding = 0,
+    this.suffixIcon,
   });
 
   final double height;
@@ -44,7 +45,7 @@ class DefaultHeader extends StatelessWidget {
               ),
               child: Text(
                 header,
-                style: AppFonts.sfPro12Black400,
+                style: AppFonts.sfPro18Black500,
               ),
             ),
           ),
@@ -53,7 +54,7 @@ class DefaultHeader extends StatelessWidget {
             children: [
               if (isShowPrefixIcon)
                 Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
+                  padding: const EdgeInsetsDirectional.only(start: 4.0),
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,
@@ -73,8 +74,7 @@ class DefaultHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-              if(suffixIcon != null)
-               suffixIcon!
+              if (suffixIcon != null) suffixIcon!
             ],
           ),
         ],

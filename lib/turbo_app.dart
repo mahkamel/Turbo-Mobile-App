@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/models/customer_model.dart';
 
 import 'blocs/localization/localization/app_localization_setup.dart';
+import 'core/di/dependency_injection.dart';
 import 'core/helpers/constants.dart' show navigatorKey;
 import 'core/routing/app_router.dart';
 import 'core/routing/routes.dart';
+import 'core/services/networking/repositories/auth_repository.dart';
 import 'core/theming/colors.dart';
 
 class MyApp extends StatelessWidget {
@@ -11,31 +15,39 @@ class MyApp extends StatelessWidget {
     super.key,
     required this.appRouter,
     required this.isFirstTime,
+    this.customer,
   });
+
   final AppRouter appRouter;
   final bool isFirstTime;
+  final CustomerModel? customer;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      title: 'Turbo',
-      supportedLocales: AppLocalizationsSetup.supportedLocales,
-      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-      localeResolutionCallback: AppLocalizationsSetup.localeResolutionCallback,
-      theme: ThemeData(
-        scaffoldBackgroundColor: AppColors.white,
-        hoverColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primaryRed,
+    return RepositoryProvider.value(
+      value: getIt<AuthRepository>()..setCustomerData(customer),
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        title: 'Turbo',
+        supportedLocales: AppLocalizationsSetup.supportedLocales,
+        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+        localeResolutionCallback:
+            AppLocalizationsSetup.localeResolutionCallback,
+        theme: ThemeData(
+          scaffoldBackgroundColor: AppColors.white,
+          hoverColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primaryRed,
+          ),
+          useMaterial3: true,
         ),
-        useMaterial3: true,
+        debugShowCheckedModeBanner: false,
+        initialRoute:
+            isFirstTime ? Routes.onBoardingScreen : Routes.signupScreen,
+        onGenerateRoute: appRouter.generateRoute,
       ),
-      debugShowCheckedModeBanner: false,
-      initialRoute: isFirstTime ? Routes.onBoardingScreen : Routes.layoutScreen,
-      onGenerateRoute: appRouter.generateRoute,
     );
   }
 }

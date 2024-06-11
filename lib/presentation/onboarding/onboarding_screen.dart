@@ -69,9 +69,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               fit: BoxFit.cover,
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
+              padding: const EdgeInsetsDirectional.only(
+                start: 20.0,
+                end: 20.0,
                 top: 16.0,
                 bottom: 8.0,
               ),
@@ -81,9 +81,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
+              padding: const EdgeInsetsDirectional.only(
+                start: 20.0,
+                end: 20.0,
               ),
               child: Text(
                 onboardingData[_currentIndex].subtitle,

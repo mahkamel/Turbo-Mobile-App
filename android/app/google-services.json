@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "675552575914",
+    "project_id": "turbo-app-53a6a",
+    "storage_bucket": "turbo-app-53a6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675552575914:android:b103dbad13c0d6c97e2bd3",
+        "android_client_info": {
+          "package_name": "com.turbo.turbo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3uiFGJf-oWzqmp2xhU12rLWMl3LD-nEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

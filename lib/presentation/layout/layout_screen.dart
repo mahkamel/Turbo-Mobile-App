@@ -3,6 +3,9 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:turbo/presentation/layout/history/history_screen.dart';
+import 'package:turbo/presentation/layout/profile/profile_screen.dart';
+import 'package:turbo/presentation/layout/search/search_screen.dart';
 
 import '../../blocs/home/home_cubit.dart';
 import '../../blocs/layout/layout_cubit.dart';
@@ -19,12 +22,12 @@ class LayoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> screens = [
       BlocProvider<HomeCubit>(
-        create: (context) => getIt<HomeCubit>()..getCurrentUserLocation(),
+        create: (context) => getIt<HomeCubit>(),
         child: const HomeScreen(),
       ),
-      const HomeScreen(),
-      const HomeScreen(),
-      const HomeScreen(),
+      const SearchScreen(),
+      const HistoryScreen(),
+      const ProfileScreen(),
     ];
     return Scaffold(
       body: SizedBox(
@@ -81,7 +84,7 @@ class LayoutScreen extends StatelessWidget {
                       BlendMode.srcIn,
                     ),
                   ),
-                  label: 'Bills',
+                  label: 'Search',
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -93,7 +96,7 @@ class LayoutScreen extends StatelessWidget {
                       BlendMode.srcIn,
                     ),
                   ),
-                  label: 'Support',
+                  label: 'History',
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -105,7 +108,7 @@ class LayoutScreen extends StatelessWidget {
                       BlendMode.srcIn,
                     ),
                   ),
-                  label: 'More',
+                  label: 'Profile',
                 ),
               ],
             ),

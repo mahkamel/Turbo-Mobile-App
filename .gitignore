@@ -46,3 +46,6 @@ app.*.map.json
 *.env
 *.aiexclude
 *.lock
+/pubspec.lock
+/devtools_options.yaml
+/ios/Podfile.lock
