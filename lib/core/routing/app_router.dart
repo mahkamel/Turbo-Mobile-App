@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/blocs/login/login_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
 import 'package:turbo/presentation/auth/signup_screen/signup_screen.dart';
+import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
 import '../../presentation/layout/layout_screen.dart';
@@ -13,10 +15,6 @@ import '../di/dependency_injection.dart';
 
 class AppRouter {
   static final Map<String, Widget Function(BuildContext, dynamic)> _routes = {
-    // Routes.onBoardingScreen: (context, _) => BlocProvider(
-    //       create: (context) => getIt<OnboardingCubit>(),
-    //       child: const OnBoardingScreen(),
-    //     ),
     Routes.onBoardingScreen: (context, _) => const OnboardingScreen(),
     Routes.loginScreen: (context, _) => BlocProvider<LoginCubit>(
           create: (context) => getIt<LoginCubit>(),
@@ -29,6 +27,14 @@ class AppRouter {
     Routes.layoutScreen: (context, _) => BlocProvider<LayoutCubit>(
           create: (context) => getIt<LayoutCubit>(),
           child: const LayoutScreen(),
+        ),
+    Routes.carDetailsScreen: (context, arguments) =>
+        BlocProvider<CarDetailsCubit>(
+          create: (context) => getIt<CarDetailsCubit>(),
+          child: CardDetailsScreen(
+            carId: (arguments).carId,
+            carImage: (arguments).carImageUrl,
+          ),
         ),
   };
 
