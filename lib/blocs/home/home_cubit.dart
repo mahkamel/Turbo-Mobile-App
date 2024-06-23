@@ -17,20 +17,25 @@ class HomeCubit extends Cubit<HomeState> {
     this._carRepository,
   ) : super(const HomeState.initial());
 
-  int selectedCategoryIndex = 0;
+  int selectedBrandIndex = -1;
 
   Map<String, List<Car>> carsByBrand = {};
   List<CarBrand> carBrands = [];
 
+  void changeSelectedBrandIndex(int newIndex) {
+    selectedBrandIndex = newIndex;
+    emit(HomeState.changeSelectedBrandIndex(selectedBrandIndex));
+  }
+
   void getCarsBrands() async {
-    print("gettt brands");
     emit(const HomeState.getCarsBrandsLoading());
     try {
       final res = await _carRepository.getCarBrands();
       res.fold(
-        (errMsg) => emit(HomeState.getCarsBrandsError(errMsg)),
+        (errMsg) {
+          emit(HomeState.getCarsBrandsError(errMsg));
+        },
         (brands) {
-          print("branndssss ${brands.length}");
           carBrands = brands;
           emit(const HomeState.getCarsBrandsSuccess());
         },
@@ -40,17 +45,17 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void getCarsBasedOnBrand() async {
-    print("caaaaarrrr");
+  void getCarsBasedOnBrand({String? brandId}) async {
+    carsByBrand.clear();
     emit(const HomeState.getCarsByBrandLoading());
     try {
-      final res = await _carRepository.getCarsByBrand();
+      final res = await _carRepository.getCarsByBrand(brandId: brandId);
       res.fold(
         (errMsg) => emit(HomeState.getCarsByBrandError(errMsg)),
-        (r) {
-          carsByBrand = r.cars.carTypes;
-          print("caaaaaa ${carsByBrand.length} -- $carsByBrand");
-          emit(const HomeState.getCarsByBrandSuccess());
+        (cars) {
+          carsByBrand = cars;
+          print("lenggrhrr ${carsByBrand.length}");
+          emit(HomeState.getCarsByBrandSuccess(brandId));
         },
       );
     } catch (e) {

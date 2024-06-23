@@ -17,6 +17,7 @@ import 'firebase_options.dart';
 import 'bloc_observe.dart';
 import 'core/routing/app_router.dart';
 import 'core/services/local/cache_helper.dart';
+import 'flavors.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -28,7 +29,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await DioHelper.init(getValueFromEnv(AppConstants.baseUrl));
+  await configureApp(Flavor.DEV);
+  await DioHelper.init(FlavorConfig.instance.baseUrl);
   await setupGetIt();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await Future.wait([
@@ -49,7 +51,7 @@ void main() async {
   debugPrint("tokeennn: ${AppConstants.fcmToken}");
   FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-  final CustomerModel? cachedCustomer= await getCustomerData();
+  final CustomerModel? cachedCustomer = await getCustomerData();
 
   Bloc.observer = MyBlocObserver();
   final bool isFirstTime =

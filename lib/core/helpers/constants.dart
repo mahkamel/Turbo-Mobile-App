@@ -23,5 +23,8 @@ class AppConstants {
 
   //env keys
   static String baseUrl = "BASE_URL";
+  static String filesBaseUrlDev = "FILES_BASE_DEV";
+  static String filesBaseUrlQA = "FILES_BASE_QA";
+  static String filesBaseUrlProd = "FILES_BASE_LIVE";
   static String customerData = "CUSTOMER_KEY";
 }
