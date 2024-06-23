@@ -1,3 +1,5 @@
+import 'package:turbo/models/car_brand_model.dart';
+
 class GetCarsByBrandsResponse {
   bool status;
   Cars cars;
@@ -41,11 +43,13 @@ class Cars {
 
 class Car {
   String carName;
-  List<Brand> carBrand;
+  List<CarBrand> carBrand;
   List<Color> carColor;
   String carType;
   String carYear;
   int carDailyPrice;
+  String carId;
+  String carImg;
 
   Car({
     required this.carName,
@@ -54,46 +58,27 @@ class Car {
     required this.carType,
     required this.carYear,
     required this.carDailyPrice,
+    required this.carId,
+    required this.carImg,
   });
 
   factory Car.fromJson(Map<String, dynamic> json) {
     return Car(
       carName: json['carName'] ?? "",
-      carBrand: List<Brand>.from((json['carBrand'] as List)
-          .map((brandJson) => Brand.fromJson(brandJson))
+      carBrand: List<CarBrand>.from((json['carBrand'] as List)
+          .map((brandJson) => CarBrand.fromJson(brandJson))
           .toList()),
       carColor: List<Color>.from((json['carColor'] as List)
           .map((colorJson) => Color.fromJson(colorJson))
           .toList()),
       carType: json['carType'] ?? "",
       carYear: json['carYear'] ?? "",
+      carId: json['id'] ?? "",
       carDailyPrice: json['carDailyPrice'] ?? 0,
+      carImg:
+          "https://images.unsplash.com/photo-1489824904134-891ab64532f1?q=80&w=2531&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     );
   }
-}
-
-class Brand {
-  String id;
-  bool brandIsActive;
-  String brandName;
-  String? brandDescription;
-  DateTime brandSysDate;
-
-  Brand({
-    required this.id,
-    required this.brandIsActive,
-    required this.brandName,
-    this.brandDescription,
-    required this.brandSysDate,
-  });
-
-  factory Brand.fromJson(Map<String, dynamic> json) => Brand(
-        id: json['_id'] ?? "",
-        brandIsActive: json['brandIsActive'] ?? false,
-        brandName: json['brandName'] ?? "",
-        brandDescription: json['brandDescription'] ?? "",
-        brandSysDate: DateTime.parse(json['brandSysDate'] ?? ""),
-      );
 }
 
 class Color {

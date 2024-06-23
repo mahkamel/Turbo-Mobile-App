@@ -18,13 +18,19 @@ class CarServices {
     try {
       Response response = await DioHelper.getData(
         endpoint: carBrandId != null
-            ? "homePage/getCarByBrand"
+            ? "homePage/getCarByBrand?brand=$carBrandId"
             : 'homePage/getCarByBrandType',
-        body: carBrandId != null
-            ? {
-                "brand": carBrandId,
-              }
-            : null,
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> getCarDetails(String carId) async {
+    try {
+      Response response = await DioHelper.getData(
+        endpoint: 'homePage/getCarDetails?carId=$carId',
       );
       return response;
     } catch (e) {

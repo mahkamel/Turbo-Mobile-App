@@ -2,6 +2,7 @@
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:turbo/core/helpers/constants.dart';
+import 'package:turbo/flavors.dart';
 import 'package:turbo/models/customer_model.dart';
 
 import '../services/local/storage_service.dart';
@@ -22,4 +23,8 @@ Future<CustomerModel?> getCustomerData() async {
     customer = null;
   }
   return customer;
+}
+
+String getCompleteFileUrl(String path) {
+  return FlavorConfig.instance.filesBaseUrl + path;
 }

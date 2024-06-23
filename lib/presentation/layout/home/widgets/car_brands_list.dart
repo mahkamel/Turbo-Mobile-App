@@ -1,19 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
+import 'package:turbo/flavors.dart';
 
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 
-class CarBrandsList extends StatelessWidget {
-  const CarBrandsList({
+class BrandsList extends StatelessWidget {
+  const BrandsList({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 85,
       child: BlocBuilder<HomeCubit, HomeState>(
         buildWhen: (previous, current) =>
             current is GetCarsBrandsLoadingState ||
@@ -26,44 +28,93 @@ class CarBrandsList extends StatelessWidget {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                        color:
-                            index == 0 ? AppColors.black950 : AppColors.white,
-                        // shape: BoxShape.circle,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppColors.black950,
-                        )),
-                    child: Center(
-                      child: Text(
-                        index == 0
-                            ? "All"
-                            : blocRead
-                                .carBrands[index - 1]
-                                .brandName,
-                        style: AppFonts.sfPro16Black500.copyWith(
-                          color:
-                              index == 0 ? AppColors.white : AppColors.black950,
-                        ),
+              : blocWatch.carBrands.isEmpty
+                  ? const SizedBox()
+                  : Expanded(
+                      child: AllBrandsListView(
+                        blocWatch: blocWatch,
+                        blocRead: blocRead,
                       ),
-                    ),
-                  ),
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: 16,
-                  ),
-                  itemCount: blocWatch
-                      .carBrands.length + 1,
-                );
+                    );
         },
       ),
+    );
+  }
+}
+
+class AllBrandsListView extends StatelessWidget {
+  const AllBrandsListView({
+    super.key,
+    required this.blocWatch,
+    required this.blocRead,
+  });
+
+  final HomeCubit blocWatch;
+  final HomeCubit blocRead;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: 16,
+      ),
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) => InkWell(
+        highlightColor: Colors.transparent,
+        onTap: () {
+          if (blocWatch.selectedBrandIndex != (index)) {
+            blocRead.changeSelectedBrandIndex(index);
+            blocRead.getCarsBasedOnBrand(
+              brandId: blocRead.carBrands[index].id,
+            );
+          } else {
+            blocRead.changeSelectedBrandIndex(-1);
+            blocRead.getCarsBasedOnBrand();
+          }
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: blocWatch.selectedBrandIndex == index
+                      ? AppColors.headerBlack
+                      : AppColors.headerBlack.withOpacity(0.1),
+                ),
+              ),
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl:
+                      "${FlavorConfig.instance.filesBaseUrl}${blocRead.carBrands[index].path}",
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) => const SizedBox(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                blocRead.carBrands[index].brandName,
+                style: AppFonts.sfPro14Black400.copyWith(
+                  fontWeight: blocWatch.selectedBrandIndex == index
+                      ? FontWeight.w500
+                      : FontWeight.w400,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      separatorBuilder: (context, index) => const SizedBox(
+        width: 16,
+      ),
+      itemCount: blocWatch.carBrands.length,
     );
   }
 }

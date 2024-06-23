@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
-import 'package:turbo/core/helpers/extentions.dart';
+import 'package:turbo/presentation/layout/home/widgets/recommended_car_card.dart';
 
-import '../../../../core/helpers/constants.dart';
-import '../../../../core/routing/routes.dart';
-import '../../../../core/routing/screens_arguments.dart';
-import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../models/get_cars_by_brands.dart';
 
@@ -29,148 +25,63 @@ class CarsByBrandsList extends StatelessWidget {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : Expanded(
-                child: ListView.separated(
-                  itemCount: blocWatch.carsByBrand.length,
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 16,
-                  ),
-                  itemBuilder: (context, index) {
-                    String carType = blocRead.carsByBrand.keys.toList()[index];
-                    List<Car> cars =
-                        blocRead.carsByBrand.values.toList()[index];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            start: 16,
-                          ),
-                          child: Text(
-                            carType,
-                            style: AppFonts.sfPro16TypeGreyHeader600,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 234,
-                          child: ListView.separated(
-                            itemCount: cars.length,
-                            padding: const EdgeInsets.only(
-                              left: 16,
-                              right: 16,
-                              top: 8,
+            : blocWatch.carsByBrand.isEmpty
+                ? const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 48),
+                    child: Text(
+                      "Based on your current selection, there are no available vehicles in our inventory at this time.",
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                : Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      itemCount: blocWatch.carsByBrand.length,
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 16,
+                      ),
+                      itemBuilder: (context, typeIndex) {
+                        String carType =
+                            blocWatch.carsByBrand.keys.toList()[typeIndex];
+                        List<Car> cars =
+                            blocWatch.carsByBrand.values.toList()[typeIndex];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.only(
+                                start: 16,
+                              ),
+                              child: Text(
+                                carType,
+                                style: AppFonts.sfPro16TypeGreyHeader600,
+                              ),
                             ),
-                            scrollDirection: Axis.horizontal,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              width: 16,
-                            ),
-                            itemBuilder: (context, index) => InkWell(
-                              highlightColor: Colors.transparent,
-                              onTap: () {
-                                context.pushNamed(
-                                  Routes.carDetailsScreen,
-                                  arguments: CardDetailsScreenArguments(
-                                    carId: cars[index].carName,
-                                    carImageUrl: "imageUrl",
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: AppConstants.screenWidth(context) * 0.8,
-                                height: 224,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
+                            SizedBox(
+                              height: 232,
+                              child: ListView.separated(
+                                itemCount: cars.length,
+                                padding: const EdgeInsets.only(
+                                  left: 16,
+                                  right: 16,
+                                  top: 8,
                                 ),
-                                constraints: const BoxConstraints(
-                                  maxWidth: 300,
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                  width: 16,
                                 ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.carCardGrey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Hero(
-                                      tag: "carId",
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 120,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.black800,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: Row(
-                                        children: [
-                                          const CircleAvatar(
-                                            radius: 10,
-                                            foregroundColor: AppColors.grey400,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 4.0),
-                                            child: Text(
-                                              cars[index]
-                                                  .carBrand
-                                                  .first
-                                                  .brandName,
-                                              style: AppFonts.sfPro14Black400,
-                                            ),
-                                          ),
-                                          Text(
-                                            cars[index].carYear,
-                                            style: AppFonts.sfPro14Black400,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Text(
-                                      cars[index].carName,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppFonts.sfPro16Black500,
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text.rich(
-                                        TextSpan(
-                                          text:
-                                              "${cars[index].carDailyPrice} SAR",
-                                          style: AppFonts.sfPro16Black500
-                                              .copyWith(
-                                                  color: AppColors.primaryRed,
-                                                  fontWeight: FontWeight.w600),
-                                          children: [
-                                            TextSpan(
-                                              text: "/day",
-                                              style: AppFonts.sfPro14Black400
-                                                  .copyWith(
-                                                      color: AppColors.grey400,
-                                                      fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                itemBuilder: (context, index) =>
+                                    RecommendedCarCard(
+                                  car: cars[index],
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              );
+                          ],
+                        );
+                      },
+                    ),
+                  );
       },
     );
   }

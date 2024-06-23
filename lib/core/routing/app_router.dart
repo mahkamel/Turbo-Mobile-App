@@ -4,6 +4,7 @@ import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/blocs/login/login_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/routing/routes.dart';
+import 'package:turbo/core/routing/screens_arguments.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
 import 'package:turbo/presentation/auth/signup_screen/signup_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
@@ -30,10 +31,12 @@ class AppRouter {
         ),
     Routes.carDetailsScreen: (context, arguments) =>
         BlocProvider<CarDetailsCubit>(
-          create: (context) => getIt<CarDetailsCubit>(),
+          create: (context) => getIt<CarDetailsCubit>()
+            ..getCarDetails(
+              (arguments).car.carId,
+            ),
           child: CardDetailsScreen(
-            carId: (arguments).carId,
-            carImage: (arguments).carImageUrl,
+            car: (arguments as CardDetailsScreenArguments).car,
           ),
         ),
   };

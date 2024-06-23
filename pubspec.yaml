@@ -73,6 +73,7 @@ flutter:
     - lang/
     - assets/images/
     - assets/images/icons/nav_bar_icons/
+    - assets/images/icons/car_details_icons/
     - .env
 
   fonts:

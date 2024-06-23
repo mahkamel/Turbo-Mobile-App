@@ -27,4 +27,5 @@ class AppColors {
   static const Color greyBorder = Color(0xFFD9D9D9);
   static const Color buttonGreyBorder = Color(0xFFB0B0B0);
   static const Color divider = Color(0xFFECECEC);
+  static const Color carDetailsGrey = Color(0xFFF2F2F2);
 }

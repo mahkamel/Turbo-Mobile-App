@@ -1,9 +1,9 @@
+import 'package:turbo/models/get_cars_by_brands.dart';
+
 class CardDetailsScreenArguments {
-  final String carId;
-  final String carImageUrl;
+  final Car car;
 
   CardDetailsScreenArguments({
-    required this.carId,
-    required this.carImageUrl,
+    required this.car,
   });
 }

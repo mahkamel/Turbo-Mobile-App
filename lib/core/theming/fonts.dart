@@ -35,6 +35,24 @@ class AppFonts {
           color: AppColors.white,
         );
 
+
+  static TextStyle sfPro22HeaderBlack700 =
+  navigatorKey.currentContext != null &&
+      AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+    fontFamily: 'SFPro',
+    fontSize: 22.0.sp(navigatorKey.currentContext!),
+    fontWeight: FontWeight.w700,
+    color: AppColors.headerBlack,
+  )
+      : const TextStyle(
+    fontFamily: 'SFPro',
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    color: AppColors.headerBlack,
+  );
+
+
   static TextStyle sfPro18HeaderBlack700 =
       navigatorKey.currentContext != null &&
               AppConstants.screenWidth(navigatorKey.currentContext!) < 600
@@ -186,6 +204,22 @@ class AppFonts {
               fontWeight: FontWeight.w400,
               color: AppColors.buttonGreyBorder,
             );
+
+
+  static TextStyle sfPro14Grey400 = navigatorKey.currentContext != null &&
+      AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+    fontFamily: 'SFPro',
+    fontSize: 14.0.sp(navigatorKey.currentContext!),
+    fontWeight: FontWeight.w400,
+    color: AppColors.grey,
+  )
+      : const TextStyle(
+    fontFamily: 'SFPro',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.grey,
+  );
 
   static TextStyle sfPro14White500 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
