@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../blocs/home/home_cubit.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 
