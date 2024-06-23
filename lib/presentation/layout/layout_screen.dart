@@ -22,7 +22,7 @@ class LayoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> screens = [
       BlocProvider<HomeCubit>(
-        create: (context) => getIt<HomeCubit>(),
+        create: (context) => getIt<HomeCubit>()..getCarsBasedOnBrand()..getCarsBrands(),
         child: const HomeScreen(),
       ),
       const SearchScreen(),

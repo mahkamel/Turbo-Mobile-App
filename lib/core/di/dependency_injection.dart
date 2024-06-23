@@ -37,7 +37,10 @@ Future<void> setupGetIt() async {
     () => SignupCubit(getIt<AuthRepository>()),
   );
   getIt.registerFactory<HomeCubit>(
-    () => HomeCubit(getIt<AuthRepository>()),
+    () => HomeCubit(
+      getIt<AuthRepository>(),
+      getIt<CarRepository>(),
+    ),
   );
   getIt.registerFactory<CarDetailsCubit>(
     () => CarDetailsCubit(getIt<CarRepository>()),

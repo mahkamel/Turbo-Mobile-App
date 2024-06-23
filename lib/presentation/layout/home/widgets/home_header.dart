@@ -36,16 +36,10 @@ class HomeHeader extends StatelessWidget {
             const SizedBox(
               height: 2,
             ),
-            BlocBuilder<HomeCubit, HomeState>(
-              buildWhen: (previous, current) =>
-                  current is GetCurrentUserLocationState,
-              builder: (context, state) {
-                return Text(
-                  // getIt<AuthRepository>().currentAddress ?? "",
-                  "Jeddah, KSA",
-                  style: AppFonts.sfPro16LocationBlue600,
-                );
-              },
+            Text(
+              // getIt<AuthRepository>().currentAddress ?? "",
+              "Jeddah, KSA",
+              style: AppFonts.sfPro16LocationBlue600,
             ),
           ],
         ),

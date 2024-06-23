@@ -14,9 +14,9 @@ class CarBrand {
   });
 
   factory CarBrand.fromJson(Map<String, dynamic> json) => CarBrand(
-        id: json['_id'] as String,
-        brandName: json['brandName'] as String,
-        brandDescription: json['brandDescription'] as String,
+        id: json['_id'] ?? ""   ,
+        brandName: json['brandName'] ?? "",
+        brandDescription: json['brandDescription'] ?? "" ,
         isActive: json['brandIsActive'] as bool,
         sysDate: DateTime.parse(json['brandSysDate'] as String),
       );
