@@ -8,6 +8,7 @@ import 'core/helpers/constants.dart' show navigatorKey;
 import 'core/routing/app_router.dart';
 import 'core/routing/routes.dart';
 import 'core/services/networking/repositories/auth_repository.dart';
+import 'core/services/networking/repositories/car_repository.dart';
 import 'core/theming/colors.dart';
 
 class MyApp extends StatelessWidget {
@@ -24,8 +25,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: getIt<AuthRepository>()..setCustomerData(customer),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider.value(
+          value: getIt<AuthRepository>()..setCustomerData(customer),
+        ),
+        RepositoryProvider.value(
+          value: getIt<CarRepository>()..getCarBrands(),
+        ),
+      ],
       child: MaterialApp(
         navigatorKey: navigatorKey,
         title: 'Turbo',
@@ -44,8 +52,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         debugShowCheckedModeBanner: false,
-        initialRoute:
-            isFirstTime ? Routes.onBoardingScreen : Routes.signupScreen,
+        initialRoute: Routes.layoutScreen,
         onGenerateRoute: appRouter.generateRoute,
       ),
     );
