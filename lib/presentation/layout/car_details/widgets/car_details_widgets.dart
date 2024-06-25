@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../blocs/car_details/car_details_cubit.dart';
 import '../../../../core/helpers/functions.dart';
@@ -105,7 +106,7 @@ class CarPricesRow extends StatelessWidget {
         Expanded(
           child: PriceCard(
             price: blocWatch.carDetailsData.carDailyPrice,
-            period: "day",
+            period: "daySmall".getLocale(),
           ),
         ),
         const SizedBox(
@@ -114,7 +115,7 @@ class CarPricesRow extends StatelessWidget {
         Expanded(
           child: PriceCard(
             price: blocWatch.carDetailsData.carWeaklyPrice,
-            period: "weak",
+            period: "weekSmall".getLocale(),
           ),
         ),
         const SizedBox(
@@ -123,7 +124,7 @@ class CarPricesRow extends StatelessWidget {
         Expanded(
           child: PriceCard(
             price: blocWatch.carDetailsData.carMothlyPrice,
-            period: "month",
+            period: "monthSmall".getLocale(),
           ),
         ),
       ],

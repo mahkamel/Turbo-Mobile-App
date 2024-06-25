@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
@@ -28,7 +29,7 @@ class HomeHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Your location",
+              "yourLocation".getLocale(),
               style: AppFonts.inter12Grey400,
             ),
             const SizedBox(

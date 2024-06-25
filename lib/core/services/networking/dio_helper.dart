@@ -71,6 +71,7 @@ class DioHelper {
     Object? formData,
     String? userToken,
   }) async {
+    print("headddders ${dio.options.headers}");
     dio.options.headers = {
       'Accept': 'application/json',
       if (userToken != null) "Authorization": userToken,
@@ -82,13 +83,16 @@ class DioHelper {
         endpoint,
         queryParameters: query,
         data: formData ?? body,
+        options: Options(contentType: Headers.jsonContentType),
       );
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
         throw Exception(response.data['message']);
       }
     } on DioException catch (e) {
+      print("ssssss $e");
       if (e is SocketException ||
           e.type == DioExceptionType.unknown ||
           e.type == DioExceptionType.connectionError ||

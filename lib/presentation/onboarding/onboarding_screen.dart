@@ -22,8 +22,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (_currentIndex == 2) {
       context.pushNamedAndRemoveUntil(Routes.layoutScreen,
           predicate: (Route<dynamic> route) {
-            return false;
-          });
+        return false;
+      });
     } else {
       setState(() {
         _currentIndex = _currentIndex + 1;
@@ -41,18 +41,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final List<OnboardingData> onboardingData = [
       OnboardingData(
-        Loc.welcomeTo.getLocale(context),
-        Loc.welcomeToSubText.getLocale(context),
+        Loc.welcomeTo.getLocale(),
+        Loc.welcomeToSubText.getLocale(),
         'assets/images/onboarding-1.png',
       ),
       OnboardingData(
-        Loc.easyBooking.getLocale(context),
-        Loc.easyBookingSubText.getLocale(context),
+        Loc.easyBooking.getLocale(),
+        Loc.easyBookingSubText.getLocale(),
         'assets/images/onboarding-2.png',
       ),
       OnboardingData(
-        Loc.enjoyTheRide.getLocale(context),
-        Loc.enjoyTheRideSubText.getLocale(context),
+        Loc.enjoyTheRide.getLocale(),
+        Loc.enjoyTheRideSubText.getLocale(),
         'assets/images/onboarding-3.png',
       ),
     ];
@@ -124,7 +124,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   onPressed: _next,
                   child: Text(
-                    _currentIndex == 2 ? "Get Started" : 'Continue',
+                    _currentIndex == 2 ? Loc.getStarted : Loc.continueButton,
                     style: AppFonts.inter18SubTextGrey400.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,

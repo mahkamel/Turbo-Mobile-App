@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/blocs/localization/cubit/localization_cubit.dart';
 import 'package:turbo/models/customer_model.dart';
 
 import 'blocs/localization/localization/app_localization_setup.dart';
@@ -31,30 +32,44 @@ class MyApp extends StatelessWidget {
           value: getIt<AuthRepository>()..setCustomerData(customer),
         ),
         RepositoryProvider.value(
-          value: getIt<CarRepository>()..getCarBrands()..getCarTypes(),
+          value: getIt<CarRepository>()
+            ..getCarBrands()
+            ..getCarTypes(),
         ),
       ],
-      child: MaterialApp(
-        navigatorKey: navigatorKey,
-        title: 'Turbo',
-        supportedLocales: AppLocalizationsSetup.supportedLocales,
-        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-        localeResolutionCallback:
-            AppLocalizationsSetup.localeResolutionCallback,
-        theme: ThemeData(
-          fontFamily: "Inter",
-          scaffoldBackgroundColor: AppColors.white,
-          hoverColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: AppColors.primaryRed,
-          ),
-          useMaterial3: true,
+      child: BlocProvider<LocalizationCubit>(
+        create: (context) => LocalizationCubit()..onInit(),
+        child: BlocBuilder<LocalizationCubit, LocalizationState>(
+          builder: (context, state) {
+            if (state.locale.languageCode.contains("ar")) {
+              AppLocalizationsSetup.isLoadAr = true;
+            }
+            return MaterialApp(
+              navigatorKey: navigatorKey,
+              title: 'Turbo',
+              supportedLocales: AppLocalizationsSetup.supportedLocales,
+              localizationsDelegates:
+                  AppLocalizationsSetup.localizationsDelegates,
+              localeResolutionCallback:
+                  AppLocalizationsSetup.localeResolutionCallback,
+              locale: state.locale,
+              theme: ThemeData(
+                fontFamily: "Inter",
+                scaffoldBackgroundColor: AppColors.white,
+                hoverColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: AppColors.primaryRed,
+                ),
+                useMaterial3: true,
+              ),
+              debugShowCheckedModeBanner: false,
+              initialRoute: Routes.layoutScreen,
+              onGenerateRoute: appRouter.generateRoute,
+            );
+          },
         ),
-        debugShowCheckedModeBanner: false,
-        initialRoute: Routes.layoutScreen,
-        onGenerateRoute: appRouter.generateRoute,
       ),
     );
   }

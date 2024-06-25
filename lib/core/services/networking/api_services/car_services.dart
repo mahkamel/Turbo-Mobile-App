@@ -1,4 +1,11 @@
+import 'dart:convert';
+
+import 'package:bson/bson.dart';
 import 'package:dio/dio.dart';
+// import 'package:hex/hex.dart';
+// import 'package:mongo_dart/mongo_dart.dart';
+// import 'package:objectid/objectid.dart' hide ObjectId;
+// import 'package:string_to_hex/string_to_hex.dart';
 
 import '../dio_helper.dart';
 
@@ -56,50 +63,79 @@ class CarServices {
     required bool isWithUnlimited,
   }) async {
     try {
-      List<Map<String, dynamic>> filterBody = [];
+      Map<String, dynamic> filterBody = {};
 
+      // if (carYears.isNotEmpty) {
+      //   if (carYears.length == 1) {
+      //     filterBody.addAll({
+      //       "carYear": carYears[0],
+      //     });
+      //   } else {
+      //     filterBody.addAll({
+      //       "carYear": {
+      //         "\$in": carYears,
+      //       }
+      //     });
+      //   }
+      // }
+
+      // if (carTypes.isNotEmpty) {
+      //   if (carTypes.length == 1) {
+      //     try {
+      //
+      //       // ObjectId objec = ObjectId.fromHexString(carTypes[0]);
+      //       // String encodedId = objec.toHexString(); // Get the string representation
+      //
+      //       // Map<String, dynamic> ob = {"objectId": objec};
+      //       print("0--------- ${carTypes[0]}");
+      //       // print("xxxxxxxx ${objec.runtimeType} -- ${objec}");
+      //       filterBody.add({
+      //         "carType": ca,
+      //       });
+      //     } catch (e) {
+      //       print("sssdddddss $e");
+      //     }
+      //   } else {
+      //     List<ObjectId> objectss = [];
+      //     for (var i in carTypes) {
+      //       objectss.add(ObjectId.fromHexString(i));
+      //     }
+      //     filterBody.add({
+      //       "carType": {
+      //         "\$in": objectss,
+      //       }
+      //     });
+      //   }
+      // }
       if (carYears.isNotEmpty) {
-        if (carYears.length == 1) {
-          filterBody.add({
-            "carYear": carYears[0],
-          });
-        } else {
-          filterBody.add({
-            "carYear": {
-              "\$in": carYears,
-            }
-          });
-        }
+        filterBody.addAll({
+          "carYear": carYears,
+        });
       }
-
       if (carTypes.isNotEmpty) {
-        if (carTypes.length == 1) {
-          filterBody.add({
-            "carType": carTypes[0],
-          });
-        } else {
-          filterBody.add({
-            "carType": {
-              "\$in": carTypes,
-            }
-          });
-        }
+        filterBody.addAll({
+          "carType": carTypes,
+        });
       }
       if (carBrands.isNotEmpty) {
-        if (carBrands.length == 1) {
-          filterBody.add({
-            "carBrand": carBrands[0],
-          });
-        } else {
-          filterBody.add({
-            "carBrand": {
-              "\$in": carBrands,
-            }
-          });
-        }
+        filterBody.addAll({
+          "carBrand": carBrands,
+        });
+        // if (carBrands.length == 1) {
+        //   ObjectId brandObject = ObjectId.fromHexString(carBrands[0]);
+        //   filterBody.add({
+        //     "carBrand": brandObject,
+        //   });
+        // } else {
+        //   filterBody.add({
+        //     "carBrand": {
+        //       "\$in": carBrands,
+        //     }
+        //   });
+        // }
       }
       if (isWithUnlimited) {
-        filterBody.add({
+        filterBody.addAll({
           "carLimitedKiloMeters": isWithUnlimited,
         });
       }
@@ -108,19 +144,20 @@ class CarServices {
           carTypes.isEmpty &&
           carBrands.isEmpty &&
           !isWithUnlimited) {
-        filterBody.add({
+        filterBody.addAll({
           "carIsActive": true,
         });
       }
-
       Response response = await DioHelper.postData(
         endpoint: 'search/getCarByFilter',
         body: {
-          "filter": filterBody,
+          "car": filterBody,
         },
       );
+      print("ssss ${response}");
       return response;
     } catch (e) {
+      print("ssssssss $e");
       throw e.toString();
     }
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
+import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/presentation/layout/history/history_screen.dart';
 import 'package:turbo/presentation/layout/profile/profile_screen.dart';
 import 'package:turbo/presentation/layout/search/search_screen.dart';
@@ -82,7 +83,7 @@ class LayoutScreen extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
-                  label: 'Home',
+                  label: 'home'.getLocale(),
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -96,7 +97,7 @@ class LayoutScreen extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
-                  label: 'Search',
+                  label: 'search'.getLocale(),
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -110,7 +111,7 @@ class LayoutScreen extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
-                  label: 'History',
+                  label: 'history'.getLocale(),
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -124,7 +125,7 @@ class LayoutScreen extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
-                  label: 'Profile',
+                  label: 'profile'.getLocale(),
                 ),
               ],
             ),
