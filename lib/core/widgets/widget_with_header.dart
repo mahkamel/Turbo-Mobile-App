@@ -8,11 +8,11 @@ class WidgetWithHeader extends StatelessWidget {
     super.key,
     required this.header,
     required this.widget,
-    this.padding = const EdgeInsets.symmetric(horizontal: 18.0),
+    this.padding = const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
   });
   final String header;
   final Widget widget;
-  final EdgeInsets padding;
+  final EdgeInsetsDirectional padding;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class WidgetWithHeader extends StatelessWidget {
           children: [
             Text(
               header,
-              style: AppFonts.sfPro16Black400,
+              style: AppFonts.inter16Black400,
             ),
             const SizedBox(
               height: 8,

@@ -94,7 +94,7 @@ class EmailTextField extends StatelessWidget {
               textInputAction: textInputAction,
               onFieldSubmitted: onSubmit,
               autofillHints: autofill,
-              style: AppFonts.sfPro12Black400,
+              style: AppFonts.inter12Black400,
               controller: enabled ? controller : TextEditingController(),
               keyboardType: textInputType,
               decoration: InputDecoration(
@@ -110,9 +110,9 @@ class EmailTextField extends StatelessWidget {
                     : null,
                 labelText: label,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelStyle: AppFonts.sfPro12Black400,
+                labelStyle: AppFonts.inter12Black400,
                 hintText: hint,
-                hintStyle: AppFonts.sfPro12Black400,
+                hintStyle: AppFonts.inter12Black400,
                 contentPadding: const EdgeInsetsDirectional.only(
                   start: 16,
                   end: 12,
@@ -160,7 +160,7 @@ class EmailTextField extends StatelessWidget {
               ),
               child: Text(
                 validateText,
-                style: AppFonts.sfPro14ErrorRed400,
+                style: AppFonts.inter14ErrorRed400,
               ),
             ),
         ],
@@ -260,12 +260,12 @@ class PasswordTextField extends StatelessWidget {
               onFieldSubmitted: onSubmit,
               obscureText: isObscureText,
               autofillHints: autofill,
-              style: AppFonts.sfPro12Black400,
+              style: AppFonts.inter12Black400,
               controller: enabled ? controller : TextEditingController(),
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
                 labelText: label,
-                labelStyle: AppFonts.sfPro12Black400,
+                labelStyle: AppFonts.inter12Black400,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 suffixIcon: Padding(
                   padding: const EdgeInsetsDirectional.only(end: 4),
@@ -282,7 +282,7 @@ class PasswordTextField extends StatelessWidget {
                   ),
                 ),
                 hintText: hintText ?? "Password",
-                hintStyle: AppFonts.sfPro12Black400,
+                hintStyle: AppFonts.inter12Black400,
                 contentPadding: const EdgeInsetsDirectional.only(
                   start: 16,
                   // end: 16,
@@ -345,7 +345,7 @@ class PasswordTextField extends StatelessWidget {
                 ),
                 child: Text(
                   validateText ?? '',
-                  style: AppFonts.sfPro14ErrorRed400,
+                  style: AppFonts.inter14ErrorRed400,
                 ),
               ),
             ),
@@ -363,7 +363,7 @@ class CustomTextField extends StatelessWidget {
   final double validatePadding;
   final double paddingTop;
   final String hint;
-  final String label;
+  final String? label;
   final TextFieldValidation validationState;
   final String validateText;
   final bool enabled;
@@ -387,7 +387,7 @@ class CustomTextField extends StatelessWidget {
   final CrossAxisAlignment crossAxisAlignment;
   final TextStyle? hintStyle;
   final InputBorder? border;
-  final EdgeInsets? contentPadding;
+  final EdgeInsetsDirectional? contentPadding;
   final double radius;
   final int? maxLines;
 
@@ -426,7 +426,7 @@ class CustomTextField extends StatelessWidget {
     this.enableInteractiveSelection = true,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
-    required this.label,
+     this.label,
     this.paddingTop = 4,
   });
 
@@ -469,9 +469,9 @@ class CustomTextField extends StatelessWidget {
                 keyboardType: textInputType,
                 textInputAction: textInputAction,
                 onFieldSubmitted: onSubmit,
-                style: AppFonts.sfPro12Black400.copyWith(
+                style: AppFonts.inter12Black400.copyWith(
                   fontSize: 14,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                 ),
                 controller: textEditingController,
                 onTapOutside: (pointerDownEvent) {
@@ -482,13 +482,13 @@ class CustomTextField extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   labelText: label,
-                  labelStyle: AppFonts.sfPro12Black400,
+                  labelStyle: AppFonts.inter12Black400,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   suffixIcon: icon,
                   prefixIcon: prefixIcon,
                   prefixIconConstraints: const BoxConstraints(),
                   hintText: hint,
-                  hintStyle: hintStyle ?? AppFonts.sfPro12Black400,
+                  hintStyle: hintStyle ?? AppFonts.inter12Black400,
                   contentPadding: contentPadding ??
                       EdgeInsetsDirectional.only(
                         start: prefixIcon != null ? 86 : 16,
@@ -565,7 +565,7 @@ class CustomTextField extends StatelessWidget {
                   validateText.isNotEmpty
                       ? validateText
                       : "This field cannot be empty",
-                  style: AppFonts.sfPro14ErrorRed400,
+                  style: AppFonts.inter14ErrorRed400,
                 ),
               ),
           ],
@@ -609,12 +609,12 @@ Widget codeTextField({
       ],
       textInputAction: TextInputAction.next,
       onChanged: onChange,
-      style: AppFonts.sfPro12Black400,
+      style: AppFonts.inter12Black400,
       controller: controller,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: AppFonts.sfPro12Black400,
+        hintStyle: AppFonts.inter12Black400,
         // isDense: true,
         contentPadding: const EdgeInsetsDirectional.only(bottom: 24, start: 4),
         border: OutlineInputBorder(

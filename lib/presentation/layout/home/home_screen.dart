@@ -23,13 +23,13 @@ class HomeScreen extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsetsDirectional.only(
-            top: 30.0,
+            top: 20.0,
             bottom: 8.0,
             start: 16,
           ),
           child: Text(
             "Brands",
-            style: AppFonts.sfPro18HeaderBlack700,
+            style: AppFonts.inter18HeaderBlack700,
           ),
         ),
         const BrandsList(),
@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
           ),
           child: Text(
             "Recommended Cars",
-            style: AppFonts.sfPro18HeaderBlack700,
+            style: AppFonts.inter18HeaderBlack700,
           ),
         ),
         const CarsByBrandsList(),

@@ -45,7 +45,7 @@ class DefaultHeader extends StatelessWidget {
               ),
               child: Text(
                 header,
-                style: AppFonts.sfPro18Black500,
+                style: AppFonts.inter18Black500,
               ),
             ),
           ),

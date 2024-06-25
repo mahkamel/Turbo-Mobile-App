@@ -36,7 +36,7 @@ class ChoosePhoneNumber extends StatelessWidget {
           children: [
             Text(
               "Phone Number",
-              style: AppFonts.sfPro16Black400,
+              style: AppFonts.inter16Black400,
             ),
             const SizedBox(
               height: 8,
@@ -61,9 +61,9 @@ class ChoosePhoneNumber extends StatelessWidget {
                     vertical: 4,
                     horizontal: 12,
                   ),
-                  labelStyle: AppFonts.sfPro12Black400,
+                  labelStyle: AppFonts.inter12Black400,
                   hintText: "Enter your phone number",
-                  hintStyle: AppFonts.sfPro12Black400,
+                  hintStyle: AppFonts.inter12Black400,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(7),
                     borderSide: const BorderSide(

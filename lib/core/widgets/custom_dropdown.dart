@@ -120,12 +120,12 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
           children: [
             Container(
               height: 48,
-              margin: EdgeInsets.only(
-                left: widget.paddingLeft,
-                right: widget.paddingRight,
+              margin: EdgeInsetsDirectional.only(
+                start: widget.paddingLeft,
+                end: widget.paddingRight,
               ),
-              padding: EdgeInsets.only(
-                right: widget.arrowRightPadding ?? 12, // arrow right padding
+              padding: EdgeInsetsDirectional.only(
+                end: widget.arrowRightPadding ?? 12, // arrow right padding
               ),
               width: double.infinity,
               decoration: BoxDecoration(
@@ -150,27 +150,27 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
             if (widget.showText)
               Padding(
                 padding: widget.dropdownPadding ??
-                    const EdgeInsets.only(
+                    const EdgeInsetsDirectional.only(
                       top: 14,
-                      left: 16,
+                      start: 16,
                     ),
                 child: Text(
                   widget.text,
-                  style: AppFonts.sfPro15Black400,
+                  style: AppFonts.inter15Black400,
                 ),
               ),
             Padding(
               padding: widget.dropdownPadding ??
-                  const EdgeInsets.only(
+                  const EdgeInsetsDirectional.only(
                     top: 14,
-                    left: 16,
+                    start: 16,
                   ), // padding text inside dropdown
               child: Row(
                 children: [
                   if (widget.index > widget.items.length || widget.index == -1)
                     Text(
                       widget.text,
-                      style: AppFonts.sfPro15Black400,
+                      style: AppFonts.inter15Black400,
                     )
                   else
                     SizedBox(
@@ -182,8 +182,8 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
                                 : widget.text,
                         maxLines: 1,
                         style: widget.index != 6
-                            ? AppFonts.sfPro15Black400
-                            : AppFonts.sfPro15buttonGreyBorder400,
+                            ? AppFonts.inter15Black400
+                            : AppFonts.inter15buttonGreyBorder400,
                       ),
                     ),
                 ],
@@ -218,9 +218,9 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
                 //Container Contain Options
                 height: widget.optionsContainerHeight ??
                     widget.listOfValues.length * 47,
-                margin: EdgeInsets.only(
-                  left: widget.paddingLeft,
-                  right: widget.optionMarginRight,
+                margin: EdgeInsetsDirectional.only(
+                  start: widget.paddingLeft,
+                  end: widget.optionMarginRight,
                 ),
                 padding: const EdgeInsets.only(bottom: 5),
                 clipBehavior: Clip.antiAlias,
@@ -268,15 +268,15 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
                                             ? AppColors.divider
                                             : null,
                                       ),
-                                      padding: EdgeInsets.only(
-                                        left: widget.optionsPaddingLeft ?? 10,
+                                      padding: EdgeInsetsDirectional.only(
+                                        start: widget.optionsPaddingLeft ?? 10,
                                         top: widget.items.first.value == 0
                                             ? 12
                                             : 0,
                                         bottom: widget.items.first.value == 0
                                             ? 12
                                             : 0,
-                                        right: widget.optionsPaddingRight ?? 20,
+                                        end: widget.optionsPaddingRight ?? 20,
                                       ),
                                       child: item.value,
                                     ),
@@ -339,7 +339,7 @@ class DropdownButtonStyle {
   final ShapeBorder shape;
   final double elevation;
   final Color backgroundColor;
-  final EdgeInsets padding;
+  final EdgeInsetsDirectional padding;
   final BoxConstraints constraints;
   final double width;
   final double height;
@@ -362,7 +362,7 @@ class DropdownStyle {
   final BorderRadius borderRadius;
   final double elevation;
   final Color color;
-  final EdgeInsets padding;
+  final EdgeInsetsDirectional padding;
   final BoxConstraints constraints;
   final Offset offset;
   final double width;
@@ -448,9 +448,9 @@ class CustomDropdownTimeState<T> extends State<CustomDropdownTime<T>>
             Container(
               height: 46,
               width: AppConstants.screenSize(context).width * (338 / 371) - 22,
-              padding: const EdgeInsets.only(
-                left: 8,
-                right: 10,
+              padding: const EdgeInsetsDirectional.only(
+                start: 8,
+                end: 10,
               ),
               margin: widget.showText
                   ? const EdgeInsets.only(top: 30)
@@ -461,9 +461,9 @@ class CustomDropdownTimeState<T> extends State<CustomDropdownTime<T>>
               ),
             ),
             Padding(
-                padding: const EdgeInsets.only(
+                padding: const EdgeInsetsDirectional.only(
                   top: 10,
-                  left: 6,
+                  start: 6,
                 ),
                 child: (_isOpen || widget.index > widget.items.length)
                     ? const Text('')
@@ -510,7 +510,7 @@ class CustomDropdownTimeState<T> extends State<CustomDropdownTime<T>>
                               width: AppConstants.screenSize(context).width *
                                       (338 / 371) -
                                   22,
-                              padding: const EdgeInsets.only(left: 10),
+                              padding: const EdgeInsetsDirectional.only(start: 10),
                               color: AppColors.primaryRed,
                               child: item.value,
                             ),
@@ -566,7 +566,7 @@ class DropdownButtonStyleTime {
   final ShapeBorder shape;
   final double elevation;
   final Color backgroundColor;
-  final EdgeInsets padding;
+  final EdgeInsetsDirectional padding;
   final BoxConstraints constraints;
   final double width;
   final double height;
@@ -589,7 +589,7 @@ class DropdownStyleTime {
   final BorderRadius borderRadius;
   final double elevation;
   final Color color;
-  final EdgeInsets padding;
+  final EdgeInsetsDirectional padding;
   final BoxConstraints constraints;
   final Offset offset;
   final double width;

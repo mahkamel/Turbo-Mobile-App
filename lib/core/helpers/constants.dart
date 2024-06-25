@@ -19,6 +19,10 @@ class AppConstants {
           ? MediaQuery.sizeOf(context).width * (width / 390)
           : width;
 
+  static SizedBox verticalGap(double height) {
+    return SizedBox(height: height);
+  }
+
   static String fcmToken = '';
 
   //env keys
@@ -27,4 +31,8 @@ class AppConstants {
   static String filesBaseUrlQA = "FILES_BASE_QA";
   static String filesBaseUrlProd = "FILES_BASE_LIVE";
   static String customerData = "CUSTOMER_KEY";
+}
+
+SizedBox horizontalGap(double width) {
+  return SizedBox(width: width);
 }

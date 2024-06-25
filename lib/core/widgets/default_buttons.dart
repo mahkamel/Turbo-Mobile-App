@@ -87,7 +87,7 @@ class DefaultButton extends StatelessWidget {
               : textWidget ??
                   Text(
                     text,
-                    style: AppFonts.sfPro18White500.copyWith(
+                    style: AppFonts.inter18White500.copyWith(
                       color: textColor,
                       fontWeight: fontWeight,
                       fontSize: fontSize,

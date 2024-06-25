@@ -182,7 +182,7 @@ class InfoStepForm extends StatelessWidget {
                             value: item.key,
                             child: Text(
                               item.value,
-                              style: AppFonts.sfPro15Black400,
+                              style: AppFonts.inter15Black400,
                             ),
                           ),
                         )
@@ -201,7 +201,7 @@ class InfoStepForm extends StatelessWidget {
                 ),
                 child: Text(
                   "Please set your password to use when login",
-                  style: AppFonts.sfPro14Black400,
+                  style: AppFonts.inter14Black400,
                 ),
               ),
             ),
