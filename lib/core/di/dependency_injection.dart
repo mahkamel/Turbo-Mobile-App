@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/blocs/login/login_cubit.dart';
+import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
 import 'package:turbo/core/services/networking/api_services/car_services.dart';
@@ -36,6 +37,7 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<SignupCubit>(
     () => SignupCubit(getIt<AuthRepository>()),
   );
+
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(
       getIt<AuthRepository>(),
@@ -44,5 +46,8 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<CarDetailsCubit>(
     () => CarDetailsCubit(getIt<CarRepository>()),
+  );
+  getIt.registerFactory<SearchCubit>(
+    () => SearchCubit(getIt<CarRepository>()),
   );
 }

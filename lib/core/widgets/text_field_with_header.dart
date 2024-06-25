@@ -52,7 +52,7 @@ class AuthTextFieldWithHeader extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final double horizontalPadding;
   final double? width;
-  final EdgeInsets? contentPadding;
+  final EdgeInsetsDirectional? contentPadding;
   @override
   State<AuthTextFieldWithHeader> createState() =>
       _AuthTextFieldWithHeaderState();
@@ -71,7 +71,7 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
           children: [
             Text(
               widget.header,
-              style: AppFonts.sfPro16Black400,
+              style: AppFonts.inter16Black400,
             ),
             const SizedBox(
               height: 8,

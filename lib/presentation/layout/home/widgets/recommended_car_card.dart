@@ -14,9 +14,11 @@ class RecommendedCarCard extends StatelessWidget {
   const RecommendedCarCard({
     super.key,
     required this.car,
+    required this.isFromFilter,
   });
 
   final Car car;
+  final bool isFromFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -31,24 +33,28 @@ class RecommendedCarCard extends StatelessWidget {
         );
       },
       child: Container(
-        width: AppConstants.screenWidth(context) * 0.8,
-        padding: const EdgeInsets.symmetric(
+        width: isFromFilter
+            ? AppConstants.screenWidth(context) - 32
+            : AppConstants.screenWidth(context) * 0.8,
+        padding: EdgeInsets.symmetric(
           vertical: 8,
-          horizontal: 12,
+          horizontal: isFromFilter ? 16 : 12,
         ),
         margin: const EdgeInsets.only(bottom: 4),
-        constraints: const BoxConstraints(
-          maxWidth: 300,
-        ),
+        constraints: !isFromFilter
+            ? const BoxConstraints(
+                maxWidth: 300,
+              )
+            : null,
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
-            BoxShadow(color: AppColors.black.withOpacity(0.1),
-            offset: const Offset(0,3),
-              blurRadius: 8,
-              spreadRadius: 0
-            ),
+            BoxShadow(
+                color: AppColors.black.withOpacity(0.1),
+                offset: const Offset(0, 3),
+                blurRadius: 8,
+                spreadRadius: 0),
           ],
         ),
         child: Column(
@@ -67,19 +73,19 @@ class RecommendedCarCard extends StatelessWidget {
               car.carName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppFonts.sfPro16Black500,
+              style: AppFonts.inter16Black500,
             ),
             Align(
               alignment: Alignment.centerRight,
               child: Text.rich(
                 TextSpan(
                   text: "${car.carDailyPrice} SAR",
-                  style: AppFonts.sfPro16Black500.copyWith(
+                  style: AppFonts.inter16Black500.copyWith(
                       color: AppColors.primaryRed, fontWeight: FontWeight.w600),
                   children: [
                     TextSpan(
                       text: "/day",
-                      style: AppFonts.sfPro14Black400
+                      style: AppFonts.inter14Black400
                           .copyWith(color: AppColors.grey400, fontSize: 16),
                     ),
                   ],
@@ -116,7 +122,7 @@ class RecommendedCarCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Text(
             car.carBrand.first.display,
-            style: AppFonts.sfPro14Black400,
+            style: AppFonts.inter14Black400,
           ),
         ),
         const CircleAvatar(
@@ -128,7 +134,7 @@ class RecommendedCarCard extends StatelessWidget {
         ),
         Text(
           car.carYear,
-          style: AppFonts.sfPro14Black400,
+          style: AppFonts.inter14Black400,
         ),
       ],
     );

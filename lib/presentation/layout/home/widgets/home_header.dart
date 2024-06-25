@@ -29,7 +29,7 @@ class HomeHeader extends StatelessWidget {
           children: [
             Text(
               "Your location",
-              style: AppFonts.sfPro12Grey400,
+              style: AppFonts.inter12Grey400,
             ),
             const SizedBox(
               height: 2,
@@ -37,7 +37,7 @@ class HomeHeader extends StatelessWidget {
             Text(
               // getIt<AuthRepository>().currentAddress ?? "",
               "Jeddah, KSA",
-              style: AppFonts.sfPro16LocationBlue600,
+              style: AppFonts.inter16LocationBlue600,
             ),
           ],
         ),

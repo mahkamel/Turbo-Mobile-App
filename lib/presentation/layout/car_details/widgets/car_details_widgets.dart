@@ -35,11 +35,11 @@ class PriceCard extends StatelessWidget {
           children: [
             Text(
               "$price SAR",
-              style: AppFonts.sfPro16Black500,
+              style: AppFonts.inter16Black500,
             ),
             Text(
               "/$period",
-              style: AppFonts.sfPro14Grey400,
+              style: AppFonts.inter14Grey400,
             ),
           ],
         ),
@@ -79,11 +79,11 @@ class CarInfoItem extends StatelessWidget {
         ),
         Text(
           "$title: ",
-          style: AppFonts.sfPro14Grey400.copyWith(fontSize: 16),
+          style: AppFonts.inter14Grey400.copyWith(fontSize: 16),
         ),
         Text(
           info,
-          style: AppFonts.sfPro16Black500,
+          style: AppFonts.inter16Black500,
         ),
       ],
     );
@@ -144,9 +144,9 @@ class CarNameWithBrandImg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
+      padding: const EdgeInsetsDirectional.only(
+        start: 16.0,
+        end: 16.0,
         bottom: 8.0,
       ),
       child: Row(
@@ -155,7 +155,7 @@ class CarNameWithBrandImg extends StatelessWidget {
           Expanded(
             child: Text(
               carName,
-              style: AppFonts.sfPro22HeaderBlack700,
+              style: AppFonts.inter20HeaderBlack700,
             ),
           ),
           Padding(

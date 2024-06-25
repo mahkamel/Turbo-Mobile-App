@@ -17,9 +17,9 @@ class CarDetailsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 350,
+      expandedHeight: AppConstants.screenHeight(context) * .4,
       pinned: false,
-      stretch: true,
+      stretch: false,
       elevation: 0,
       forceMaterialTransparency: true,
       automaticallyImplyLeading: false,
@@ -27,13 +27,9 @@ class CarDetailsAppBar extends StatelessWidget {
         expandedTitleScale: 1,
         title: Hero(
           tag: carId,
-          child: Container(
+          child: SizedBox(
             height: 350,
             width: AppConstants.screenWidth(context),
-            decoration: BoxDecoration(
-              color: AppColors.black800,
-              borderRadius: BorderRadius.circular(8),
-            ),
             child: AspectRatio(
               aspectRatio: 1,
               child: CachedNetworkImage(

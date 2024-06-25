@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/presentation/layout/history/history_screen.dart';
 import 'package:turbo/presentation/layout/profile/profile_screen.dart';
 import 'package:turbo/presentation/layout/search/search_screen.dart';
@@ -22,10 +23,17 @@ class LayoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> screens = [
       BlocProvider<HomeCubit>(
-        create: (context) => getIt<HomeCubit>()..getCarsBasedOnBrand()..getCarsBrands(),
+        create: (context) => getIt<HomeCubit>()
+          ..getCarsBasedOnBrand()
+          ..getCarsBrands(),
         child: const HomeScreen(),
       ),
-      const SearchScreen(),
+      BlocProvider<SearchCubit>(
+        create: (context) => getIt<SearchCubit>()
+          ..unSelectAllBrands()
+          ..init(),
+        child: const SearchScreen(),
+      ),
       const HistoryScreen(),
       const ProfileScreen(),
     ];
@@ -50,11 +58,11 @@ class LayoutScreen extends StatelessWidget {
               backgroundColor: AppColors.navBarBlack,
               selectedItemColor: AppColors.white,
               unselectedItemColor: AppColors.navBarUnSelected,
-              selectedLabelStyle: AppFonts.sfPro12Black400.copyWith(
+              selectedLabelStyle: AppFonts.inter12Black400.copyWith(
                 fontWeight: FontWeight.w500,
                 fontSize: 13,
               ),
-              unselectedLabelStyle: AppFonts.sfPro12Black400,
+              unselectedLabelStyle: AppFonts.inter12Black400,
               currentIndex: context.watch<LayoutCubit>().navBarIndex,
               elevation: 0,
               type: BottomNavigationBarType.fixed,
@@ -71,42 +79,50 @@ class LayoutScreen extends StatelessWidget {
                           : AppColors.subTextGrey,
                       BlendMode.srcIn,
                     ),
+                    height: 20,
+                    width: 20,
                   ),
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/home_nav_icon.svg",
+                    "assets/images/icons/nav_bar_icons/search_nav_icon.svg",
                     colorFilter: ColorFilter.mode(
                       context.watch<LayoutCubit>().navBarIndex == 1
                           ? AppColors.white
                           : AppColors.subTextGrey,
                       BlendMode.srcIn,
                     ),
+                    height: 20,
+                    width: 20,
                   ),
                   label: 'Search',
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/home_nav_icon.svg",
+                    "assets/images/icons/nav_bar_icons/history_nav_icon.svg",
                     colorFilter: ColorFilter.mode(
                       context.watch<LayoutCubit>().navBarIndex == 2
                           ? AppColors.white
                           : AppColors.subTextGrey,
                       BlendMode.srcIn,
                     ),
+                    height: 20,
+                    width: 20,
                   ),
                   label: 'History',
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/home_nav_icon.svg",
+                    "assets/images/icons/nav_bar_icons/profile_nav_icon.svg",
                     colorFilter: ColorFilter.mode(
                       context.watch<LayoutCubit>().navBarIndex == 3
                           ? AppColors.white
                           : AppColors.subTextGrey,
                       BlendMode.srcIn,
                     ),
+                    height: 20,
+                    width: 20,
                   ),
                   label: 'Profile',
                 ),

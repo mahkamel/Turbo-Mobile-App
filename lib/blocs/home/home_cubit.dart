@@ -30,16 +30,21 @@ class HomeCubit extends Cubit<HomeState> {
   void getCarsBrands() async {
     emit(const HomeState.getCarsBrandsLoading());
     try {
-      final res = await _carRepository.getCarBrands();
-      res.fold(
-        (errMsg) {
-          emit(HomeState.getCarsBrandsError(errMsg));
-        },
-        (brands) {
-          carBrands = brands;
-          emit(const HomeState.getCarsBrandsSuccess());
-        },
-      );
+      if (_carRepository.carBrands.isEmpty) {
+        final res = await _carRepository.getCarBrands();
+        res.fold(
+          (errMsg) {
+            emit(HomeState.getCarsBrandsError(errMsg));
+          },
+          (brands) {
+            carBrands = brands;
+            emit(const HomeState.getCarsBrandsSuccess());
+          },
+        );
+      } else {
+        carBrands = _carRepository.carBrands;
+        emit(const HomeState.getCarsBrandsSuccess());
+      }
     } catch (e) {
       emit(HomeState.getCarsBrandsError(e.toString()));
     }
@@ -54,7 +59,6 @@ class HomeCubit extends Cubit<HomeState> {
         (errMsg) => emit(HomeState.getCarsByBrandError(errMsg)),
         (cars) {
           carsByBrand = cars;
-          print("lenggrhrr ${carsByBrand.length}");
           emit(HomeState.getCarsByBrandSuccess(brandId));
         },
       );

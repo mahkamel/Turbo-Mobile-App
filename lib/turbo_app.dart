@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           value: getIt<AuthRepository>()..setCustomerData(customer),
         ),
         RepositoryProvider.value(
-          value: getIt<CarRepository>()..getCarBrands(),
+          value: getIt<CarRepository>()..getCarBrands()..getCarTypes(),
         ),
       ],
       child: MaterialApp(
@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
         localeResolutionCallback:
             AppLocalizationsSetup.localeResolutionCallback,
         theme: ThemeData(
+          fontFamily: "Inter",
           scaffoldBackgroundColor: AppColors.white,
           hoverColor: Colors.transparent,
           splashColor: Colors.transparent,

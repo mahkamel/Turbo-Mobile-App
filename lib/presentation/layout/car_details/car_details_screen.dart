@@ -67,7 +67,7 @@ class CardDetailsScreen extends StatelessWidget {
                                             Text(
                                               "Car info",
                                               style: AppFonts
-                                                  .sfPro18HeaderBlack700
+                                                  .inter18HeaderBlack700
                                                   .copyWith(
                                                 color: AppColors.grey700,
                                               ),
@@ -95,39 +95,49 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             CarInfoItem(
-                                              title: "Limited KiloMeters",
+                                              title: "Plate Number",
                                               info: blocRead.carDetailsData
-                                                  .carLimitedKiloMeters
-                                                  .toString(),
+                                                  .carPlateNumber,
                                               iconPath:
-                                                  "assets/images/icons/car_details_icons/limitedkm_icon.png",
+                                                  "assets/images/icons/car_details_icons/car_plate_icon.png",
                                             ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: 4.0),
                                               child: CarInfoItem(
-                                                title: "Plate Number",
-                                                info: blocRead.carDetailsData
-                                                    .carPlateNumber,
+                                                title: "Engine",
+                                                info: blocRead
+                                                    .carDetailsData.carEngine,
                                                 iconPath:
-                                                    "assets/images/icons/car_details_icons/car_plate_icon.png",
+                                                    "assets/images/icons/car_details_icons/car_engine_icon.png",
                                               ),
                                             ),
                                             CarInfoItem(
-                                              title: "Engine",
+                                              title: "Seats",
                                               info: blocRead
-                                                  .carDetailsData.carEngine,
+                                                  .carDetailsData.carPassengerNo.toString(),
                                               iconPath:
-                                                  "assets/images/icons/car_details_icons/car_engine_icon.png",
+                                                  "assets/images/icons/car_details_icons/car_seat_icon.png",
                                             ),
-                                            const SizedBox(
-                                              height: 16,
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 4.0,
+                                                bottom: 16.0,
+                                              ),
+                                              child: CarInfoItem(
+                                                title: "Limited KiloMeters",
+                                                info: blocRead.carDetailsData
+                                                    .carLimitedKiloMeters
+                                                    .toString(),
+                                                iconPath:
+                                                    "assets/images/icons/car_details_icons/limitedkm_icon.png",
+                                              ),
                                             ),
                                             Text(
                                               "Price",
                                               style: AppFonts
-                                                  .sfPro18HeaderBlack700
+                                                  .inter18HeaderBlack700
                                                   .copyWith(
                                                 color: AppColors.grey700,
                                               ),
@@ -136,14 +146,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               height: 8,
                                             ),
                                             CarPricesRow(blocWatch: blocWatch),
-                                            DefaultButton(
-                                              marginTop: 20,
-                                              marginBottom: 12,
-                                              color: AppColors.primaryBG,
-                                              textColor: AppColors.primaryRed,
-                                              function: () {},
-                                              text: "Book Now",
-                                            ),
+                                            const SizedBox(height: 90,),
                                           ],
                                         ),
                                       );
@@ -155,6 +158,19 @@ class CardDetailsScreen extends StatelessWidget {
                 ],
               ),
               const BackButtonWithBG(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: DefaultButton(
+                  marginTop: 20,
+                  marginBottom: 20,
+                  marginRight: 16,
+                  marginLeft: 16,
+                  color: AppColors.primaryBG,
+                  textColor: AppColors.primaryRed,
+                  function: () {},
+                  text: "Book Now",
+                ),
+              ),
             ],
           ),
         ),

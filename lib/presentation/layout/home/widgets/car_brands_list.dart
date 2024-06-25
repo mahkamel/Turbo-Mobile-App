@@ -30,11 +30,51 @@ class BrandsList extends StatelessWidget {
                 )
               : blocWatch.carBrands.isEmpty
                   ? const SizedBox()
-                  : Expanded(
-                      child: AllBrandsListView(
-                        blocWatch: blocWatch,
-                        blocRead: blocRead,
+                  : ListView.separated(
+                      padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 16,
                       ),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => InkWell(
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+                          if (blocWatch.selectedBrandIndex != (index)) {
+                            blocRead.changeSelectedBrandIndex(index);
+                            blocRead.getCarsBasedOnBrand(
+                              brandId: blocRead.carBrands[index].id,
+                            );
+                          } else {
+                            blocRead.changeSelectedBrandIndex(-1);
+                            blocRead.getCarsBasedOnBrand();
+                          }
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            BrandLogoCircle(
+                              logoPath: blocRead.carBrands[index].path,
+                              isWithBlackBorder:
+                                  blocWatch.selectedBrandIndex == index,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text(
+                                blocRead.carBrands[index].brandName,
+                                style: AppFonts.inter14Black400.copyWith(
+                                  fontWeight:
+                                      blocWatch.selectedBrandIndex == index
+                                          ? FontWeight.w500
+                                          : FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      separatorBuilder: (context, index) => const SizedBox(
+                        width: 16,
+                      ),
+                      itemCount: blocWatch.carBrands.length,
                     );
         },
       ),
@@ -42,79 +82,40 @@ class BrandsList extends StatelessWidget {
   }
 }
 
-class AllBrandsListView extends StatelessWidget {
-  const AllBrandsListView({
+class BrandLogoCircle extends StatelessWidget {
+  const BrandLogoCircle({
     super.key,
-    required this.blocWatch,
-    required this.blocRead,
+    required this.logoPath,
+    this.size = 60,
+    this.isWithBlackBorder = false,
   });
 
-  final HomeCubit blocWatch;
-  final HomeCubit blocRead;
+  final double size;
+  final bool isWithBlackBorder;
+  final String logoPath;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: 16,
-      ),
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (context, index) => InkWell(
-        highlightColor: Colors.transparent,
-        onTap: () {
-          if (blocWatch.selectedBrandIndex != (index)) {
-            blocRead.changeSelectedBrandIndex(index);
-            blocRead.getCarsBasedOnBrand(
-              brandId: blocRead.carBrands[index].id,
-            );
-          } else {
-            blocRead.changeSelectedBrandIndex(-1);
-            blocRead.getCarsBasedOnBrand();
-          }
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: blocWatch.selectedBrandIndex == index
-                      ? AppColors.headerBlack
-                      : AppColors.headerBlack.withOpacity(0.1),
-                ),
-              ),
-              child: Center(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      "${FlavorConfig.instance.filesBaseUrl}${blocRead.carBrands[index].path}",
-                  fit: BoxFit.contain,
-                  placeholder: (context, url) => const SizedBox(),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                blocRead.carBrands[index].brandName,
-                style: AppFonts.sfPro14Black400.copyWith(
-                  fontWeight: blocWatch.selectedBrandIndex == index
-                      ? FontWeight.w500
-                      : FontWeight.w400,
-                ),
-              ),
-            ),
-          ],
+    return Container(
+      width: size,
+      height: size,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: isWithBlackBorder
+              ? AppColors.headerBlack
+              : AppColors.headerBlack.withOpacity(0.1),
         ),
       ),
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 16,
+      child: Center(
+        child: CachedNetworkImage(
+          imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
+          fit: BoxFit.contain,
+          placeholder: (context, url) => const SizedBox(),
+        ),
       ),
-      itemCount: blocWatch.carBrands.length,
     );
   }
 }

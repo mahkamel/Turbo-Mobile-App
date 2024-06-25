@@ -77,7 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               child: Text(
                 "${onboardingData[_currentIndex].title} Turbo",
-                style: AppFonts.sfPro28White600,
+                style: AppFonts.inter28White600,
               ),
             ),
             Padding(
@@ -88,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Text(
                 onboardingData[_currentIndex].subtitle,
                 textAlign: TextAlign.left,
-                style: AppFonts.sfPro18SubTextGrey400,
+                style: AppFonts.inter18SubTextGrey400,
               ),
             ),
             const Spacer(),
@@ -125,7 +125,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onPressed: _next,
                   child: Text(
                     _currentIndex == 2 ? "Get Started" : 'Continue',
-                    style: AppFonts.sfPro18SubTextGrey400.copyWith(
+                    style: AppFonts.inter18SubTextGrey400.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
                         color: AppColors.primaryRed),
