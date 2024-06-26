@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
+import 'package:turbo/core/widgets/custom_shimmer.dart';
 import 'package:turbo/flavors.dart';
 
 import '../../../../core/theming/colors.dart';
@@ -24,10 +25,9 @@ class BrandsList extends StatelessWidget {
         builder: (context, state) {
           var blocWatch = context.watch<HomeCubit>();
           var blocRead = context.read<HomeCubit>();
-          return state is GetCarsBrandsLoadingState
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
+          return state is GetCarsBrandsLoadingState ||
+                  blocWatch.isFirstGettingCarBrand
+              ? const BrandsShimmer()
               : blocWatch.carBrands.isEmpty
                   ? const SizedBox()
                   : ListView.separated(
@@ -77,6 +77,57 @@ class BrandsList extends StatelessWidget {
                       itemCount: blocWatch.carBrands.length,
                     );
         },
+      ),
+    );
+  }
+}
+
+class BrandsShimmer extends StatelessWidget {
+  const BrandsShimmer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      itemCount: 6,
+      separatorBuilder: (context, index) => const SizedBox(
+        width: 16,
+      ),
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) => CustomShimmer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.divider),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Container(
+                  height: 25,
+                  width: 25,
+                  decoration: const BoxDecoration(
+                    color: AppColors.divider,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Container(
+              width: 50,
+              height: 8,
+              color: AppColors.divider,
+            ),
+          ],
+        ),
       ),
     );
   }

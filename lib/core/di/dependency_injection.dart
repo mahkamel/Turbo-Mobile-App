@@ -6,7 +6,9 @@ import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
 import 'package:turbo/core/services/networking/api_services/car_services.dart';
+import 'package:turbo/core/services/networking/api_services/cities_districts_services.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
+import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
 import '../services/networking/repositories/auth_repository.dart';
@@ -15,20 +17,24 @@ final getIt = GetIt.instance;
 
 Future<void> setupGetIt() async {
   //Services
-  getIt.registerLazySingleton<AuthServices>(
-    () => AuthServices(),
-  );
-  getIt.registerLazySingleton<CarServices>(
-    () => CarServices(),
-  );
+  getIt.registerLazySingleton<AuthServices>(() => AuthServices());
+  getIt.registerLazySingleton<CarServices>(() => CarServices());
+  getIt.registerLazySingleton<CitiesDistrictsServices>(
+      () => CitiesDistrictsServices());
 
   //Repositories
   getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepository(getIt<AuthServices>()),
+    () => AuthRepository(getIt<AuthServices>(),
+
+    ),
   );
 
   getIt.registerLazySingleton<CarRepository>(
     () => CarRepository(getIt<CarServices>()),
+  );
+
+  getIt.registerLazySingleton<CitiesDistrictsRepository>(
+    () => CitiesDistrictsRepository(getIt<CitiesDistrictsServices>()),
   );
 
   //Blocs
@@ -42,6 +48,7 @@ Future<void> setupGetIt() async {
     () => HomeCubit(
       getIt<AuthRepository>(),
       getIt<CarRepository>(),
+      getIt<CitiesDistrictsRepository>(),
     ),
   );
   getIt.registerFactory<CarDetailsCubit>(

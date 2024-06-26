@@ -27,7 +27,6 @@ class SearchCubit extends Cubit<SearchState> {
   bool isFilteredRes = false;
 
   init() {
-    print("ccccc ${_carRepository.filteredCars.length}");
     filteredCars = _carRepository.filteredCars;
     if (_carRepository.filteredCars.isNotEmpty) {
       isFilteredRes = true;

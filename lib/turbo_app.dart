@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/localization/cubit/localization_cubit.dart';
+import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 import 'package:turbo/models/customer_model.dart';
 
 import 'blocs/localization/localization/app_localization_setup.dart';
@@ -29,12 +30,16 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(
-          value: getIt<AuthRepository>()..setCustomerData(customer),
+          value: getIt<AuthRepository>()
+            ..setCustomerData(customer),
         ),
         RepositoryProvider.value(
           value: getIt<CarRepository>()
             ..getCarBrands()
             ..getCarTypes(),
+        ),
+        RepositoryProvider.value(
+          value: getIt<CitiesDistrictsRepository>()..getCities(),
         ),
       ],
       child: BlocProvider<LocalizationCubit>(
