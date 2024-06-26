@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:turbo/core/di/dependency_injection.dart';
 import 'package:turbo/core/helpers/functions.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:turbo/models/customer_model.dart';
 import 'package:turbo/turbo_app.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,14 +40,20 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     ),
   ]);
+
   NotificationServices().onInit();
   await Future.delayed(const Duration(seconds: 1));
-  if (Platform.isIOS) {
-    if (await FirebaseMessaging.instance.getAPNSToken() != null) {
+  if (kIsWeb) {
+    // AppConstants.fcmToken = await FirebaseMessaging.instance.getToken(vapidKey: "BO4fsO8a7cQQLhN5dC0mTY3FsXI7JrFZstKiJqMqY4y4aR6ctsIc_4-rUBCdpb1EHAPTqyA2G_3sdUpevG4pZ_Q") ?? "";
+  } else {
+    if (Platform.isIOS) {
+      if (await FirebaseMessaging.instance.getAPNSToken() != null) {
+        AppConstants.fcmToken =
+            await FirebaseMessaging.instance.getToken() ?? "";
+      }
+    } else {
       AppConstants.fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
     }
-  } else {
-    AppConstants.fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
   }
   debugPrint("tokeennn: ${AppConstants.fcmToken}");
   FirebaseMessaging.instance.setAutoInitEnabled(true);

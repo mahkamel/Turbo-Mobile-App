@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
+import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/theming/fonts.dart';
 import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/presentation/layout/car_details/widgets/car_details_app_bar.dart';
@@ -65,7 +66,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "Car info",
+                                              "carInfo".getLocale(),
                                               style: AppFonts
                                                   .inter18HeaderBlack700
                                                   .copyWith(
@@ -76,7 +77,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               height: 12,
                                             ),
                                             CarInfoItem(
-                                              title: "Model",
+                                              title: "model".getLocale(),
                                               info: blocRead
                                                   .carDetailsData.carModel,
                                               iconPath:
@@ -87,7 +88,7 @@ class CardDetailsScreen extends StatelessWidget {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 4.0),
                                               child: CarInfoItem(
-                                                title: "Year",
+                                                title: "year".getLocale(),
                                                 info: blocRead
                                                     .carDetailsData.carYear,
                                                 iconPath:
@@ -95,7 +96,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             CarInfoItem(
-                                              title: "Plate Number",
+                                              title: "plateNumber".getLocale(),
                                               info: blocRead.carDetailsData
                                                   .carPlateNumber,
                                               iconPath:
@@ -106,7 +107,7 @@ class CardDetailsScreen extends StatelessWidget {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 4.0),
                                               child: CarInfoItem(
-                                                title: "Engine",
+                                                title: "engine".getLocale(),
                                                 info: blocRead
                                                     .carDetailsData.carEngine,
                                                 iconPath:
@@ -114,9 +115,10 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             CarInfoItem(
-                                              title: "Seats",
+                                              title: "seats".getLocale(),
                                               info: blocRead
-                                                  .carDetailsData.carPassengerNo.toString(),
+                                                  .carDetailsData.carPassengerNo
+                                                  .toString(),
                                               iconPath:
                                                   "assets/images/icons/car_details_icons/car_seat_icon.png",
                                             ),
@@ -126,7 +128,7 @@ class CardDetailsScreen extends StatelessWidget {
                                                 bottom: 16.0,
                                               ),
                                               child: CarInfoItem(
-                                                title: "Limited KiloMeters",
+                                                title: "limitedKm".getLocale(),
                                                 info: blocRead.carDetailsData
                                                     .carLimitedKiloMeters
                                                     .toString(),
@@ -135,7 +137,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             Text(
-                                              "Price",
+                                              "prices".getLocale(),
                                               style: AppFonts
                                                   .inter18HeaderBlack700
                                                   .copyWith(
@@ -146,7 +148,9 @@ class CardDetailsScreen extends StatelessWidget {
                                               height: 8,
                                             ),
                                             CarPricesRow(blocWatch: blocWatch),
-                                            const SizedBox(height: 90,),
+                                            const SizedBox(
+                                              height: 90,
+                                            ),
                                           ],
                                         ),
                                       );
@@ -168,7 +172,7 @@ class CardDetailsScreen extends StatelessWidget {
                   color: AppColors.primaryBG,
                   textColor: AppColors.primaryRed,
                   function: () {},
-                  text: "Book Now",
+                  text: "bookNow".getLocale(),
                 ),
               ),
             ],

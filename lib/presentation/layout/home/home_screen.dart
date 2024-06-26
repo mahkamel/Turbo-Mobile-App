@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/presentation/layout/home/widgets/car_brands_list.dart';
 import 'package:turbo/presentation/layout/home/widgets/cars_by_brands_list.dart';
 import 'package:turbo/presentation/layout/home/widgets/home_header.dart';
@@ -28,7 +29,7 @@ class HomeScreen extends StatelessWidget {
             start: 16,
           ),
           child: Text(
-            "Brands",
+            "brands".getLocale(),
             style: AppFonts.inter18HeaderBlack700,
           ),
         ),
@@ -40,7 +41,7 @@ class HomeScreen extends StatelessWidget {
             start: 16,
           ),
           child: Text(
-            "Recommended Cars",
+            "recommendedCars".getLocale(),
             style: AppFonts.inter18HeaderBlack700,
           ),
         ),

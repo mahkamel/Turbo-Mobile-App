@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../../blocs/search/search_cubit.dart';
 import '../../../../../core/theming/colors.dart';
@@ -83,13 +84,13 @@ class CarBrandFilterHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Car Brand",
+          "carBrand".getLocale(),
           style: AppFonts.inter18HeaderBlack700,
         ),
         DefaultButton(
           height: 30,
           width: 72,
-          text: "Browse",
+          text: "browse".getLocale(),
           fontSize: 12,
           fontWeight: FontWeight.w700,
           function: () {

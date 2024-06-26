@@ -9,6 +9,9 @@ class AppLocalizationsSetup {
     Locale('ar' , 'SA'),
   ];
 
+  static bool isLoadAr = false;
+
+
   static const Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates = [
     AppLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
@@ -21,6 +24,6 @@ class AppLocalizationsSetup {
         return supportedLocale;
       }
     }
-    return supportedLocales.first;
+    return isLoadAr ? supportedLocales.last:supportedLocales.first;
   }
 }
