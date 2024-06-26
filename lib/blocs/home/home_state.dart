@@ -14,5 +14,10 @@ class HomeState with _$HomeState {
 
   const factory HomeState.changeSelectedBrandIndex(final int index) = ChangeSelectedBrandIndexState;
 
+  const factory HomeState.getCitiesLoading() = GetCitiesLoadingState;
+  const factory HomeState.getCitiesSuccess() = GetCitiesSuccessState;
+  const factory HomeState.getCitiesError(final String errMsg) = GetCitiesErrorState;
+
+  const factory HomeState.changeSelectedCityIndex(final int index) = ChangeSelectedCityIndexState;
 
 }

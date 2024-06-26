@@ -26,7 +26,9 @@ class LayoutScreen extends StatelessWidget {
       BlocProvider<HomeCubit>(
         create: (context) => getIt<HomeCubit>()
           ..getCarsBasedOnBrand()
-          ..getCarsBrands(),
+          ..getCarsBrands()
+          ..getCities()
+          ..getCachedSelectedCityIndex(),
         child: const HomeScreen(),
       ),
       BlocProvider<SearchCubit>(

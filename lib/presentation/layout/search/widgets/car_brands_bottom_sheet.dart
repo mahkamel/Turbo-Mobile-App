@@ -25,6 +25,9 @@ class CarBrandsBottomSheet extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         color: AppColors.white,
       ),
+      constraints: const BoxConstraints(
+        maxHeight: 900,
+      ),
       padding: const EdgeInsetsDirectional.only(
         start: 16,
         top: 16,

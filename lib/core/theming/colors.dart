@@ -29,4 +29,7 @@ class AppColors {
   static const Color divider = Color(0xFFECECEC);
   static const Color carDetailsGrey = Color(0xFFF2F2F2);
   static const Color borderGrey = Color(0xFFB0AAAA);
+
+  static const Color shimmer = Color(0xffD9D9D9);
+
 }

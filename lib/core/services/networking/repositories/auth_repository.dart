@@ -2,13 +2,17 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:turbo/core/helpers/constants.dart';
+import 'package:turbo/core/services/local/cache_helper.dart';
 import 'package:turbo/core/services/local/storage_service.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
 import 'package:turbo/models/customer_model.dart';
 
 class AuthRepository {
   final AuthServices _authServices;
-  AuthRepository(this._authServices);
+  int selectedCityIndex = 0;
+  AuthRepository(
+    this._authServices,
+  );
 
   CustomerModel customer = CustomerModel.empty();
 
@@ -60,5 +64,10 @@ class AuthRepository {
     } catch (e) {
       return Left(e.toString());
     }
+  }
+
+
+  void setSelectedCityIdToCache(String id) {
+    CacheHelper.setData(key: "SelectedCityId", value: id);
   }
 }

@@ -1,5 +1,3 @@
-import 'package:turbo/core/helpers/extentions.dart';
-
 class Loc {
   static const String welcomeTo = "welcomeTo";
   static const String welcomeToSubText = "welcomeToSubText";
@@ -9,5 +7,4 @@ class Loc {
   static const String enjoyTheRideSubText = "enjoyTheRideSubText";
   static const String getStarted = "getStarted";
   static const String continueButton = "continue";
-  // static  String carInfo = "carInfo".getLocale();
 }

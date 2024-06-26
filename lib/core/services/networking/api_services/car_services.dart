@@ -1,11 +1,5 @@
-import 'dart:convert';
-
-import 'package:bson/bson.dart';
 import 'package:dio/dio.dart';
-// import 'package:hex/hex.dart';
-// import 'package:mongo_dart/mongo_dart.dart';
-// import 'package:objectid/objectid.dart' hide ObjectId;
-// import 'package:string_to_hex/string_to_hex.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../dio_helper.dart';
 
@@ -65,48 +59,6 @@ class CarServices {
     try {
       Map<String, dynamic> filterBody = {};
 
-      // if (carYears.isNotEmpty) {
-      //   if (carYears.length == 1) {
-      //     filterBody.addAll({
-      //       "carYear": carYears[0],
-      //     });
-      //   } else {
-      //     filterBody.addAll({
-      //       "carYear": {
-      //         "\$in": carYears,
-      //       }
-      //     });
-      //   }
-      // }
-
-      // if (carTypes.isNotEmpty) {
-      //   if (carTypes.length == 1) {
-      //     try {
-      //
-      //       // ObjectId objec = ObjectId.fromHexString(carTypes[0]);
-      //       // String encodedId = objec.toHexString(); // Get the string representation
-      //
-      //       // Map<String, dynamic> ob = {"objectId": objec};
-      //       print("0--------- ${carTypes[0]}");
-      //       // print("xxxxxxxx ${objec.runtimeType} -- ${objec}");
-      //       filterBody.add({
-      //         "carType": ca,
-      //       });
-      //     } catch (e) {
-      //       print("sssdddddss $e");
-      //     }
-      //   } else {
-      //     List<ObjectId> objectss = [];
-      //     for (var i in carTypes) {
-      //       objectss.add(ObjectId.fromHexString(i));
-      //     }
-      //     filterBody.add({
-      //       "carType": {
-      //         "\$in": objectss,
-      //       }
-      //     });
-      //   }
-      // }
       if (carYears.isNotEmpty) {
         filterBody.addAll({
           "carYear": carYears,
@@ -121,18 +73,6 @@ class CarServices {
         filterBody.addAll({
           "carBrand": carBrands,
         });
-        // if (carBrands.length == 1) {
-        //   ObjectId brandObject = ObjectId.fromHexString(carBrands[0]);
-        //   filterBody.add({
-        //     "carBrand": brandObject,
-        //   });
-        // } else {
-        //   filterBody.add({
-        //     "carBrand": {
-        //       "\$in": carBrands,
-        //     }
-        //   });
-        // }
       }
       if (isWithUnlimited) {
         filterBody.addAll({
@@ -154,10 +94,9 @@ class CarServices {
           "car": filterBody,
         },
       );
-      print("ssss ${response}");
       return response;
     } catch (e) {
-      print("ssssssss $e");
+      debugPrint("ssssssss $e");
       throw e.toString();
     }
   }
