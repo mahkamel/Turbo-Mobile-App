@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/blocs/login/login_cubit.dart';
+import 'package:turbo/blocs/payment/payment_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
-import 'package:turbo/presentation/auth/signup_screen/signup_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
+import '../../presentation/auth/requests/payment/payment_screen.dart';
+import '../../presentation/auth/requests/signup_screen.dart';
 import '../../presentation/layout/layout_screen.dart';
 import '../../presentation/onboarding/onboarding_screen.dart';
 import '../di/dependency_injection.dart';
@@ -45,6 +47,11 @@ class AppRouter {
           child: CardDetailsScreen(
             car: (arguments as CardDetailsScreenArguments).car,
           ),
+        ),
+    Routes.paymentScreen: (context, arguments) => BlocProvider<PaymentCubit>(
+          create: (context) => getIt<PaymentCubit>(),
+          //todo:ddd
+          child: PaymentScreen(value: 2000),
         ),
   };
 

@@ -6,10 +6,15 @@ class AppColors {
   static const Color primaryGreen = Color(0xFF25B093);
   static const Color black = Color(0xFF000000);
   static const Color black950 = Color(0xFF071013);
+  static const Color blackBorder = Color(0xFF121212);
   static const Color black800 = Color(0xFF333333);
   static const Color headerBlack = Color(0xFF131313);
   static const Color textBlack = Color(0xFF071013);
   static const Color removeGrey = Color(0xFFBAC6D5);
+  static const Color bottomSheetCloseGrey = Color(0xFFC8D1E1);
+  static const Color bottomSheetGrey = Color(0xFF474A56);
+  static const Color toggleBlack = Color(0xFF2E2E2E);
+  static const Color toggleGrey = Color(0xFFEEEEEE);
 
   static const Color grey = Color(0xFF535559);
   static const Color grey700 = Color(0xFF4D4D4D);
@@ -31,6 +36,8 @@ class AppColors {
   static const Color divider = Color(0xFFECECEC);
   static const Color carDetailsGrey = Color(0xFFF2F2F2);
   static const Color borderGrey = Color(0xFFB0AAAA);
+  static const Color bottomSheetDarkerGrey = Color(0xFF8A8A8A);
+  static const Color savedCardsBgColor = Color(0xFFF8F8FA);
 
   static const Color shimmer = Color(0xffD9D9D9);
 

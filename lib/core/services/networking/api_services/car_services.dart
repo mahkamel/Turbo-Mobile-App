@@ -113,7 +113,7 @@ class CarServices {
     required String requestFromDate,
     required String requestToDate,
     required String requestCity,
-    required String customerId,
+    required String userToken,
     required num requestPrice,
     required String requestToken,
     required List<File> files,
@@ -129,7 +129,6 @@ class CarServices {
           "requestFrom": requestFromDate,
           "requestTo": requestToDate,
           "requestCity": requestCity,
-          "customerId": customerId,
           "requestPrice": requestPrice,
           "requestToken": requestToken,
           "requestStatus": "pending",
@@ -156,6 +155,7 @@ class CarServices {
       Response response = await DioHelper.postData(
         endpoint: 'car/addCarRequest',
         formData: carRequestForm,
+        userToken: userToken ,
         body: {},
       );
       return response;

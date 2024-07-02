@@ -8,7 +8,6 @@ import '../../../../core/widgets/default_buttons.dart';
 import 'filter/car_brand_filter.dart';
 import 'filter/car_types_filter.dart';
 import 'filter/car_year_filter.dart';
-import 'filter/unlimited_km_checkbox.dart';
 
 class FilterCars extends StatelessWidget {
   const FilterCars({
@@ -38,14 +37,14 @@ class FilterCars extends StatelessWidget {
         const SizedBox(
           height: 24,
         ),
-        Text(
-          "Additional Services",
-          style: AppFonts.inter18HeaderBlack700,
-        ),
-        const SizedBox(
-          height: 4,
-        ),
-        const UnlimitedKMCheckbox(),
+        // Text(
+        //   "Additional Services",
+        //   style: AppFonts.inter18HeaderBlack700,
+        // ),
+        // const SizedBox(
+        //   height: 4,
+        // ),
+        // const UnlimitedKMCheckbox(),
         const Spacer(),
         SizedBox(
           height: 48,
@@ -96,7 +95,3 @@ class FilterCars extends StatelessWidget {
     );
   }
 }
-
-
-
-

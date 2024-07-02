@@ -7,6 +7,8 @@ import 'package:turbo/core/services/local/storage_service.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
 import 'package:turbo/models/customer_model.dart';
 
+import '../../../../models/saved_card.dart';
+
 class AuthRepository {
   final AuthServices _authServices;
   int selectedCityIndex = 0;
@@ -15,6 +17,7 @@ class AuthRepository {
   );
 
   CustomerModel customer = CustomerModel.empty();
+  List<SavedCard> savedPaymentCards = [];
 
   void setCustomerData(CustomerModel? cachedCustomer) {
     if (cachedCustomer != null) {
