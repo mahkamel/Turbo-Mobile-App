@@ -1,6 +1,7 @@
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../blocs/signup/signup_cubit.dart';
 import '../../../../core/theming/colors.dart';
@@ -43,8 +44,8 @@ class SignupStepper extends StatelessWidget {
                     child: const Icon(Icons.info_outline_rounded),
                   ),
                 ),
-                customTitle: const Text(
-                  'Your Info',
+                customTitle: Text(
+                  'yourInfo'.getLocale(),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -56,8 +57,8 @@ class SignupStepper extends StatelessWidget {
                     child: const Icon(Icons.document_scanner_rounded),
                   ),
                 ),
-                customTitle: const Text(
-                  'Required Documents',
+                customTitle:  Text(
+                  'completeBooking'.getLocale(),
                   textAlign: TextAlign.center,
                 ),
               ),

@@ -81,4 +81,48 @@ class SignupState with _$SignupState {
   const factory SignupState.submitCustomerInfoFailed({
     required String errMsg,
   }) = SubmitCustomerInfoErrorState;
+
+  const factory SignupState.changeSelectedCityIndex({
+    required int index,
+  }) = ChangeSelectedCityIndexState;
+
+  const factory SignupState.changeSelectedDistrictIndex({
+    required int index,
+  }) = ChangeSelectedDistrictIndexState;
+
+  const factory SignupState.getDistrictByCityLoading({
+    required final String id,
+  }) = GetDistrictByCityLoadingState;
+  const factory SignupState.getDistrictByCitySuccess({
+    required final List<District> districts,
+    required final String cityId,
+  }) = GetDistrictByCitySuccessState;
+  const factory SignupState.getDistrictByCityError(final String errMsg) =
+      GetDistrictByCityErrorState;
+
+  const factory SignupState.changeIsWithPrivateDriverValue({
+    required final bool isWithPrivateDriver,
+  }) = ChangeIsWithPrivateDriverValueState;
+
+  const factory SignupState.calculatePrice({
+    required final num price,
+  }) = CalculatePriceState;
+
+  const factory SignupState.confirmBookingLoading() =
+      ConfirmBookingLoadingState;
+  const factory SignupState.confirmBookingSuccess() =
+      ConfirmBookingSuccessState;
+  const factory SignupState.confirmBookingFailed({
+    required String errMsg,
+  }) = ConfirmBookingErrorState;
+
+  const factory SignupState.checkLocation({
+    required String location,
+    required TextFieldValidation validation,
+  }) = CheckLocationValidationState;
+
+  const factory SignupState.changeSelectedDatesValue({
+    required DateTime? pickUp,
+    required DateTime? delivery,
+  }) = ChangeSelectedDatesValueState;
 }

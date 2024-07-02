@@ -59,6 +59,7 @@ void main() async {
   FirebaseMessaging.instance.setAutoInitEnabled(true);
 
   final CustomerModel? cachedCustomer = await getCustomerData();
+  debugPrint("useeerTokeneee: ${cachedCustomer?.token}");
 
   Bloc.observer = MyBlocObserver();
   final bool isFirstTime =

@@ -1,0 +1,451 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:turbo/core/widgets/widget_with_header.dart';
+
+import '../../../../core/helpers/constants.dart';
+import '../../../../core/theming/colors.dart';
+import '../../../../core/theming/fonts.dart';
+import '../../../../core/widgets/container_with_shadow.dart';
+import '../../../../core/widgets/custom_dropdown.dart';
+
+class SelectFile extends StatefulWidget {
+  final String header;
+  final void Function(
+    List<PlatformFile?> files,
+    bool isSingleFile,
+  ) onFileSelected;
+  final void Function() onPrefixClicked;
+  final GlobalKey<CustomDropdownState>? citiesKey;
+  final GlobalKey<CustomDropdownState>? districtsKey;
+  final bool isWarningToReplace;
+  final bool isFromMyApplication;
+  final bool isFromPending;
+  final EdgeInsetsDirectional? padding;
+  final double? marginBottom;
+  final File? file;
+  final List<PlatformFile>? files;
+  final List<String> paths;
+  final bool isShowDeleteFile;
+  final String prefixImgPath;
+
+  const SelectFile({
+    super.key,
+    required this.header,
+    required this.onFileSelected,
+    required this.onPrefixClicked,
+    this.citiesKey,
+    this.districtsKey,
+    this.isWarningToReplace = false,
+    this.isFromMyApplication = false,
+    this.isFromPending = false,
+    this.padding,
+    this.marginBottom,
+    this.file,
+    this.paths = const [],
+    this.isShowDeleteFile = false,
+    this.files,
+    this.prefixImgPath = "assets/images/icons/pdf_file.png",
+  });
+
+  @override
+  State<SelectFile> createState() => _SelectFileState();
+}
+
+class _SelectFileState extends State<SelectFile> {
+  File? _file;
+  List<PlatformFile> files = [];
+  String filesName = "";
+
+  @override
+  void initState() {
+    if (widget.file != null) {
+      setState(() {
+        _file = widget.file;
+      });
+    }
+    if (widget.files != null) {
+      setState(() {
+        files = widget.files!;
+      });
+    }
+    if (widget.paths.isNotEmpty) {
+      if (widget.paths.length > 1) {
+        filesName = "${widget.header} (${widget.paths.length})";
+      } else {
+        filesName = widget.header;
+      }
+    }
+    super.initState();
+  }
+
+  Future<void> pickFile() async {
+    if (widget.citiesKey != null) {
+      if (widget.citiesKey!.currentState != null) {
+        if (widget.citiesKey!.currentState!.isOpen) {
+          widget.citiesKey!.currentState!.closeBottomSheet();
+        }
+      }
+    }
+    if (widget.districtsKey != null) {
+      if (widget.districtsKey!.currentState != null) {
+        if (widget.districtsKey!.currentState!.isOpen) {
+          widget.districtsKey!.currentState!.closeBottomSheet();
+        }
+      }
+    }
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'png', 'pdf'],
+    );
+
+    if (result != null) {
+      setState(() {
+        _file = File(result.files.first.path!);
+        files = result.files;
+        if (files.length > 1) {
+          filesName = "${widget.header} (${files.length})";
+        } else {
+          filesName = widget.header;
+        }
+      });
+      widget.onFileSelected(result.files, result.isSinglePick);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WidgetWithHeader(
+      key: Key(widget.header),
+      padding: widget.padding ??
+          const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
+      header: widget.header,
+      widget: InkWell(
+        onTap: () {
+          if ((widget.isFromMyApplication ||
+              (widget.isFromPending && widget.paths.isNotEmpty))) {
+            widget.onPrefixClicked();
+            if (widget.paths.isNotEmpty && !widget.isWarningToReplace) {
+              showAdaptiveDialog(
+                context: context,
+                builder: (context) {
+                  return DisplayDocumentsDialog(
+                    paths: widget.paths,
+                  );
+                },
+              );
+            }
+          } else {
+            pickFile();
+          }
+        },
+        child: DefaultContainerWithInnerShadow(
+          borderColor: widget.isWarningToReplace
+              ? AppColors.errorRed
+              : AppColors.greyBorder,
+          height: 74,
+          child: (_file != null || widget.paths.isNotEmpty)
+              ? Row(
+                  children: [
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Image.asset(
+                      widget.prefixImgPath,
+                      height: widget.prefixImgPath.contains("national_id")
+                          ? 52
+                          : 48,
+                      width: widget.prefixImgPath.contains("national_id")
+                          ? 52
+                          : 48,
+                    ),
+                    SizedBox(
+                      width: widget.prefixImgPath.contains("national_id")
+                          ? 23
+                          : 27,
+                    ),
+                    Expanded(
+                      child: Text(
+                        filesName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFonts.inter15Black400,
+                      ),
+                    ),
+                    IconButton(
+                      padding: EdgeInsets.only(
+                          right: ((widget.isFromMyApplication ||
+                                          widget.isFromPending) &&
+                                      widget.isWarningToReplace) ||
+                                  (widget.isFromMyApplication ||
+                                      (widget.isFromPending &&
+                                          widget.paths.isNotEmpty))
+                              ? 8
+                              : 0),
+                      onPressed: () async {
+                        if (widget.districtsKey != null) {
+                          if (widget.districtsKey!.currentState != null) {
+                            if (widget.districtsKey!.currentState!.isOpen) {
+                              widget.districtsKey!.currentState!
+                                  .closeBottomSheet();
+                            }
+                          }
+                        }
+                        if (widget.citiesKey != null) {
+                          if (widget.citiesKey!.currentState != null) {
+                            if (widget.citiesKey!.currentState!.isOpen) {
+                              widget.citiesKey!.currentState!
+                                  .closeBottomSheet();
+                            }
+                          }
+                        }
+                        if (!(widget.isFromMyApplication ||
+                                (widget.isFromPending &&
+                                    widget.paths.isNotEmpty)) ||
+                            (widget.isShowDeleteFile)) {
+                          setState(() {
+                            _file = null;
+                            files = [];
+                            filesName = "";
+                          });
+                          widget.onPrefixClicked();
+                        } else if (widget.isWarningToReplace) {
+                          widget.onPrefixClicked();
+                          pickFile();
+                        } else if ((widget.isFromMyApplication ||
+                            (widget.isFromPending &&
+                                widget.paths.isNotEmpty))) {
+                          widget.onPrefixClicked();
+                          if (widget.paths.isNotEmpty &&
+                              !widget.isWarningToReplace) {
+                            showAdaptiveDialog(
+                              context: context,
+                              builder: (context) {
+                                return DisplayDocumentsDialog(
+                                  paths: widget.paths,
+                                );
+                              },
+                            );
+                          }
+                        } else {
+                          widget.onPrefixClicked();
+                        }
+                      },
+                      icon: (widget.isFromMyApplication ||
+                                  widget.isFromPending) &&
+                              widget.isWarningToReplace
+                          ? Text(
+                              "Replace",
+                              style: AppFonts.inter14TextBlack500,
+                            )
+                          : (widget.isFromMyApplication ||
+                                  (widget.isFromPending &&
+                                          widget.paths.isNotEmpty) &&
+                                      !widget.isShowDeleteFile)
+                              ? Text(
+                                  "View",
+                                  style: AppFonts.inter14TextBlack500,
+                                )
+                              : Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.removeGrey,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.clear,
+                                    color: AppColors.removeGrey,
+                                    size: 14,
+                                  ),
+                                ),
+                    ),
+                  ],
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      SvgPicture.asset(
+                        "assets/images/icons/picture_icon.svg",
+                      ),
+                      Text(
+                        "Select File",
+                        style: AppFonts.inter15Black400,
+                      ),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+}
+
+class DisplayDocumentsDialog extends StatelessWidget {
+  const DisplayDocumentsDialog({
+    super.key,
+    required this.paths,
+  });
+
+  final List<String> paths;
+  @override
+  Widget build(BuildContext context) {
+    ScrollController scrollController = ScrollController();
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => Navigator.pop(context),
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 20,
+              ),
+              child: InkWell(
+                onTap: () {},
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  width: AppConstants.screenWidth(context) - 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (paths.length == 1 &&
+                          (paths[0].toLowerCase().endsWith(".jpg") ||
+                              paths[0].toLowerCase().endsWith(".jpeg") ||
+                              paths[0].toLowerCase().endsWith(".png")))
+                        Image.network(
+                          "${dotenv.env['FILES_BASE_URL']!}${paths[0]}",
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress != null) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              return child;
+                            }
+                          },
+                        ),
+                      if (paths.length == 1 &&
+                          paths[0].toLowerCase().endsWith(".pdf"))
+                        Expanded(
+                          child: const PDF(
+                            swipeHorizontal: true,
+                            enableSwipe: true,
+                            fitPolicy: FitPolicy.BOTH,
+                          ).cachedFromUrl(
+                            '${dotenv.env['FILES_BASE_URL']!}${paths[0]}',
+                            placeholder: (progress) =>
+                                Center(child: Text('$progress %')),
+                            errorWidget: (error) {
+                              return Center(child: Text(error.toString()));
+                            },
+                          ),
+                        ),
+                      if (paths.length > 1)
+                        Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(
+                                Icons.close,
+                              ),
+                            )),
+                      if (paths.length > 1)
+                        Expanded(
+                          child: Scrollbar(
+                            controller: scrollController,
+                            trackVisibility: true,
+                            thumbVisibility: true,
+                            interactive: true,
+                            thickness: 6,
+                            child: ListView.separated(
+                              controller: scrollController,
+                              itemCount: paths.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                height: 16,
+                              ),
+                              itemBuilder: (context, index) {
+                                if (paths[index]
+                                    .toLowerCase()
+                                    .endsWith(".pdf")) {
+                                  return SizedBox(
+                                    height: 350,
+                                    child: const PDF(
+                                      swipeHorizontal: true,
+                                      enableSwipe: true,
+                                      fitPolicy: FitPolicy.BOTH,
+                                    ).cachedFromUrl(
+                                      '${dotenv.env['FILES_BASE_URL']!}${paths[0]}',
+                                      placeholder: (progress) =>
+                                          Center(child: Text('$progress %')),
+                                      errorWidget: (error) {
+                                        return Center(
+                                            child: Text(error.toString()));
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  return Image.network(
+                                    "${dotenv.env['FILES_BASE_URL']!}${paths[index]}",
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress != null) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      } else {
+                                        return child;
+                                      }
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Future<List<File>> convertPlatformFileList(
+    List<PlatformFile?> platformFiles) async {
+  List<File> files = [];
+  for (PlatformFile? platformFile in platformFiles) {
+    if (platformFile != null) {
+      File file = File(platformFile.path!);
+      files.add(file);
+    }
+  }
+  return files;
+}

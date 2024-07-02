@@ -203,6 +203,7 @@ class AppFonts {
           fontWeight: FontWeight.w400,
           color: AppColors.black,
         );
+
   static TextStyle inter15buttonGreyBorder400 =
       navigatorKey.currentContext != null &&
               AppConstants.screenWidth(navigatorKey.currentContext!) < 600
@@ -217,6 +218,21 @@ class AppFonts {
               fontWeight: FontWeight.w400,
               color: AppColors.buttonGreyBorder,
             );
+
+  static TextStyle inter14TextBlack500 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 14.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w500,
+          color: AppColors.textBlack,
+        )
+      : const TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: AppColors.textBlack,
+        );
 
   static TextStyle inter14Grey400 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600

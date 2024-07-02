@@ -29,11 +29,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider.value(
-          value: getIt<AuthRepository>()
-            ..setCustomerData(customer),
+        RepositoryProvider<AuthRepository>.value(
+          value: getIt<AuthRepository>()..setCustomerData(customer),
         ),
-        RepositoryProvider.value(
+        RepositoryProvider<CarRepository>.value(
           value: getIt<CarRepository>()
             ..getCarBrands()
             ..getCarTypes(),

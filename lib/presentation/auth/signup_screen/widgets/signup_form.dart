@@ -153,7 +153,9 @@ class InfoStepForm extends StatelessWidget {
                   header: "Are You a Saudi Arabian Citizen?",
                   widget: CustomDropdown<int>(
                     onTap: () {},
-                    border: Border.all(          color: AppColors.black.withOpacity(0.5),),
+                    border: Border.all(
+                      color: AppColors.black.withOpacity(0.5),
+                    ),
                     paddingLeft: 0,
                     key: clientTypeKey,
                     paddingRight: 0,

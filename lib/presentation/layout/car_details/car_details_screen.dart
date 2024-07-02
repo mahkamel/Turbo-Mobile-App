@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
+import 'package:turbo/core/routing/routes.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/theming/fonts.dart';
 import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/presentation/layout/car_details/widgets/car_details_app_bar.dart';
 import 'package:turbo/presentation/layout/car_details/widgets/car_details_widgets.dart';
 
+import '../../../core/routing/screens_arguments.dart';
 import '../../../core/theming/colors.dart';
 import '../../../core/widgets/back_button_with_bg.dart';
 import '../../../models/get_cars_by_brands.dart';
@@ -147,7 +150,7 @@ class CardDetailsScreen extends StatelessWidget {
                                             const SizedBox(
                                               height: 8,
                                             ),
-                                            CarPricesRow(blocWatch: blocWatch),
+                                            CarPricesRow(blocRead: blocRead),
                                             const SizedBox(
                                               height: 90,
                                             ),
@@ -162,19 +165,152 @@ class CardDetailsScreen extends StatelessWidget {
                 ],
               ),
               const BackButtonWithBG(),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: DefaultButton(
-                  marginTop: 20,
-                  marginBottom: 20,
-                  marginRight: 16,
-                  marginLeft: 16,
-                  color: AppColors.primaryBG,
-                  textColor: AppColors.primaryRed,
-                  function: () {},
-                  text: "bookNow".getLocale(),
-                ),
-              ),
+              BlocBuilder<CarDetailsCubit, CarDetailsState>(
+                  buildWhen: (previous, current) =>
+                      current is GetCarsDetailsErrorState ||
+                      current is GetCarsDetailsLoadingState ||
+                      current is GetCarsDetailsSuccessState,
+                  builder: (context, state) {
+                    var blocRead = context.read<CarDetailsCubit>();
+                    if (context
+                        .watch<CarDetailsCubit>()
+                        .carDetailsData
+                        .id
+                        .isEmpty) {
+                      return const SizedBox();
+                    } else {
+                      return Align(
+                        alignment: Alignment.bottomCenter,
+                        child: DefaultButton(
+                          marginTop: 20,
+                          marginBottom: 20,
+                          marginRight: 16,
+                          marginLeft: 16,
+                          color: AppColors.primaryBG,
+                          textColor: AppColors.primaryRed,
+                          function: () {
+                              if (context
+                                  .read<AuthRepository>()
+                                  .customer
+                                  .token
+                                  .isEmpty) {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (bsContext) {
+                                    return Container(
+                                      width:
+                                          AppConstants.screenWidth(bsContext),
+                                      padding:
+                                          const EdgeInsetsDirectional.symmetric(
+                                        horizontal: 20,
+                                        vertical: 18,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(8),
+                                            topLeft: Radius.circular(8),
+                                          ),
+                                          color: AppColors.white),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "loginRequiredTitle".getLocale(),
+                                            style:
+                                                AppFonts.inter18HeaderBlack700,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                              bottom: 24,
+                                            ),
+                                            child: Text(
+                                              "loginRequiredContent"
+                                                  .getLocale(),
+                                              style: AppFonts.inter14Grey400,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: AppConstants.screenWidth(
+                                                context),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                    child: DefaultButton(
+                                                  text: "Cancel",
+                                                  color: AppColors.white,
+                                                  textColor:
+                                                      AppColors.primaryRed,
+                                                  border: Border.all(
+                                                      color:
+                                                          AppColors.primaryRed),
+                                                  function: () {
+                                                    Navigator.of(bsContext)
+                                                        .pop();
+                                                  },
+                                                )),
+                                                const SizedBox(
+                                                  width: 16,
+                                                ),
+                                                Expanded(
+                                                  child: DefaultButton(
+                                                    color: AppColors.primaryRed,
+                                                    function: () {
+                                                      Navigator.of(bsContext)
+                                                          .pop();
+
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        Routes.loginScreen,
+                                                        arguments:
+                                                            LoginScreenArguments(
+                                                          carId: car.carId,
+                                                          dailyPrice: blocRead
+                                                              .carDetailsData
+                                                              .carDailyPrice,
+                                                          weeklyPrice: blocRead
+                                                              .carDetailsData
+                                                              .carWeaklyPrice,
+                                                          monthlyPrice: blocRead
+                                                              .carDetailsData
+                                                              .carMothlyPrice,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.signupScreen,
+                                  arguments: SignupScreenArguments(
+                                    carId: car.carId,
+                                    isFromLogin: false,
+                                    dailyPrice:
+                                        blocRead.carDetailsData.carDailyPrice,
+                                    weeklyPrice:
+                                        blocRead.carDetailsData.carWeaklyPrice,
+                                    monthlyPrice:
+                                        blocRead.carDetailsData.carMothlyPrice,
+                                  ),
+                                );
+                              }
+
+                          },
+                          text: "bookNow".getLocale(),
+                        ),
+                      );
+                    }
+                  }),
             ],
           ),
         ),

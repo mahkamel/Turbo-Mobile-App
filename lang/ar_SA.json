@@ -29,6 +29,21 @@
   "history": "السجل",
   "profile": "المزيد",
   "carBrand": "ماركات",
-  "browse": "Browse"
+  "browse": "تصفح",
+  "loginRequiredTitle": "تسجيل الدخول مطلوب",
+  "loginRequiredContent": "لاستكمال الحجز واختيار السيارة التي ترغب بها، يرجى تسجيل الدخول إلى حسابك. إذا لم يكن لديك حساب حتى الآن، يمكنك إنشاء حساب بسهولة في بضع خطوات.",
+  "login": "تسجيل الدخول",
+  "dontHaveAccount": "ليس لديك حساب حتى الآن؟",
+  "signUp": "سجل",
+  "phoneNumber": "رقم الهاتف",
+  "enterUrPhoneNumber": "أدخل رقم هاتفك",
+  "forgetPassword": "نسيت كلمة المرور؟",
+  "yourInfo": "معلوماتك",
+  "completeBooking": "تأكيد الحجز",
+  "password": "كلمة السر",
+  "enterPassword": "أدخل كلمة السر"
+
+
+
 
 }
