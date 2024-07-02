@@ -17,13 +17,20 @@ import '../di/dependency_injection.dart';
 class AppRouter {
   static final Map<String, Widget Function(BuildContext, dynamic)> _routes = {
     Routes.onBoardingScreen: (context, _) => const OnboardingScreen(),
-    Routes.loginScreen: (context, _) => BlocProvider<LoginCubit>(
+    Routes.loginScreen: (context, arguments) => BlocProvider<LoginCubit>(
           create: (context) => getIt<LoginCubit>(),
-          child: const LoginScreen(),
+          child: LoginScreen(
+            requestedCarId: (arguments as LoginScreenArguments).carId,
+            dailyPrice: arguments.dailyPrice,
+            weeklyPrice: arguments.weeklyPrice,
+            monthlyPrice: arguments.monthlyPrice,
+          ),
         ),
-    Routes.signupScreen: (context, _) => BlocProvider<SignupCubit>(
-          create: (context) => getIt<SignupCubit>(),
-          child: const SignupScreen(),
+    Routes.signupScreen: (context, arguments) => BlocProvider<SignupCubit>(
+          create: (context) => getIt<SignupCubit>()..onInit(arguments),
+          child: SignupScreen(
+            isFromLogin: (arguments as SignupScreenArguments).isFromLogin,
+          ),
         ),
     Routes.layoutScreen: (context, _) => BlocProvider<LayoutCubit>(
           create: (context) => getIt<LayoutCubit>(),

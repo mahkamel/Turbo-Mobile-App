@@ -94,10 +94,10 @@ class CarInfoItem extends StatelessWidget {
 class CarPricesRow extends StatelessWidget {
   const CarPricesRow({
     super.key,
-    required this.blocWatch,
+    required this.blocRead,
   });
 
-  final CarDetailsCubit blocWatch;
+  final CarDetailsCubit blocRead;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class CarPricesRow extends StatelessWidget {
       children: [
         Expanded(
           child: PriceCard(
-            price: blocWatch.carDetailsData.carDailyPrice,
+            price: blocRead.carDetailsData.carDailyPrice,
             period: "daySmall".getLocale(),
           ),
         ),
@@ -114,7 +114,7 @@ class CarPricesRow extends StatelessWidget {
         ),
         Expanded(
           child: PriceCard(
-            price: blocWatch.carDetailsData.carWeaklyPrice,
+            price: blocRead.carDetailsData.carWeaklyPrice,
             period: "weekSmall".getLocale(),
           ),
         ),
@@ -123,7 +123,7 @@ class CarPricesRow extends StatelessWidget {
         ),
         Expanded(
           child: PriceCard(
-            price: blocWatch.carDetailsData.carMothlyPrice,
+            price: blocRead.carDetailsData.carMothlyPrice,
             period: "monthSmall".getLocale(),
           ),
         ),

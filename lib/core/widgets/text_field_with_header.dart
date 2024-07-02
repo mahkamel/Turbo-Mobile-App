@@ -71,7 +71,7 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
           children: [
             Text(
               widget.header,
-              style: AppFonts.inter16Black400,
+              style: AppFonts.inter16Black500,
             ),
             const SizedBox(
               height: 8,
@@ -89,7 +89,7 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
                   });
                 },
                 suffixIcon:
-                _isObscure ? Icons.visibility : Icons.visibility_off,
+                    _isObscure ? Icons.visibility : Icons.visibility_off,
                 onSubmit: widget.onSubmit,
                 onChange: widget.onChange,
                 validateText: widget.validationText,
@@ -100,8 +100,8 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
               CustomTextField(
                 onTapOutside: widget.onTapOutside != null
                     ? (pointer) {
-                  widget.onTapOutside!();
-                }
+                        widget.onTapOutside!();
+                      }
                     : null,
                 height: widget.isMultiLine ? 107 : null,
                 onTap: widget.onTap,

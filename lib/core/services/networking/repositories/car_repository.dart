@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/api_services/car_services.dart';
 import 'package:turbo/models/car_brand_model.dart';
 import 'package:turbo/models/car_details_model.dart';
@@ -109,6 +111,45 @@ class CarRepository {
         }
 
         return Right(filteredCars);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('getCarsByBrand Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, bool>> addCarRequest({
+    required String requestCarId,
+    required String requestLocation,
+    required String requestDistrictId,
+    required bool isWithRequestDriver,
+    required int requestPeriod,
+    required String requestFromDate,
+    required String requestToDate,
+    required String requestCity,
+    required String customerId,
+    required num requestPrice,
+    required List<File> files,
+  }) async {
+    try {
+      final response = await _carServices.addCarRequest(
+        customerId: customerId,
+        isWithRequestDriver: isWithRequestDriver,
+        requestCarId: requestCarId,
+        requestCity: requestCarId,
+        requestDistrictId: requestDistrictId,
+        requestFromDate: requestFromDate,
+        requestToDate: requestToDate,
+        requestLocation: requestLocation,
+        requestPeriod: requestPeriod,
+        requestPrice: requestPrice,
+        requestToken: AppConstants.fcmToken,
+        files: files,
+      );
+      if (response.statusCode == 200 && response.data['status']) {
+        return const Right(true);
       } else {
         return Left(response.data['message']);
       }

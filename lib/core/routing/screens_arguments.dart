@@ -7,3 +7,33 @@ class CardDetailsScreenArguments {
     required this.car,
   });
 }
+
+class LoginScreenArguments {
+  final String carId;
+  final num dailyPrice;
+  final num weeklyPrice;
+  final num monthlyPrice;
+
+  LoginScreenArguments({
+    required this.carId,
+    required this.dailyPrice,
+    required this.weeklyPrice,
+    required this.monthlyPrice,
+  });
+}
+
+class SignupScreenArguments {
+  final String carId;
+  final bool isFromLogin;
+  final num dailyPrice;
+  final num weeklyPrice;
+  final num monthlyPrice;
+
+  SignupScreenArguments({
+    required this.carId,
+    required this.isFromLogin,
+    required this.dailyPrice,
+    required this.weeklyPrice,
+    required this.monthlyPrice,
+  });
+}

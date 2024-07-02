@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -100,4 +103,68 @@ class CarServices {
       throw e.toString();
     }
   }
+
+  Future<Response> addCarRequest({
+    required String requestCarId,
+    required String requestLocation,
+    required String requestDistrictId,
+    required bool isWithRequestDriver,
+    required int requestPeriod,
+    required String requestFromDate,
+    required String requestToDate,
+    required String requestCity,
+    required String customerId,
+    required num requestPrice,
+    required String requestToken,
+    required List<File> files,
+  }) async {
+    try {
+      Map<String, dynamic> body = {
+        "carRequest": {
+          "requestCarId": requestCarId,
+          "requestLocation": requestLocation,
+          "requestDistrict": requestDistrictId,
+          "requestDriver": isWithRequestDriver,
+          "requestPeriod": requestPeriod,
+          "requestFrom": requestFromDate,
+          "requestTo": requestToDate,
+          "requestCity": requestCity,
+          "customerId": customerId,
+          "requestPrice": requestPrice,
+          "requestToken": requestToken,
+          "requestStatus": "pending",
+        }
+      };
+      String jsonData = json.encode(body);
+      FormData carRequestForm = FormData();
+      carRequestForm.fields.add(MapEntry("carRequest", jsonData));
+      if (files.isNotEmpty) {
+        for (int i = 0; i < files.length; i++) {
+          final String path = files[i].path;
+          carRequestForm.files.add(
+            MapEntry(
+              "files",
+              await MultipartFile.fromFile(
+                path,
+                filename: getFileName(path),
+              ),
+            ),
+          );
+        }
+      }
+
+      Response response = await DioHelper.postData(
+        endpoint: 'car/addCarRequest',
+        formData: carRequestForm,
+        body: {},
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+}
+
+String getFileName(String filePath) {
+  return filePath.split('/').last;
 }

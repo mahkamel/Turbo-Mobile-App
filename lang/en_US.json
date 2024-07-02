@@ -29,6 +29,20 @@
   "history": "History",
   "profile": "Profile",
   "carBrand": "Car Brand",
-  "browse": "Browse"
+  "browse": "Browse",
+  "loginRequiredTitle": "Login Required",
+  "loginRequiredContent": "To complete your booking and reserve your desired car, please log in to your account. If you don't have an account yet, you can easily create one in a few steps.",
+  "login": "Login",
+  "dontHaveAccount": "Don't have an account yet?",
+  "signUp": "Sign Up",
+  "phoneNumber": "Phone Number",
+  "enterUrPhoneNumber": "Enter your phone number",
+  "forgetPassword": "Forget Password?",
+  "yourInfo": "Your Info",
+  "completeBooking": "Confirm Booking",
+  "password": "Password",
+  "enterPassword": "Enter Password"
+
+
 
 }

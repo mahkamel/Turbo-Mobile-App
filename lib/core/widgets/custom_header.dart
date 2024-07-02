@@ -9,7 +9,7 @@ class DefaultHeader extends StatelessWidget {
     super.key,
     required this.header,
     this.onBackPressed,
-    this.height = 25,
+    this.height = 27,
     this.alignment = MainAxisAlignment.start,
     this.textAlignment,
     this.isShowPrefixIcon = true,
@@ -45,7 +45,10 @@ class DefaultHeader extends StatelessWidget {
               ),
               child: Text(
                 header,
-                style: AppFonts.inter18Black500,
+                style: AppFonts.inter20HeaderBlack700.copyWith(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
               ),
             ),
           ),

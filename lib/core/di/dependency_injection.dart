@@ -24,8 +24,8 @@ Future<void> setupGetIt() async {
 
   //Repositories
   getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepository(getIt<AuthServices>(),
-
+    () => AuthRepository(
+      getIt<AuthServices>(),
     ),
   );
 
@@ -41,7 +41,11 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<LayoutCubit>(() => LayoutCubit());
   getIt.registerFactory<LoginCubit>(() => LoginCubit());
   getIt.registerFactory<SignupCubit>(
-    () => SignupCubit(getIt<AuthRepository>()),
+    () => SignupCubit(
+      authRepository: getIt<AuthRepository>(),
+      citiesDistrictsRepository: getIt<CitiesDistrictsRepository>(),
+      carRepository: getIt<CarRepository>(),
+    ),
   );
 
   getIt.registerFactory<HomeCubit>(
