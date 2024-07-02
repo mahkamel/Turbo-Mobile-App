@@ -311,7 +311,7 @@ class SignupCubit extends Cubit<SignupState> {
         isWithPrivateDriver: isWithPrivateDriver));
   }
 
-  void changePickupDateValue(DateTime? pickUp) {
+  void changePickupDateValue({DateTime? pickUp}) {
     if (pickUp != null) {
       pickedDate = pickUp;
     }
@@ -373,7 +373,7 @@ class SignupCubit extends Cubit<SignupState> {
           requestToDate:
               deliveryDate != null ? deliveryDate!.toIso8601String() : "",
           requestCity: citiesDistrictsRepository.cities[citySelectedIndex].id,
-          customerId: authRepository.customer.token,
+          userToken: authRepository.customer.token,
           requestPrice: calculatedPrice,
           files: files ?? [],
         );

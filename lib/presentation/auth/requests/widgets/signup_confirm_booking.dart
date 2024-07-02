@@ -5,8 +5,9 @@ import 'package:turbo/core/helpers/enums.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 import 'package:turbo/core/widgets/custom_dropdown.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
-import 'package:turbo/presentation/auth/signup_screen/widgets/select_file.dart';
+import 'package:turbo/presentation/auth/requests/widgets/select_file.dart';
 
+import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/default_buttons.dart';
@@ -93,14 +94,14 @@ class SignupConfirmBooking extends StatelessWidget {
             builder: (context, state) {
               final blocWatch = context.watch<SignupCubit>();
               return WidgetWithHeader(
-                          header: "District",
-                          widget:  state is GetDistrictByCityLoadingState
-                              ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                              : blocWatch.districts.isEmpty
-                              ? const SizedBox()
-                              : CustomDropdown<int>(
+                header: "District",
+                widget: state is GetDistrictByCityLoadingState
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : blocWatch.districts.isEmpty
+                        ? const SizedBox()
+                        : CustomDropdown<int>(
                             onTap: () {},
                             border: Border.all(
                               color: AppColors.black.withOpacity(0.5),
@@ -139,7 +140,7 @@ class SignupConfirmBooking extends StatelessWidget {
                                 )
                                 .toList(),
                           ),
-                        );
+              );
             },
           ),
         ),
@@ -210,7 +211,7 @@ class SignupConfirmBooking extends StatelessWidget {
           header: "Pickup",
           onDateSelected: (selectedDate) {
             blocRead.pickedDate = selectedDate;
-            blocRead.changePickupDateValue(selectedDate);
+            blocRead.changePickupDateValue(pickUp: selectedDate);
             blocRead.calculatePrice();
           },
         ),
@@ -231,7 +232,7 @@ class SignupConfirmBooking extends StatelessWidget {
               selectedDateTime: context.watch<SignupCubit>().deliveryDate,
               onDateSelected: (selectedDate) {
                 blocRead.deliveryDate = selectedDate;
-                blocRead.changePickupDateValue(selectedDate);
+                blocRead.changePickupDateValue();
                 blocRead.calculatePrice();
               },
             );
@@ -297,8 +298,11 @@ class SignupConfirmBooking extends StatelessWidget {
           listener: (context, state) {
             if (state is ConfirmBookingErrorState) {
               defaultErrorSnackBar(context: context, message: state.errMsg);
-            }else if(state is ConfirmBookingSuccessState ){
-
+            } else if (state is ConfirmBookingSuccessState) {
+              Navigator.of(context).pushNamed(
+                Routes.paymentScreen,
+                arguments: blocRead.calculatedPrice,
+              );
             }
           },
           buildWhen: (previous, current) =>

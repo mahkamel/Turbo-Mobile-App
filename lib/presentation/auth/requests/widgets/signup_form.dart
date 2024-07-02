@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
-import 'package:turbo/presentation/auth/signup_screen/widgets/select_phone_number.dart';
+import 'package:turbo/presentation/auth/requests/widgets/select_phone_number.dart';
 
 import '../../../../blocs/signup/signup_cubit.dart';
 import '../../../../core/helpers/enums.dart';

@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
-import 'package:turbo/presentation/auth/signup_screen/widgets/signup_confirm_booking.dart';
-import 'package:turbo/presentation/auth/signup_screen/widgets/signup_form.dart';
-import 'package:turbo/presentation/auth/signup_screen/widgets/stepper.dart';
+import 'package:turbo/presentation/auth/requests/widgets/signup_confirm_booking.dart';
+import 'package:turbo/presentation/auth/requests/widgets/signup_form.dart';
+import 'package:turbo/presentation/auth/requests/widgets/stepper.dart';
 
 import '../../../core/helpers/constants.dart';
 import '../../../core/routing/routes.dart';

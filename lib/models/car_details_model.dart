@@ -70,7 +70,7 @@ class CarDetailsData {
       carEngine: json['carEngine'] ?? "",
       carPlateNumber: json['carPlateNumber'] ?? "",
       carChassis: json['carChassis'] ?? "",
-      carModel: json['carModel']["modelName"] ?? "",
+      carModel: json.containsKey("carModel") && json['carModel'] != null ? json['carModel']["modelName"] ?? "" : "",
       carColor: json['carColor']["Color_Name"] ?? "",
       carPassengerNo: json['carPassengerNo'] ?? 0,
       carDailyPrice: json['carDailyPrice'] ?? 0.0,

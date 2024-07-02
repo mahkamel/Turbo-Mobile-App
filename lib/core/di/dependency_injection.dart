@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/blocs/login/login_cubit.dart';
+import 'package:turbo/blocs/payment/payment_cubit.dart';
+import 'package:turbo/blocs/payment/payment_cubit.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
@@ -9,8 +11,10 @@ import 'package:turbo/core/services/networking/api_services/car_services.dart';
 import 'package:turbo/core/services/networking/api_services/cities_districts_services.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
+import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
+import '../services/networking/api_services/payemnt_service.dart';
 import '../services/networking/repositories/auth_repository.dart';
 
 final getIt = GetIt.instance;
@@ -19,6 +23,7 @@ Future<void> setupGetIt() async {
   //Services
   getIt.registerLazySingleton<AuthServices>(() => AuthServices());
   getIt.registerLazySingleton<CarServices>(() => CarServices());
+  getIt.registerLazySingleton<PaymentService>(() => PaymentService());
   getIt.registerLazySingleton<CitiesDistrictsServices>(
       () => CitiesDistrictsServices());
 
@@ -35,6 +40,10 @@ Future<void> setupGetIt() async {
 
   getIt.registerLazySingleton<CitiesDistrictsRepository>(
     () => CitiesDistrictsRepository(getIt<CitiesDistrictsServices>()),
+  );
+
+  getIt.registerLazySingleton<PaymentRepository>(
+    () => PaymentRepository(getIt<PaymentService>()),
   );
 
   //Blocs
@@ -60,5 +69,9 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<SearchCubit>(
     () => SearchCubit(getIt<CarRepository>()),
+  );
+
+  getIt.registerFactory<PaymentCubit>(
+    () => PaymentCubit(getIt<PaymentRepository>()),
   );
 }

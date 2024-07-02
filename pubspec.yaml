@@ -59,6 +59,7 @@ dependencies:
   shimmer: ^3.0.0
   file_picker: ^8.0.5
   flutter_cached_pdfview: ^0.4.2
+  toggle_switch: ^2.3.0
 
 dev_dependencies:
   flutter_test:

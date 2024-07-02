@@ -20,6 +20,21 @@ class AppFonts {
           color: AppColors.white,
         );
 
+  static TextStyle inter28Black600 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 28.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w600,
+          color: AppColors.black,
+        )
+      : const TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 28,
+          fontWeight: FontWeight.w600,
+          color: AppColors.black,
+        );
+
   static TextStyle inter24White600 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(
@@ -96,6 +111,23 @@ class AppFonts {
           fontWeight: FontWeight.w500,
           color: AppColors.white,
         );
+
+  static TextStyle inter18BottomSheetGrey400 =
+      navigatorKey.currentContext != null &&
+              AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+          ? TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 18.0.sp(navigatorKey.currentContext!),
+              fontWeight: FontWeight.w400,
+              color: AppColors.bottomSheetGrey,
+            )
+          : const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              color: AppColors.bottomSheetGrey,
+            );
+
   static TextStyle inter18SubTextGrey400 =
       navigatorKey.currentContext != null &&
               AppConstants.screenWidth(navigatorKey.currentContext!) < 600
@@ -188,6 +220,22 @@ class AppFonts {
           fontWeight: FontWeight.w400,
           color: AppColors.black,
         );
+
+  static TextStyle inter16BottomSheetGreyGrey100 =
+      navigatorKey.currentContext != null &&
+              AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+          ? TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 16.0.sp(navigatorKey.currentContext!),
+              fontWeight: FontWeight.w100,
+              color: AppColors.bottomSheetGrey,
+            )
+          : const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 16,
+              fontWeight: FontWeight.w100,
+              color: AppColors.bottomSheetGrey,
+            );
 
   static TextStyle inter15Black400 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
@@ -307,6 +355,22 @@ class AppFonts {
           fontWeight: FontWeight.w400,
           color: AppColors.errorRed,
         );
+
+  static TextStyle inter14BottomSheetDarkerGrey100 =
+      navigatorKey.currentContext != null &&
+              AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+          ? TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 14.0.sp(navigatorKey.currentContext!),
+              fontWeight: FontWeight.w100,
+              color: AppColors.bottomSheetDarkerGrey,
+            )
+          : const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 14,
+              fontWeight: FontWeight.w100,
+              color: AppColors.bottomSheetDarkerGrey,
+            );
 
   static TextStyle inter12Black500 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
