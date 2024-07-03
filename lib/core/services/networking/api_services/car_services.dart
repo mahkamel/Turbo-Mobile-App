@@ -18,7 +18,18 @@ class CarServices {
     }
   }
 
-  Future<Response> getCarBrands() async {
+  Future<Response> getCarBrands(String branchId) async {
+    try {
+      Response response = await DioHelper.getData(
+        endpoint: 'homePage/getActiveBrandByBranchId?_id=$branchId',
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> getActiveCarBrands() async {
     try {
       Response response = await DioHelper.getData(
         endpoint: 'homePage/getActiveBrands',
@@ -29,12 +40,15 @@ class CarServices {
     }
   }
 
-  Future<Response> getCarsByBrand({String? carBrandId}) async {
+  Future<Response> getCarsByBrand({
+    required String branchId,
+    String? carBrandId,
+  }) async {
     try {
       Response response = await DioHelper.getData(
         endpoint: carBrandId != null
-            ? "homePage/getCarByBrand?brand=$carBrandId"
-            : 'homePage/getCarByBrandType',
+            ? "homePage/getCarByBrand?brand=$carBrandId&branch=$branchId"
+            : 'homePage/getCarByBrandType?branch=$branchId',
       );
       return response;
     } catch (e) {
@@ -120,19 +134,19 @@ class CarServices {
   }) async {
     try {
       Map<String, dynamic> body = {
-        "carRequest": {
-          "requestCarId": requestCarId,
-          "requestLocation": requestLocation,
-          "requestDistrict": requestDistrictId,
-          "requestDriver": isWithRequestDriver,
-          "requestPeriod": requestPeriod,
-          "requestFrom": requestFromDate,
-          "requestTo": requestToDate,
-          "requestCity": requestCity,
-          "requestPrice": requestPrice,
-          "requestToken": requestToken,
-          "requestStatus": "pending",
-        }
+        "requestCarId": {
+          "carId": requestCarId,
+          "from": requestFromDate,
+        },
+        "requestLocation": requestLocation,
+        "requestDistrict": requestDistrictId,
+        "requestDriver": isWithRequestDriver,
+        "requestPeriod": requestPeriod,
+        "requestFrom": requestFromDate,
+        "requestTo": requestToDate,
+        "requestCity": requestCity,
+        "requestPrice": requestPrice,
+        "requestToken": requestToken,
       };
       String jsonData = json.encode(body);
       FormData carRequestForm = FormData();
@@ -155,7 +169,7 @@ class CarServices {
       Response response = await DioHelper.postData(
         endpoint: 'car/addCarRequest',
         formData: carRequestForm,
-        userToken: userToken ,
+        userToken: userToken,
         body: {},
       );
       return response;

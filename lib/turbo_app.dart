@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/localization/cubit/localization_cubit.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
+import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 import 'package:turbo/models/customer_model.dart';
 
 import 'blocs/localization/localization/app_localization_setup.dart';
@@ -32,10 +33,11 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<AuthRepository>.value(
           value: getIt<AuthRepository>()..setCustomerData(customer),
         ),
+        RepositoryProvider<PaymentRepository>.value(
+          value: getIt<PaymentRepository>()..getSavedPaymentMethods(),
+        ),
         RepositoryProvider<CarRepository>.value(
-          value: getIt<CarRepository>()
-            ..getCarBrands()
-            ..getCarTypes(),
+          value: getIt<CarRepository>()..getCarTypes(),
         ),
         RepositoryProvider.value(
           value: getIt<CitiesDistrictsRepository>()..getCities(),

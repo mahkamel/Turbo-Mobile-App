@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 import 'package:turbo/presentation/auth/requests/payment/widgets/payment_card_type.dart';
 
 import '../../../../../blocs/payment/payment_cubit.dart';
@@ -8,7 +9,6 @@ import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/helpers/constants.dart';
 import '../../../../../core/helpers/enums.dart';
 import '../../../../../core/helpers/functions.dart';
-import '../../../../../core/services/networking/repositories/auth_repository.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/widgets/text_field_with_header.dart';
@@ -229,6 +229,9 @@ class CardNumber extends StatelessWidget {
       ),
       textEditingController: blocRead.cardNumber,
       validation: blocWatch.cardNumberValidation,
+      onTapOutside: () {
+        blocRead.checkCardNumberValidation();
+      },
       onChange: (value) {
         if (value.isEmpty ||
             blocRead.cardNumberValidation != TextFieldValidation.normal) {
@@ -248,7 +251,7 @@ class CardNumber extends StatelessWidget {
           );
         }
       },
-      suffixIcon: getIt<AuthRepository>().savedPaymentCards.isNotEmpty
+      suffixIcon: getIt<PaymentRepository>().savedPaymentCards.isNotEmpty
           ? IconButton(
               onPressed: () {
                 showModalBottomSheet(
@@ -297,6 +300,98 @@ class CardHolderName extends StatelessWidget {
       onSubmit: (_) {
         blocRead.checkCardHolderNameValidation();
       },
+    );
+  }
+}
+
+class TotalAmount extends StatelessWidget {
+  const TotalAmount({
+    super.key,
+    required this.value,
+  });
+
+  final num value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(
+        start: 16.0,
+        bottom: 16.0,
+      ),
+      child: Text.rich(
+        TextSpan(
+          text: "Total: ",
+          style: AppFonts.inter16TypeGreyHeader600,
+          children: [
+            TextSpan(
+              text: "$value ",
+              style: AppFonts.inter18Black500,
+            ),
+            TextSpan(
+              text: "SAR",
+              style: AppFonts.inter18Black500.copyWith(
+                fontSize: 16,
+              ),
+            ),
+            TextSpan(
+              text: " (Including VAT)",
+              style: AppFonts.inter14Grey400,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ExpiryDateAndCvvRow extends StatelessWidget {
+  const ExpiryDateAndCvvRow({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18.0).copyWith(
+        bottom: 16,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: BlocBuilder<PaymentCubit, PaymentState>(
+              buildWhen: (previous, current) =>
+                  current is CheckExpiryDateState ||
+                  current is CheckCVVState ||
+                  current is SelectedSavedCardState,
+              builder: (context, state) {
+                var blocRead = context.read<PaymentCubit>();
+                var blocWatch = context.watch<PaymentCubit>();
+                return ExpiryDate(
+                  blocRead: blocRead,
+                  blocWatch: blocWatch,
+                );
+              },
+            ),
+          ),
+          const SizedBox(
+            width: 28,
+          ),
+          Expanded(
+            child: BlocBuilder<PaymentCubit, PaymentState>(
+              buildWhen: (previous, current) =>
+                  current is CheckCVVState ||
+                  current is CheckExpiryDateState ||
+                  current is SelectedSavedCardState,
+              builder: (context, state) {
+                var blocRead = context.read<PaymentCubit>();
+                var blocWatch = context.watch<PaymentCubit>();
+                return CVV(blocRead: blocRead, blocWatch: blocWatch);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/widgets/custom_shimmer.dart';
@@ -25,15 +25,13 @@ class CarsByBrandsList extends StatelessWidget {
       builder: (context, state) {
         var blocWatch = context.watch<HomeCubit>();
         return (state is GetCarsByBrandLoadingState &&
-                    !blocWatch.isFirstTimeGettingCarRec) ||
+                    !AppConstants.isFirstTimeGettingCarRec) ||
                 (state is GetCarsBrandsLoadingState &&
-                    !blocWatch.isFirstTimeGettingCarRec)
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
+                    !AppConstants.isFirstTimeGettingCarRec)
+            ? Lottie.asset("assets/lottie/car_loading.json")
             : state is GetCarsByBrandLoadingState ||
                     state is GetCarsBrandsLoadingState ||
-                    blocWatch.isFirstTimeGettingCarRec
+                    AppConstants.isFirstTimeGettingCarRec
                 ? const CarsByBrandShimmer()
                 : blocWatch.carsByBrand.isEmpty
                     ? Padding(

@@ -25,6 +25,9 @@ class AppConstants {
 
   static String fcmToken = '';
 
+  static bool isFirstTimeGettingCarRec = true;
+  static bool isFirstGettingCarBrand = true;
+
   //env keys
   static String baseUrl = "BASE_URL";
   static String filesBaseUrlDev = "FILES_BASE_DEV";

@@ -54,12 +54,7 @@ class HomeHeader extends StatelessWidget {
                             current is ChangeSelectedCityIndexState,
                         builder: (context, state) {
                           return Text(
-                            context
-                                .read<CitiesDistrictsRepository>()
-                                .cities[context
-                                    .watch<AuthRepository>()
-                                    .selectedCityIndex]
-                                .cityName,
+                            "${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName}, ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName} ",
                             style: AppFonts.inter16LocationBlue600,
                           );
                         },
@@ -133,11 +128,105 @@ class SelectCityBottomSheet extends StatelessWidget {
               buildWhen: (previous, current) =>
                   current is ChangeSelectedCityIndexState,
               builder: (context, state) {
+                var blocRead = context.read<HomeCubit>();
                 return ListView.builder(
                   padding: const EdgeInsets.only(top: 8),
                   itemBuilder: (context, index) => InkWell(
                     onTap: () {
-                      context.read<HomeCubit>().changeSelectedCityIndex(index);
+                      showAdaptiveDialog(
+                        context: context,
+                        builder: (dialogContext) => Dialog(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Container(
+                              width: AppConstants.screenWidth(context),
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    AppConstants.screenHeight(context) * 0.7,
+                              ),
+                              padding: const EdgeInsetsDirectional.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "Choose Branch",
+                                    style: AppFonts.inter18HeaderBlack700,
+                                  ),
+                                  const Divider(
+                                    height: 24,
+                                    color: AppColors.divider,
+                                  ),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, branchIndex) =>
+                                        Center(
+                                      child: InkWell(
+                                        onTap: () {
+                                          blocRead
+                                              .changeSelectedCityIndex(index);
+                                          blocRead.changeSelectedBranchIndex(
+                                              branchIndex);
+                                          Navigator.of(dialogContext).pop();
+                                          blocRead.getCarsBasedOnBrand();
+                                          blocRead.getCarsBrandsByBranchId();
+                                        },
+                                        child: SizedBox(
+                                          height: 40,
+                                          child: Text(
+                                            context
+                                                .read<
+                                                    CitiesDistrictsRepository>()
+                                                .cities[index]
+                                                .branches[branchIndex]
+                                                .branchName,
+                                            style: AppFonts.inter16Black400
+                                                .copyWith(
+                                              color: context
+                                                              .watch<
+                                                                  AuthRepository>()
+                                                              .selectedCityIndex ==
+                                                          index &&
+                                                      context
+                                                              .watch<
+                                                                  AuthRepository>()
+                                                              .selectedBranchIndex ==
+                                                          branchIndex
+                                                  ? AppColors.primaryRed
+                                                  : AppColors.black,
+                                              fontWeight: context
+                                                              .watch<
+                                                                  AuthRepository>()
+                                                              .selectedCityIndex ==
+                                                          index &&
+                                                      context
+                                                              .watch<
+                                                                  AuthRepository>()
+                                                              .selectedBranchIndex ==
+                                                          branchIndex
+                                                  ? FontWeight.w500
+                                                  : FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    itemCount: context
+                                        .read<CitiesDistrictsRepository>()
+                                        .cities[index]
+                                        .branches
+                                        .length,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
                     },
                     child: Row(
                       children: [

@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/presentation/layout/history/history_screen.dart';
@@ -24,11 +25,7 @@ class LayoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> screens = [
       BlocProvider<HomeCubit>(
-        create: (context) => getIt<HomeCubit>()
-          ..getCarsBasedOnBrand()
-          ..getCarsBrands()
-          ..getCities()
-          ..getCachedSelectedCityIndex(),
+        create: (context) => getIt<HomeCubit>()..getCities(),
         child: const HomeScreen(),
       ),
       BlocProvider<SearchCubit>(
@@ -38,7 +35,10 @@ class LayoutScreen extends StatelessWidget {
         child: const SearchScreen(),
       ),
       const HistoryScreen(),
-      const ProfileScreen(),
+      BlocProvider<ProfileCubit>.value(
+        value: getIt<ProfileCubit>(),
+        child: const ProfileScreen(),
+      ),
     ];
     return Scaffold(
       body: SizedBox(

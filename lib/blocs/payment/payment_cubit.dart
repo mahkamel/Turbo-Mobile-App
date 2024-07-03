@@ -13,7 +13,8 @@ part 'payment_cubit.freezed.dart';
 
 class PaymentCubit extends Cubit<PaymentState> {
   final PaymentRepository _paymentRepository;
-  PaymentCubit(this._paymentRepository) : super(const PaymentState.initial());
+  PaymentCubit(this._paymentRepository, )
+      : super(const PaymentState.initial());
 
   int cardTypeToggle = 0;
 
@@ -77,10 +78,18 @@ class PaymentCubit extends Cubit<PaymentState> {
   }
 
   void checkCardNumberValidation() {
+    print("sssssss ${AppRegex.isValidCardNumberBasedOnType(
+      cardNumber.text,
+      cardTypeToggle == 0
+          ? "visa"
+          : cardTypeToggle == 1
+              ? "mastercard"
+              : "amex",
+    )}");
     if (cardNumber.text.isNotEmpty && cardNumber.text.contains("*")) {
       cardNumberValidation = TextFieldValidation.valid;
     } else if (cardNumber.text.isNotEmpty &&
-        AppRegex.isValidCardNumber(
+        AppRegex.isValidCardNumberBasedOnType(
           cardNumber.text,
           cardTypeToggle == 0
               ? "visa"
@@ -88,6 +97,7 @@ class PaymentCubit extends Cubit<PaymentState> {
                   ? "mastercard"
                   : "amex",
         )) {
+      print("sssssssss");
       cardNumberValidation = TextFieldValidation.valid;
     } else {
       cardNumberValidation = TextFieldValidation.notValid;
@@ -142,7 +152,108 @@ class PaymentCubit extends Cubit<PaymentState> {
     emit(const PaymentState.selectedSavedCard(""));
   }
 
-  void payCarRequest() async {
-    // final res = await _paymentRepository.carRequestPayment();
+  //billing
+  void checkFirstNameValidation() {
+    if (billingFirstNameCtrl.text.isEmpty) {
+      billingFirstNameValidation = TextFieldValidation.notValid;
+    } else {
+      billingFirstNameValidation = TextFieldValidation.valid;
+    }
+    emit(PaymentState.checkBillingFirstName(billingFirstNameValidation));
   }
+
+  void checkLastNameValidation() {
+    if (billingLastNameCtrl.text.isEmpty) {
+      billingLastNameValidation = TextFieldValidation.notValid;
+    } else {
+      billingLastNameValidation = TextFieldValidation.valid;
+    }
+    emit(PaymentState.checkBillingLastName(billingLastNameValidation));
+  }
+
+  void checkBillingCityValidation() {
+    if (billingCityCtrl.text.isEmpty) {
+      billingCityValidation = TextFieldValidation.notValid;
+    } else {
+      billingCityValidation = TextFieldValidation.valid;
+    }
+    emit(PaymentState.checkBillingCity(billingCityValidation));
+  }
+
+  void checkBillingAddressValidation() {
+    if (billingAddressCtrl.text.isEmpty) {
+      billingAddressValidation = TextFieldValidation.notValid;
+    } else {
+      billingAddressValidation = TextFieldValidation.valid;
+    }
+    emit(PaymentState.checkBillingAddress(billingAddressValidation));
+  }
+
+  void checkBillingPostalCodeValidation() {
+    if (billingPostalCodeCtrl.text.isEmpty) {
+      billingPostalCodeValidation = TextFieldValidation.notValid;
+    } else {
+      billingPostalCodeValidation = TextFieldValidation.valid;
+    }
+    emit(PaymentState.checkBillingPostalCode(billingPostalCodeValidation));
+  }
+
+  void payCarRequest({
+    required String carRequestId,
+    required num amount,
+  }) async {
+    checkCardHolderNameValidation();
+    checkCardNumberValidation();
+    checkExpiryDateValidation();
+    checkCVVValidation();
+    checkFirstNameValidation();
+    checkLastNameValidation();
+    checkBillingCityValidation();
+    checkBillingAddressValidation();
+    checkBillingPostalCodeValidation();
+    if (cardHolderName.text.isNotEmpty &&
+        cardHolderNameValidation == TextFieldValidation.valid &&
+        cardNumber.text.isNotEmpty &&
+        cardNumberValidation == TextFieldValidation.valid &&
+        cardExpiryDate.text.isNotEmpty &&
+        cardExpiryDateValidation == TextFieldValidation.valid &&
+        cardCVV.text.isNotEmpty &&
+        cardCVVValidation == TextFieldValidation.valid &&
+        billingFirstNameCtrl.text.isNotEmpty &&
+        billingLastNameCtrl.text.isNotEmpty &&
+        billingCityCtrl.text.isNotEmpty &&
+        billingAddressCtrl.text.isNotEmpty &&
+        billingPostalCodeCtrl.text.isNotEmpty) {
+      emit(const PaymentState.submitPaymentFormLoading());
+      try {
+        final res = await _paymentRepository.carRequestPayment(
+          requestId: carRequestId,
+          paymentAmount: amount,
+          visaCardName: cardHolderName.text,
+          visaCardNumber: cardNumber.text,
+          billingVisaLastNo: getLastFourFromCardNumber(cardNumber.text),
+          visaCardExpiryMonth: cardExpiryDate.text.split('/')[0],
+          visaCardExpiryYear: cardExpiryDate.text.split('/')[1],
+          isToSave: isSaveCardInfo,
+          billingFirstName: billingFirstNameCtrl.text,
+          billingLastName: billingLastNameCtrl.text,
+          billingCity: billingCityCtrl.text,
+          billingAddress: billingAddressCtrl.text,
+          billingPostalCode: billingPostalCodeCtrl.text,
+          savedCardId: selectedSavedCardId,
+        );
+        res.fold(
+          (errMsg) => emit(PaymentState.submitPaymentFormError(errMsg)),
+          (message) => emit(PaymentState.submitPaymentFormSuccess(message)),
+        );
+      } catch (e) {
+        emit(PaymentState.submitPaymentFormError(e.toString()));
+      }
+    }
+  }
+}
+
+String getLastFourFromCardNumber(String cardNumber) {
+  String number = cardNumber.substring(cardNumber.length - 4);
+  return number;
 }

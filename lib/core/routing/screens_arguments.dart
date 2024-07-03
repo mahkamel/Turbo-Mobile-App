@@ -37,3 +37,13 @@ class SignupScreenArguments {
     required this.monthlyPrice,
   });
 }
+
+class PaymentScreenArguments {
+  final num value;
+  final String carRequestId;
+
+  PaymentScreenArguments({
+    required this.value,
+    required this.carRequestId,
+  });
+}

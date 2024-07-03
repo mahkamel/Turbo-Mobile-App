@@ -50,8 +50,10 @@ class AppRouter {
         ),
     Routes.paymentScreen: (context, arguments) => BlocProvider<PaymentCubit>(
           create: (context) => getIt<PaymentCubit>(),
-          //todo:ddd
-          child: PaymentScreen(value: 2000),
+          child: PaymentScreen(
+            value: (arguments as PaymentScreenArguments).value,
+            carRequestId: arguments.carRequestId,
+          ),
         ),
   };
 

@@ -15,7 +15,7 @@ class CarBrand {
 
   factory CarBrand.fromJson(Map<String, dynamic> json) => CarBrand(
         id: json['_id'] ?? "",
-        display: json['display'] ?? false,
+        display: json['display'] ?? "",
         brandName: json['brandName'] ?? "",
         path: json['path'] ?? "",
       );

@@ -7,21 +7,24 @@ import 'package:turbo/core/services/local/storage_service.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
 import 'package:turbo/models/customer_model.dart';
 
-import '../../../../models/saved_card.dart';
+import '../../local/token_service.dart';
 
 class AuthRepository {
   final AuthServices _authServices;
   int selectedCityIndex = 0;
+  int selectedBranchIndex = 0;
+  String selectedBranchId = "";
   AuthRepository(
     this._authServices,
   );
 
   CustomerModel customer = CustomerModel.empty();
-  List<SavedCard> savedPaymentCards = [];
 
   void setCustomerData(CustomerModel? cachedCustomer) {
     if (cachedCustomer != null) {
       customer = cachedCustomer;
+      UserTokenService.saveUserToken(customer.token);
+      UserTokenService.userTokenFirstTime();
     }
   }
 
@@ -69,8 +72,11 @@ class AuthRepository {
     }
   }
 
-
   void setSelectedCityIdToCache(String id) {
     CacheHelper.setData(key: "SelectedCityId", value: id);
+  }
+
+  void setSelectedBranchIdToCache(String id) {
+    CacheHelper.setData(key: "SelectedBranchId", value: id);
   }
 }

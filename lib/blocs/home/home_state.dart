@@ -19,5 +19,6 @@ class HomeState with _$HomeState {
   const factory HomeState.getCitiesError(final String errMsg) = GetCitiesErrorState;
 
   const factory HomeState.changeSelectedCityIndex(final int index) = ChangeSelectedCityIndexState;
+  const factory HomeState.changeSelectedBranchIndex(final int index) = ChangeSelectedBranchIndexState;
 
 }

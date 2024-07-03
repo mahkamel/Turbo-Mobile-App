@@ -297,6 +297,23 @@ class AppFonts {
           color: AppColors.grey,
         );
 
+
+  static TextStyle inter14PrimaryRed500 = navigatorKey.currentContext != null &&
+      AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14.0.sp(navigatorKey.currentContext!),
+    fontWeight: FontWeight.w500,
+    color: AppColors.primaryRed,
+  )
+      : const TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.primaryRed,
+  );
+
+
   static TextStyle inter14White500 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(

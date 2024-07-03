@@ -26,7 +26,7 @@ class SignupCubit extends Cubit<SignupState> {
     required this.carRepository,
   }) : super(const SignupState.initial());
 
-  int currentStep = 1;
+  int currentStep = 0;
   int saCitizenSelectedIndex = 0;
 
   int citySelectedIndex = 0;
@@ -327,7 +327,6 @@ class SignupCubit extends Cubit<SignupState> {
 
   void calculatePrice() {
     if (deliveryDate != null && pickedDate != null) {
-      print("yessss");
       final int durationInDays = deliveryDate!.difference(pickedDate!).inDays;
 
       if (durationInDays >= 1 && durationInDays < 7) {
@@ -379,7 +378,7 @@ class SignupCubit extends Cubit<SignupState> {
         );
         res.fold(
           (errMsg) => emit(SignupState.confirmBookingFailed(errMsg: errMsg)),
-          (r) => emit(const SignupState.confirmBookingSuccess()),
+          (requestId) => emit(SignupState.confirmBookingSuccess(requestId)),
         );
       }
     } catch (e) {

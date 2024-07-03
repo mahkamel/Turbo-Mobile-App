@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 
 import '../../../../../blocs/payment/payment_cubit.dart';
 import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/helpers/constants.dart';
-import '../../../../../core/services/networking/repositories/auth_repository.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/widgets/container_with_shadow.dart';
@@ -71,11 +71,11 @@ class ExistingCardsBottomSheet extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.only(top: 12.0),
-              itemCount: getIt<AuthRepository>().savedPaymentCards.length,
+              itemCount: getIt<PaymentRepository>().savedPaymentCards.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: () {
                   blocRead.onSavedCardSelected(
-                    getIt<AuthRepository>().savedPaymentCards[index],
+                    getIt<PaymentRepository>().savedPaymentCards[index],
                   );
                   Navigator.pop(context);
                 },
@@ -95,7 +95,7 @@ class ExistingCardsBottomSheet extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          getIt<AuthRepository>()
+                          getIt<PaymentRepository>()
                               .savedPaymentCards[index]
                               .visaCardName,
                           overflow: TextOverflow.ellipsis,
@@ -106,7 +106,7 @@ class ExistingCardsBottomSheet extends StatelessWidget {
                         width: 4,
                       ),
                       Text(
-                        "**** `${getIt<AuthRepository>().savedPaymentCards[index].visaCardNumber}",
+                        "**** `${getIt<PaymentRepository>().savedPaymentCards[index].visaCardNumber}",
                         style: AppFonts.inter16BottomSheetGreyGrey100,
                       ),
                     ],

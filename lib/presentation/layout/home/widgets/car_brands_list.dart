@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/widgets/custom_shimmer.dart';
 import 'package:turbo/flavors.dart';
 
@@ -26,7 +27,7 @@ class BrandsList extends StatelessWidget {
           var blocWatch = context.watch<HomeCubit>();
           var blocRead = context.read<HomeCubit>();
           return state is GetCarsBrandsLoadingState ||
-                  blocWatch.isFirstGettingCarBrand
+                  AppConstants.isFirstGettingCarBrand
               ? const BrandsShimmer()
               : blocWatch.carBrands.isEmpty
                   ? const SizedBox()

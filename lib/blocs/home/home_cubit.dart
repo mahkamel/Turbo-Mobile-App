@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 
@@ -22,8 +23,6 @@ class HomeCubit extends Cubit<HomeState> {
   ) : super(const HomeState.initial());
 
   int selectedBrandIndex = -1;
-  bool isFirstTimeGettingCarRec = true;
-  bool isFirstGettingCarBrand = true;
 
   Map<String, List<Car>> carsByBrand = {};
   List<CarBrand> carBrands = [];
@@ -33,29 +32,30 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeState.changeSelectedBrandIndex(selectedBrandIndex));
   }
 
-  void getCarsBrands() async {
+  void getCarsBrandsByBranchId() async {
     emit(const HomeState.getCarsBrandsLoading());
     try {
       if (_carRepository.carBrands.isEmpty) {
-        final res = await _carRepository.getCarBrands();
+        final res =
+            await _carRepository.getCarBrands(_authRepository.selectedBranchId);
         res.fold(
           (errMsg) {
-            isFirstGettingCarBrand = false;
+            AppConstants.isFirstGettingCarBrand = false;
             emit(HomeState.getCarsBrandsError(errMsg));
           },
           (brands) {
             carBrands = brands;
-            isFirstGettingCarBrand = false;
+            AppConstants.isFirstGettingCarBrand = false;
             emit(const HomeState.getCarsBrandsSuccess());
           },
         );
       } else {
         carBrands = _carRepository.carBrands;
-        isFirstGettingCarBrand = false;
+        AppConstants.isFirstGettingCarBrand = false;
         emit(const HomeState.getCarsBrandsSuccess());
       }
     } catch (e) {
-      isFirstGettingCarBrand = false;
+      AppConstants.isFirstGettingCarBrand = false;
       emit(HomeState.getCarsBrandsError(e.toString()));
     }
   }
@@ -64,20 +64,23 @@ class HomeCubit extends Cubit<HomeState> {
     carsByBrand.clear();
     emit(const HomeState.getCarsByBrandLoading());
     try {
-      final res = await _carRepository.getCarsByBrand(brandId: brandId);
+      final res = await _carRepository.getCarsByBrand(
+        branchId: _authRepository.selectedBranchId,
+        brandId: brandId,
+      );
       res.fold(
         (errMsg) {
-          isFirstTimeGettingCarRec = false;
+          AppConstants.isFirstTimeGettingCarRec = false;
           emit(HomeState.getCarsByBrandError(errMsg));
         },
         (cars) {
           carsByBrand = cars;
-          isFirstTimeGettingCarRec = false;
+          AppConstants.isFirstTimeGettingCarRec = false;
           emit(HomeState.getCarsByBrandSuccess(brandId));
         },
       );
     } catch (e) {
-      isFirstTimeGettingCarRec = false;
+      AppConstants.isFirstTimeGettingCarRec = false;
       emit(HomeState.getCarsByBrandError(e.toString()));
     }
   }
@@ -88,12 +91,22 @@ class HomeCubit extends Cubit<HomeState> {
       if (_citiesDistrictsRepository.cities.isNotEmpty) {
         emit(const HomeState.getCitiesSuccess());
         getCachedSelectedCityIndex();
+        getCarsBrandsByBranchId();
+        getCarsBasedOnBrand();
       } else {
         final res = await _citiesDistrictsRepository.getCities();
         res.fold(
           (errMsg) => emit(HomeState.getCitiesError(errMsg)),
-          (r) {
+          (cities) {
             getCachedSelectedCityIndex();
+            if (_authRepository.selectedBranchId.isEmpty) {
+              _authRepository.selectedBranchId =
+                  cities[_authRepository.selectedCityIndex]
+                      .branches[_authRepository.selectedBranchIndex]
+                      .id;
+            }
+            getCarsBrandsByBranchId();
+            getCarsBasedOnBrand();
             emit(const HomeState.getCitiesSuccess());
           },
         );
@@ -104,12 +117,29 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void getCachedSelectedCityIndex() async {
-    String? cachedId = await CacheHelper.getData(key: "SelectedCityId");
-    if (cachedId != null) {
+    String? cachedCityId = await CacheHelper.getData(key: "SelectedCityId");
+    String? cachedBranchId = await CacheHelper.getData(key: "SelectedBranchId");
+    if (cachedCityId != null) {
       _authRepository.selectedCityIndex =
           _citiesDistrictsRepository.cities.indexWhere(
-        (element) => element.id == cachedId,
+        (element) {
+          return element.id == cachedCityId;
+        },
       );
+      if (cachedBranchId != null) {
+        int index = _citiesDistrictsRepository
+            .cities[_authRepository.selectedCityIndex].branches
+            .indexWhere(
+          (element) => element.id == cachedBranchId,
+        );
+        if (index != -1) {
+          _authRepository.selectedBranchIndex = index;
+          _authRepository.selectedBranchId = _citiesDistrictsRepository
+              .cities[_authRepository.selectedCityIndex]
+              .branches[_authRepository.selectedBranchIndex]
+              .id;
+        }
+      }
     }
   }
 
@@ -119,5 +149,14 @@ class HomeCubit extends Cubit<HomeState> {
         _citiesDistrictsRepository.cities[_authRepository.selectedCityIndex].id;
     _authRepository.setSelectedCityIdToCache(id);
     emit(HomeState.changeSelectedCityIndex(index));
+  }
+
+  void changeSelectedBranchIndex(int index) {
+    _authRepository.selectedBranchIndex = index;
+    _authRepository.selectedBranchId = _citiesDistrictsRepository
+        .cities[_authRepository.selectedCityIndex].branches[index].id;
+    print("iddddd ${_authRepository.selectedBranchId}");
+    _authRepository
+        .setSelectedBranchIdToCache(_authRepository.selectedBranchId);
   }
 }
