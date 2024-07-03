@@ -28,5 +28,21 @@ class PaymentState with _$PaymentState {
   const factory PaymentState.changeCardTypeToggle(int index) =
   ChangeCardTypeToggleState;
 
+  const factory PaymentState.checkBillingFirstName(TextFieldValidation validation) =
+  CheckingBillingFirstNameValidation;
+
+  const factory PaymentState.checkBillingLastName(TextFieldValidation validation) =
+  CheckingBillingLastNameValidation;
+
+  const factory PaymentState.checkBillingAddress(TextFieldValidation validation) =
+  CheckingBillingAddressValidation;
+
+  const factory PaymentState.checkBillingCity(TextFieldValidation validation) =
+  CheckingBillingCityValidation;
+
+  const factory PaymentState.checkBillingPostalCode(TextFieldValidation validation) =
+  CheckingBillingPostalCodeValidation;
+
+
 
 }

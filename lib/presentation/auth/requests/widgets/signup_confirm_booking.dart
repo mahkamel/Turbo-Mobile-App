@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/helpers/enums.dart';
+import 'package:turbo/core/routing/screens_arguments.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 import 'package:turbo/core/widgets/custom_dropdown.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
@@ -301,7 +302,10 @@ class SignupConfirmBooking extends StatelessWidget {
             } else if (state is ConfirmBookingSuccessState) {
               Navigator.of(context).pushNamed(
                 Routes.paymentScreen,
-                arguments: blocRead.calculatedPrice,
+                arguments: PaymentScreenArguments(
+                  value: blocRead.calculatedPrice,
+                  carRequestId: state.requestId,
+                ),
               );
             }
           },

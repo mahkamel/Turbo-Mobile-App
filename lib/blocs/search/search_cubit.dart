@@ -60,7 +60,7 @@ class SearchCubit extends Cubit<SearchState> {
     emit(const SearchState.getCarsBrandsLoading());
     try {
       if (_carRepository.carBrands.isEmpty) {
-        await _carRepository.getCarBrands();
+        await _carRepository.getActiveBrands();
       }
       emit(const SearchState.getCarsBrandsSuccess());
     } catch (e) {

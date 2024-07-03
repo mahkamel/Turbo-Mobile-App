@@ -107,7 +107,7 @@ class InfoStepForm extends StatelessWidget {
             ),
             BlocBuilder<SignupCubit, SignupState>(
               buildWhen: (previous, current) =>
-                  current is CheckEmailValidationState,
+                  current is CheckAddressValidationState,
               builder: (context, state) {
                 return AuthTextFieldWithHeader(
                   onTap: () {
@@ -120,7 +120,7 @@ class InfoStepForm extends StatelessWidget {
                   header: "Address",
                   hintText: "Enter Address",
                   isWithValidation: true,
-                  textInputType: TextInputType.emailAddress,
+                  textInputType: TextInputType.text,
                   validationText: "Invalid Address Address.",
                   textEditingController: blocRead.customerAddressController,
                   validation:
@@ -146,7 +146,7 @@ class InfoStepForm extends StatelessWidget {
             ),
             BlocBuilder<SignupCubit, SignupState>(
               buildWhen: (previous, current) =>
-                  current is CheckEmailValidationState,
+                  current is ChangeSACitizenIndexState,
               builder: (context, state) {
                 var blocWatch = context.watch<SignupCubit>();
                 return WidgetWithHeader(

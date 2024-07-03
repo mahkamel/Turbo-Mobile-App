@@ -36,7 +36,7 @@ class AppRegex {
     return RegExp(r'^(?=.{8,})').hasMatch(password);
   }
 
-  static bool isValidCardNumber(String cardNumber, String cardType) {
+  static bool isValidCardNumberBasedOnType(String cardNumber, String cardType) {
     cardNumber = cardNumber.removeWhiteSpaces();
     Map<String, String> cardPatterns = {
       'visa': r'^4[0-9]{12}(?:[0-9]{3})?$',
@@ -45,17 +45,28 @@ class AppRegex {
       'amex': r'^3[47][0-9]{13}$',
     };
 
-    // String? cardType = _detectCardType(cardNumber);
-    // if (cardType != null) {
-    //   String? pattern = cardPatterns[cardType.toLowerCase()];
-    //   if (pattern != null) {
-    //     return RegExp(pattern).hasMatch(cardNumber);
-    //   }
-    // }
-    // return false;
     String? pattern = cardPatterns[cardType.toLowerCase()];
     if (pattern != null) {
       return RegExp(pattern).hasMatch(cardNumber);
+    }
+    return false;
+  }
+
+  static bool isValidCardNumber(String cardNumber) {
+    cardNumber = cardNumber.removeWhiteSpaces();
+    Map<String, String> cardPatterns = {
+      'visa': r'^4[0-9]{12}(?:[0-9]{3})?$',
+      'mastercard':
+          r'^5[1-5][0-9]{14}|^(222[1-9]|22[3-9]\\d|2[3-6]\\d{2}|27[0-1]\\d|2720)[0-9]{12}$',
+      'amex': r'^3[47][0-9]{13}$',
+    };
+
+    String? cardType = _detectCardType(cardNumber);
+    if (cardType != null) {
+      String? pattern = cardPatterns[cardType.toLowerCase()];
+      if (pattern != null) {
+        return RegExp(pattern).hasMatch(cardNumber);
+      }
     }
     return false;
   }

@@ -110,7 +110,7 @@ class SignupState with _$SignupState {
 
   const factory SignupState.confirmBookingLoading() =
       ConfirmBookingLoadingState;
-  const factory SignupState.confirmBookingSuccess() =
+  const factory SignupState.confirmBookingSuccess(final String requestId) =
       ConfirmBookingSuccessState;
   const factory SignupState.confirmBookingFailed({
     required String errMsg,

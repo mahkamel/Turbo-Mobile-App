@@ -18,9 +18,28 @@ class CarRepository {
   List<CarType> carTypes = [];
   Map<String, List<Car>> filteredCars = {};
 
-  Future<Either<String, List<CarBrand>>> getCarBrands() async {
+  Future<Either<String, List<CarBrand>>> getCarBrands(String branchId) async {
     try {
-      final response = await _carServices.getCarBrands();
+      final response = await _carServices.getCarBrands(branchId);
+      if (response.statusCode == 200 && response.data['status']) {
+        List<CarBrand> carBrands = (response.data['data'] as List).isNotEmpty
+            ? (response.data['data'] as List)
+                .map((brand) => CarBrand.fromJson(brand))
+                .toList()
+            : <CarBrand>[];
+        return Right(carBrands);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('getCarBrands Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, List<CarBrand>>> getActiveBrands() async {
+    try {
+      final response = await _carServices.getActiveCarBrands();
       if (response.statusCode == 200 && response.data['status']) {
         carBrands = (response.data['data'] as List).isNotEmpty
             ? (response.data['data'] as List)
@@ -56,10 +75,15 @@ class CarRepository {
     }
   }
 
-  Future<Either<String, Map<String, List<Car>>>> getCarsByBrand(
-      {String? brandId}) async {
+  Future<Either<String, Map<String, List<Car>>>> getCarsByBrand({
+    required String branchId,
+    String? brandId,
+  }) async {
     try {
-      final response = await _carServices.getCarsByBrand(carBrandId: brandId);
+      final response = await _carServices.getCarsByBrand(
+        branchId: branchId,
+        carBrandId: brandId,
+      );
       if (response.statusCode == 200 && response.data['status']) {
         Map<String, List<Car>> cars = {};
         if ((response.data as Map).containsKey("cars")) {
@@ -120,7 +144,7 @@ class CarRepository {
     }
   }
 
-  Future<Either<String, bool>> addCarRequest({
+  Future<Either<String, String>> addCarRequest({
     required String requestCarId,
     required String requestLocation,
     required String requestDistrictId,
@@ -149,7 +173,8 @@ class CarRepository {
         files: files,
       );
       if (response.statusCode == 200 && response.data['status']) {
-        return const Right(true);
+        String requestId = response.data['requestId'];
+        return Right(requestId);
       } else {
         return Left(response.data['message']);
       }

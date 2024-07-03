@@ -3,7 +3,7 @@ import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/blocs/login/login_cubit.dart';
 import 'package:turbo/blocs/payment/payment_cubit.dart';
-import 'package:turbo/blocs/payment/payment_cubit.dart';
+import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
@@ -14,7 +14,7 @@ import 'package:turbo/core/services/networking/repositories/cities_districts_rep
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
-import '../services/networking/api_services/payemnt_service.dart';
+import '../services/networking/api_services/payment_service.dart';
 import '../services/networking/repositories/auth_repository.dart';
 
 final getIt = GetIt.instance;
@@ -72,6 +72,12 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerFactory<PaymentCubit>(
-    () => PaymentCubit(getIt<PaymentRepository>()),
+    () => PaymentCubit(
+      getIt<PaymentRepository>(),
+    ),
+  );
+
+  getIt.registerFactory<ProfileCubit>(
+    () => ProfileCubit(getIt<PaymentRepository>()),
   );
 }
