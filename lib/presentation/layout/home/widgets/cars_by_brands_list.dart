@@ -28,7 +28,13 @@ class CarsByBrandsList extends StatelessWidget {
                     !AppConstants.isFirstTimeGettingCarRec) ||
                 (state is GetCarsBrandsLoadingState &&
                     !AppConstants.isFirstTimeGettingCarRec)
-            ? Lottie.asset("assets/lottie/car_loading.json")
+            ? Center(
+                child: Lottie.asset(
+                  "assets/lottie/luxury_car_loading.json",
+                  height: AppConstants.screenWidth(context) * .4,
+                  width: (AppConstants.screenWidth(context) * .4) + 50,
+                ),
+              )
             : state is GetCarsByBrandLoadingState ||
                     state is GetCarsBrandsLoadingState ||
                     AppConstants.isFirstTimeGettingCarRec

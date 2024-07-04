@@ -51,7 +51,9 @@ class HomeHeader extends StatelessWidget {
                       ),
                       BlocBuilder<HomeCubit, HomeState>(
                         buildWhen: (previous, current) =>
-                            current is ChangeSelectedCityIndexState,
+                            current is ChangeSelectedCityIndexState ||
+                            current is GetCitiesSuccessState ||
+                            current is ChangeSelectedBranchIndexState,
                         builder: (context, state) {
                           return Text(
                             "${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName}, ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName} ",

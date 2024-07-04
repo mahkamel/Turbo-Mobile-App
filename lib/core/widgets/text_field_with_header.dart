@@ -78,6 +78,7 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
             ),
             if (widget.isPassword)
               PasswordTextField(
+                onTextFieldTap: widget.onTap,
                 label: '',
                 isObscureText: _isObscure,
                 textInputAction: widget.textInputAction ?? TextInputAction.next,

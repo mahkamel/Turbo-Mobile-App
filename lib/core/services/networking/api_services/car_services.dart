@@ -72,10 +72,13 @@ class CarServices {
     required List<String> carTypes,
     required List<String> carBrands,
     required bool isWithUnlimited,
+    required String branchId,
   }) async {
     try {
       Map<String, dynamic> filterBody = {};
-
+      filterBody.addAll({
+        "branchId": branchId,
+      });
       if (carYears.isNotEmpty) {
         filterBody.addAll({
           "carYear": carYears,

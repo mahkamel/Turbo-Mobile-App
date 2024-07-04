@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 
 import '../../core/services/networking/repositories/car_repository.dart';
 import '../../models/car_brand_model.dart';
@@ -11,7 +12,9 @@ part 'search_cubit.freezed.dart';
 
 class SearchCubit extends Cubit<SearchState> {
   final CarRepository _carRepository;
-  SearchCubit(this._carRepository) : super(const SearchState.initial());
+  final AuthRepository _authRepository;
+  SearchCubit(this._carRepository, this._authRepository)
+      : super(const SearchState.initial());
 
   TextEditingController brandSearchController = TextEditingController();
 
@@ -25,6 +28,7 @@ class SearchCubit extends Cubit<SearchState> {
   Map<String, List<Car>> filteredCars = {};
 
   bool isFilteredRes = false;
+  bool isGettingFilterResults = false;
 
   init() {
     filteredCars = _carRepository.filteredCars;
@@ -133,6 +137,7 @@ class SearchCubit extends Cubit<SearchState> {
 
   void applyFilter() async {
     isFilteredRes = false;
+    isGettingFilterResults = true;
     try {
       emit(const SearchState.getFilteredCarsLoading());
       List<String> selectedTypesId = [];
@@ -150,16 +155,22 @@ class SearchCubit extends Cubit<SearchState> {
         carTypes: selectedTypesId,
         carBrands: selectedBrandsId,
         isWithUnlimited: isWithUnlimitedKM,
+        branchId: _authRepository.selectedBranchId,
       );
       res.fold(
-        (l) {},
+        (errMsg) {
+          isGettingFilterResults = false;
+          emit(SearchState.getFilteredCarsError(errMsg));
+        },
         (res) {
           filteredCars = res;
           isFilteredRes = true;
+          isGettingFilterResults = false;
           emit(const SearchState.getFilteredCarsSuccess());
         },
       );
     } catch (e) {
+      isGettingFilterResults = false;
       emit(SearchState.getFilteredCarsError(e.toString()));
     }
   }

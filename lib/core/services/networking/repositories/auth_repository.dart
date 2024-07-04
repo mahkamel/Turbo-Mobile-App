@@ -77,6 +77,7 @@ class AuthRepository {
   }
 
   void setSelectedBranchIdToCache(String id) {
+    print("iddd ${id}");
     CacheHelper.setData(key: "SelectedBranchId", value: id);
   }
 }

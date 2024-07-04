@@ -27,12 +27,15 @@ class HomeCubit extends Cubit<HomeState> {
   Map<String, List<Car>> carsByBrand = {};
   List<CarBrand> carBrands = [];
 
+  bool isFirstGettingCarBrand = true;
+
   void changeSelectedBrandIndex(int newIndex) {
     selectedBrandIndex = newIndex;
     emit(HomeState.changeSelectedBrandIndex(selectedBrandIndex));
   }
 
   void getCarsBrandsByBranchId() async {
+    isFirstGettingCarBrand = true;
     emit(const HomeState.getCarsBrandsLoading());
     try {
       if (_carRepository.carBrands.isEmpty) {
@@ -40,22 +43,22 @@ class HomeCubit extends Cubit<HomeState> {
             await _carRepository.getCarBrands(_authRepository.selectedBranchId);
         res.fold(
           (errMsg) {
-            AppConstants.isFirstGettingCarBrand = false;
+            isFirstGettingCarBrand = false;
             emit(HomeState.getCarsBrandsError(errMsg));
           },
           (brands) {
             carBrands = brands;
-            AppConstants.isFirstGettingCarBrand = false;
+            isFirstGettingCarBrand = false;
             emit(const HomeState.getCarsBrandsSuccess());
           },
         );
       } else {
         carBrands = _carRepository.carBrands;
-        AppConstants.isFirstGettingCarBrand = false;
+        isFirstGettingCarBrand = false;
         emit(const HomeState.getCarsBrandsSuccess());
       }
     } catch (e) {
-      AppConstants.isFirstGettingCarBrand = false;
+      isFirstGettingCarBrand = false;
       emit(HomeState.getCarsBrandsError(e.toString()));
     }
   }
@@ -90,21 +93,16 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       if (_citiesDistrictsRepository.cities.isNotEmpty) {
         emit(const HomeState.getCitiesSuccess());
-        getCachedSelectedCityIndex();
+        // getCachedSelectedCityIndex();
         getCarsBrandsByBranchId();
         getCarsBasedOnBrand();
       } else {
         final res = await _citiesDistrictsRepository.getCities();
         res.fold(
           (errMsg) => emit(HomeState.getCitiesError(errMsg)),
-          (cities) {
-            getCachedSelectedCityIndex();
-            if (_authRepository.selectedBranchId.isEmpty) {
-              _authRepository.selectedBranchId =
-                  cities[_authRepository.selectedCityIndex]
-                      .branches[_authRepository.selectedBranchIndex]
-                      .id;
-            }
+          (cities) async {
+            print("uscesss");
+            await getCachedCityAndBranch();
             getCarsBrandsByBranchId();
             getCarsBasedOnBrand();
             emit(const HomeState.getCitiesSuccess());
@@ -116,9 +114,10 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void getCachedSelectedCityIndex() async {
+  Future<void> getCachedCityAndBranch() async {
     String? cachedCityId = await CacheHelper.getData(key: "SelectedCityId");
     String? cachedBranchId = await CacheHelper.getData(key: "SelectedBranchId");
+    print("sssssssv% ${cachedBranchId}");
     if (cachedCityId != null) {
       _authRepository.selectedCityIndex =
           _citiesDistrictsRepository.cities.indexWhere(
@@ -126,6 +125,7 @@ class HomeCubit extends Cubit<HomeState> {
           return element.id == cachedCityId;
         },
       );
+      print("cachesss id ${cachedBranchId == null}");
       if (cachedBranchId != null) {
         int index = _citiesDistrictsRepository
             .cities[_authRepository.selectedCityIndex].branches
@@ -133,13 +133,20 @@ class HomeCubit extends Cubit<HomeState> {
           (element) => element.id == cachedBranchId,
         );
         if (index != -1) {
+          print("indexsss = -1   }");
           _authRepository.selectedBranchIndex = index;
           _authRepository.selectedBranchId = _citiesDistrictsRepository
               .cities[_authRepository.selectedCityIndex]
               .branches[_authRepository.selectedBranchIndex]
               .id;
+          print("branchhh ${_authRepository.selectedBranchId}");
         }
       }
+    } else {
+      _authRepository.selectedBranchId = _citiesDistrictsRepository
+          .cities[_authRepository.selectedCityIndex]
+          .branches[_authRepository.selectedBranchIndex]
+          .id;
     }
   }
 

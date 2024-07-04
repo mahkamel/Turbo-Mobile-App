@@ -12,7 +12,7 @@ import 'package:turbo/models/get_cars_by_brands.dart';
 
 class CarRepository {
   final CarServices _carServices;
-  CarRepository(this._carServices);
+  CarRepository(this._carServices,);
 
   List<CarBrand> carBrands = [];
   List<CarType> carTypes = [];
@@ -80,6 +80,7 @@ class CarRepository {
     String? brandId,
   }) async {
     try {
+      print("-------- branchid ---- ${branchId}");
       final response = await _carServices.getCarsByBrand(
         branchId: branchId,
         carBrandId: brandId,
@@ -119,6 +120,7 @@ class CarRepository {
     required List<String> carTypes,
     required List<String> carBrands,
     required bool isWithUnlimited,
+    required String branchId,
   }) async {
     try {
       final response = await _carServices.carsFilter(
@@ -126,6 +128,7 @@ class CarRepository {
         carTypes: carTypes,
         carBrands: carBrands,
         isWithUnlimited: isWithUnlimited,
+        branchId: branchId,
       );
       if (response.statusCode == 200 && response.data['status']) {
         filteredCars = {};

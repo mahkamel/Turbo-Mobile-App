@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/core/widgets/snackbar.dart';
 
 import '../../../../blocs/search/search_cubit.dart';
 import '../../../../core/helpers/constants.dart';
@@ -71,18 +73,30 @@ class FilterCars extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: DefaultButton(
-                  marginTop: 0,
-                  height: 48,
-                  function: () {
-                    searchCubitRead.applyFilter();
+                child: BlocListener<SearchCubit, SearchState>(
+                  listenWhen: (previous, current) =>
+                      current is GetFilteredCarsErrorState,
+                  listener: (context, state) {
+                    if (state is GetFilteredCarsErrorState) {
+                      defaultErrorSnackBar(
+                        context: context,
+                        message: state.errMsg,
+                      );
+                    }
                   },
-                  borderRadius: 8,
-                  color: AppColors.white,
-                  textColor: AppColors.primaryRed,
-                  fontWeight: FontWeight.w600,
-                  border: Border.all(color: AppColors.primaryRed),
-                  text: "View Results",
+                  child: DefaultButton(
+                    marginTop: 0,
+                    height: 48,
+                    function: () {
+                      searchCubitRead.applyFilter();
+                    },
+                    borderRadius: 8,
+                    color: AppColors.white,
+                    textColor: AppColors.primaryRed,
+                    fontWeight: FontWeight.w600,
+                    border: Border.all(color: AppColors.primaryRed),
+                    text: "View Results",
+                  ),
                 ),
               ),
             ],
