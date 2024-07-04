@@ -8,10 +8,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:turbo/core/widgets/widget_with_header.dart';
 
 import '../../../../core/helpers/constants.dart';
+import '../../../../core/helpers/dropdown_keys.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/container_with_shadow.dart';
-import '../../../../core/widgets/custom_dropdown.dart';
 
 class SelectFile extends StatefulWidget {
   final String header;
@@ -20,8 +20,6 @@ class SelectFile extends StatefulWidget {
     bool isSingleFile,
   ) onFileSelected;
   final void Function() onPrefixClicked;
-  final GlobalKey<CustomDropdownState>? citiesKey;
-  final GlobalKey<CustomDropdownState>? districtsKey;
   final bool isWarningToReplace;
   final bool isFromMyApplication;
   final bool isFromPending;
@@ -38,8 +36,6 @@ class SelectFile extends StatefulWidget {
     required this.header,
     required this.onFileSelected,
     required this.onPrefixClicked,
-    this.citiesKey,
-    this.districtsKey,
     this.isWarningToReplace = false,
     this.isFromMyApplication = false,
     this.isFromPending = false,
@@ -84,19 +80,11 @@ class _SelectFileState extends State<SelectFile> {
   }
 
   Future<void> pickFile() async {
-    if (widget.citiesKey != null) {
-      if (widget.citiesKey!.currentState != null) {
-        if (widget.citiesKey!.currentState!.isOpen) {
-          widget.citiesKey!.currentState!.closeBottomSheet();
-        }
+    if (districtsKey.currentState != null) {
+      if (districtsKey.currentState!.isOpen) {
+        districtsKey.currentState!.closeBottomSheet();
       }
-    }
-    if (widget.districtsKey != null) {
-      if (widget.districtsKey!.currentState != null) {
-        if (widget.districtsKey!.currentState!.isOpen) {
-          widget.districtsKey!.currentState!.closeBottomSheet();
-        }
-      }
+
     }
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: false,
@@ -188,20 +176,9 @@ class _SelectFileState extends State<SelectFile> {
                               ? 8
                               : 0),
                       onPressed: () async {
-                        if (widget.districtsKey != null) {
-                          if (widget.districtsKey!.currentState != null) {
-                            if (widget.districtsKey!.currentState!.isOpen) {
-                              widget.districtsKey!.currentState!
-                                  .closeBottomSheet();
-                            }
-                          }
-                        }
-                        if (widget.citiesKey != null) {
-                          if (widget.citiesKey!.currentState != null) {
-                            if (widget.citiesKey!.currentState!.isOpen) {
-                              widget.citiesKey!.currentState!
-                                  .closeBottomSheet();
-                            }
+                        if (districtsKey.currentState != null) {
+                          if (districtsKey.currentState!.isOpen) {
+                            districtsKey.currentState!.closeBottomSheet();
                           }
                         }
                         if (!(widget.isFromMyApplication ||

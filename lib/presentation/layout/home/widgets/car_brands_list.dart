@@ -27,7 +27,7 @@ class BrandsList extends StatelessWidget {
           var blocWatch = context.watch<HomeCubit>();
           var blocRead = context.read<HomeCubit>();
           return state is GetCarsBrandsLoadingState ||
-                  AppConstants.isFirstGettingCarBrand
+                  blocWatch.isFirstGettingCarBrand
               ? const BrandsShimmer()
               : blocWatch.carBrands.isEmpty
                   ? const SizedBox()

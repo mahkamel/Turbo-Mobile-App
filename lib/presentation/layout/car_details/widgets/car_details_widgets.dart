@@ -18,33 +18,44 @@ class PriceCard extends StatelessWidget {
   final String period;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      constraints: const BoxConstraints(
-        maxWidth: 200,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.divider,
-        borderRadius: BorderRadius.circular(
-          4,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "${period == "day" ? "Daily" : period == "week" ? "Weekly" : "Monthly"} ",
+          style: AppFonts.inter16Black500.copyWith(fontSize: 15),
         ),
-      ),
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "$price SAR",
-              style: AppFonts.inter16Black500,
+        Container(
+          height: 40,
+          width: double.infinity,
+          margin: const EdgeInsets.only(top: 4),
+          padding: const EdgeInsetsDirectional.symmetric(horizontal: 4),
+          constraints: const BoxConstraints(
+            maxWidth: 200,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.divider,
+            borderRadius: BorderRadius.circular(
+              4,
             ),
-            Text(
-              "/$period",
-              style: AppFonts.inter14Grey400,
+          ),
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "$price ",
+                  style: AppFonts.inter16Black500,
+                ),
+                Text(
+                  "SAR",
+                  style: AppFonts.inter14Grey400.copyWith(fontSize: 12),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/presentation/layout/search/widgets/filter.dart';
@@ -39,39 +40,48 @@ class SearchScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: searchCubitWatch.isFilteredRes
-                    ? searchCubitWatch.filteredCars.isEmpty
-                        ? SizedBox(
-                            width: AppConstants.screenWidth(context),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/images/icons/no_results_founded.svg",
-                                  height:
-                                      AppConstants.screenHeight(context) * 0.4,
-                                ),
-                                Text(
-                                  "We couldn't find anything matching your search.",
-                                  style:
-                                      AppFonts.inter14HeaderBlack400.copyWith(
-                                    fontSize: 16,
+              if (searchCubitWatch.isGettingFilterResults)
+                Center(
+                  child: Lottie.asset(
+                    "assets/lottie/car_loading.json",
+                    height: AppConstants.screenWidth(context) * .8,
+                    width: (AppConstants.screenWidth(context) * .8) + 50,
+                  ),
+                ),
+              if (!searchCubitWatch.isGettingFilterResults)
+                Expanded(
+                  child: searchCubitWatch.isFilteredRes
+                      ? searchCubitWatch.filteredCars.isEmpty
+                          ? SizedBox(
+                              width: AppConstants.screenWidth(context),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/icons/no_results_founded.svg",
+                                    height: AppConstants.screenHeight(context) *
+                                        0.4,
                                   ),
-                                  textAlign: TextAlign.center,
-                                )
-                              ],
-                            ),
-                          )
-                        : CarsByTypesListview(
-                            carsByBrand: searchCubitWatch.filteredCars,
-                            isFromFilter: true,
-                          )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: FilterCars(searchCubitRead: searchCubitRead),
-                      ),
-              ),
+                                  Text(
+                                    "We couldn't find anything matching your search.",
+                                    style:
+                                        AppFonts.inter14HeaderBlack400.copyWith(
+                                      fontSize: 16,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                            )
+                          : CarsByTypesListview(
+                              carsByBrand: searchCubitWatch.filteredCars,
+                              isFromFilter: true,
+                            )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: FilterCars(searchCubitRead: searchCubitRead),
+                        ),
+                ),
             ],
           ),
         ),
