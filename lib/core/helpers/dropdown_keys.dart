@@ -8,4 +8,4 @@ final GlobalKey<CustomDropdownState> clientTypeKey =
 final GlobalKey<CustomDropdownState> districtsKey =
     GlobalKey<CustomDropdownState>();
 
-final GlobalKey<CustomDropdownState> cityKey = GlobalKey<CustomDropdownState>();
+final GlobalKey<CustomDropdownState> priceRangeKey = GlobalKey<CustomDropdownState>();

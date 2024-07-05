@@ -30,6 +30,8 @@ class SearchCubit extends Cubit<SearchState> {
   bool isFilteredRes = false;
   bool isGettingFilterResults = false;
 
+  int selectedFilterPriceRange = -1;
+
   init() {
     filteredCars = _carRepository.filteredCars;
     if (_carRepository.filteredCars.isNotEmpty) {
@@ -135,6 +137,11 @@ class SearchCubit extends Cubit<SearchState> {
     );
   }
 
+  void changePriceRangeIndex(int newIndex) {
+    selectedFilterPriceRange = newIndex;
+    emit(SearchState.changeSelectedPriceRangeIndex(selectedFilterPriceRange));
+  }
+
   void applyFilter() async {
     isFilteredRes = false;
     isGettingFilterResults = true;
@@ -156,6 +163,8 @@ class SearchCubit extends Cubit<SearchState> {
         carBrands: selectedBrandsId,
         isWithUnlimited: isWithUnlimitedKM,
         branchId: _authRepository.selectedBranchId,
+        priceFrom: getFromPriceRange(selectedFilterPriceRange),
+        priceTo: getToPriceRange(selectedFilterPriceRange),
       );
       res.fold(
         (errMsg) {
@@ -181,7 +190,7 @@ class SearchCubit extends Cubit<SearchState> {
     selectedCarYears = {};
 
     isWithUnlimitedKM = false;
-
+    changePriceRangeIndex(-1);
     brandSearchController.clear();
     emit(const SearchState.filterReset());
   }
@@ -197,4 +206,28 @@ class SearchCubit extends Cubit<SearchState> {
     brandSearchController.dispose();
     return super.close();
   }
+}
+
+int? getFromPriceRange(int index) {
+  if (index == 0) {
+    return 1;
+  } else if (index == 1) {
+    return 500;
+  } else if (index == 2) {
+    return 1000;
+  } else if (index == 3) {
+    return 2000;
+  }
+  return null;
+}
+
+int? getToPriceRange(int index) {
+  if (index == 0) {
+    return 500;
+  } else if (index == 1) {
+    return 1000;
+  } else if (index == 2) {
+    return 2000;
+  }
+  return null;
 }

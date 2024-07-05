@@ -10,9 +10,15 @@ import 'package:turbo/models/car_details_model.dart';
 import 'package:turbo/models/car_type_model.dart';
 import 'package:turbo/models/get_cars_by_brands.dart';
 
+import '../api_services/pricing_policy_service.dart';
+
 class CarRepository {
   final CarServices _carServices;
-  CarRepository(this._carServices,);
+  final PricingPolicyService _pricingPolicyService;
+  CarRepository(
+    this._carServices,
+    this._pricingPolicyService,
+  );
 
   List<CarBrand> carBrands = [];
   List<CarType> carTypes = [];
@@ -80,7 +86,6 @@ class CarRepository {
     String? brandId,
   }) async {
     try {
-      print("-------- branchid ---- ${branchId}");
       final response = await _carServices.getCarsByBrand(
         branchId: branchId,
         carBrandId: brandId,
@@ -101,16 +106,49 @@ class CarRepository {
     }
   }
 
-  Future<Either<String, CarDetailsData>> getCarDetails(String carId) async {
+  Future<Either<String, CarDetailsData>> getCarDetails(String carId ) async {
     try {
       final response = await _carServices.getCarDetails(carId);
       if (response.statusCode == 200 && response.data['status']) {
-        return Right(CarDetailsModel.fromJson(response.data).data);
+        return Right(CarDetailsModel.fromJson(response.data ).data);
       } else {
         return Left(response.data['message']);
       }
     } catch (e) {
       debugPrint('getCarDetails Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, num>> getVat() async {
+    try {
+      final response = await _pricingPolicyService.getPricingVat();
+      if (response.statusCode == 200 && response.data['status']) {
+        AppConstants.vat = response.data['data'][0]['pricingPolicyValue'];
+
+        return Right(AppConstants.vat);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('getVat Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, num>> getDriverFees() async {
+    try {
+      final response =
+          await _pricingPolicyService.getAllPricingPolicyWithoutVat();
+      if (response.statusCode == 200 && response.data['status']) {
+        AppConstants.driverFees =
+            response.data['data'][0]['pricingPolicyValue'];
+        return Right(AppConstants.driverFees);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('getVat Error -- $e');
       return Left(e.toString());
     }
   }
@@ -121,6 +159,8 @@ class CarRepository {
     required List<String> carBrands,
     required bool isWithUnlimited,
     required String branchId,
+    int? priceFrom,
+    int? priceTo,
   }) async {
     try {
       final response = await _carServices.carsFilter(
@@ -129,6 +169,8 @@ class CarRepository {
         carBrands: carBrands,
         isWithUnlimited: isWithUnlimited,
         branchId: branchId,
+        priceFrom: priceFrom,
+        priceTo: priceTo,
       );
       if (response.statusCode == 200 && response.data['status']) {
         filteredCars = {};
@@ -150,7 +192,7 @@ class CarRepository {
   Future<Either<String, String>> addCarRequest({
     required String requestCarId,
     required String requestLocation,
-    required String requestDistrictId,
+    required String requestBranchId,
     required bool isWithRequestDriver,
     required int requestPeriod,
     required String requestFromDate,
@@ -166,7 +208,7 @@ class CarRepository {
         isWithRequestDriver: isWithRequestDriver,
         requestCarId: requestCarId,
         requestCity: requestCarId,
-        requestDistrictId: requestDistrictId,
+        requestBranchId: requestBranchId,
         requestFromDate: requestFromDate,
         requestToDate: requestToDate,
         requestLocation: requestLocation,

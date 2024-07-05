@@ -41,11 +41,14 @@ class SearchScreen extends StatelessWidget {
                 ),
               ),
               if (searchCubitWatch.isGettingFilterResults)
-                Center(
-                  child: Lottie.asset(
-                    "assets/lottie/car_loading.json",
-                    height: AppConstants.screenWidth(context) * .8,
-                    width: (AppConstants.screenWidth(context) * .8) + 50,
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Center(
+                    child: Lottie.asset(
+                      "assets/lottie/car_filter_loading.json",
+                      height: AppConstants.screenWidth(context) * .6,
+                      width: (AppConstants.screenWidth(context) * .6),
+                    ),
                   ),
                 ),
               if (!searchCubitWatch.isGettingFilterResults)
@@ -77,9 +80,9 @@ class SearchScreen extends StatelessWidget {
                               carsByBrand: searchCubitWatch.filteredCars,
                               isFromFilter: true,
                             )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: FilterCars(searchCubitRead: searchCubitRead),
+                      : const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: FilterCars(),
                         ),
                 ),
             ],

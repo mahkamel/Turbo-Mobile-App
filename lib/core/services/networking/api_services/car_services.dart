@@ -73,6 +73,8 @@ class CarServices {
     required List<String> carBrands,
     required bool isWithUnlimited,
     required String branchId,
+    int? priceFrom,
+    int? priceTo,
   }) async {
     try {
       Map<String, dynamic> filterBody = {};
@@ -97,6 +99,14 @@ class CarServices {
       if (isWithUnlimited) {
         filterBody.addAll({
           "carLimitedKiloMeters": isWithUnlimited,
+        });
+      }
+      if (priceFrom != null) {
+        filterBody.addAll({
+          "priceRange": {
+            "from": priceFrom,
+            if (priceTo != null) "to": priceTo,
+          },
         });
       }
 
@@ -124,7 +134,7 @@ class CarServices {
   Future<Response> addCarRequest({
     required String requestCarId,
     required String requestLocation,
-    required String requestDistrictId,
+    required String requestBranchId,
     required bool isWithRequestDriver,
     required int requestPeriod,
     required String requestFromDate,
@@ -142,7 +152,7 @@ class CarServices {
           "from": requestFromDate,
         },
         "requestLocation": requestLocation,
-        "requestDistrict": requestDistrictId,
+        "requestBranch": requestBranchId,
         "requestDriver": isWithRequestDriver,
         "requestPeriod": requestPeriod,
         "requestFrom": requestFromDate,

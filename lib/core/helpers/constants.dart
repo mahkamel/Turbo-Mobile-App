@@ -27,6 +27,9 @@ class AppConstants {
 
   static bool isFirstTimeGettingCarRec = true;
 
+  static num vat = -1;
+  static num driverFees = -1;
+
   //env keys
   static String baseUrl = "BASE_URL";
   static String filesBaseUrlDev = "FILES_BASE_DEV";

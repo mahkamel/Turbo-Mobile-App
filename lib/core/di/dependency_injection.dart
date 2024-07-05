@@ -9,6 +9,7 @@ import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
 import 'package:turbo/core/services/networking/api_services/car_services.dart';
 import 'package:turbo/core/services/networking/api_services/cities_districts_services.dart';
+import 'package:turbo/core/services/networking/api_services/pricing_policy_service.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
@@ -26,6 +27,8 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<PaymentService>(() => PaymentService());
   getIt.registerLazySingleton<CitiesDistrictsServices>(
       () => CitiesDistrictsServices());
+  getIt.registerLazySingleton<PricingPolicyService>(
+      () => PricingPolicyService());
 
   //Repositories
   getIt.registerLazySingleton<AuthRepository>(
@@ -35,7 +38,10 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<CarRepository>(
-    () => CarRepository(getIt<CarServices>()),
+    () => CarRepository(
+      getIt<CarServices>(),
+      getIt<PricingPolicyService>(),
+    ),
   );
 
   getIt.registerLazySingleton<CitiesDistrictsRepository>(

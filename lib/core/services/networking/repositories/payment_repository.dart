@@ -125,4 +125,10 @@ class PaymentRepository {
       return Left(e.toString());
     }
   }
+
+  void init(){
+    if(UserTokenService.currentUserToken.isNotEmpty){
+      getSavedPaymentMethods();
+    }
+  }
 }

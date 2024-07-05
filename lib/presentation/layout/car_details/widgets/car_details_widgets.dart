@@ -44,7 +44,7 @@ class PriceCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "$price ",
+                  "${price.toStringAsFixed(2)} ",
                   style: AppFonts.inter16Black500,
                 ),
                 Text(
