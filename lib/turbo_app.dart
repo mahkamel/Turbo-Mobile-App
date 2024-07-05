@@ -34,10 +34,13 @@ class MyApp extends StatelessWidget {
           value: getIt<AuthRepository>()..setCustomerData(customer),
         ),
         RepositoryProvider<PaymentRepository>.value(
-          value: getIt<PaymentRepository>()..getSavedPaymentMethods(),
+          value: getIt<PaymentRepository>()..init(),
         ),
         RepositoryProvider<CarRepository>.value(
-          value: getIt<CarRepository>()..getCarTypes(),
+          value: getIt<CarRepository>()
+            ..getCarTypes()
+            ..getVat()
+            ..getDriverFees(),
         ),
         RepositoryProvider.value(
           value: getIt<CitiesDistrictsRepository>()..getCities(),

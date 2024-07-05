@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
@@ -304,8 +305,11 @@ class SignupCubit extends Cubit<SignupState> {
     emit(SignupState.changeSelectedCityIndex(index: index));
   }
 
-  void changeIsWithPrivateDriverValue(bool value) {
+  void changeIsWithPrivateDriverValue(bool value) async {
     isWithPrivateDriver = value;
+    if (AppConstants.driverFees == -1) {
+      await carRepository.getDriverFees();
+    }
     calculatePrice();
     emit(SignupState.changeIsWithPrivateDriverValue(
         isWithPrivateDriver: isWithPrivateDriver));
@@ -326,6 +330,7 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   void calculatePrice() {
+    calculatedPrice = 0.0;
     if (deliveryDate != null && pickedDate != null) {
       final int durationInDays = deliveryDate!.difference(pickedDate!).inDays;
 
@@ -336,11 +341,9 @@ class SignupCubit extends Cubit<SignupState> {
       } else {
         calculatedPrice = durationInDays * monthlyPrice;
       }
-      if (isWithPrivateDriver) {
-        calculatedPrice += 15.0;
-      }
-    } else {
-      calculatedPrice = 0.0;
+    }
+    if (isWithPrivateDriver) {
+      calculatedPrice += AppConstants.driverFees;
     }
     emit(SignupState.calculatePrice(price: calculatedPrice));
   }
@@ -358,11 +361,13 @@ class SignupCubit extends Cubit<SignupState> {
       } else if ((deliveryDate != null || deliveryDate != null) &&
           files != null &&
           locationController.text.isNotEmpty &&
-          districts.isNotEmpty) {
+          districts.isNotEmpty &&
+          AppConstants.vat != -1 &&
+          AppConstants.driverFees != -1) {
         final res = await carRepository.addCarRequest(
           requestCarId: requestedCarId,
           requestLocation: locationController.text,
-          requestDistrictId: districts[districtSelectedIndex].id,
+          requestBranchId: authRepository.selectedBranchId,
           isWithRequestDriver: isWithPrivateDriver,
           requestPeriod: pickedDate != null && deliveryDate != null
               ? deliveryDate!.difference(pickedDate!).inDays
@@ -373,7 +378,7 @@ class SignupCubit extends Cubit<SignupState> {
               deliveryDate != null ? deliveryDate!.toIso8601String() : "",
           requestCity: citiesDistrictsRepository.cities[citySelectedIndex].id,
           userToken: authRepository.customer.token,
-          requestPrice: calculatedPrice,
+          requestPrice: double.parse(calculatedPrice.toStringAsFixed(2)),
           files: files ?? [],
         );
         res.fold(

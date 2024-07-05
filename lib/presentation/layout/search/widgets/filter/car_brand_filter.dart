@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../../blocs/search/search_cubit.dart';
+import '../../../../../core/helpers/dropdown_keys.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/widgets/default_buttons.dart';
@@ -13,13 +14,12 @@ import '../delete_icon.dart';
 class SelectedCarBrandFilter extends StatelessWidget {
   const SelectedCarBrandFilter({
     super.key,
-    required this.searchCubitRead,
   });
 
-  final SearchCubit searchCubitRead;
 
   @override
   Widget build(BuildContext context) {
+    var searchCubitRead = context.read<SearchCubit>();
     return BlocBuilder<SearchCubit, SearchState>(
       buildWhen: (previous, current) =>
       current is BrandsSelectionState ||
@@ -40,6 +40,11 @@ class SelectedCarBrandFilter extends StatelessWidget {
                   (index) => InkWell(
                 highlightColor: Colors.transparent,
                 onTap: () {
+                  if (priceRangeKey.currentState != null) {
+                    if (priceRangeKey.currentState!.isOpen) {
+                      priceRangeKey.currentState!.closeBottomSheet();
+                    }
+                  }
                   searchCubitRead.unSelectTheCarBrand(
                     searchCubitRead.selectedBrands[index],
                   );
@@ -73,13 +78,12 @@ class SelectedCarBrandFilter extends StatelessWidget {
 class CarBrandFilterHeader extends StatelessWidget {
   const CarBrandFilterHeader({
     super.key,
-    required this.searchCubitRead,
   });
 
-  final SearchCubit searchCubitRead;
 
   @override
   Widget build(BuildContext context) {
+    var searchCubitRead = context.read<SearchCubit>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -94,6 +98,11 @@ class CarBrandFilterHeader extends StatelessWidget {
           fontSize: 12,
           fontWeight: FontWeight.w700,
           function: () {
+            if (priceRangeKey.currentState != null) {
+              if (priceRangeKey.currentState!.isOpen) {
+                priceRangeKey.currentState!.closeBottomSheet();
+              }
+            }
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,

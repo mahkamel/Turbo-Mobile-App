@@ -1,3 +1,4 @@
+import '../core/helpers/constants.dart';
 import 'car_brand_model.dart';
 
 class CarDetailsModel {
@@ -24,7 +25,7 @@ class CarDetailsData {
   final String carCategory;
   final String carYear;
   final String carEngine;
-  final String carPlateNumber;
+  // final String carPlateNumber;
   final String carChassis;
   final String carModel;
   final String carColor;
@@ -45,7 +46,7 @@ class CarDetailsData {
     required this.carCategory,
     required this.carYear,
     required this.carEngine,
-    required this.carPlateNumber,
+    // required this.carPlateNumber,
     required this.carChassis,
     required this.carModel,
     required this.carColor,
@@ -68,15 +69,19 @@ class CarDetailsData {
       carCategory: json['carCategory']["categoryName"] ?? "",
       carYear: json['carYear'] ?? "",
       carEngine: json['carEngine'] ?? "",
-      carPlateNumber: json['carPlateNumber'] ?? "",
+      // carPlateNumber: json['carPlateNumber'] ?? "",
       carChassis: json['carChassis'] ?? "",
-      carModel: json.containsKey("carModel") && json['carModel'] != null ? json['carModel']["modelName"] ?? "" : "",
+      carModel: json.containsKey("carModel") && json['carModel'] != null
+          ? json['carModel']["modelName"] ?? ""
+          : "",
       carColor: json['carColor']["Color_Name"] ?? "",
       carPassengerNo: json['carPassengerNo'] ?? 0,
-      carDailyPrice: json['carDailyPrice'] ?? 0.0,
+      carDailyPrice: ((json['carDailyPrice'] ?? 0.0) * (AppConstants.vat / 100)),
       carLimitedKiloMeters: json['carLimitedKiloMeters'] ?? 0,
-      carMothlyPrice: json['carMothlyPrice'] ?? 0.0,
-      carWeaklyPrice: json['carWeaklyPrice'] ?? 0.0,
+      carMothlyPrice:
+          (json['carMothlyPrice'] ?? 0.0) * (AppConstants.vat / 100),
+      carWeaklyPrice:
+          (json['carWeaklyPrice'] ?? 0.0) * (AppConstants.vat / 100),
       carSysDate: json['carSysDate'] ?? "",
     );
   }
@@ -95,7 +100,7 @@ class CarDetailsData {
         carCategory: "",
         carYear: "",
         carEngine: "",
-        carPlateNumber: "",
+        // carPlateNumber: "",
         carChassis: "",
         carModel: "",
         carColor: "",

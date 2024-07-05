@@ -113,7 +113,7 @@ class LayoutScreen extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
-                  label: 'history'.getLocale(),
+                  label: "Orders",
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(

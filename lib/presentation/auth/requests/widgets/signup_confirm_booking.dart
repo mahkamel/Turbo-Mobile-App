@@ -24,7 +24,6 @@ class SignupConfirmBooking extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-
       physics: const ClampingScrollPhysics(),
       child: InkWell(
         highlightColor: Colors.transparent,
@@ -39,10 +38,10 @@ class SignupConfirmBooking extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.0),
-              child: DistrictsDropdown(),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(vertical: 12.0),
+            //   child: DistrictsDropdown(),
+            // ),
             BookingLocationField(),
             Padding(
               padding: EdgeInsetsDirectional.only(
@@ -181,7 +180,7 @@ class RentalPrice extends StatelessWidget {
               style: AppFonts.inter16TypeGreyHeader600,
               children: [
                 TextSpan(
-                  text: "${blocWatch.calculatedPrice} ",
+                  text: "${blocWatch.calculatedPrice.toStringAsFixed(2)} ",
                   style: AppFonts.inter18Black500,
                 ),
                 TextSpan(
