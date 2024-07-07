@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
+import 'package:turbo/models/notifications_model.dart';
 
 import '../../core/services/local/cache_helper.dart';
 import '../../core/services/networking/repositories/auth_repository.dart';
@@ -26,6 +27,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   Map<String, List<Car>> carsByBrand = {};
   List<CarBrand> carBrands = [];
+  List<UserNotificationModel> notifications = [];
 
   bool isFirstGettingCarBrand = true;
 
@@ -93,7 +95,6 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       if (_citiesDistrictsRepository.cities.isNotEmpty) {
         emit(const HomeState.getCitiesSuccess());
-        // getCachedSelectedCityIndex();
         getCarsBrandsByBranchId();
         getCarsBasedOnBrand();
       } else {
@@ -101,7 +102,6 @@ class HomeCubit extends Cubit<HomeState> {
         res.fold(
           (errMsg) => emit(HomeState.getCitiesError(errMsg)),
           (cities) async {
-            print("uscesss");
             await getCachedCityAndBranch();
             getCarsBrandsByBranchId();
             getCarsBasedOnBrand();
@@ -117,7 +117,6 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> getCachedCityAndBranch() async {
     String? cachedCityId = await CacheHelper.getData(key: "SelectedCityId");
     String? cachedBranchId = await CacheHelper.getData(key: "SelectedBranchId");
-    print("sssssssv% ${cachedBranchId}");
     if (cachedCityId != null) {
       _authRepository.selectedCityIndex =
           _citiesDistrictsRepository.cities.indexWhere(
@@ -125,7 +124,12 @@ class HomeCubit extends Cubit<HomeState> {
           return element.id == cachedCityId;
         },
       );
-      print("cachesss id ${cachedBranchId == null}");
+      if (_authRepository.selectedCityIndex == -1) {
+        _authRepository.selectedCityIndex = 0;
+      }
+
+      _authRepository.selectedCityId = _citiesDistrictsRepository
+          .cities[_authRepository.selectedCityIndex].id;
       if (cachedBranchId != null) {
         int index = _citiesDistrictsRepository
             .cities[_authRepository.selectedCityIndex].branches
@@ -133,13 +137,11 @@ class HomeCubit extends Cubit<HomeState> {
           (element) => element.id == cachedBranchId,
         );
         if (index != -1) {
-          print("indexsss = -1   }");
           _authRepository.selectedBranchIndex = index;
           _authRepository.selectedBranchId = _citiesDistrictsRepository
               .cities[_authRepository.selectedCityIndex]
               .branches[_authRepository.selectedBranchIndex]
               .id;
-          print("branchhh ${_authRepository.selectedBranchId}");
         }
       }
     } else {
@@ -155,6 +157,7 @@ class HomeCubit extends Cubit<HomeState> {
     String id =
         _citiesDistrictsRepository.cities[_authRepository.selectedCityIndex].id;
     _authRepository.setSelectedCityIdToCache(id);
+    _authRepository.selectedCityId = id;
     emit(HomeState.changeSelectedCityIndex(index));
   }
 
@@ -162,8 +165,24 @@ class HomeCubit extends Cubit<HomeState> {
     _authRepository.selectedBranchIndex = index;
     _authRepository.selectedBranchId = _citiesDistrictsRepository
         .cities[_authRepository.selectedCityIndex].branches[index].id;
-    print("iddddd ${_authRepository.selectedBranchId}");
     _authRepository
         .setSelectedBranchIdToCache(_authRepository.selectedBranchId);
+  }
+
+  void getNotifications() async {
+    try {
+      final res = await _authRepository.getNotifications();
+      res.fold(
+        (errMsg) {
+          emit(HomeState.getNotificationsError(errMsg));
+        },
+        (userNotifications) {
+          notifications = userNotifications;
+          emit(HomeState.getNotificationsSuccess());
+        },
+      );
+    } catch (e) {
+      emit(HomeState.getNotificationsError(e.toString()));
+    }
   }
 }

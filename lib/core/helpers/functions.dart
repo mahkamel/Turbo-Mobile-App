@@ -3,6 +3,7 @@
 import 'package:flutter/services.dart'
     show TextEditingValue, TextInputFormatter, TextSelection;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/flavors.dart';
 import 'package:turbo/models/customer_model.dart';
@@ -49,7 +50,6 @@ class NoLeadingOrTrailingSpaceFormatter extends TextInputFormatter {
     return newValue;
   }
 }
-
 
 class CardNumberInputFormatter extends TextInputFormatter {
   @override
@@ -143,4 +143,22 @@ bool validateExpiryDate(String value) {
   }
 
   return true;
+}
+
+String formatNotificationDate(String notificationDate) {
+  DateTime now = DateTime.now();
+  DateTime parsedDate = DateTime.parse(notificationDate);
+  Duration difference = now.difference(parsedDate);
+
+  if (difference.inMinutes <= 0) {
+    return 'Just now';
+  } else if (difference.inMinutes <= 59) {
+    return '${difference.inMinutes} minutes ago';
+  } else if (difference.inHours <= 23) {
+    return '${difference.inHours} hours ago';
+  } else if (difference.inDays < 7) {
+    return '${difference.inDays} days ago';
+  } else {
+    return DateFormat('yyyy-MM-dd | hh:mm a').format(parsedDate);
+  }
 }

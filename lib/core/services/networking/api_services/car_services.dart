@@ -144,6 +144,7 @@ class CarServices {
     required num requestPrice,
     required String requestToken,
     required List<File> files,
+    required List<File> secondFiles,
   }) async {
     try {
       Map<String, dynamic> body = {
@@ -165,11 +166,24 @@ class CarServices {
       FormData carRequestForm = FormData();
       carRequestForm.fields.add(MapEntry("carRequest", jsonData));
       if (files.isNotEmpty) {
+        print("filessss num ${files.length}");
         for (int i = 0; i < files.length; i++) {
           final String path = files[i].path;
           carRequestForm.files.add(
             MapEntry(
               "files",
+              await MultipartFile.fromFile(
+                path,
+                filename: getFileName(path),
+              ),
+            ),
+          );
+        }
+        for (int i = 0; i < secondFiles.length; i++) {
+          final String path = secondFiles[i].path;
+          carRequestForm.files.add(
+            MapEntry(
+              "nationalId",
               await MultipartFile.fromFile(
                 path,
                 filename: getFileName(path),

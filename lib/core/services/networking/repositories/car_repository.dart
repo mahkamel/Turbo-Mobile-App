@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/api_services/car_services.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/models/car_brand_model.dart';
 import 'package:turbo/models/car_details_model.dart';
 import 'package:turbo/models/car_type_model.dart';
@@ -201,13 +202,14 @@ class CarRepository {
     required String userToken,
     required num requestPrice,
     required List<File> files,
+    required List<File> secondFiles,
   }) async {
     try {
       final response = await _carServices.addCarRequest(
         userToken: userToken,
         isWithRequestDriver: isWithRequestDriver,
         requestCarId: requestCarId,
-        requestCity: requestCarId,
+        requestCity: requestCity,
         requestBranchId: requestBranchId,
         requestFromDate: requestFromDate,
         requestToDate: requestToDate,
@@ -216,6 +218,7 @@ class CarRepository {
         requestPrice: requestPrice,
         requestToken: AppConstants.fcmToken,
         files: files,
+          secondFiles:secondFiles,
       );
       if (response.statusCode == 200 && response.data['status']) {
         String requestId = response.data['requestId'];

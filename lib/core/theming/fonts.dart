@@ -373,6 +373,38 @@ class AppFonts {
           color: AppColors.errorRed,
         );
 
+  static TextStyle inter14BottomSheetDarkerGrey400 =
+  navigatorKey.currentContext != null &&
+      AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14.0.sp(navigatorKey.currentContext!),
+    fontWeight: FontWeight.w400,
+    color: AppColors.bottomSheetDarkerGrey,
+  )
+      : const TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.bottomSheetDarkerGrey,
+  );
+
+  static TextStyle inter14Black800_400 =
+  navigatorKey.currentContext != null &&
+      AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14.0.sp(navigatorKey.currentContext!),
+    fontWeight: FontWeight.w400,
+    color: AppColors.black800,
+  )
+      : const TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.black800,
+  );
+
   static TextStyle inter14BottomSheetDarkerGrey100 =
       navigatorKey.currentContext != null &&
               AppConstants.screenWidth(navigatorKey.currentContext!) < 600
