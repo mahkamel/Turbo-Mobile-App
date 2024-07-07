@@ -325,7 +325,7 @@ class TotalAmount extends StatelessWidget {
           style: AppFonts.inter16TypeGreyHeader600,
           children: [
             TextSpan(
-              text: "$value ",
+              text: "${value.toStringAsFixed(2)} ",
               style: AppFonts.inter18Black500,
             ),
             TextSpan(

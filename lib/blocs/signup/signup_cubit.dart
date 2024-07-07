@@ -39,6 +39,7 @@ class SignupCubit extends Cubit<SignupState> {
   double monthlyPrice = 0;
 
   List<File>? files = [];
+  List<File>? secondFiles = [];
   List<District> districts = [];
 
   TextEditingController customerNameController = TextEditingController();
@@ -354,12 +355,12 @@ class SignupCubit extends Cubit<SignupState> {
     try {
       if (deliveryDate == null ||
           deliveryDate == null ||
-          files == null ||
+          files == null || secondFiles == null ||
           districts.isEmpty) {
         emit(const SignupState.confirmBookingFailed(
             errMsg: "Complete all required files"));
       } else if ((deliveryDate != null || deliveryDate != null) &&
-          files != null &&
+          files != null && secondFiles != null &&
           locationController.text.isNotEmpty &&
           districts.isNotEmpty &&
           AppConstants.vat != -1 &&
@@ -376,10 +377,11 @@ class SignupCubit extends Cubit<SignupState> {
               pickedDate != null ? pickedDate!.toIso8601String() : "",
           requestToDate:
               deliveryDate != null ? deliveryDate!.toIso8601String() : "",
-          requestCity: citiesDistrictsRepository.cities[citySelectedIndex].id,
+          requestCity: authRepository.selectedCityId,
           userToken: authRepository.customer.token,
           requestPrice: double.parse(calculatedPrice.toStringAsFixed(2)),
           files: files ?? [],
+          secondFiles: secondFiles ?? [],
         );
         res.fold(
           (errMsg) => emit(SignupState.confirmBookingFailed(errMsg: errMsg)),

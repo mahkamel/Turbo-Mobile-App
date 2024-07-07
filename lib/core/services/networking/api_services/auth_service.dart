@@ -36,4 +36,15 @@ class AuthServices {
       throw e.toString();
     }
   }
+
+  Future<Response> getNotifications() async {
+    try {
+      Response response = await DioHelper.getData(
+        endpoint: 'customer/getNotifications',
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }

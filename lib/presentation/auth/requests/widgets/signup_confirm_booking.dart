@@ -154,6 +154,19 @@ class RequiredFilesSection extends StatelessWidget {
                 blocRead.files = null;
               },
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            SelectFile(
+              padding: EdgeInsetsDirectional.zero,
+              header: "Second File",
+              onFileSelected: (p0, isSingle) async {
+                blocRead.secondFiles = await convertPlatformFileList(p0);
+              },
+              onPrefixClicked: () {
+                blocRead.secondFiles = null;
+              },
+            ),
           ],
         ),
       ),

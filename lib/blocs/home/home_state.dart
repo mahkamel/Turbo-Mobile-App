@@ -21,4 +21,8 @@ class HomeState with _$HomeState {
   const factory HomeState.changeSelectedCityIndex(final int index) = ChangeSelectedCityIndexState;
   const factory HomeState.changeSelectedBranchIndex(final int index) = ChangeSelectedBranchIndexState;
 
+  const factory HomeState.getNotificationsLoading() = GetNotificationsLoadingState;
+  const factory HomeState.getNotificationsSuccess() = GetNotificationsSuccessState;
+  const factory HomeState.getNotificationsError(final String errMsg) = GetNotificationsErrorState;
+
 }

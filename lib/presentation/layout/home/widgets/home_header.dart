@@ -3,12 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
+import 'package:turbo/core/services/local/token_service.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 import 'package:turbo/core/widgets/custom_shimmer.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
+import '../notifications_screens/notifications_screen.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
@@ -21,9 +24,14 @@ class HomeHeader extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is GetCitiesLoadingState ||
           current is GetCitiesErrorState ||
-          current is GetCitiesSuccessState,
+          current is GetCitiesSuccessState ||
+          current is GetNotificationsLoadingState ||
+          current is GetNotificationsErrorState ||
+          current is GetNotificationsSuccessState,
       builder: (context, state) {
-        return state is GetCitiesLoadingState
+        var blocWatch = context.watch<HomeCubit>();
+        return state is GetCitiesLoadingState ||
+                state is GetNotificationsLoadingState
             ? const HeaderShimmerEffect()
             : Row(
                 children: [
@@ -39,32 +47,59 @@ class HomeHeader extends StatelessWidget {
                   const SizedBox(
                     width: 8,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "yourLocation".getLocale(),
-                        style: AppFonts.inter12Grey400,
-                      ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      BlocBuilder<HomeCubit, HomeState>(
-                        buildWhen: (previous, current) =>
-                            current is ChangeSelectedCityIndexState ||
-                            current is GetCitiesSuccessState ||
-                            current is ChangeSelectedBranchIndexState,
-                        builder: (context, state) {
-                          return Text(
-                            "${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName}, ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName} ",
-                            style: AppFonts.inter16LocationBlue600,
-                          );
-                        },
-                      ),
-                    ],
+                  InkWell(
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (bottomSheetContext) =>
+                            BlocProvider<HomeCubit>.value(
+                          value: context.read<HomeCubit>(),
+                          child: const SelectCityBottomSheet(),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "yourLocation".getLocale(),
+                          style: AppFonts.inter12Grey400,
+                        ),
+                        const SizedBox(
+                          height: 2,
+                        ),
+                        BlocBuilder<HomeCubit, HomeState>(
+                          buildWhen: (previous, current) =>
+                              current is ChangeSelectedCityIndexState ||
+                              current is GetCitiesSuccessState ||
+                              current is ChangeSelectedBranchIndexState,
+                          builder: (context, state) {
+                            if (context
+                                .watch<CitiesDistrictsRepository>()
+                                .cities
+                                .isNotEmpty) {
+                              return Text(
+                                "${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName}, ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName} ",
+                                style: AppFonts.inter16LocationBlue600,
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   const Spacer(),
                   IconButton(
+                    // constraints: const BoxConstraints(),
+                    style: const ButtonStyle(
+                      tapTargetSize:
+                          MaterialTapTargetSize.shrinkWrap, // the '2023' part
+                    ),
+                    padding: EdgeInsets.zero,
                     onPressed: () {
                       showModalBottomSheet(
                         isScrollControlled: true,
@@ -77,7 +112,39 @@ class HomeHeader extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                  )
+                  ),
+                  if (UserTokenService.currentUserToken.isNotEmpty)
+                    InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (navigateContext) =>
+                              BlocProvider<HomeCubit>.value(
+                            value: context.read<HomeCubit>(),
+                            child: const NotificationsScreen(
+
+                            ),
+                          ),
+                        ));
+                      },
+                      child: SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: badges.Badge(
+                          badgeStyle: const badges.BadgeStyle(
+                            badgeColor: AppColors.primaryRed,
+                          ),
+                          position: badges.BadgePosition.topEnd(end: -6),
+                          badgeContent: Text(
+                            "${blocWatch.notifications.length}",
+                            style: const TextStyle(
+                              color: AppColors.white,
+                            ),
+                          ),
+                          child: const Icon(Icons.notifications_none_rounded),
+                        ),
+                      ),
+                    ),
                 ],
               );
       },
@@ -325,6 +392,10 @@ class HeaderShimmerEffect extends StatelessWidget {
         const CustomShimmer(
           child: Icon(Icons.keyboard_arrow_down_rounded),
         ),
+        if (UserTokenService.currentUserToken.isNotEmpty)
+          const CustomShimmer(
+            child: Icon(Icons.notifications_none_rounded),
+          ),
       ],
     );
   }

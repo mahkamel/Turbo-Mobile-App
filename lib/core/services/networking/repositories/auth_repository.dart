@@ -7,6 +7,7 @@ import 'package:turbo/core/services/local/storage_service.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
 import 'package:turbo/models/customer_model.dart';
 
+import '../../../../models/notifications_model.dart';
 import '../../local/token_service.dart';
 
 class AuthRepository {
@@ -14,6 +15,7 @@ class AuthRepository {
   int selectedCityIndex = 0;
   int selectedBranchIndex = 0;
   String selectedBranchId = "";
+  String selectedCityId = "";
   AuthRepository(
     this._authServices,
   );
@@ -72,12 +74,34 @@ class AuthRepository {
     }
   }
 
+  Future<Either<String, List<UserNotificationModel>>> getNotifications() async {
+    try {
+      final response = await _authServices.getNotifications();
+      if (response.statusCode == 200) {
+        if (response.data['status']) {
+          List<UserNotificationModel> notifications =
+              (response.data['data'] as List)
+                  .map(
+                    (e) => UserNotificationModel.fromJson(e),
+                  )
+                  .toList();
+          return Right(notifications);
+        } else {
+          return Left(response.data['message']);
+        }
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
   void setSelectedCityIdToCache(String id) {
     CacheHelper.setData(key: "SelectedCityId", value: id);
   }
 
   void setSelectedBranchIdToCache(String id) {
-    print("iddd ${id}");
     CacheHelper.setData(key: "SelectedBranchId", value: id);
   }
 }

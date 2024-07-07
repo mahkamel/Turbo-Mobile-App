@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:turbo/core/services/local/token_service.dart';
 
 class DioHelper {
   static late Dio dio;
@@ -38,7 +39,8 @@ class DioHelper {
     try {
       dio.options.headers = {
         'Accept': 'application/json',
-        if (userToken != null) "Authorization": userToken,
+        if (UserTokenService.currentUserToken.isNotEmpty)
+          "Authorization": UserTokenService.currentUserToken,
       };
       Response response = await dio.get(
         endpoint,
