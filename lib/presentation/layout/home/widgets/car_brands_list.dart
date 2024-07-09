@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
-import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/widgets/custom_shimmer.dart';
 import 'package:turbo/flavors.dart';
 

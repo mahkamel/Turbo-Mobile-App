@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext, WatchContext;
 import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../blocs/login/login_cubit.dart';
@@ -8,13 +9,11 @@ import '../../../../core/widgets/text_field_with_header.dart';
 class LoginPassword extends StatelessWidget {
   const LoginPassword({
     super.key,
-    required this.blocRead,
   });
-
-  final LoginCubit blocRead;
 
   @override
   Widget build(BuildContext context) {
+    var blocRead = context.read<LoginCubit>();
     return AuthTextFieldWithHeader(
       header: "password".getLocale(),
       hintText: "enterPassword".getLocale(),
@@ -22,8 +21,8 @@ class LoginPassword extends StatelessWidget {
       isWithValidation: true,
       textInputType: TextInputType.text,
       textInputAction: TextInputAction.next,
-      textEditingController: TextEditingController(),
-      validation: TextFieldValidation.valid,
+      textEditingController: blocRead.passwordController,
+      validation: context.watch<LoginCubit>().passwordValidation,
       onChange: (value) {
         if (value.isEmpty ||
             blocRead.passwordValidation != TextFieldValidation.normal) {

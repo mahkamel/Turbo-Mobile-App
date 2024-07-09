@@ -3,11 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/helpers/enums.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
-import 'package:turbo/core/widgets/custom_dropdown.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/auth/requests/widgets/select_file.dart';
 
-import '../../../../core/helpers/dropdown_keys.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
@@ -22,46 +20,32 @@ class SignupConfirmBooking extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      physics: const ClampingScrollPhysics(),
-      child: InkWell(
-        highlightColor: Colors.transparent,
-        onTap: () {
-          if (districtsKey.currentState != null) {
-            if (districtsKey.currentState!.isOpen) {
-              districtsKey.currentState!.closeBottomSheet();
-            }
-          }
-        },
-        child: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Padding(
-            //   padding: EdgeInsets.symmetric(vertical: 12.0),
-            //   child: DistrictsDropdown(),
-            // ),
-            BookingLocationField(),
-            Padding(
-              padding: EdgeInsetsDirectional.only(
-                start: 20.0,
-                end: 10.0,
-                top: 8.0,
-                bottom: 8.0,
-              ),
-              child: PrivateDriverRow(),
+      physics: ClampingScrollPhysics(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BookingLocationField(),
+          Padding(
+            padding: EdgeInsetsDirectional.only(
+              start: 20.0,
+              end: 10.0,
+              top: 8.0,
+              bottom: 8.0,
             ),
-            PickupDateSelection(),
-            DeliveryDateSelection(),
-            RentalPrice(),
-            SizedBox(
-              height: 8,
-            ),
-            RequiredFilesSection(),
-            ConfirmBookingButton()
-          ],
-        ),
+            child: PrivateDriverRow(),
+          ),
+          PickupDateSelection(),
+          DeliveryDateSelection(),
+          RentalPrice(),
+          SizedBox(
+            height: 8,
+          ),
+          RequiredFilesSection(),
+          ConfirmBookingButton()
+        ],
       ),
     );
   }
@@ -106,11 +90,6 @@ class ConfirmBookingButton extends StatelessWidget {
           marginBottom: 24,
           text: "Confirm Booking",
           function: () {
-            if (districtsKey.currentState != null) {
-              if (districtsKey.currentState!.isOpen) {
-                districtsKey.currentState!.closeBottomSheet();
-              }
-            }
             blocRead.confirmBookingClicked();
           },
         );
@@ -134,41 +113,32 @@ class RequiredFilesSection extends StatelessWidget {
         color: AppColors.primaryRed,
         fontSize: 18,
       ),
-      widget: InkWell(
-        onTap: () {
-          if (districtsKey.currentState != null) {
-            if (districtsKey.currentState!.isOpen) {
-              districtsKey.currentState!.closeBottomSheet();
-            }
-          }
-        },
-        child: Column(
-          children: [
-            SelectFile(
-              padding: EdgeInsetsDirectional.zero,
-              header: "National ID",
-              onFileSelected: (p0, isSingle) async {
-                blocRead.files = await convertPlatformFileList(p0);
-              },
-              onPrefixClicked: () {
-                blocRead.files = null;
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            SelectFile(
-              padding: EdgeInsetsDirectional.zero,
-              header: "Second File",
-              onFileSelected: (p0, isSingle) async {
-                blocRead.secondFiles = await convertPlatformFileList(p0);
-              },
-              onPrefixClicked: () {
-                blocRead.secondFiles = null;
-              },
-            ),
-          ],
-        ),
+      widget: Column(
+        children: [
+          SelectFile(
+            padding: EdgeInsetsDirectional.zero,
+            header: "National ID",
+            onFileSelected: (p0, isSingle) async {
+              blocRead.nationalIdFile = await convertPlatformFileList(p0);
+            },
+            onPrefixClicked: () {
+              blocRead.nationalIdFile = null;
+            },
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          SelectFile(
+            padding: EdgeInsetsDirectional.zero,
+            header: "Passport",
+            onFileSelected: (p0, isSingle) async {
+              blocRead.passportFiles = await convertPlatformFileList(p0);
+            },
+            onPrefixClicked: () {
+              blocRead.passportFiles = null;
+            },
+          ),
+        ],
       ),
     );
   }
@@ -254,13 +224,20 @@ class PickupDateSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final blocRead = context.read<SignupCubit>();
-    return DateSelection(
-      key: const Key("PickupDate"),
-      header: "Pickup",
-      onDateSelected: (selectedDate) {
-        blocRead.pickedDate = selectedDate;
-        blocRead.changePickupDateValue(pickUp: selectedDate);
-        blocRead.calculatePrice();
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) =>
+          current is ChangeSelectedDatesValueState,
+      builder: (context, state) {
+        return DateSelection(
+          key: const Key("PickupDate"),
+          header: "Pickup",
+          selectedDateTime: context.watch<SignupCubit>().pickedDate,
+          onDateSelected: (selectedDate) {
+            blocRead.pickedDate = selectedDate;
+            blocRead.changePickupDateValue(pickUp: selectedDate);
+            blocRead.calculatePrice();
+          },
+        );
       },
     );
   }
@@ -275,45 +252,30 @@ class PrivateDriverRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final blocRead = context.read<SignupCubit>();
 
-    return InkWell(
-      highlightColor: Colors.transparent,
-      onTap: () {
-        if (districtsKey.currentState != null) {
-          if (districtsKey.currentState!.isOpen) {
-            districtsKey.currentState!.closeBottomSheet();
-          }
-        }
-      },
-      child: Row(
-        children: [
-          Text(
-            "Private Driver?",
-            style: AppFonts.inter16Black500,
-          ),
-          const Spacer(),
-          BlocBuilder<SignupCubit, SignupState>(
-            buildWhen: (previous, current) =>
-                current is ChangeIsWithPrivateDriverValueState,
-            builder: (context, state) {
-              return Checkbox(
-                visualDensity: VisualDensity.standard,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: context.watch<SignupCubit>().isWithPrivateDriver,
-                onChanged: (value) {
-                  if (districtsKey.currentState != null) {
-                    if (districtsKey.currentState!.isOpen) {
-                      districtsKey.currentState!.closeBottomSheet();
-                    }
-                  }
-                  if (value != null) {
-                    blocRead.changeIsWithPrivateDriverValue(value);
-                  }
-                },
-              );
-            },
-          ),
-        ],
-      ),
+    return Row(
+      children: [
+        Text(
+          "Private Driver?",
+          style: AppFonts.inter16Black500,
+        ),
+        const Spacer(),
+        BlocBuilder<SignupCubit, SignupState>(
+          buildWhen: (previous, current) =>
+              current is ChangeIsWithPrivateDriverValueState,
+          builder: (context, state) {
+            return Checkbox(
+              visualDensity: VisualDensity.standard,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              value: context.watch<SignupCubit>().isWithPrivateDriver,
+              onChanged: (value) {
+                if (value != null) {
+                  blocRead.changeIsWithPrivateDriverValue(value);
+                }
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }
@@ -331,18 +293,11 @@ class BookingLocationField extends StatelessWidget {
         final blocRead = context.read<SignupCubit>();
 
         return AuthTextFieldWithHeader(
-          onTap: () {
-            if (districtsKey.currentState != null) {
-              if (districtsKey.currentState!.isOpen) {
-                districtsKey.currentState!.closeBottomSheet();
-              }
-            }
-          },
-          header: "Location",
-          hintText: "Enter Location",
+          header: "Address",
+          hintText: "Enter Address",
           isWithValidation: true,
           textInputType: TextInputType.name,
-          validationText: "Invalid Location.",
+          validationText: "Invalid Address.",
           textEditingController: blocRead.locationController,
           validation: context.watch<SignupCubit>().locationValidation,
           onTapOutside: () {
@@ -357,75 +312,6 @@ class BookingLocationField extends StatelessWidget {
           onSubmit: (value) {
             blocRead.checkLocationValidation();
           },
-        );
-      },
-    );
-  }
-}
-
-class DistrictsDropdown extends StatelessWidget {
-  const DistrictsDropdown({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignupCubit, SignupState>(
-      buildWhen: (previous, current) =>
-          current is GetDistrictByCityErrorState ||
-          current is GetDistrictByCityLoadingState ||
-          current is GetDistrictByCitySuccessState ||
-          current is ChangeSelectedDistrictIndexState,
-      builder: (context, state) {
-        final blocRead = context.read<SignupCubit>();
-        final blocWatch = context.watch<SignupCubit>();
-        return WidgetWithHeader(
-          header: "District",
-          widget: state is GetDistrictByCityLoadingState
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : blocWatch.districts.isEmpty
-                  ? const SizedBox()
-                  : CustomDropdown<int>(
-                      onTap: () {},
-                      border: Border.all(
-                        color: AppColors.black.withOpacity(0.5),
-                      ),
-                      paddingLeft: 0,
-                      key: districtsKey,
-                      paddingRight: 0,
-                      index: blocWatch.districtSelectedIndex,
-                      showText: false,
-                      listOfValues: blocWatch.districts
-                          .map(
-                            (e) => e.districtName,
-                          )
-                          .toList(),
-                      text: "Select District",
-                      isCheckedBox: false,
-                      onChange: (_, int index) {
-                        blocRead.changeSelectedDistrictId(index);
-                      },
-                      items: blocWatch.districts
-                          .map(
-                            (e) => e.districtName,
-                          )
-                          .toList()
-                          .asMap()
-                          .entries
-                          .map(
-                            (item) => CustomDropdownItem(
-                              key: UniqueKey(),
-                              value: item.key,
-                              child: Text(
-                                item.value,
-                                style: AppFonts.inter15Black400,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
         );
       },
     );

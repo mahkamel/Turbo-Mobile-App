@@ -10,9 +10,11 @@ import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
+import '../../blocs/orders/order_cubit.dart';
 import '../../presentation/auth/requests/payment/payment_screen.dart';
 import '../../presentation/auth/requests/signup_screen.dart';
 import '../../presentation/layout/layout_screen.dart';
+import '../../presentation/layout/orders/request_status/request_status_screen.dart';
 import '../../presentation/onboarding/onboarding_screen.dart';
 import '../di/dependency_injection.dart';
 
@@ -53,6 +55,15 @@ class AppRouter {
           child: PaymentScreen(
             value: (arguments as PaymentScreenArguments).value,
             carRequestId: arguments.carRequestId,
+          ),
+        ),
+    Routes.editRequestScreen: (context, arguments) => BlocProvider<OrderCubit>(
+          create: (context) => getIt<OrderCubit>()
+            ..getRequestStatus(
+              (arguments).requestId,
+            ),
+          child: RequestStatusScreen(
+            requestId: (arguments as RequestStatusScreenArguments).requestId,
           ),
         ),
   };

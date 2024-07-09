@@ -9,6 +9,7 @@ import '../../../../core/routing/routes.dart';
 import '../../../../core/routing/screens_arguments.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
+import 'car_image.dart';
 
 class RecommendedCarCard extends StatelessWidget {
   const RecommendedCarCard({
@@ -143,28 +144,8 @@ class RecommendedCarCard extends StatelessWidget {
   Hero _carImage() {
     return Hero(
       tag: car.carId,
-      child: Container(
-        width: double.infinity,
-        height: 124,
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          color: AppColors.black800,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: CachedNetworkImage(
-          imageUrl: car.carImg,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => const SizedBox(
-            height: 40,
-            width: 40,
-            child: Center(
-              child: CircularProgressIndicator(
-                color: AppColors.white,
-              ),
-            ),
-          ),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
+      child: CarImage(
+        carImgPath: car.carImg,
       ),
     );
   }

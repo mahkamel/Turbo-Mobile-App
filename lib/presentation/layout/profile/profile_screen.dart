@@ -24,7 +24,6 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-
                 const SizedBox(
                   height: 24,
                 ),
@@ -33,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (_) => BlocProvider<ProfileCubit>.value(
                         value: context.read<ProfileCubit>()
-                          ..getAllSavedPaymentMethods()
+                          ..getAllSavedPaymentMethods(isForceToRefresh: true)
                           ..savedCardsInit(),
                         child: const SavedCardsScreen(),
                       ),
@@ -56,11 +55,11 @@ class ProfileScreen extends StatelessWidget {
                         value: LocaleCode.en_US,
                         items: LocaleCode.values
                             .map((code) => DropdownMenuItem(
-                          value: code,
-                          child: Text(code == LocaleCode.en_US
-                              ? 'English'
-                              : 'عربي'),
-                        ))
+                                  value: code,
+                                  child: Text(code == LocaleCode.en_US
+                                      ? 'English'
+                                      : 'عربي'),
+                                ))
                             .toList(),
                         onChanged: (code) {
                           if (code == LocaleCode.ar_SA) {

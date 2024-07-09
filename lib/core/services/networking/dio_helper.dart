@@ -34,7 +34,6 @@ class DioHelper {
   static Future<Response> getData({
     required String endpoint,
     Map<String, dynamic>? body,
-    String? userToken,
   }) async {
     try {
       dio.options.headers = {
@@ -71,20 +70,19 @@ class DioHelper {
     required Map<String, dynamic> body,
     Map<String, dynamic>? query,
     Object? formData,
-    String? userToken,
   }) async {
     dio.options.headers = {
       'Accept': 'application/json',
-      if (userToken != null) "Authorization": userToken,
+      if (UserTokenService.currentUserToken.isNotEmpty) "Authorization": UserTokenService.currentUserToken,
       'Content-Type':
           formData != null ? "multipart/form-data" : 'application/json'
     };
+    print("ssss ${dio.options.headers}");
     try {
       Response response = await dio.post(
         endpoint,
         queryParameters: query,
         data: formData ?? body,
-        options: Options(contentType: Headers.jsonContentType),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -93,6 +91,7 @@ class DioHelper {
         throw Exception(response.data['message']);
       }
     } on DioException catch (e) {
+      print("dioooErororr ${e}");
       if (e is SocketException ||
           e.type == DioExceptionType.unknown ||
           e.type == DioExceptionType.connectionError ||
