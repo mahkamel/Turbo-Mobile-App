@@ -10,9 +10,10 @@ import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/auth/login_screen/widgets/auth_rich_text.dart';
 import 'package:turbo/presentation/auth/login_screen/widgets/forget_pass_button.dart';
 import 'package:turbo/presentation/auth/login_screen/widgets/login_password.dart';
-import 'package:turbo/presentation/auth/login_screen/widgets/login_phone_number.dart';
 
+import '../../../core/helpers/enums.dart';
 import '../../../core/routing/routes.dart';
+import '../../../core/widgets/text_field_with_header.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({
@@ -29,7 +30,6 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var blocRead = context.read<LoginCubit>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -42,12 +42,43 @@ class LoginScreen extends StatelessWidget {
                 header: "login".getLocale(),
                 textAlignment: AlignmentDirectional.center,
               ),
-              LoginPhoneNumber(blocRead: blocRead),
+              const SizedBox(
+                height: 48,
+              ),
+              BlocBuilder<LoginCubit, LoginState>(
+                buildWhen: (previous, current) =>
+                    current is CheckLoginEmailValidationState,
+                builder: (context, state) {
+                  return AuthTextFieldWithHeader(
+                    header: "Email",
+                    hintText: "Enter Email",
+                    isWithValidation: true,
+                    textInputType: TextInputType.emailAddress,
+                    validationText: "Invalid Email Address.",
+                    textEditingController:
+                        context.read<LoginCubit>().emailController,
+                    validation: context.watch<LoginCubit>().emailValidation,
+                    onChange: (value) {
+                      if (value.isEmpty ||
+                          context.read<LoginCubit>().emailValidation !=
+                              TextFieldValidation.normal) {
+                        context.read<LoginCubit>().checkEmailValidationState();
+                      }
+                    },
+                    onSubmit: (value) {
+                      context.read<LoginCubit>().checkEmailValidationState();
+                    },
+                  );
+                },
+              ),
+              const SizedBox(
+                height: 18,
+              ),
               BlocBuilder<LoginCubit, LoginState>(
                 buildWhen: (previous, current) =>
                     current is CheckLoginPasswordValidationState,
                 builder: (context, state) {
-                  return LoginPassword(blocRead: blocRead);
+                  return const LoginPassword();
                 },
               ),
               const ForgetPasswordButton(),
@@ -58,13 +89,24 @@ class LoginScreen extends StatelessWidget {
                       context: context,
                       message: state.errMsg,
                     );
+                  } else if (state is LoginSuccessState) {
+                    Navigator.of(context).pushReplacementNamed(
+                      Routes.signupScreen,
+                      arguments: SignupScreenArguments(
+                          carId: requestedCarId,
+                          isFromLogin: true,
+                          dailyPrice: dailyPrice,
+                          weeklyPrice: weeklyPrice,
+                          monthlyPrice: monthlyPrice),
+                    );
                   }
                 },
                 builder: (context, state) {
+                  var blocRead = context.read<LoginCubit>();
                   return DefaultButton(
                     loading: state is LoginLoadingState,
                     function: () {
-                      blocRead.onLoginPressed();
+                      blocRead.onLoginButtonClicked();
                     },
                     text: "login".getLocale(),
                     marginTop: 24,

@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:turbo/core/widgets/widget_with_header.dart';
 
 import '../../../../core/helpers/constants.dart';
-import '../../../../core/helpers/dropdown_keys.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/container_with_shadow.dart';
+import '../../../../flavors.dart';
 
 class SelectFile extends StatefulWidget {
   final String header;
@@ -27,9 +26,10 @@ class SelectFile extends StatefulWidget {
   final double? marginBottom;
   final File? file;
   final List<PlatformFile>? files;
-  final List<String> paths;
+  final String paths;
   final bool isShowDeleteFile;
   final String prefixImgPath;
+  final double? width;
 
   const SelectFile({
     super.key,
@@ -42,7 +42,8 @@ class SelectFile extends StatefulWidget {
     this.padding,
     this.marginBottom,
     this.file,
-    this.paths = const [],
+    this.width,
+    this.paths = "",
     this.isShowDeleteFile = false,
     this.files,
     this.prefixImgPath = "assets/images/icons/pdf_file.png",
@@ -70,22 +71,12 @@ class _SelectFileState extends State<SelectFile> {
       });
     }
     if (widget.paths.isNotEmpty) {
-      if (widget.paths.length > 1) {
-        filesName = "${widget.header} (${widget.paths.length})";
-      } else {
-        filesName = widget.header;
-      }
+      filesName = widget.header;
     }
     super.initState();
   }
 
   Future<void> pickFile() async {
-    if (districtsKey.currentState != null) {
-      if (districtsKey.currentState!.isOpen) {
-        districtsKey.currentState!.closeBottomSheet();
-      }
-
-    }
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
@@ -96,11 +87,7 @@ class _SelectFileState extends State<SelectFile> {
       setState(() {
         _file = File(result.files.first.path!);
         files = result.files;
-        if (files.length > 1) {
-          filesName = "${widget.header} (${files.length})";
-        } else {
-          filesName = widget.header;
-        }
+        filesName = widget.header;
       });
       widget.onFileSelected(result.files, result.isSinglePick);
     }
@@ -109,6 +96,7 @@ class _SelectFileState extends State<SelectFile> {
   @override
   Widget build(BuildContext context) {
     return WidgetWithHeader(
+      width: widget.width,
       key: Key(widget.header),
       padding: widget.padding ??
           const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
@@ -123,7 +111,7 @@ class _SelectFileState extends State<SelectFile> {
                 context: context,
                 builder: (context) {
                   return DisplayDocumentsDialog(
-                    paths: widget.paths,
+                    paths: [widget.paths],
                   );
                 },
               );
@@ -176,11 +164,6 @@ class _SelectFileState extends State<SelectFile> {
                               ? 8
                               : 0),
                       onPressed: () async {
-                        if (districtsKey.currentState != null) {
-                          if (districtsKey.currentState!.isOpen) {
-                            districtsKey.currentState!.closeBottomSheet();
-                          }
-                        }
                         if (!(widget.isFromMyApplication ||
                                 (widget.isFromPending &&
                                     widget.paths.isNotEmpty)) ||
@@ -204,7 +187,7 @@ class _SelectFileState extends State<SelectFile> {
                               context: context,
                               builder: (context) {
                                 return DisplayDocumentsDialog(
-                                  paths: widget.paths,
+                                  paths: [widget.paths],
                                 );
                               },
                             );
@@ -311,7 +294,7 @@ class DisplayDocumentsDialog extends StatelessWidget {
                               paths[0].toLowerCase().endsWith(".jpeg") ||
                               paths[0].toLowerCase().endsWith(".png")))
                         Image.network(
-                          "${dotenv.env['FILES_BASE_URL']!}${paths[0]}",
+                          "${FlavorConfig.instance.filesBaseUrl}${paths[0]}",
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress != null) {
                               return const Center(
@@ -330,7 +313,7 @@ class DisplayDocumentsDialog extends StatelessWidget {
                             enableSwipe: true,
                             fitPolicy: FitPolicy.BOTH,
                           ).cachedFromUrl(
-                            '${dotenv.env['FILES_BASE_URL']!}${paths[0]}',
+                            '${FlavorConfig.instance.filesBaseUrl}${paths[0]}',
                             placeholder: (progress) =>
                                 Center(child: Text('$progress %')),
                             errorWidget: (error) {
@@ -375,7 +358,7 @@ class DisplayDocumentsDialog extends StatelessWidget {
                                       enableSwipe: true,
                                       fitPolicy: FitPolicy.BOTH,
                                     ).cachedFromUrl(
-                                      '${dotenv.env['FILES_BASE_URL']!}${paths[0]}',
+                                      '${FlavorConfig.instance.filesBaseUrl}${paths[0]}',
                                       placeholder: (progress) =>
                                           Center(child: Text('$progress %')),
                                       errorWidget: (error) {
@@ -386,7 +369,7 @@ class DisplayDocumentsDialog extends StatelessWidget {
                                   );
                                 } else {
                                   return Image.network(
-                                    "${dotenv.env['FILES_BASE_URL']!}${paths[index]}",
+                                    "${FlavorConfig.instance.filesBaseUrl}${paths[index]}",
                                     loadingBuilder:
                                         (context, child, loadingProgress) {
                                       if (loadingProgress != null) {

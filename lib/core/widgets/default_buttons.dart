@@ -80,8 +80,8 @@ class DefaultButton extends StatelessWidget {
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: defaultLoading(
-                      color: color == Colors.transparent
-                          ? AppColors.primaryGreen
+                      color: color == Colors.transparent || color == Colors.white
+                          ? AppColors.primaryRed
                           : Colors.white),
                 )
               : textWidget ??

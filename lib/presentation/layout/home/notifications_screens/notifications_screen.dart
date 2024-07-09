@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
+import 'package:turbo/core/routing/screens_arguments.dart';
 
 import '../../../../core/helpers/constants.dart';
+import '../../../../core/routing/routes.dart';
 import '../../../../core/widgets/custom_header.dart';
 import '../../../../models/notifications_model.dart';
 import 'notification_card.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({
     super.key,
   });
+
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  @override
+  void initState() {
+    context.read<HomeCubit>().getNotifications();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +47,9 @@ class NotificationsScreen extends StatelessWidget {
                     current is GetNotificationsLoadingState ||
                     current is GetNotificationsErrorState ||
                     current is GetNotificationsSuccessState,
-                builder: (context, state) {
+                builder: (homeContext, state) {
                   List<UserNotificationModel> notifications =
-                      context.watch<HomeCubit>().notifications;
+                      homeContext.watch<HomeCubit>().notifications;
                   return state is GetNotificationsLoadingState
                       ? const Center(
                           child: CircularProgressIndicator(),
@@ -52,13 +65,25 @@ class NotificationsScreen extends StatelessWidget {
                                 top: 8,
                                 bottom: 20,
                               ),
-                              itemBuilder: (context, index) => NotificationCard(
-                                title: notifications[index].notificationType,
-                                subTitle:
-                                    notifications[index].notificationMessage,
-                                date: notifications[index]
-                                    .notificationDate
-                                    .toIso8601String(),
+                              itemBuilder: (listViewContext, index) => InkWell(
+                                highlightColor: Colors.transparent,
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    Routes.editRequestScreen,
+                                    arguments: RequestStatusScreenArguments(
+                                      requestId: notifications[index]
+                                          .notificationRequestId,
+                                    ),
+                                  );
+                                },
+                                child: NotificationCard(
+                                  title: notifications[index].notificationType,
+                                  subTitle:
+                                      notifications[index].notificationMessage,
+                                  date: notifications[index]
+                                      .notificationDate
+                                      .toIso8601String(),
+                                ),
                               ),
                               separatorBuilder: (context, index) =>
                                   const SizedBox(
@@ -69,7 +94,7 @@ class NotificationsScreen extends StatelessWidget {
                           ),
                         );
                 },
-              )
+              ),
             ],
           ),
         ),

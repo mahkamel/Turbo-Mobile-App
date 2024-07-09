@@ -7,14 +7,16 @@ import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
-import 'package:turbo/core/services/networking/api_services/car_services.dart';
+import 'package:turbo/core/services/networking/api_services/car_service.dart';
 import 'package:turbo/core/services/networking/api_services/cities_districts_services.dart';
 import 'package:turbo/core/services/networking/api_services/pricing_policy_service.dart';
+import 'package:turbo/core/services/networking/api_services/requests_services.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
+import '../../blocs/orders/order_cubit.dart';
 import '../services/networking/api_services/payment_service.dart';
 import '../services/networking/repositories/auth_repository.dart';
 
@@ -29,6 +31,7 @@ Future<void> setupGetIt() async {
       () => CitiesDistrictsServices());
   getIt.registerLazySingleton<PricingPolicyService>(
       () => PricingPolicyService());
+  getIt.registerLazySingleton<RequestsService>(() => RequestsService());
 
   //Repositories
   getIt.registerLazySingleton<AuthRepository>(
@@ -41,6 +44,7 @@ Future<void> setupGetIt() async {
     () => CarRepository(
       getIt<CarServices>(),
       getIt<PricingPolicyService>(),
+      getIt<RequestsService>(),
     ),
   );
 
@@ -54,7 +58,9 @@ Future<void> setupGetIt() async {
 
   //Blocs
   getIt.registerFactory<LayoutCubit>(() => LayoutCubit());
-  getIt.registerFactory<LoginCubit>(() => LoginCubit());
+  getIt.registerFactory<LoginCubit>(() => LoginCubit(
+        getIt<AuthRepository>(),
+      ));
   getIt.registerFactory<SignupCubit>(
     () => SignupCubit(
       authRepository: getIt<AuthRepository>(),
@@ -88,5 +94,11 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getIt<PaymentRepository>()),
+  );
+  getIt.registerFactory<OrderCubit>(
+    () => OrderCubit(
+      getIt<CarRepository>(),
+      getIt<AuthRepository>(),
+    ),
   );
 }

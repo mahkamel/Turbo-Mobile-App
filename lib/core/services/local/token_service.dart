@@ -5,7 +5,11 @@ class UserTokenService {
   static String _userToken = '';
 
   static Future<void> saveUserToken(String token) async {
-    await StorageService.saveData(_tokenKey, token);
+    await StorageService.saveData(_tokenKey, token).then(
+      (_) {
+        _userToken = token;
+      },
+    );
   }
 
   static Future<String?> getUserToken() async {

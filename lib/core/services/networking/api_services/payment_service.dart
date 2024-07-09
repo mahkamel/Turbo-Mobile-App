@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 
-import '../../local/token_service.dart';
 import '../dio_helper.dart';
 
 class PaymentService {
@@ -69,7 +68,6 @@ class PaymentService {
     try {
       Response response = await DioHelper.postData(
         endpoint: 'payment/addPaymentCarRequest',
-        userToken: UserTokenService.currentUserToken,
         body: paymentBody,
       );
       return response;
@@ -84,7 +82,6 @@ class PaymentService {
     try {
       Response response = await DioHelper.getData(
         endpoint: 'visacard/getPaymentMethods',
-        userToken: userToken,
       );
       return response;
     } catch (e) {
@@ -99,7 +96,6 @@ class PaymentService {
     try {
       Response response = await DioHelper.postData(
           endpoint: 'visacard/deleteVisaCard',
-          userToken: userToken,
           body: {
             "visaCard": {
               "_id": cardId,
@@ -121,7 +117,6 @@ class PaymentService {
     try {
       Response response = await DioHelper.postData(
           endpoint: 'visacard/addPaymentMethod',
-          userToken: userToken,
           body: {
             "visaCard": {
               "visaCardName": visaCardName,

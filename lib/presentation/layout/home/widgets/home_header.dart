@@ -121,20 +121,18 @@ class HomeHeader extends StatelessWidget {
                           builder: (navigateContext) =>
                               BlocProvider<HomeCubit>.value(
                             value: context.read<HomeCubit>(),
-                            child: const NotificationsScreen(
-
-                            ),
+                            child: const NotificationsScreen(),
                           ),
                         ));
                       },
                       child: SizedBox(
                         height: 30,
-                        width: 30,
+                        width: 24,
                         child: badges.Badge(
                           badgeStyle: const badges.BadgeStyle(
                             badgeColor: AppColors.primaryRed,
                           ),
-                          position: badges.BadgePosition.topEnd(end: -6),
+                          position: badges.BadgePosition.topEnd(end: -8),
                           badgeContent: Text(
                             "${blocWatch.notifications.length}",
                             style: const TextStyle(

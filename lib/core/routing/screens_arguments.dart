@@ -47,3 +47,12 @@ class PaymentScreenArguments {
     required this.carRequestId,
   });
 }
+
+
+class RequestStatusScreenArguments {
+  final String requestId;
+
+  RequestStatusScreenArguments({
+    required this.requestId,
+  });
+}

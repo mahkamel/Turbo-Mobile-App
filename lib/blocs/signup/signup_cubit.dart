@@ -38,8 +38,8 @@ class SignupCubit extends Cubit<SignupState> {
   double weeklyPrice = 0;
   double monthlyPrice = 0;
 
-  List<File>? files = [];
-  List<File>? secondFiles = [];
+  List<File>? nationalIdFile = [];
+  List<File>? passportFiles = [];
   List<District> districts = [];
 
   TextEditingController customerNameController = TextEditingController();
@@ -79,7 +79,6 @@ class SignupCubit extends Cubit<SignupState> {
     weeklyPrice = arguments.weeklyPrice.toDouble();
     monthlyPrice = arguments.monthlyPrice.toDouble();
     citySelectedIndex = authRepository.selectedCityIndex;
-    getDistrictsByCity(citiesDistrictsRepository.cities[citySelectedIndex].id);
   }
 
   void changeStepIndicator(int index) {
@@ -355,14 +354,14 @@ class SignupCubit extends Cubit<SignupState> {
     try {
       if (deliveryDate == null ||
           deliveryDate == null ||
-          files == null || secondFiles == null ||
-          districts.isEmpty) {
+          nationalIdFile == null ||
+          passportFiles == null) {
         emit(const SignupState.confirmBookingFailed(
             errMsg: "Complete all required files"));
       } else if ((deliveryDate != null || deliveryDate != null) &&
-          files != null && secondFiles != null &&
+          nationalIdFile != null &&
+          passportFiles != null &&
           locationController.text.isNotEmpty &&
-          districts.isNotEmpty &&
           AppConstants.vat != -1 &&
           AppConstants.driverFees != -1) {
         final res = await carRepository.addCarRequest(
@@ -380,8 +379,8 @@ class SignupCubit extends Cubit<SignupState> {
           requestCity: authRepository.selectedCityId,
           userToken: authRepository.customer.token,
           requestPrice: double.parse(calculatedPrice.toStringAsFixed(2)),
-          files: files ?? [],
-          secondFiles: secondFiles ?? [],
+          nationalId: nationalIdFile ?? [],
+          passport: passportFiles ?? [],
         );
         res.fold(
           (errMsg) => emit(SignupState.confirmBookingFailed(errMsg: errMsg)),

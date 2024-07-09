@@ -9,17 +9,19 @@ class WidgetWithHeader extends StatelessWidget {
     required this.header,
     required this.widget,
     this.headerStyle,
+    this.width,
     this.padding = const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
   });
   final String header;
   final Widget widget;
   final EdgeInsetsDirectional padding;
   final TextStyle? headerStyle;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: AppConstants.screenWidth(context),
+      width: width ?? AppConstants.screenWidth(context),
       child: Padding(
         padding: padding,
         child: Column(

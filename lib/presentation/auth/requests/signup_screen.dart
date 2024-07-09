@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
+import 'package:turbo/core/services/local/token_service.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_confirm_booking.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_form.dart';
 import 'package:turbo/presentation/auth/requests/widgets/stepper.dart';
@@ -30,7 +31,8 @@ class SignupScreen extends StatelessWidget {
         if (didPop) {
           return;
         }
-        if (isFromLogin) {
+
+        if (isFromLogin && UserTokenService.currentUserToken.isEmpty) {
           context.pushReplacementNamed(
             Routes.loginScreen,
             arguments: LoginScreenArguments(
@@ -57,11 +59,6 @@ class SignupScreen extends StatelessWidget {
                   clientTypeKey.currentState!.closeBottomSheet();
                 }
               }
-              if (districtsKey.currentState != null) {
-                if (districtsKey.currentState!.isOpen) {
-                  districtsKey.currentState!.closeBottomSheet();
-                }
-              }
             },
             child: Column(
               children: [
@@ -70,7 +67,8 @@ class SignupScreen extends StatelessWidget {
                       !isFromLogin ? "Confirm Booking" : "signUp".getLocale(),
                   textAlignment: AlignmentDirectional.topCenter,
                   onBackPressed: () {
-                    if (isFromLogin) {
+                    if (isFromLogin &&
+                        UserTokenService.currentUserToken.isEmpty) {
                       context.pushReplacementNamed(
                         Routes.loginScreen,
                         arguments: LoginScreenArguments(

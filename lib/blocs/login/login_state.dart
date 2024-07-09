@@ -9,6 +9,11 @@ class LoginState with _$LoginState {
     required TextFieldValidation validation,
   }) = CheckLoginPasswordValidationState;
 
+  const factory LoginState.checkEmail({
+    required String email,
+    required TextFieldValidation validation,
+  }) = CheckLoginEmailValidationState;
+
 
   const factory LoginState.loginLoading() = LoginLoadingState;
   const factory LoginState.loginSuccess() = LoginSuccessState;

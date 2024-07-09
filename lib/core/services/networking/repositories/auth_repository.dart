@@ -5,6 +5,7 @@ import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/local/cache_helper.dart';
 import 'package:turbo/core/services/local/storage_service.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
+import 'package:turbo/models/attachment.dart';
 import 'package:turbo/models/customer_model.dart';
 
 import '../../../../models/notifications_model.dart';
@@ -27,6 +28,30 @@ class AuthRepository {
       customer = cachedCustomer;
       UserTokenService.saveUserToken(customer.token);
       UserTokenService.userTokenFirstTime();
+    }
+  }
+
+  Future<Either<String, CustomerModel>> customerLogin({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await _authServices.customerLogin(
+        email: email,
+        password: password,
+      );
+      if (response.statusCode == 200) {
+        if (response.data['status']) {
+          return Right(CustomerModel.fromJson(response.data));
+        } else {
+          return const Left(
+              "Invalid login credentials. Please double-check your email and password.");
+        }
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      return Left(e.toString());
     }
   }
 
@@ -55,12 +80,12 @@ class AuthRepository {
       if (response.statusCode == 200 && response.data['status']) {
         customer = CustomerModel(
           customerName: customerName,
-          phoneNumber: customerTelephone,
-          customerType: customerType,
+          customerId: "",
           customerEmail: customerEmail,
-          customerAddress: customerAddress,
+          attachments: <Attachment>[],
           token: response.data['token'],
         );
+        UserTokenService.saveUserToken(response.data['token']);
         StorageService.saveData(
           "customerData",
           json.encode(customer.toJson()),

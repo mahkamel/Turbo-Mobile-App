@@ -8,6 +8,7 @@ import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/flavors.dart';
 import 'package:turbo/models/customer_model.dart';
 
+import '../../models/attachment.dart';
 import '../services/local/storage_service.dart';
 
 String getValueFromEnv(String key) => dotenv.env[key] ?? "";
@@ -161,4 +162,24 @@ String formatNotificationDate(String notificationDate) {
   } else {
     return DateFormat('yyyy-MM-dd | hh:mm a').format(parsedDate);
   }
+}
+
+Attachment? findAttachmentFile({
+  required String type,
+  required List<Attachment> attachments,
+}) {
+  try {
+    return attachments.firstWhere((item) => item.fileType == type);
+  } catch (e) {
+    return null;
+  }
+}
+
+String formatDateTime(DateTime dateTime, {String? locale}) {
+  final DateFormat formatter = DateFormat(
+    'E MMM d HH:MM a',
+    locale,
+  );
+
+  return formatter.format(dateTime);
 }

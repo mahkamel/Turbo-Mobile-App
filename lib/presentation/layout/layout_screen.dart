@@ -3,10 +3,10 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
-import 'package:turbo/presentation/layout/history/history_screen.dart';
 import 'package:turbo/presentation/layout/profile/profile_screen.dart';
 import 'package:turbo/presentation/layout/search/search_screen.dart';
 
@@ -17,6 +17,7 @@ import '../../core/helpers/constants.dart';
 import '../../core/theming/colors.dart';
 import '../../core/theming/fonts.dart';
 import 'home/home_screen.dart';
+import 'orders/orders_screen.dart';
 
 class LayoutScreen extends StatelessWidget {
   const LayoutScreen({super.key});
@@ -25,7 +26,9 @@ class LayoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> screens = [
       BlocProvider<HomeCubit>(
-        create: (context) => getIt<HomeCubit>()..getCities()..getNotifications(),
+        create: (context) => getIt<HomeCubit>()
+          ..getCities()
+          ..getNotifications(),
         child: const HomeScreen(),
       ),
       BlocProvider<SearchCubit>(
@@ -34,7 +37,10 @@ class LayoutScreen extends StatelessWidget {
           ..init(),
         child: const SearchScreen(),
       ),
-      const HistoryScreen(),
+      BlocProvider(
+        create: (context) => getIt<OrderCubit>()..getAllCustomerRequests(),
+        child: const OrdersScreen(),
+      ),
       BlocProvider<ProfileCubit>.value(
         value: getIt<ProfileCubit>(),
         child: const ProfileScreen(),

@@ -78,14 +78,6 @@ class PaymentCubit extends Cubit<PaymentState> {
   }
 
   void checkCardNumberValidation() {
-    print("sssssss ${AppRegex.isValidCardNumberBasedOnType(
-      cardNumber.text,
-      cardTypeToggle == 0
-          ? "visa"
-          : cardTypeToggle == 1
-              ? "mastercard"
-              : "amex",
-    )}");
     if (cardNumber.text.isNotEmpty && cardNumber.text.contains("*")) {
       cardNumberValidation = TextFieldValidation.valid;
     } else if (cardNumber.text.isNotEmpty &&
@@ -97,7 +89,6 @@ class PaymentCubit extends Cubit<PaymentState> {
                   ? "mastercard"
                   : "amex",
         )) {
-      print("sssssssss");
       cardNumberValidation = TextFieldValidation.valid;
     } else {
       cardNumberValidation = TextFieldValidation.notValid;

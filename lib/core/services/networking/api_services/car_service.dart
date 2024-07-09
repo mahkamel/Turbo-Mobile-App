@@ -143,8 +143,8 @@ class CarServices {
     required String userToken,
     required num requestPrice,
     required String requestToken,
-    required List<File> files,
-    required List<File> secondFiles,
+    required List<File> nationalIdFiles,
+    required List<File> passportFiles,
   }) async {
     try {
       Map<String, dynamic> body = {
@@ -165,13 +165,12 @@ class CarServices {
       String jsonData = json.encode(body);
       FormData carRequestForm = FormData();
       carRequestForm.fields.add(MapEntry("carRequest", jsonData));
-      if (files.isNotEmpty) {
-        print("filessss num ${files.length}");
-        for (int i = 0; i < files.length; i++) {
-          final String path = files[i].path;
+      if (nationalIdFiles.isNotEmpty) {
+        for (int i = 0; i < nationalIdFiles.length; i++) {
+          final String path = nationalIdFiles[i].path;
           carRequestForm.files.add(
             MapEntry(
-              "files",
+              "nationalId",
               await MultipartFile.fromFile(
                 path,
                 filename: getFileName(path),
@@ -179,11 +178,11 @@ class CarServices {
             ),
           );
         }
-        for (int i = 0; i < secondFiles.length; i++) {
-          final String path = secondFiles[i].path;
+        for (int i = 0; i < passportFiles.length; i++) {
+          final String path = passportFiles[i].path;
           carRequestForm.files.add(
             MapEntry(
-              "nationalId",
+              "passport",
               await MultipartFile.fromFile(
                 path,
                 filename: getFileName(path),
@@ -196,7 +195,6 @@ class CarServices {
       Response response = await DioHelper.postData(
         endpoint: 'car/addCarRequest',
         formData: carRequestForm,
-        userToken: userToken,
         body: {},
       );
       return response;

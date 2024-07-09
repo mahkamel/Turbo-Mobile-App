@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/helpers/constants.dart';
-import '../../../../core/helpers/dropdown_keys.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/widget_with_header.dart';
@@ -15,6 +14,7 @@ class DateSelection extends StatefulWidget {
     required this.onDateSelected,
     this.selectedDateTime,
     this.minDate,
+    this.padding,
     this.isDeliveryDate = false,
   });
 
@@ -23,6 +23,7 @@ class DateSelection extends StatefulWidget {
   final DateTime? minDate;
   final void Function(DateTime?) onDateSelected;
   final bool isDeliveryDate;
+  final EdgeInsetsDirectional? padding;
 
   @override
   State<DateSelection> createState() => _DateSelectionState();
@@ -35,19 +36,14 @@ class _DateSelectionState extends State<DateSelection> {
   Widget build(BuildContext context) {
     return WidgetWithHeader(
       header: "${widget.header} Date",
-      padding: const EdgeInsetsDirectional.only(
-        bottom: 12,
-        start: 20,
-        end: 20,
-      ),
+      padding: widget.padding ??
+          const EdgeInsetsDirectional.only(
+            bottom: 12,
+            start: 20,
+            end: 20,
+          ),
       widget: InkWell(
-        onTap: (){
-          if (districtsKey.currentState != null) {
-            if (districtsKey.currentState!.isOpen) {
-              districtsKey.currentState!.closeBottomSheet();
-            }
-          }
-        },
+        onTap: () {},
         child: Container(
           width: AppConstants.screenWidth(context),
           decoration: BoxDecoration(
@@ -61,11 +57,6 @@ class _DateSelectionState extends State<DateSelection> {
             children: [
               IconButton(
                 onPressed: () {
-                  if (districtsKey.currentState != null) {
-                    if (districtsKey.currentState!.isOpen) {
-                      districtsKey.currentState!.closeBottomSheet();
-                    }
-                  }
                   tempDateTime = widget.minDate ??
                       (widget.selectedDateTime ??
                           (widget.isDeliveryDate
@@ -90,6 +81,7 @@ class _DateSelectionState extends State<DateSelection> {
                           ),
                           Expanded(
                             child: CupertinoDatePicker(
+                              // use24hFormat: true,
                               minimumDate: widget.minDate ??
                                   (widget.isDeliveryDate
                                       ? DateTime.now()
@@ -101,7 +93,7 @@ class _DateSelectionState extends State<DateSelection> {
                                           ? DateTime.now()
                                               .add(const Duration(days: 1))
                                           : DateTime.now())),
-                              mode: CupertinoDatePickerMode.dateAndTime,
+                              mode: CupertinoDatePickerMode.date,
                               onDateTimeChanged: (dateTime) {
                                 setState(() {
                                   tempDateTime = dateTime;
@@ -130,6 +122,8 @@ class _DateSelectionState extends State<DateSelection> {
                                   setState(() {
                                     selectedDateTime = tempDateTime;
                                   });
+                                  print(
+                                      "timeeee ${selectedDateTime?.toIso8601String()}");
                                   widget.onDateSelected(selectedDateTime);
                                   if (Navigator.of(bsContext).canPop()) {
                                     Navigator.of(bsContext).pop();
@@ -165,11 +159,6 @@ class _DateSelectionState extends State<DateSelection> {
               ),
               IconButton(
                 onPressed: () {
-                  if (districtsKey.currentState != null) {
-                    if (districtsKey.currentState!.isOpen) {
-                      districtsKey.currentState!.closeBottomSheet();
-                    }
-                  }
                   showModalBottomSheet(
                     context: context,
                     builder: (timeBSContext) => Container(
@@ -189,8 +178,10 @@ class _DateSelectionState extends State<DateSelection> {
                           ),
                           Expanded(
                             child: CupertinoDatePicker(
+                              // use24hFormat: true,
                               minimumDate: widget.minDate ?? DateTime.now(),
-                              initialDateTime: selectedDateTime ?? DateTime.now(),
+                              initialDateTime:
+                                  selectedDateTime ?? DateTime.now(),
                               mode: CupertinoDatePickerMode.time,
                               onDateTimeChanged: (DateTime value) {
                                 setState(() {
@@ -247,8 +238,8 @@ class _DateSelectionState extends State<DateSelection> {
                     const SizedBox(
                       width: 8,
                     ),
-                    Text(selectedDateTime != null
-                        ? formatTime(selectedDateTime!)
+                    Text(widget.selectedDateTime != null
+                        ? formatTime(widget.selectedDateTime!)
                         : "00:00"),
                   ],
                 ),

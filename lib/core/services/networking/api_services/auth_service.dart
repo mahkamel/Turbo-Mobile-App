@@ -3,6 +3,24 @@ import 'package:dio/dio.dart';
 import '../dio_helper.dart';
 
 class AuthServices {
+  Future<Response> customerLogin({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      Response response = await DioHelper.postData(
+        endpoint: 'customer/customerLogin',
+        body: {
+          "UserOfCustomer_Email": email,
+          "password": password,
+        },
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
   Future<Response> signupInfoStep({
     required String customerName,
     required String customerEmail,
@@ -40,7 +58,7 @@ class AuthServices {
   Future<Response> getNotifications() async {
     try {
       Response response = await DioHelper.getData(
-        endpoint: 'customer/getNotifications',
+        endpoint: 'notification/getNotifications',
       );
       return response;
     } catch (e) {
