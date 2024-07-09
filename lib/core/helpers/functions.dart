@@ -4,13 +4,11 @@ import 'package:flutter/services.dart'
     show TextEditingValue, TextInputFormatter, TextSelection;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
-import 'package:turbo/blocs/localization/cubit/localization_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/flavors.dart';
 import 'package:turbo/models/customer_model.dart';
 
 import '../../models/attachment.dart';
-import '../di/dependency_injection.dart';
 import '../services/local/storage_service.dart';
 
 String getValueFromEnv(String key) => dotenv.env[key] ?? "";
