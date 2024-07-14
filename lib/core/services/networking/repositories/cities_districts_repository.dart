@@ -1,13 +1,16 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:turbo/core/services/networking/api_services/cities_districts_services.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/models/city_model.dart';
 import 'package:turbo/models/district_model.dart';
 
 class CitiesDistrictsRepository {
+  final AuthRepository _authRepository;
   final CitiesDistrictsServices _citiesDistrictsServices;
 
-  CitiesDistrictsRepository(this._citiesDistrictsServices);
+  CitiesDistrictsRepository(
+      this._citiesDistrictsServices, this._authRepository);
 
   List<City> cities = [];
 
@@ -20,6 +23,11 @@ class CitiesDistrictsRepository {
                 .map((type) => City.fromJson(type))
                 .toList()
             : <City>[];
+        _authRepository.selectedCityIndex = 0;
+        _authRepository.selectedCityId = cities[0].id;
+        _authRepository.selectedBranchId = cities[0].id;
+        _authRepository.selectedBranchId = cities[0].branches.first.id;
+
         return Right(cities);
       } else {
         return Left(response.data['message']);

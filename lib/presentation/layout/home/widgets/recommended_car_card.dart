@@ -37,9 +37,10 @@ class RecommendedCarCard extends StatelessWidget {
         width: isFromFilter
             ? AppConstants.screenWidth(context) - 32
             : AppConstants.screenWidth(context) * 0.8,
-        padding: EdgeInsets.symmetric(
-          vertical: 8,
-          horizontal: isFromFilter ? 16 : 12,
+        padding: EdgeInsetsDirectional.only(
+          top: 8,
+          start: isFromFilter ? 16 : 12,
+          end: isFromFilter ? 16 : 12,
         ),
         margin: const EdgeInsets.only(bottom: 4),
         constraints: !isFromFilter

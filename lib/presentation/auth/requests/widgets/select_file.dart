@@ -28,6 +28,7 @@ class SelectFile extends StatefulWidget {
   final List<PlatformFile>? files;
   final String paths;
   final bool isShowDeleteFile;
+  final bool isShowReplaceWithoutBorder;
   final String prefixImgPath;
   final double? width;
 
@@ -39,6 +40,7 @@ class SelectFile extends StatefulWidget {
     this.isWarningToReplace = false,
     this.isFromMyApplication = false,
     this.isFromPending = false,
+    this.isShowReplaceWithoutBorder = false,
     this.padding,
     this.marginBottom,
     this.file,
@@ -174,7 +176,7 @@ class _SelectFileState extends State<SelectFile> {
                             filesName = "";
                           });
                           widget.onPrefixClicked();
-                        } else if (widget.isWarningToReplace) {
+                        } else if (widget.isWarningToReplace || widget.isShowReplaceWithoutBorder) {
                           widget.onPrefixClicked();
                           pickFile();
                         } else if ((widget.isFromMyApplication ||
@@ -198,7 +200,7 @@ class _SelectFileState extends State<SelectFile> {
                       },
                       icon: (widget.isFromMyApplication ||
                                   widget.isFromPending) &&
-                              widget.isWarningToReplace
+                              widget.isWarningToReplace || widget.isShowReplaceWithoutBorder
                           ? Text(
                               "Replace",
                               style: AppFonts.inter14TextBlack500,

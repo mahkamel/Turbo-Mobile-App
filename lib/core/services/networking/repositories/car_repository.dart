@@ -195,7 +195,7 @@ class CarRepository {
     }
   }
 
-  Future<Either<String, String>> addCarRequest({
+  Future<Either<String, Map<String, dynamic>>> addCarRequest({
     required String requestCarId,
     required String requestLocation,
     required String requestBranchId,
@@ -224,6 +224,47 @@ class CarRepository {
         requestToken: AppConstants.fcmToken,
         nationalIdFiles: nationalId,
         passportFiles: passport,
+      );
+      if (response.statusCode == 200 && response.data['status']) {
+        return Right(response.data);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('getCarsByBrand Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, String>> addNewRequest({
+    required String requestCarId,
+    required String requestLocation,
+    required String requestBranchId,
+    required bool isWithRequestDriver,
+    required int requestPeriod,
+    required String requestFromDate,
+    required String requestToDate,
+    required String requestCity,
+    required String userToken,
+    required num requestPrice,
+    required num requestDailyCalculationPrice,
+    required List<String> attachmentsIds,
+  }) async {
+    try {
+      final response = await _carServices.addNewCarRequest(
+        userToken: userToken,
+        isWithRequestDriver: isWithRequestDriver,
+        requestCarId: requestCarId,
+        requestCity: requestCity,
+        requestBranchId: requestBranchId,
+        requestFromDate: requestFromDate,
+        requestToDate: requestToDate,
+        requestLocation: requestLocation,
+        requestPeriod: requestPeriod,
+        requestPrice: requestPrice,
+        requestToken: AppConstants.fcmToken,
+        attachmentsIds: attachmentsIds,
+        requestDailyCalculationPrice: requestDailyCalculationPrice,
       );
       if (response.statusCode == 200 && response.data['status']) {
         String requestId = response.data['requestId'];
@@ -300,7 +341,6 @@ class CarRepository {
   }
 
   Future<Either<String, Attachment>> editRequestFile({
-    required String requestId,
     required String fileType,
     required String attachmentId,
     required String oldPathFiles,
@@ -308,14 +348,20 @@ class CarRepository {
   }) async {
     try {
       final response = await _requestsService.editRequestFile(
-        requestId: requestId,
         fileType: fileType,
         attachmentId: attachmentId,
         oldPathFiles: oldPathFiles,
         newFile: newFile,
       );
       if (response.statusCode == 200 && response.data['status']) {
-        return Right(Attachment.fromJson(response.data['data']));
+        List<Attachment> attachments =
+            (response.data['attachmentArray'] as List)
+                .map((e) => Attachment.fromJson(e))
+                .toList();
+        return Right(attachments.firstWhere(
+          (element) =>
+              (element.id == attachmentId || element.fileType == fileType),
+        ));
       } else {
         return Left(response.data['message']);
       }

@@ -70,14 +70,16 @@ class DioHelper {
     required Map<String, dynamic> body,
     Map<String, dynamic>? query,
     Object? formData,
+    String? token,
   }) async {
+    print("tokeeenenn ${UserTokenService.currentUserToken} -- ${token}");
     dio.options.headers = {
       'Accept': 'application/json',
-      if (UserTokenService.currentUserToken.isNotEmpty) "Authorization": UserTokenService.currentUserToken,
+      if (UserTokenService.currentUserToken.isNotEmpty || token != null)
+        "Authorization": token ?? UserTokenService.currentUserToken,
       'Content-Type':
           formData != null ? "multipart/form-data" : 'application/json'
     };
-    print("ssss ${dio.options.headers}");
     try {
       Response response = await dio.post(
         endpoint,
@@ -91,7 +93,6 @@ class DioHelper {
         throw Exception(response.data['message']);
       }
     } on DioException catch (e) {
-      print("dioooErororr ${e}");
       if (e is SocketException ||
           e.type == DioExceptionType.unknown ||
           e.type == DioExceptionType.connectionError ||

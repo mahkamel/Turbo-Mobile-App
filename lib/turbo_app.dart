@@ -49,10 +49,15 @@ class MyApp extends StatelessWidget {
       child: BlocProvider<LocalizationCubit>(
         create: (context) => LocalizationCubit()..onInit(),
         child: BlocBuilder<LocalizationCubit, LocalizationState>(
+          buildWhen: (previous, current) {
+            return current is SelectedLocalization ||
+                previous is SelectedLocalization;
+          },
           builder: (context, state) {
             if (state.locale.languageCode.contains("ar")) {
               AppLocalizationsSetup.isLoadAr = true;
             }
+            print("localweee ${state.locale}");
             return MaterialApp(
               navigatorKey: navigatorKey,
               title: 'Turbo',
@@ -61,20 +66,22 @@ class MyApp extends StatelessWidget {
                   AppLocalizationsSetup.localizationsDelegates,
               localeResolutionCallback:
                   AppLocalizationsSetup.localeResolutionCallback,
-              locale: state.locale,
+              locale: context.watch<LocalizationCubit>().state.locale,
               theme: ThemeData(
                 fontFamily: "Inter",
                 scaffoldBackgroundColor: AppColors.white,
                 hoverColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 focusColor: Colors.transparent,
+                highlightColor: Colors.transparent,
                 colorScheme: ColorScheme.fromSeed(
                   seedColor: AppColors.primaryRed,
                 ),
                 useMaterial3: true,
               ),
               debugShowCheckedModeBanner: false,
-              initialRoute: Routes.layoutScreen,
+              initialRoute:
+                  isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
               onGenerateRoute: appRouter.generateRoute,
             );
           },

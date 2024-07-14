@@ -122,8 +122,6 @@ class _DateSelectionState extends State<DateSelection> {
                                   setState(() {
                                     selectedDateTime = tempDateTime;
                                   });
-                                  print(
-                                      "timeeee ${selectedDateTime?.toIso8601String()}");
                                   widget.onDateSelected(selectedDateTime);
                                   if (Navigator.of(bsContext).canPop()) {
                                     Navigator.of(bsContext).pop();
@@ -159,6 +157,11 @@ class _DateSelectionState extends State<DateSelection> {
               ),
               IconButton(
                 onPressed: () {
+                  tempDateTime = widget.minDate ??
+                      (widget.selectedDateTime ??
+                          (widget.isDeliveryDate
+                              ? DateTime.now().add(const Duration(days: 1))
+                              : DateTime.now()));
                   showModalBottomSheet(
                     context: context,
                     builder: (timeBSContext) => Container(

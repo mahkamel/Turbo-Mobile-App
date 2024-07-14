@@ -31,6 +31,14 @@ class HomeCubit extends Cubit<HomeState> {
 
   bool isFirstGettingCarBrand = true;
 
+  void onInit() {
+    try {
+      getCities();
+      getNotifications();
+      refreshCustomerData();
+    } catch (e) {}
+  }
+
   void changeSelectedBrandIndex(int newIndex) {
     selectedBrandIndex = newIndex;
     emit(HomeState.changeSelectedBrandIndex(selectedBrandIndex));
@@ -65,8 +73,10 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  bool isGettingCars  = false;
   void getCarsBasedOnBrand({String? brandId}) async {
     carsByBrand.clear();
+    isGettingCars = true;
     emit(const HomeState.getCarsByBrandLoading());
     try {
       final res = await _carRepository.getCarsByBrand(
@@ -76,16 +86,19 @@ class HomeCubit extends Cubit<HomeState> {
       res.fold(
         (errMsg) {
           AppConstants.isFirstTimeGettingCarRec = false;
+          isGettingCars = false;
           emit(HomeState.getCarsByBrandError(errMsg));
         },
         (cars) {
           carsByBrand = cars;
           AppConstants.isFirstTimeGettingCarRec = false;
+          isGettingCars = false;
           emit(HomeState.getCarsByBrandSuccess(brandId));
         },
       );
     } catch (e) {
       AppConstants.isFirstTimeGettingCarRec = false;
+      isGettingCars = false;
       emit(HomeState.getCarsByBrandError(e.toString()));
     }
   }
@@ -94,9 +107,9 @@ class HomeCubit extends Cubit<HomeState> {
     emit(const HomeState.getCitiesLoading());
     try {
       if (_citiesDistrictsRepository.cities.isNotEmpty) {
-        emit(const HomeState.getCitiesSuccess());
         getCarsBrandsByBranchId();
         getCarsBasedOnBrand();
+        emit(const HomeState.getCitiesSuccess());
       } else {
         final res = await _citiesDistrictsRepository.getCities();
         res.fold(
@@ -169,20 +182,55 @@ class HomeCubit extends Cubit<HomeState> {
         .setSelectedBranchIdToCache(_authRepository.selectedBranchId);
   }
 
-  void getNotifications() async {
+  void getNotifications({bool isFromNotificationScreen = false}) async {
+    emit(const HomeState.getNotificationsLoading());
     try {
       final res = await _authRepository.getNotifications();
       res.fold(
         (errMsg) {
           emit(HomeState.getNotificationsError(errMsg));
         },
-        (userNotifications) {
+        (userNotifications) async {
           notifications = userNotifications;
-          emit(HomeState.getNotificationsSuccess());
+          if (isFromNotificationScreen) {
+            for (var notification in notifications) {
+              notification.isNotificationSeen = true;
+            }
+          }
+
+          emit(const HomeState.getNotificationsSuccess());
+          if (isFromNotificationScreen) {
+            _authRepository.setNotificationsSeen();
+          }
         },
       );
     } catch (e) {
       emit(HomeState.getNotificationsError(e.toString()));
+    }
+  }
+
+  void readNotification(String notificationId) async {
+    final res = await _authRepository.setNotificationsRead(notificationId);
+
+    res.fold(
+      (_) {},
+      (_) async {
+        for (var notification in notifications) {
+          if (notification.id == notificationId) {
+            notification.isNotificationRead = true;
+            break;
+          }
+        }
+        emit(HomeState.setReadNotification(notificationId));
+      },
+    );
+  }
+
+  void refreshCustomerData() async {
+    try {
+      await _authRepository.refreshCustomerData();
+    } catch (e) {
+      print("eeeee $e");
     }
   }
 }

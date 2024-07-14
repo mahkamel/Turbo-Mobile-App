@@ -7,6 +7,7 @@ class RequestModel {
   late String requestLocation;
   late RequestBranch requestBranch;
   late String requestPeriod;
+  late String requestPaidStatus;
   late DateTime requestFrom;
   late DateTime requestTo;
   late RequestCity? requestCity;
@@ -22,49 +23,39 @@ class RequestModel {
     required this.requestPeriod,
     required this.requestFrom,
     required this.requestTo,
+    required this.requestPaidStatus,
     this.requestCity,
     required this.requestPrice,
     required this.requestSysDate,
   });
 
   RequestModel.fromJson(Map<String, dynamic> json) {
-    print("---------requestDriver---------");
     requestDriver = json['requestDriver'] ?? false;
-    print("--------requestStatus----------");
     requestStatus = json['requestStatus'] ?? 0;
     requestPrice = json['requestPrice'] ?? 0;
-    print("-------_id ${json['_id']}-----------");
     id = json['_id'] ?? "";
-    print("---------requestCarId---------");
-    print("---------${json['requestCarId']}---------");
     requestCarId = (json['requestCarId'] as List)
         .map((dynamic item) =>
             RequestCarId.fromJson(item as Map<String, dynamic>))
         .toList();
-    print("-----------requestLocation-------");
     requestLocation = json['requestLocation'] ?? "";
-    print("----------requestBranch--------");
+    requestPaidStatus = json['requestPaidStatus'] ?? "";
     requestBranch = json.containsKey("requestBranch")
         ? RequestBranch.fromJson(json['requestBranch'] as Map<String, dynamic>)
         : RequestBranch(
             id: "",
             branchName: "",
           );
-    print("-------requestPeriod-----------");
     requestPeriod = json['requestPeriod'] ?? "";
-    print("---------requestFrom---------");
     requestFrom = DateTime.parse(
       json['requestFrom'] ?? "",
     );
-    print("---------requestTo---------");
     requestTo = DateTime.parse(
       json['requestTo'] ?? "",
     );
-    print("----------requestCity--------");
     requestCity = json['requestCity'] == null
         ? null
         : RequestCity.fromJson(json['requestCity'] as Map<String, dynamic>);
-    print("---------requestSysDate---------");
     requestSysDate = DateTime.parse(
       json['requestSysDate'] ?? "",
     );
@@ -76,13 +67,12 @@ class RequestCarId {
 
   RequestCarId({required this.carId});
 
-  factory RequestCarId.fromJson(Map<String, dynamic> json) {print("******* ${json}");
+  factory RequestCarId.fromJson(Map<String, dynamic> json) {
     return RequestCarId(
-        carId: RequestCar.fromJson(json['carId'] as Map<String, dynamic>),
-      );
+      carId: RequestCar.fromJson(json['carId'] as Map<String, dynamic>),
+    );
   }
 }
-
 
 class RequestCar {
   final String id;
@@ -109,7 +99,6 @@ class RequestCar {
     );
   }
 }
-
 
 class RequestBranch {
   final String id;

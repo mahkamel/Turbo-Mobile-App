@@ -16,10 +16,7 @@ import '../../../core/widgets/custom_header.dart';
 class SignupScreen extends StatelessWidget {
   const SignupScreen({
     super.key,
-    this.isFromLogin = true,
   });
-
-  final bool isFromLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +28,7 @@ class SignupScreen extends StatelessWidget {
         if (didPop) {
           return;
         }
-
-        if (isFromLogin && UserTokenService.currentUserToken.isEmpty) {
+        if (UserTokenService.currentUserToken.isEmpty) {
           context.pushReplacementNamed(
             Routes.loginScreen,
             arguments: LoginScreenArguments(
@@ -63,12 +59,12 @@ class SignupScreen extends StatelessWidget {
             child: Column(
               children: [
                 DefaultHeader(
-                  header:
-                      !isFromLogin ? "Confirm Booking" : "signUp".getLocale(),
+                  header: UserTokenService.currentUserToken.isNotEmpty
+                      ? "Confirm Booking"
+                      : "signUp".getLocale(),
                   textAlignment: AlignmentDirectional.topCenter,
                   onBackPressed: () {
-                    if (isFromLogin &&
-                        UserTokenService.currentUserToken.isEmpty) {
+                    if (UserTokenService.currentUserToken.isEmpty) {
                       context.pushReplacementNamed(
                         Routes.loginScreen,
                         arguments: LoginScreenArguments(
@@ -86,10 +82,19 @@ class SignupScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                if (isFromLogin) const SignupStepper(),
-                if (isFromLogin && blocWatch.currentStep == 0)
+                if (UserTokenService.currentUserToken.isEmpty &&
+                    blocWatch.requestedCarId.isNotEmpty)
+                  const SignupStepper(),
+                if ((blocWatch.requestedCarId.isNotEmpty &&
+                        blocWatch.currentStep == 0) ||
+                    ((UserTokenService.currentUserToken.isEmpty &&
+                        blocWatch.currentStep == 0)))
                   const InfoStepForm(),
-                if ((isFromLogin && blocWatch.currentStep == 1) || !isFromLogin)
+                if ((blocWatch.requestedCarId.isNotEmpty &&
+                        blocWatch.currentStep == 1) &&
+                    (((UserTokenService.currentUserToken.isEmpty &&
+                            blocWatch.currentStep == 1)) ||
+                        UserTokenService.currentUserToken.isNotEmpty))
                   const Expanded(
                     child: SignupConfirmBooking(),
                   ),

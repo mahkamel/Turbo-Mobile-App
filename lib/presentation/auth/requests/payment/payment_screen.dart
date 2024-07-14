@@ -7,11 +7,11 @@ import '../../../../core/helpers/constants.dart';
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({
     super.key,
-    required this.value,
+    required this.paymentAmount,
     required this.carRequestId,
   });
 
-  final num value;
+  final num paymentAmount;
   final String carRequestId;
 
   @override
@@ -32,7 +32,7 @@ class PaymentScreen extends StatelessWidget {
               ),
               Expanded(
                 child: PaymentForm(
-                  value: value,
+                  value: paymentAmount,
                   carRequestId: carRequestId,
                 ),
               ),

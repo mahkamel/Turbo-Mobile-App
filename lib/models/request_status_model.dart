@@ -16,14 +16,15 @@ class RequestStatusModel {
   RequestCity requestCity;
   num requestPrice;
   String customerId;
+  String requestPaidStatus;
   DateTime requestSysDate;
   int requestCode;
   String requestRejectComment;
-  String requestRejectedByUser;
   DateTime? requestRejectedDate;
 
   RequestStatusModel({
     required this.requestDriver,
+    required this.requestPaidStatus,
     required this.requestStatus,
     required this.id,
     required this.attachmentsId,
@@ -39,39 +40,38 @@ class RequestStatusModel {
     required this.requestSysDate,
     required this.requestCode,
     required this.requestRejectComment,
-    required this.requestRejectedByUser,
     this.requestRejectedDate,
   });
   factory RequestStatusModel.fromJson(Map<String, dynamic> json) {
-    // Parse individual fields from the JSON
     return RequestStatusModel(
-      requestDriver: json['requestDriver'] as bool,
-      requestStatus: json['requestStatus'] as int,
-      id: json['_id'] ?? "", // Handle potential missing id field
-      attachmentsId: [], // Assuming attachmentsId needs separate parsing
+      requestDriver: json['requestDriver'] ?? false,
+      requestStatus: json['requestStatus'] ?? 0,
+      id: json['_id'] ?? "",
+      attachmentsId: (json['attachmentsId'] as List)
+          .map(
+            (e) => Attachment.fromJson(e),
+          )
+          .toList(),
       requestCarId: (json['requestCarId'] as List)
           .map((carJson) => RequestStatusCar.fromJson(carJson))
           .toList(),
-      requestLocation: json['requestLocation'] as String,
+      requestLocation: json['requestLocation'] ?? "",
+      requestPaidStatus: json['requestPaidStatus'] ?? "pending",
       requestBranch:
           RequestBranch.fromJson(json['requestBranch'] as Map<String, dynamic>),
-      requestPeriod: json['requestPeriod'] as String,
-      requestFrom:
-          DateTime.parse(json['requestFrom'] as String), // Assuming date format
-      requestTo:
-          DateTime.parse(json['requestTo'] as String), // Assuming date format
+      requestPeriod: json['requestPeriod'] ?? "0",
+      requestFrom: DateTime.parse(json['requestFrom'] as String),
+      requestTo: DateTime.parse(json['requestTo'] as String),
       requestCity:
           RequestCity.fromJson(json['requestCity'] as Map<String, dynamic>),
-      requestPrice: json['requestPrice'] as num,
-      customerId: json['customerId'] as String,
+      requestPrice: json['requestPrice'] ?? 0.0,
+      customerId: json['customerId'] ?? "",
       requestSysDate: DateTime.parse(
           json['requestSysDate'] as String), // Assuming date format
       requestCode: json['requestCode'] as int,
       requestRejectComment: json.containsKey("requestRejectComment")
           ? json['requestRejectComment'] ?? ""
-          : "", // Handle potential missing field
-      requestRejectedByUser:
-          json['requestRejectedByUser'] ?? "", // Handle potential missing field
+          : "",
       requestRejectedDate: json.containsKey("requestRejectedDate") &&
               json['requestRejectedDate'] != null
           ? DateTime.parse(json['requestRejectedDate'] as String)
@@ -86,7 +86,6 @@ class RequestCarId {
   RequestCarId({required this.carId});
 
   factory RequestCarId.fromJson(Map<String, dynamic> json) {
-    print("******* ${json}");
     return RequestCarId(
       carId: RequestStatusCar.fromJson(json['carId'] as Map<String, dynamic>),
     );

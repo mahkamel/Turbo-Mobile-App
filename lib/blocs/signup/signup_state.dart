@@ -125,4 +125,20 @@ class SignupState with _$SignupState {
     required DateTime? pickUp,
     required DateTime? delivery,
   }) = ChangeSelectedDatesValueState;
+
+  const factory SignupState.saveEditedFileLoading(final String fileId) =
+      SaveRequestEditedFileLoadingState;
+  const factory SignupState.saveEditedFileSuccess(final String fileId) =
+      SaveRequestEditedFileSuccessState;
+  const factory SignupState.saveEditedFileError(
+          final String errMsg, final String fileId) =
+      SaveRequestEditedFileErrorState;
+
+  const factory SignupState.changeNationalIdStatus({
+    required int state,
+  }) = ChangeNationalIdStatusState;
+
+  const factory SignupState.changePassportStatus({
+    required int state,
+  }) = ChangePassportStatusState;
 }

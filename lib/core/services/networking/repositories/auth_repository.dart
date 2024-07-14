@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/local/cache_helper.dart';
 import 'package:turbo/core/services/local/storage_service.dart';
@@ -42,11 +43,29 @@ class AuthRepository {
       );
       if (response.statusCode == 200) {
         if (response.data['status']) {
-          return Right(CustomerModel.fromJson(response.data));
+          CustomerModel customer = CustomerModel.fromJson(response.data);
+          UserTokenService.saveUserToken(customer.token);
+          return Right(customer);
         } else {
           return const Left(
               "Invalid login credentials. Please double-check your email and password.");
         }
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, CustomerModel>> refreshCustomerData() async {
+    try {
+      final response = await _authServices.refreshCustomerData();
+      print("sssresds $response");
+      if (response.statusCode == 200 && response.data['status']) {
+        customer.attachments =
+            CustomerModel.fromJson(response.data).attachments;
+        return Right(customer);
       } else {
         return Left(response.data['message']);
       }
@@ -128,5 +147,71 @@ class AuthRepository {
 
   void setSelectedBranchIdToCache(String id) {
     CacheHelper.setData(key: "SelectedBranchId", value: id);
+  }
+
+  Future<Either<String, bool>> setNotificationsSeen() async {
+    try {
+      final response = await _authServices.setSeenNotifications();
+      if (response.statusCode == 200 && response.data['status']) {
+        return const Right(true);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('setNotificationsSeen Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, bool>> setNotificationsRead(
+    String notificationId,
+  ) async {
+    try {
+      final response = await _authServices.setReadNotification(notificationId);
+      if (response.statusCode == 200 && response.data['status']) {
+        return const Right(true);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('setReadNotification Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, bool>> setNotificationToken(String token , String authToken) async {
+    try {
+      final response =
+          await _authServices.setNotificationsToken(token, authToken);
+      if (response.statusCode == 200 && response.data['status']) {
+        return const Right(true);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('setNotificationToken Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, bool>> disableNotificationToken(String token) async {
+    try {
+      final response = await _authServices.disableNotificationsToken(token);
+      if (response.statusCode == 200 && response.data['status']) {
+        return const Right(true);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('disableNotificationToken Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<void> clearCustomerData() async {
+    customer = CustomerModel.empty();
+    UserTokenService.deleteUserToken();
+    StorageService.deleteAllData();
+    await disableNotificationToken(AppConstants.fcmToken);
   }
 }
