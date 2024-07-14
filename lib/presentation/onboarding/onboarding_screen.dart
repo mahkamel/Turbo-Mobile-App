@@ -4,6 +4,7 @@ import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../core/routing/routes.dart';
+import '../../core/services/local/cache_helper.dart';
 import '../../core/theming/colors.dart';
 import '../../core/theming/fonts.dart';
 import '../../core/theming/locale_keys.dart';
@@ -20,6 +21,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _next() async {
     if (_currentIndex == 2) {
+      CacheHelper.setData(key: "isFirstTime", value: false);
       context.pushNamedAndRemoveUntil(Routes.layoutScreen,
           predicate: (Route<dynamic> route) {
         return false;

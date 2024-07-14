@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
+import 'package:turbo/presentation/layout/profile/add_new_card_screen.dart';
 
 import '../../../../../blocs/payment/payment_cubit.dart';
+import '../../../../../blocs/profile_cubit/profile_cubit.dart';
 import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/helpers/constants.dart';
 import '../../../../../core/theming/colors.dart';
@@ -13,9 +16,11 @@ class ExistingCardsBottomSheet extends StatelessWidget {
   const ExistingCardsBottomSheet({
     super.key,
     required this.blocRead,
+    required this.bottomSheetContext,
   });
 
   final PaymentCubit blocRead;
+  final BuildContext bottomSheetContext;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +123,12 @@ class ExistingCardsBottomSheet extends StatelessWidget {
           DefaultButton(
             function: () {
               blocRead.onRemoveSelectedCard();
-              Navigator.pop(context);
+              Navigator.of(bottomSheetContext).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => BlocProvider<ProfileCubit>.value(
+                    value: getIt<ProfileCubit>()..savedCardsInit(),
+                    child: const AddNewCardScreen()),
+              ));
             },
             borderRadius: 0,
             marginRight: 20,

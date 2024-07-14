@@ -39,27 +39,28 @@ class RequestsService {
     num? requestPrice,
   }) async {
     try {
-      Response response =
-          await DioHelper.postData(endpoint: 'car/editCarRequest', body: {
-        "carRequest": {
-          "requestId": requestId,
-          if (requestLocation != null) "requestLocation": requestLocation,
-          if (requestDriver != null) "requestDriver": requestDriver,
-          if (requestPeriod != null) "requestPeriod": requestPeriod,
-          if (requestForm != null) "requestFrom": requestForm.toIso8601String(),
-          if (requestTo != null) "requestTo": requestTo.toIso8601String(),
-          if (requestPrice != null) "requestPrice": requestPrice,
-        }
-      });
+      Response response = await DioHelper.postData(
+        endpoint: 'car/editCarRequest',
+        body: {
+          "carRequest": {
+            "requestId": requestId,
+            if (requestLocation != null) "requestLocation": requestLocation,
+            if (requestDriver != null) "requestDriver": requestDriver,
+            if (requestPeriod != null) "requestPeriod": requestPeriod,
+            if (requestForm != null)
+              "requestFrom": requestForm.toIso8601String(),
+            if (requestTo != null) "requestTo": requestTo.toIso8601String(),
+            if (requestPrice != null) "requestPrice": requestPrice,
+          }
+        },
+      );
       return response;
     } catch (e) {
-      print("ssss $e");
       throw e.toString();
     }
   }
 
   Future<Response> editRequestFile({
-    required String requestId,
     required String fileType,
     required String attachmentId,
     required String oldPathFiles,
@@ -67,7 +68,6 @@ class RequestsService {
   }) async {
     try {
       Map<String, dynamic> body = {
-        "requestId": requestId,
         "attachmentId": attachmentId,
         "oldPathFiles": oldPathFiles,
       };

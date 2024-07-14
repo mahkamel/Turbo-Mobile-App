@@ -1,14 +1,16 @@
 class UserNotificationModel {
-  final bool notificationRead;
-  final String id;
-  final String notificationMessage;
-  final String notificationCustomerId;
-  final String notificationRequestId;
-  final String notificationType;
-  final DateTime notificationDate;
+  bool isNotificationRead;
+  bool isNotificationSeen;
+  String id;
+  String notificationMessage;
+  String notificationCustomerId;
+  String notificationRequestId;
+  String notificationType;
+  DateTime notificationDate;
 
   UserNotificationModel({
-    required this.notificationRead,
+    required this.isNotificationRead,
+    required this.isNotificationSeen,
     required this.id,
     required this.notificationMessage,
     required this.notificationCustomerId,
@@ -19,7 +21,8 @@ class UserNotificationModel {
 
   factory UserNotificationModel.fromJson(Map<String, dynamic> json) =>
       UserNotificationModel(
-        notificationRead: json['notificationRead'] ?? false,
+        isNotificationRead: json['notificationRead'] ?? false,
+        isNotificationSeen: json['notificationSeen'] ?? false,
         id: json['_id'] ?? "",
         notificationMessage: json['notificationMessage'] ?? "",
         notificationCustomerId: json['notificationCustomerId'] ?? "",

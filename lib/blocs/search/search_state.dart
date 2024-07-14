@@ -45,4 +45,5 @@ class SearchState with _$SearchState {
       GetFilteredCarsSuccessState;
   const factory SearchState.getFilteredCarsError(final String errMsg) =
       GetFilteredCarsErrorState;
+
 }

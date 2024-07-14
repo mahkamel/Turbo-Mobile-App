@@ -7,6 +7,7 @@ import 'package:turbo/presentation/auth/requests/widgets/select_phone_number.dar
 
 import '../../../../blocs/signup/signup_cubit.dart';
 import '../../../../core/helpers/enums.dart';
+import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/custom_dropdown.dart';
@@ -99,7 +100,13 @@ class SignupSubmitButton extends StatelessWidget {
         var blocRead = context.read<SignupCubit>();
 
         if (state is SubmitCustomerInfoSuccessState) {
-          blocRead.changeStepIndicator(1);
+          if (blocRead.requestedCarId.isNotEmpty) {
+            blocRead.changeStepIndicator(1);
+          } else {
+            Navigator.of(context).pushReplacementNamed(
+              Routes.layoutScreen,
+            );
+          }
         } else if (state is SubmitCustomerInfoErrorState) {
           defaultErrorSnackBar(context: context, message: state.errMsg);
         }

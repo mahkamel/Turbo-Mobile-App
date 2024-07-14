@@ -25,4 +25,7 @@ class HomeState with _$HomeState {
   const factory HomeState.getNotificationsSuccess() = GetNotificationsSuccessState;
   const factory HomeState.getNotificationsError(final String errMsg) = GetNotificationsErrorState;
 
+  const factory HomeState.setReadNotification(final String notificationId) = SetReadNotificationState;
+
+
 }

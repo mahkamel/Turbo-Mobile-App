@@ -10,12 +10,13 @@ class NotificationCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.subTitle,
-    required this.date,
+    required this.date, required this.isRead,
   });
 
   final String title;
   final String subTitle;
   final String date;
+  final bool isRead;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class NotificationCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16.0),
         width: AppConstants.screenWidth(context),
         decoration: BoxDecoration(
-          color: AppColors.greyBorder.withOpacity(0.4),
+          color: isRead ? AppColors.greyBorder.withOpacity(0.1):AppColors.greyBorder.withOpacity(0.4),
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(

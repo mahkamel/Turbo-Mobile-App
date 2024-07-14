@@ -6,8 +6,10 @@ import 'package:turbo/blocs/payment/payment_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
+import 'package:turbo/presentation/onboarding/init_select_lang_screen.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
 import '../../blocs/orders/order_cubit.dart';
@@ -20,22 +22,29 @@ import '../di/dependency_injection.dart';
 
 class AppRouter {
   static final Map<String, Widget Function(BuildContext, dynamic)> _routes = {
+    Routes.initLangScreen: (context, _) => const FirstSelectLangScreen(),
     Routes.onBoardingScreen: (context, _) => const OnboardingScreen(),
     Routes.loginScreen: (context, arguments) => BlocProvider<LoginCubit>(
           create: (context) => getIt<LoginCubit>(),
-          child: LoginScreen(
-            requestedCarId: (arguments as LoginScreenArguments).carId,
-            dailyPrice: arguments.dailyPrice,
-            weeklyPrice: arguments.weeklyPrice,
-            monthlyPrice: arguments.monthlyPrice,
-          ),
+          child: arguments != null
+              ? LoginScreen(
+                  requestedCarId: (arguments as LoginScreenArguments).carId,
+                  dailyPrice: arguments.dailyPrice,
+                  weeklyPrice: arguments.weeklyPrice,
+                  monthlyPrice: arguments.monthlyPrice,
+                )
+              : const LoginScreen(),
         ),
-    Routes.signupScreen: (context, arguments) => BlocProvider<SignupCubit>(
-          create: (context) => getIt<SignupCubit>()..onInit(arguments),
-          child: SignupScreen(
-            isFromLogin: (arguments as SignupScreenArguments).isFromLogin,
+    Routes.signupScreen: (context, arguments) => arguments != null
+        ? BlocProvider<SignupCubit>(
+            create: (context) => getIt<SignupCubit>()
+              ..onInit(arguments as SignupScreenArguments),
+            child: const SignupScreen(),
+          )
+        : BlocProvider<SignupCubit>(
+            create: (context) => getIt<SignupCubit>(),
+            child: const SignupScreen(),
           ),
-        ),
     Routes.layoutScreen: (context, _) => BlocProvider<LayoutCubit>(
           create: (context) => getIt<LayoutCubit>(),
           child: const LayoutScreen(),
@@ -53,17 +62,21 @@ class AppRouter {
     Routes.paymentScreen: (context, arguments) => BlocProvider<PaymentCubit>(
           create: (context) => getIt<PaymentCubit>(),
           child: PaymentScreen(
-            value: (arguments as PaymentScreenArguments).value,
+            paymentAmount: (arguments as PaymentScreenArguments).paymentAmount,
             carRequestId: arguments.carRequestId,
           ),
         ),
-    Routes.editRequestScreen: (context, arguments) => BlocProvider<OrderCubit>(
-          create: (context) => getIt<OrderCubit>()
-            ..getRequestStatus(
-              (arguments).requestId,
+    Routes.requestStatusScreen: (context, arguments) =>
+        RepositoryProvider<AuthRepository>.value(
+          value: getIt<AuthRepository>(),
+          child: BlocProvider<OrderCubit>(
+            create: (context) => getIt<OrderCubit>()
+              ..getRequestStatus(
+                (arguments).requestId,
+              ),
+            child: RequestStatusScreen(
+              requestId: (arguments as RequestStatusScreenArguments).requestId,
             ),
-          child: RequestStatusScreen(
-            requestId: (arguments as RequestStatusScreenArguments).requestId,
           ),
         ),
   };

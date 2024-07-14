@@ -40,10 +40,21 @@
   "forgetPassword": "نسيت كلمة المرور؟",
   "yourInfo": "معلوماتك",
   "completeBooking": "تأكيد الحجز",
-  "password": "كلمة السر",
-  "enterPassword": "أدخل كلمة السر"
-
-
-
-
+  "enterPassword": "أدخل كلمة السر",
+  "selectYourLang": "مرحباً! من فضلك اختر اللغة",
+  "emailAddress": "عنوان البريد الإلكتروني",
+  "thisEmailIsInvalid": "هذا البريد الإلكتروني غير صالح",
+  "password": "كلمة المرور",
+  "passwordCannotBeEmpty": "لا يمكن أن تكون كلمة المرور فارغة.",
+  "dontHaveAnAccount": "ليس لديك حساب؟",
+  "signup": "التسجيل",
+  "English": "الإنجليزية",
+  "Arabic": "العربية",
+  "Language": "اللغة",
+  "userProfile": "ملف المستخدم",
+  "Settings": "الإعدادات",
+  "Logout": "تسجيل الخروج",
+  "done": "تم",
+  "back": "السابق",
+  "next": "التالي"
 }

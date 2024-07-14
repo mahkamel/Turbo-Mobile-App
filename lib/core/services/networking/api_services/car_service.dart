@@ -202,6 +202,51 @@ class CarServices {
       throw e.toString();
     }
   }
+
+  Future<Response> addNewCarRequest({
+    required String requestCarId,
+    required String requestLocation,
+    required String requestBranchId,
+    required bool isWithRequestDriver,
+    required int requestPeriod,
+    required String requestFromDate,
+    required String requestToDate,
+    required String requestCity,
+    required String userToken,
+    required num requestPrice,
+    required num requestDailyCalculationPrice,
+    required String requestToken,
+    required List<String> attachmentsIds,
+  }) async {
+    try {
+      Map<String, dynamic> body = {
+        "carRequest": {
+          "requestCarId": {
+            "carId": requestCarId,
+            "from": requestFromDate,
+          },
+          "requestLocation": requestLocation,
+          "requestBranch": requestBranchId,
+          "requestDriver": isWithRequestDriver,
+          "requestPeriod": requestPeriod,
+          "requestFrom": requestFromDate,
+          "requestTo": requestToDate,
+          "requestCity": requestCity,
+          "requestTotalPrice": requestPrice,
+          "requestDailyCalculationPrice": requestDailyCalculationPrice,
+          "requestToken": requestToken,
+          "attachmentsId": attachmentsIds,
+        }
+      };
+      Response response = await DioHelper.postData(
+        endpoint: 'car/addNewCarRequest',
+        body: body,
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }
 
 String getFileName(String filePath) {

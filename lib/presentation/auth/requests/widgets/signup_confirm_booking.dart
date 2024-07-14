@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/helpers/enums.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/auth/requests/widgets/select_file.dart';
 
+import '../../../../core/helpers/constants.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
@@ -68,29 +70,57 @@ class ConfirmBookingButton extends StatelessWidget {
         if (state is ConfirmBookingErrorState) {
           defaultErrorSnackBar(context: context, message: state.errMsg);
         } else if (state is ConfirmBookingSuccessState) {
-          Navigator.of(context).pushNamed(
+          Navigator.of(context).pushReplacementNamed(
             Routes.paymentScreen,
             arguments: PaymentScreenArguments(
-              value: blocRead.calculatedPrice,
+              paymentAmount: blocRead.calculatedPrice,
               carRequestId: state.requestId,
             ),
           );
         }
       },
-      buildWhen: (previous, current) =>
-          current is ConfirmBookingErrorState ||
-          current is ConfirmBookingLoadingState ||
-          current is ConfirmBookingSuccessState,
       builder: (context, state) {
+        var blocWatch = context.watch<SignupCubit>();
+        print("deliveryDate ${blocWatch.deliveryDate == null}");
+        print("pickedDate ${blocWatch.pickedDate == null}");
+        print("sssss ${blocWatch.nationalIdInitStatus}");
+        print("sssss ${blocWatch.passportInitStatus}");
+        print("sssss ${blocWatch.nationalIdInitStatus}");
+        print("sssss ${blocWatch.passportInitStatus}");
+        print(
+            "customerAddressValidation ${blocWatch.locationValidation == TextFieldValidation.valid}");
+
         return DefaultButton(
           loading: state is ConfirmBookingLoadingState,
           marginRight: 16,
           marginLeft: 16,
           marginTop: 24,
           marginBottom: 24,
+          color: blocWatch.locationValidation !=
+                      TextFieldValidation.valid ||
+                  blocWatch.deliveryDate == null ||
+                  blocWatch.pickedDate == null ||
+                  state is SaveRequestEditedFileLoadingState ||
+                  blocWatch.nationalIdInitStatus == 2 ||
+                  blocWatch.passportInitStatus == 2 ||
+                  blocWatch.nationalIdInitStatus == -1 ||
+                  blocWatch.passportInitStatus == -1
+              ? AppColors.greyBorder
+              : AppColors.primaryRed,
           text: "Confirm Booking",
           function: () {
-            blocRead.confirmBookingClicked();
+            if (state is! ConfirmBookingLoadingState &&
+                state is! SaveRequestEditedFileLoadingState &&
+                blocWatch.locationValidation ==
+                    TextFieldValidation.valid &&
+                blocWatch.deliveryDate != null &&
+                blocWatch.pickedDate != null &&
+                blocWatch.nationalIdInitStatus != 2 &&
+                blocWatch.passportInitStatus != 2 &&
+                blocWatch.nationalIdInitStatus != -1 &&
+                blocWatch.passportInitStatus != -1) {
+              blocRead.confirmBookingClicked();
+            }
           },
         );
       },
@@ -106,40 +136,313 @@ class RequiredFilesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final blocRead = context.read<SignupCubit>();
+    if (context.watch<AuthRepository>().customer.attachments.isEmpty) {
+      return WidgetWithHeader(
+        header: "Files",
+        headerStyle: AppFonts.inter16Black500.copyWith(
+          color: AppColors.primaryRed,
+          fontSize: 18,
+        ),
+        widget: Column(
+          children: [
+            SelectFile(
+              key: const Key("NationalIDConfirm"),
+              isFromMyApplication: false,
+              padding: EdgeInsetsDirectional.zero,
+              header: "National ID",
+              onFileSelected: (p0, isSingle) async {
+                blocRead.nationalIdFile = await convertPlatformFileList(p0);
+                blocRead.changeNationalIdState(0);
+              },
+              onPrefixClicked: () {
+                blocRead.nationalIdFile = null;
+                blocRead.changeNationalIdState(-1);
+              },
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            SelectFile(
+              key: const Key("PassportConfirm"),
+              isFromMyApplication: false,
+              padding: EdgeInsetsDirectional.zero,
+              header: "Passport",
+              onFileSelected: (p0, isSingle) async {
+                blocRead.passportFiles = await convertPlatformFileList(p0);
+                blocRead.changePassportState(0);
+              },
+              onPrefixClicked: () {
+                blocRead.passportFiles = null;
+                blocRead.changePassportState(-1);
+              },
+            ),
+          ],
+        ),
+      );
+    } else {
+      return const ExistingUserAttachments();
+    }
+  }
+}
 
-    return WidgetWithHeader(
-      header: "Files",
-      headerStyle: AppFonts.inter16Black500.copyWith(
-        color: AppColors.primaryRed,
-        fontSize: 18,
-      ),
-      widget: Column(
-        children: [
-          SelectFile(
-            padding: EdgeInsetsDirectional.zero,
-            header: "National ID",
-            onFileSelected: (p0, isSingle) async {
-              blocRead.nationalIdFile = await convertPlatformFileList(p0);
-            },
-            onPrefixClicked: () {
-              blocRead.nationalIdFile = null;
-            },
+class ExistingUserAttachments extends StatefulWidget {
+  const ExistingUserAttachments({
+    super.key,
+  });
+
+  @override
+  State<ExistingUserAttachments> createState() =>
+      _ExistingUserAttachmentsState();
+}
+
+class _ExistingUserAttachmentsState extends State<ExistingUserAttachments> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<SignupCubit, SignupState>(
+      listenWhen: (previous, current) =>
+          current is SaveRequestEditedFileErrorState ||
+          current is SaveRequestEditedFileSuccessState,
+      listener: (context, state) {
+        if (state is SaveRequestEditedFileErrorState) {
+          defaultErrorSnackBar(context: context, message: state.errMsg);
+        } else if (state is SaveRequestEditedFileSuccessState) {
+          defaultSuccessSnackBar(
+              context: context,
+              message: "Your File has been updated successfully");
+        }
+      },
+      builder: (context, state) {
+        var blocWatch = context.watch<SignupCubit>();
+        var blocRead = context.read<SignupCubit>();
+        return WidgetWithHeader(
+          padding: const EdgeInsetsDirectional.symmetric(horizontal: 16),
+          header: "Files",
+          headerStyle: AppFonts.inter16Black500.copyWith(
+            color: AppColors.primaryRed,
+            fontSize: 18,
           ),
-          const SizedBox(
-            height: 16,
+          widget: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 110,
+                width: AppConstants.screenWidth(context),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SelectFile(
+                      isShowReplaceWithoutBorder: true,
+                      isFromMyApplication: true,
+                      width: blocWatch.nationalIdAttachments?.fileStatus == 4
+                          ? AppConstants.screenWidth(context) - 80
+                          : AppConstants.screenWidth(context) - 32,
+                      key: const Key("NewRequestNationalID"),
+                      padding: const EdgeInsetsDirectional.only(bottom: 4),
+                      paths: blocRead.nationalIdAttachments?.filePath ?? "",
+                      header: "National ID",
+                      prefixImgPath: "assets/images/icons/national_id.png",
+                      isFromPending: true,
+                      onFileSelected: (p0, isSingle) async {
+                        blocRead.nationalIdFile =
+                            await convertPlatformFileList(p0);
+                        if (blocRead.nationalIdAttachments != null &&
+                            blocRead.nationalIdAttachments?.fileRejectComment !=
+                                null) {
+                          blocRead.nationalIdAttachments?.fileRejectComment =
+                              null;
+                          blocRead.nationalIdAttachments?.filePath = "";
+                          blocRead.nationalIdAttachments?.fileStatus = 4;
+                          setState(() {});
+                        }
+                      },
+                      isWarningToReplace:
+                          blocWatch.nationalIdAttachments?.fileStatus == 2,
+                      onPrefixClicked: () {
+                        if (blocRead.nationalIdAttachments == null ||
+                            (blocRead.nationalIdAttachments != null &&
+                                blocRead.nationalIdAttachments
+                                        ?.fileRejectComment ==
+                                    null)) {
+                          blocRead.nationalIdFile = null;
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    if (blocRead.nationalIdAttachments?.fileStatus == 4)
+                      BlocBuilder<SignupCubit, SignupState>(
+                        buildWhen: (previous, current) {
+                          return (current
+                                      is SaveRequestEditedFileLoadingState &&
+                                  current.fileId ==
+                                      blocRead.nationalIdAttachments?.id) ||
+                              (current is SaveRequestEditedFileSuccessState &&
+                                  current.fileId ==
+                                      blocRead.nationalIdAttachments?.id) ||
+                              (current is SaveRequestEditedFileErrorState &&
+                                  current.fileId ==
+                                      blocRead.nationalIdAttachments?.id);
+                        },
+                        builder: (context, state) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 28.0),
+                            child: Center(
+                              child:
+                                  (state is SaveRequestEditedFileLoadingState &&
+                                          state
+                                                  .fileId ==
+                                              blocRead
+                                                  .nationalIdAttachments?.id)
+                                      ? const Padding(
+                                          padding: EdgeInsetsDirectional.only(
+                                              start: 8.0),
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : IconButton(
+                                          onPressed: () {
+                                            if (blocRead.nationalIdFile !=
+                                                    null &&
+                                                blocRead.nationalIdFile!
+                                                    .isNotEmpty &&
+                                                blocRead.nationalIdAttachments
+                                                        ?.fileStatus !=
+                                                    2) {
+                                              blocRead.updateRequestFile(
+                                                fileId: blocRead
+                                                        .nationalIdAttachments
+                                                        ?.id ??
+                                                    "",
+                                                oldPathFiles:
+                                                    blocRead.nationalIdOldPaths,
+                                                fileType: "nationalId",
+                                                newFile: blocRead
+                                                    .nationalIdFile!.first,
+                                              );
+                                            }
+                                          },
+                                          icon: const Center(
+                                            child: Icon(
+                                              Icons.upload_file_rounded,
+                                              color: AppColors.primaryGreen,
+                                            ),
+                                          ),
+                                        ),
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 110,
+                width: AppConstants.screenWidth(context),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SelectFile(
+                      isShowReplaceWithoutBorder: true,
+                      isFromMyApplication: true,
+                      width: blocWatch.passportAttachments?.fileStatus == 4
+                          ? AppConstants.screenWidth(context) - 80
+                          : AppConstants.screenWidth(context) - 32,
+                      key: const Key("NewRequestPassport"),
+                      padding: const EdgeInsetsDirectional.only(bottom: 4),
+                      paths: blocRead.passportAttachments?.filePath ?? "",
+                      header: "Passport",
+                      isFromPending: true,
+                      onFileSelected: (p0, isSingle) async {
+                        blocRead.passportFiles =
+                            await convertPlatformFileList(p0);
+                        if (blocRead.passportAttachments != null &&
+                            blocRead.passportAttachments?.fileRejectComment !=
+                                null) {
+                          blocRead.passportAttachments?.fileRejectComment =
+                              null;
+                          blocRead.passportAttachments?.filePath = "";
+                          blocRead.passportAttachments?.fileStatus = 4;
+                          setState(() {});
+                        }
+                      },
+                      isWarningToReplace:
+                          blocWatch.passportAttachments?.fileStatus == 2,
+                      onPrefixClicked: () {
+                        if (blocRead.passportAttachments == null ||
+                            (blocRead.passportAttachments != null &&
+                                blocRead.passportAttachments
+                                        ?.fileRejectComment ==
+                                    null)) {
+                          blocRead.passportFiles = null;
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    if (blocRead.passportAttachments?.fileStatus == 4)
+                      BlocBuilder<SignupCubit, SignupState>(
+                        buildWhen: (previous, current) {
+                          return (current
+                                      is SaveRequestEditedFileLoadingState &&
+                                  current.fileId ==
+                                      blocRead.passportAttachments?.id) ||
+                              (current is SaveRequestEditedFileSuccessState &&
+                                  current.fileId ==
+                                      blocRead.passportAttachments?.id) ||
+                              (current is SaveRequestEditedFileErrorState &&
+                                  current.fileId ==
+                                      blocRead.passportAttachments?.id);
+                        },
+                        builder: (context, state) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 28.0),
+                            child: Center(
+                              child:
+                                  (state is SaveRequestEditedFileLoadingState &&
+                                          state.fileId ==
+                                              blocRead.passportAttachments?.id)
+                                      ? const Padding(
+                                          padding: EdgeInsetsDirectional.only(
+                                              start: 8.0),
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : IconButton(
+                                          onPressed: () {
+                                            if (blocRead.passportFiles !=
+                                                    null &&
+                                                blocRead.passportFiles!
+                                                    .isNotEmpty &&
+                                                blocRead.passportAttachments
+                                                        ?.fileStatus !=
+                                                    2) {
+                                              blocRead.updateRequestFile(
+                                                fileId: blocRead
+                                                        .passportAttachments
+                                                        ?.id ??
+                                                    "",
+                                                oldPathFiles:
+                                                    blocRead.passportOldPaths,
+                                                fileType: "passport",
+                                                newFile: blocRead
+                                                    .passportFiles!.first,
+                                              );
+                                            }
+                                          },
+                                          icon: const Center(
+                                            child: Icon(
+                                              Icons.upload_file_rounded,
+                                              color: AppColors.primaryGreen,
+                                            ),
+                                          ),
+                                        ),
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          SelectFile(
-            padding: EdgeInsetsDirectional.zero,
-            header: "Passport",
-            onFileSelected: (p0, isSingle) async {
-              blocRead.passportFiles = await convertPlatformFileList(p0);
-            },
-            onPrefixClicked: () {
-              blocRead.passportFiles = null;
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -231,6 +534,7 @@ class PickupDateSelection extends StatelessWidget {
         return DateSelection(
           key: const Key("PickupDate"),
           header: "Pickup",
+          minDate: DateTime.now(),
           selectedDateTime: context.watch<SignupCubit>().pickedDate,
           onDateSelected: (selectedDate) {
             blocRead.pickedDate = selectedDate;
@@ -293,7 +597,7 @@ class BookingLocationField extends StatelessWidget {
         final blocRead = context.read<SignupCubit>();
 
         return AuthTextFieldWithHeader(
-          header: "Address",
+          header: "Pickup Location",
           hintText: "Enter Address",
           isWithValidation: true,
           textInputType: TextInputType.name,

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:turbo/blocs/orders/order_cubit.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/layout/orders/request_status/widgets/edit_request.dart';
 
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/helpers/functions.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../models/attachment.dart';
@@ -51,10 +54,7 @@ class RequestStatusScreen extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 } else if (blocWatch.requestStatus != null) {
-                  print(
-                      "statuds index ${blocWatch.requestStatus!.requestStatus}");
                   if (blocWatch.requestStatus!.requestStatus == 0) {
-                    print("yessss");
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -75,7 +75,17 @@ class RequestStatusScreen extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
+                        Lottie.asset("assets/lottie/success_booking.json"),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
+                            "Congratulations! Your car rental request is approved!.",
+                            style: AppFonts.inter16Black400.copyWith(
+                              fontSize: 17,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ],
                     );
                   } else if (blocWatch.requestStatus!.requestStatus == 2) {
@@ -87,12 +97,16 @@ class RequestStatusScreen extends StatelessWidget {
                       type: "passport",
                       attachments: blocWatch.requestStatus!.attachmentsId,
                     );
-                    return EditRequest(
-                      blocWatch: blocWatch,
-                      blocRead: blocRead,
-                      nationalIdResult: nationalIdResult,
-                      passportResult: passportResult,
-                      requestId: requestId,
+
+                    return RepositoryProvider<AuthRepository>.value(
+                      value: getIt<AuthRepository>(),
+                      child: EditRequest(
+                        blocWatch: blocWatch,
+                        blocRead: blocRead,
+                        nationalIdResult: nationalIdResult,
+                        passportResult: passportResult,
+                        requestId: requestId,
+                      ),
                     );
                   } else {
                     return const SizedBox();

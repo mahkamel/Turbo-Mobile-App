@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
+import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 
 import '../../core/helpers/app_regex.dart';
 import '../../core/helpers/enums.dart';
@@ -15,7 +17,9 @@ part 'login_cubit.freezed.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepository _authRepository;
-  LoginCubit(this._authRepository) : super(const LoginState.initial());
+  final PaymentRepository _paymentRepository;
+  LoginCubit(this._authRepository, this._paymentRepository)
+      : super(const LoginState.initial());
 
   TextEditingController emailController = TextEditingController();
   TextFieldValidation emailValidation = TextFieldValidation.normal;
@@ -100,12 +104,15 @@ class LoginCubit extends Cubit<LoginState> {
           emit(LoginState.loginError(errMsg));
         }, (customer) async {
           _authRepository.customer = customer;
+          print("sccustomeer ${customer.token}");
           UserTokenService.saveUserToken(customer.token);
+          await _authRepository.setNotificationToken(AppConstants.fcmToken,customer.token);
+          await _authRepository.getNotifications();
+          await _paymentRepository.getSavedPaymentMethods();
           StorageService.saveData(
             "customerData",
             json.encode(customer.toJson()),
           );
-
           emit(
             const LoginState.loginSuccess(),
           );

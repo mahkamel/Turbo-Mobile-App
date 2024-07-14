@@ -24,10 +24,8 @@ class CarsByBrandsList extends StatelessWidget {
           current is GetCarsByBrandSuccessState,
       builder: (context, state) {
         var blocWatch = context.watch<HomeCubit>();
-        return (state is GetCarsByBrandLoadingState &&
-                    !AppConstants.isFirstTimeGettingCarRec) ||
-                (state is GetCarsBrandsLoadingState &&
-                    !AppConstants.isFirstTimeGettingCarRec)
+        return (blocWatch.isGettingCars &&
+                !AppConstants.isFirstTimeGettingCarRec)
             ? Center(
                 child: Lottie.asset(
                   "assets/lottie/luxury_car_loading.json",
@@ -40,23 +38,45 @@ class CarsByBrandsList extends StatelessWidget {
                     AppConstants.isFirstTimeGettingCarRec
                 ? const CarsByBrandShimmer()
                 : blocWatch.carsByBrand.isEmpty
-                    ? Padding(
-                        padding: const EdgeInsetsDirectional.only(
-                          start: 16.0,
-                          end: 16.0,
-                          // top: 48,
-                        ),
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/icons/no_results_founded.svg",
-                              height: AppConstants.screenHeight(context) * 0.4,
+                    ? Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            if (context.read<HomeCubit>().selectedBrandIndex ==
+                                -1) {
+                              context.read<HomeCubit>().getCarsBasedOnBrand();
+                            } else {
+                              context.read<HomeCubit>().getCarsBasedOnBrand(
+                                  brandId: context
+                                      .read<HomeCubit>()
+                                      .carBrands[context
+                                          .read<HomeCubit>()
+                                          .selectedBrandIndex]
+                                      .id);
+                            }
+                          },
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: Padding(
+                              padding: const EdgeInsetsDirectional.only(
+                                start: 16.0,
+                                end: 16.0,
+                                // top: 48,
+                              ),
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/icons/no_results_founded.svg",
+                                    height: AppConstants.screenHeight(context) *
+                                        0.4,
+                                  ),
+                                  Text(
+                                    "noCarsBasedOnBrand".getLocale(),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
                             ),
-                            Text(
-                              "noCarsBasedOnBrand".getLocale(),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                          ),
                         ),
                       )
                     : Expanded(

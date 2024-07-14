@@ -41,8 +41,20 @@
   "yourInfo": "Your Info",
   "completeBooking": "Confirm Booking",
   "password": "Password",
-  "enterPassword": "Enter Password"
-
-
-
+  "enterPassword": "Enter Password",
+  "selectYourLang": "Hello! Pick your language to continue.",
+  "email": "Email",
+  "emailAddress": "Email Address",
+  "thisEmailIsInvalid": "This email is invalid",
+  "passwordCannotBeEmpty": "Password cannot be empty.",
+  "signup": "Sign Up",
+  "English": "English",
+  "Arabic": "Arabic",
+  "Language": "Language",
+  "userProfile": "User Profile",
+  "Settings": "Settings",
+  "Logout": "Logout",
+  "done": "Done",
+  "back": "Back",
+  "next": "Next"
 }
