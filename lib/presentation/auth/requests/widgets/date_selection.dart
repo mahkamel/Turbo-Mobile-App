@@ -60,8 +60,8 @@ class _DateSelectionState extends State<DateSelection> {
                   tempDateTime = widget.minDate ??
                       (widget.selectedDateTime ??
                           (widget.isDeliveryDate
-                              ? DateTime.now().add(const Duration(days: 1))
-                              : DateTime.now()));
+                              ? DateTime.now().add(const Duration(days: 1,hours: 1))
+                              : DateTime.now().add(const Duration(hours: 1))));
                   showModalBottomSheet(
                     context: context,
                     builder: (bsContext) => Container(
@@ -84,15 +84,16 @@ class _DateSelectionState extends State<DateSelection> {
                               // use24hFormat: true,
                               minimumDate: widget.minDate ??
                                   (widget.isDeliveryDate
-                                      ? DateTime.now()
-                                          .add(const Duration(days: 1))
-                                      : DateTime.now()),
+                                      ? DateTime.now().add(
+                                          const Duration(days: 1, hours: 1))
+                                      : DateTime.now()
+                                          .add(const Duration(hours: 1))),
                               initialDateTime: widget.minDate ??
                                   (widget.selectedDateTime ??
                                       (widget.isDeliveryDate
                                           ? DateTime.now()
-                                              .add(const Duration(days: 1))
-                                          : DateTime.now())),
+                                              .add(const Duration(days: 1, hours: 1))
+                                          : DateTime.now().add(const Duration(hours: 1)))),
                               mode: CupertinoDatePickerMode.date,
                               onDateTimeChanged: (dateTime) {
                                 setState(() {
@@ -159,74 +160,79 @@ class _DateSelectionState extends State<DateSelection> {
               ),
               IconButton(
                 onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (timeBSContext) => Container(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      height: 350,
-                      width: AppConstants.screenWidth(context),
-                      color: AppColors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${widget.header} Time",
-                            style: AppFonts.inter18Black500,
-                          ),
-                          Expanded(
-                            child: CupertinoDatePicker(
-                              // use24hFormat: true,
-                              minimumDate: widget.minDate ?? DateTime.now(),
-                              initialDateTime:
-                                  selectedDateTime ?? DateTime.now(),
-                              mode: CupertinoDatePickerMode.time,
-                              onDateTimeChanged: (DateTime value) {
-                                setState(() {
-                                  tempDateTime = value;
-                                });
-                              },
+                  if (selectedDateTime != null) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (timeBSContext) => Container(
+                        padding: const EdgeInsetsDirectional.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        height: 350,
+                        width: AppConstants.screenWidth(context),
+                        color: AppColors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${widget.header} Time",
+                              style: AppFonts.inter18Black500,
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  if (Navigator.of(timeBSContext).canPop()) {
-                                    Navigator.of(timeBSContext).pop();
-                                  }
+                            Expanded(
+                              child: CupertinoDatePicker(
+                                // use24hFormat: true,
+                                minimumDate: widget.minDate ??
+                                    DateTime.now()
+                                        .add(const Duration(hours: 1)),
+                                initialDateTime: selectedDateTime ??
+                                    DateTime.now()
+                                        .add(const Duration(hours: 1)),
+                                mode: CupertinoDatePickerMode.time,
+                                onDateTimeChanged: (DateTime value) {
+                                  setState(() {
+                                    tempDateTime = value;
+                                  });
                                 },
-                                child: Text(
-                                  "Cancel",
-                                  style: AppFonts.inter16Black500.copyWith(
-                                    color: AppColors.errorRed,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    if (Navigator.of(timeBSContext).canPop()) {
+                                      Navigator.of(timeBSContext).pop();
+                                    }
+                                  },
+                                  child: Text(
+                                    "Cancel",
+                                    style: AppFonts.inter16Black500.copyWith(
+                                      color: AppColors.errorRed,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    selectedDateTime = tempDateTime;
-                                  });
-                                  widget.onDateSelected(selectedDateTime);
-                                  if (Navigator.of(timeBSContext).canPop()) {
-                                    Navigator.of(timeBSContext).pop();
-                                  }
-                                },
-                                child: Text(
-                                  "Confirm",
-                                  style: AppFonts.inter16Black500,
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedDateTime = tempDateTime;
+                                    });
+                                    widget.onDateSelected(selectedDateTime);
+                                    if (Navigator.of(timeBSContext).canPop()) {
+                                      Navigator.of(timeBSContext).pop();
+                                    }
+                                  },
+                                  child: Text(
+                                    "Confirm",
+                                    style: AppFonts.inter16Black500,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 icon: Row(
                   children: [

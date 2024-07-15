@@ -350,8 +350,8 @@ class EditDeliveryDate extends StatelessWidget {
               ? context
               .watch<OrderCubit>()
               .pickedDate!
-              .add(const Duration(days: 1))
-              : DateTime.now().add(const Duration(days: 1)),
+              .add(const Duration(days: 1 , hours: 1))
+              : DateTime.now().add(const Duration(days: 1, hours: 1)),
           isDeliveryDate: true,
           selectedDateTime: blocWatch.deliveryDate,
           onDateSelected: (selectedDate) {

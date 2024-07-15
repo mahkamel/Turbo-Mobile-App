@@ -25,7 +25,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   int selectedBrandIndex = -1;
 
-  Map<String, List<Car>> carsByBrand = {};
+  List<CarData> carsByBrand = [];
   List<CarBrand> carBrands = [];
   List<UserNotificationModel> notifications = [];
 

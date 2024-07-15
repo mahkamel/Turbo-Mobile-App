@@ -76,12 +76,16 @@ class CarDetailsData {
           : "",
       carColor: json['carColor']["Color_Name"] ?? "",
       carPassengerNo: json['carPassengerNo'] ?? 0,
-      carDailyPrice: ((json['carDailyPrice'] ?? 0.0) * (AppConstants.vat / 100)),
+      carDailyPrice: ((json['carDailyPrice'] ?? 0.0) +
+          ((json['carDailyPrice'] ?? 0.0) * (AppConstants.vat / 100))),
       carLimitedKiloMeters: json['carLimitedKiloMeters'] ?? 0,
-      carMothlyPrice:
-          (json['carMothlyPrice'] ?? 0.0) * (AppConstants.vat / 100),
+      carMothlyPrice:((json['carMothlyPrice'] ?? 0.0) +
+          ((json['carMothlyPrice'] ?? 0.0) * (AppConstants.vat / 100))),
+
       carWeaklyPrice:
-          (json['carWeaklyPrice'] ?? 0.0) * (AppConstants.vat / 100),
+      ((json['carWeaklyPrice'] ?? 0.0) +
+          ((json['carWeaklyPrice'] ?? 0.0) * (AppConstants.vat / 100))),
+
       carSysDate: json['carSysDate'] ?? "",
     );
   }

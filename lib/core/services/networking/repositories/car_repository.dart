@@ -28,7 +28,7 @@ class CarRepository {
 
   List<CarBrand> carBrands = [];
   List<CarType> carTypes = [];
-  Map<String, List<Car>> filteredCars = {};
+  List<CarData> filteredCars = [];
 
   Future<Either<String, List<CarBrand>>> getCarBrands(String branchId) async {
     try {
@@ -87,7 +87,7 @@ class CarRepository {
     }
   }
 
-  Future<Either<String, Map<String, List<Car>>>> getCarsByBrand({
+  Future<Either<String, List<CarData>>> getCarsByBrand({
     required String branchId,
     String? brandId,
   }) async {
@@ -97,9 +97,9 @@ class CarRepository {
         carBrandId: brandId,
       );
       if (response.statusCode == 200 && response.data['status']) {
-        Map<String, List<Car>> cars = {};
-        if ((response.data as Map).containsKey("cars")) {
-          cars = GetCarsByBrandsResponse.fromJson(response.data).cars.carTypes;
+        List<CarData> cars = [];
+        if ((response.data['result'] as List).isNotEmpty) {
+          cars = GetCarsByBrandsResponse.fromJson(response.data).results;
         }
 
         return Right(cars);
@@ -159,7 +159,7 @@ class CarRepository {
     }
   }
 
-  Future<Either<String, Map<String, List<Car>>>> carsFilter({
+  Future<Either<String, List<CarData>>> carsFilter({
     required List<String> carYears,
     required List<String> carTypes,
     required List<String> carBrands,
@@ -179,10 +179,10 @@ class CarRepository {
         priceTo: priceTo,
       );
       if (response.statusCode == 200 && response.data['status']) {
-        filteredCars = {};
-        if ((response.data as Map).containsKey("cars")) {
+        List<CarData> filteredCars = [];
+        if ((response.data['result'] as List).isNotEmpty) {
           filteredCars =
-              GetCarsByBrandsResponse.fromJson(response.data).cars.carTypes;
+              GetCarsByBrandsResponse.fromJson(response.data).results;
         }
 
         return Right(filteredCars);

@@ -8,7 +8,7 @@ import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 
 class PriceCard extends StatelessWidget {
-  const PriceCard({
+  const  PriceCard({
     super.key,
     required this.price,
     required this.period,
@@ -112,6 +112,7 @@ class CarPricesRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("carr dailyy  ${blocRead.carDetailsData.carDailyPrice}");
     return Row(
       children: [
         Expanded(

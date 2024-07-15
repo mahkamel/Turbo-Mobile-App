@@ -25,7 +25,7 @@ class SearchCubit extends Cubit<SearchState> {
 
   bool isWithUnlimitedKM = false;
 
-  Map<String, List<Car>> filteredCars = {};
+  List<CarData> filteredCars = [];
 
   bool isFilteredRes = false;
   bool isGettingFilterResults = false;

@@ -201,8 +201,8 @@ class DeliveryDateSelection extends StatelessWidget {
               ? context
                   .watch<SignupCubit>()
                   .pickedDate!
-                  .add(const Duration(days: 1))
-              : DateTime.now().add(const Duration(days: 1)),
+                  .add(const Duration(days: 1, hours: 1))
+              : DateTime.now().add(const Duration(days: 1, hours: 1)),
           isDeliveryDate: true,
           selectedDateTime: context.watch<SignupCubit>().deliveryDate,
           onDateSelected: (selectedDate) {
@@ -293,7 +293,7 @@ class BookingLocationField extends StatelessWidget {
         final blocRead = context.read<SignupCubit>();
 
         return AuthTextFieldWithHeader(
-          header: "Address",
+          header: "Pickup Address",
           hintText: "Enter Address",
           isWithValidation: true,
           textInputType: TextInputType.name,

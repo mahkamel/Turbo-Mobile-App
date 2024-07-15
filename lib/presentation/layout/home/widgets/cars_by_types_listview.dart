@@ -8,10 +8,10 @@ class CarsByTypesListview extends StatelessWidget {
   const CarsByTypesListview({
     super.key,
     required this.carsByBrand,
-     this.isFromFilter = false,
+    this.isFromFilter = false,
   });
 
-  final Map<String, List<Car>> carsByBrand;
+  final List<CarData> carsByBrand;
   final bool isFromFilter;
 
   @override
@@ -23,8 +23,8 @@ class CarsByTypesListview extends StatelessWidget {
         height: 16,
       ),
       itemBuilder: (context, typeIndex) {
-        String carType = carsByBrand.keys.toList()[typeIndex];
-        List<Car> cars = carsByBrand.values.toList()[typeIndex];
+        String carType = carsByBrand[typeIndex].carType;
+        List<Car> cars = carsByBrand[typeIndex].cars;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

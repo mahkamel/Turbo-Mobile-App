@@ -43,8 +43,8 @@ class CardDetailsScreen extends StatelessWidget {
                     delegate: SliverChildListDelegate(
                       [
                         CarNameWithBrandImg(
-                          carName: car.carName,
-                          brandImgUrl: car.carBrand.first.path,
+                          carName: car.model.modelName,
+                          brandImgUrl: car.brand.brandPath,
                         ),
                         BlocBuilder<CarDetailsCubit, CarDetailsState>(
                           buildWhen: (previous, current) =>

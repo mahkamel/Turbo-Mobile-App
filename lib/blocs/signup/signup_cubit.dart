@@ -331,16 +331,19 @@ class SignupCubit extends Cubit<SignupState> {
 
   void calculatePrice() {
     calculatedPrice = 0.0;
+    print("isssss ${deliveryDate != null && pickedDate != null}");
     if (deliveryDate != null && pickedDate != null) {
       final int durationInDays = deliveryDate!.difference(pickedDate!).inDays;
-
-      if (durationInDays >= 1 && durationInDays < 7) {
+      print("ssssss ${durationInDays} -- $dailyPrice");
+      if (durationInDays >= 0 && durationInDays < 7) {
         calculatedPrice = durationInDays * dailyPrice;
       } else if (durationInDays >= 7 && durationInDays < 30) {
         calculatedPrice = durationInDays * weeklyPrice;
       } else {
         calculatedPrice = durationInDays * monthlyPrice;
       }
+      print(
+          "ssssss ${durationInDays} -- $dailyPrice -- ${weeklyPrice} -- $monthlyPrice");
     }
     if (isWithPrivateDriver) {
       calculatedPrice += AppConstants.driverFees;
