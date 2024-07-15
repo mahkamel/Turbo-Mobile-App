@@ -245,10 +245,12 @@ class AddNewCardScreen extends StatelessWidget {
                           current is AddNewCardSuccessState,
                       listener: (context, state) {
                         if (state is AddNewCardSuccessState) {
-                          defaultSuccessSnackBar(
-                            context: context,
-                            message: "Visa Card Added Successfully",
-                          );
+                          // defaultSuccessSnackBar(
+                          //   context: context,
+                          //   message: "Visa Card Added Successfully",
+                          // );
+
+                          Navigator.of(context).pop();
                         } else if (state is AddNewCardErrorState) {
                           defaultErrorSnackBar(
                             context: context,

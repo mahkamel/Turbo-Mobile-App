@@ -36,7 +36,9 @@ class SearchCubit extends Cubit<SearchState> {
     filteredCars = _carRepository.filteredCars;
     if (_carRepository.filteredCars.isNotEmpty) {
       isFilteredRes = true;
+
       emit(const SearchState.getFilteredCarsSuccess());
+      getCarsTypes();
     }
   }
 

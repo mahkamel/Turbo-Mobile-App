@@ -123,8 +123,6 @@ class _DateSelectionState extends State<DateSelection> {
                                   setState(() {
                                     selectedDateTime = tempDateTime;
                                   });
-                                  print(
-                                      "timeeee ${selectedDateTime?.toIso8601String()}");
                                   widget.onDateSelected(selectedDateTime);
                                   if (Navigator.of(bsContext).canPop()) {
                                     Navigator.of(bsContext).pop();

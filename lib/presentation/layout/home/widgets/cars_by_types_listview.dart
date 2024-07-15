@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/presentation/layout/home/widgets/recommended_car_card.dart';
 
 import '../../../../core/theming/fonts.dart';

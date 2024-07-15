@@ -245,8 +245,9 @@ class CardNumber extends StatelessWidget {
         if (blocRead.selectedSavedCardId != null) {
           showModalBottomSheet(
             context: context,
-            builder: (context) => ExistingCardsBottomSheet(
+            builder: (bottomSheetContext) => ExistingCardsBottomSheet(
               blocRead: blocRead,
+              bottomSheetContext: bottomSheetContext,
             ),
           );
         }
@@ -256,8 +257,9 @@ class CardNumber extends StatelessWidget {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (context) => ExistingCardsBottomSheet(
+                  builder: (bottomSheetContext) => ExistingCardsBottomSheet(
                     blocRead: blocRead,
+                    bottomSheetContext: bottomSheetContext,
                   ),
                 );
               },

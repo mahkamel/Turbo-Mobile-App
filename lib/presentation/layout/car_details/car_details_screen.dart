@@ -130,10 +130,11 @@ class CardDetailsScreen extends StatelessWidget {
                                                 bottom: 16.0,
                                               ),
                                               child: CarInfoItem(
-                                                title: "limitedKm".getLocale(),
-                                                info: blocRead.carDetailsData
-                                                    .carLimitedKiloMeters
-                                                    .toString(),
+                                                title:
+                                                    "${"limitedKm".getLocale()} (Daily)",
+                                                info:
+                                                    "${blocRead.carDetailsData.carLimitedKiloMeters}"
+                                                        .toString(),
                                                 iconPath:
                                                     "assets/images/icons/car_details_icons/limitedkm_icon.png",
                                               ),
@@ -187,7 +188,7 @@ class CardDetailsScreen extends StatelessWidget {
                           marginLeft: 16,
                           color: AppColors.primaryBG,
                           textColor: AppColors.primaryRed,
-                          function: () {
+                          function: () async {
                             if (context
                                 .read<AuthRepository>()
                                 .customer
@@ -283,20 +284,24 @@ class CardDetailsScreen extends StatelessWidget {
                                 },
                               );
                             } else {
-                              Navigator.pushNamed(
-                                context,
-                                Routes.signupScreen,
-                                arguments: SignupScreenArguments(
-                                  carId: car.carId,
-                                  isFromLogin: false,
-                                  dailyPrice:
-                                      blocRead.carDetailsData.carDailyPrice,
-                                  weeklyPrice:
-                                      blocRead.carDetailsData.carWeaklyPrice,
-                                  monthlyPrice:
-                                      blocRead.carDetailsData.carMothlyPrice,
-                                ),
-                              );
+                              await context
+                                  .read<AuthRepository>()
+                                  .refreshCustomerData()
+                                  .then(
+                                    (value) => Navigator.pushNamed(
+                                      context,
+                                      Routes.signupScreen,
+                                      arguments: SignupScreenArguments(
+                                        carId: car.carId,
+                                        dailyPrice: blocRead
+                                            .carDetailsData.carDailyPrice,
+                                        weeklyPrice: blocRead
+                                            .carDetailsData.carWeaklyPrice,
+                                        monthlyPrice: blocRead
+                                            .carDetailsData.carMothlyPrice,
+                                      ),
+                                    ),
+                                  );
                             }
                           },
                           text: "bookNow".getLocale(),

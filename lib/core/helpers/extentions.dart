@@ -14,9 +14,9 @@ extension StringExtension on String {
     return replaceAll(RegExp(r'\s+'), '');
   }
 
-  String getLocale() {
+  String getLocale({BuildContext? context}) {
     if(navigatorKey.currentContext != null) {
-      return AppLocalizations.of(navigatorKey.currentContext!)?.translate(this) ?? this;
+      return AppLocalizations.of(context ?? navigatorKey.currentContext!)?.translate(this) ?? this;
     }else{
       return "";
     }

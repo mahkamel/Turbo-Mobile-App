@@ -6,5 +6,5 @@ abstract class LocalizationState {
 }
 
 class SelectedLocalization extends LocalizationState {
-  SelectedLocalization(super.locale);
+  SelectedLocalization(Locale locale) : super(locale);
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -8,6 +9,7 @@ import 'package:turbo/models/request_model.dart';
 
 import '../../core/helpers/constants.dart';
 import '../../core/helpers/functions.dart';
+import '../../core/services/local/storage_service.dart';
 import '../../core/services/networking/repositories/car_repository.dart';
 import '../../models/attachment.dart';
 import '../../models/request_status_model.dart';
@@ -39,10 +41,12 @@ class OrderCubit extends Cubit<OrderState> {
   List<File>? nationalID;
   Attachment? nationalIdAttachments;
   String nationalIdOldPaths = "";
+  int nationalIdInitStatus = 0;
 
   List<File>? passportFiles;
   Attachment? passportAttachments;
   String passportOldPaths = "";
+  int passportInitStatus = 0;
 
   void getAllCustomerRequests() async {
     emit(const OrderState.getAllRequestsLoading());
@@ -88,10 +92,8 @@ class OrderCubit extends Cubit<OrderState> {
 
   void calculatePrice() {
     calculatedPrice = 0.0;
-    print("isssss ${deliveryDate != null && pickedDate != null}");
     if (deliveryDate != null && pickedDate != null) {
       final int durationInDays = deliveryDate!.difference(pickedDate!).inDays;
-      print("ssssss ${durationInDays} -- $dailyPrice");
       if (durationInDays >= 1 && durationInDays < 7) {
         calculatedPrice = durationInDays * dailyPrice;
       } else if (durationInDays >= 7 && durationInDays < 30) {
@@ -127,13 +129,16 @@ class OrderCubit extends Cubit<OrderState> {
             type: "nationalId",
             attachments: status.attachmentsId,
           );
+          print("ssssss ${nationalIdAttachments?.fileStatus}");
           nationalIdOldPaths = nationalIdAttachments?.filePath ?? "";
-
+          nationalIdInitStatus = nationalIdAttachments?.fileStatus ?? -1;
           passportAttachments = findAttachmentFile(
             type: "passport",
             attachments: status.attachmentsId,
           );
           passportOldPaths = passportAttachments?.filePath ?? "";
+          passportInitStatus = passportAttachments?.fileStatus ?? -1;
+
           emit(OrderState.getRequestStatusSuccess(requestId));
         },
       );
@@ -226,7 +231,6 @@ class OrderCubit extends Cubit<OrderState> {
     emit(OrderState.saveEditedFileLoading(fileId));
     try {
       final res = await _carRepository.editRequestFile(
-        requestId: requestStatus!.id,
         fileType: fileType,
         attachmentId: fileId,
         oldPathFiles: oldPathFiles,
@@ -236,18 +240,30 @@ class OrderCubit extends Cubit<OrderState> {
       res.fold(
         (errMsg) => emit(OrderState.saveEditedFileError(errMsg, fileId)),
         (newAttachments) {
+          int index = 0;
           for (Attachment attachment in _authRepository.customer.attachments) {
             if (attachment.id == fileId) {
-              attachment = newAttachments;
+              _authRepository.customer.attachments[index] = newAttachments;
               break;
             }
+            index++;
           }
-          for (Attachment attachment in requestStatus!.attachmentsId) {
-            if (attachment.id == fileId) {
-              attachment = newAttachments;
-              break;
-            }
-          }
+          StorageService.saveData(
+            "customerData",
+            json.encode(_authRepository.customer.toJson()),
+          );
+          nationalIdAttachments = findAttachmentFile(
+            type: "nationalId",
+            attachments: _authRepository.customer.attachments,
+          );
+          nationalIdOldPaths = nationalIdAttachments?.filePath ?? "";
+          nationalIdInitStatus = nationalIdAttachments?.fileStatus ?? -1;
+          passportAttachments = findAttachmentFile(
+            type: "passport",
+            attachments: _authRepository.customer.attachments,
+          );
+          nationalIdOldPaths = passportAttachments?.filePath ?? "";
+          passportInitStatus = passportAttachments?.fileStatus ?? -1;
         },
       );
       emit(OrderState.saveEditedFileSuccess(fileId));
@@ -263,6 +279,7 @@ class OrderCubit extends Cubit<OrderState> {
       res.fold(
         (errMsg) => emit(OrderState.submitEditsError(errMsg)),
         (_) {
+
           emit(const OrderState.submitEditsSuccess());
         },
       );

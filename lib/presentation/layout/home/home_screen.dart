@@ -1,13 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
+import 'package:turbo/core/services/local/token_service.dart';
 import 'package:turbo/presentation/layout/home/widgets/car_brands_list.dart';
 import 'package:turbo/presentation/layout/home/widgets/cars_by_brands_list.dart';
 import 'package:turbo/presentation/layout/home/widgets/home_header.dart';
 
 import '../../../core/theming/fonts.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final AppLifecycleListener _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _listener = AppLifecycleListener(
+      onResume: () async {
+        var blocRead = context.read<HomeCubit>();
+        await UserTokenService.getUserToken();
+        if (UserTokenService.currentUserToken.isNotEmpty) {
+          blocRead.getNotifications();
+          blocRead.refreshCustomerData();
+        }
+        if (blocRead.selectedBrandIndex == -1) {
+          blocRead.getCarsBasedOnBrand();
+        } else {
+          blocRead.getCarsBasedOnBrand(
+              brandId: blocRead.carBrands[blocRead.selectedBrandIndex].id);
+        }
+      },
+      onHide: () {
+        debugPrint("on onHide");
+      },
+      onPause: () {
+        debugPrint("on onPause");
+      },
+      onShow: () {
+        debugPrint("on onShow");
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

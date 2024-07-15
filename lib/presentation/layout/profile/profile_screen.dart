@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:turbo/blocs/localization/cubit/localization_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
+import 'package:turbo/core/routing/routes.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/presentation/layout/profile/saved_cards_screen.dart';
 
 import '../../../blocs/profile_cubit/profile_cubit.dart';
 import '../../../core/theming/colors.dart';
+import '../../../core/theming/fonts.dart';
 import '../../../core/widgets/shadow_container_with_button.dart';
-
-enum LocaleCode { en_US, ar_SA }
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -20,60 +20,104 @@ class ProfileScreen extends StatelessWidget {
         child: SizedBox(
           height: AppConstants.screenHeight(context),
           width: AppConstants.screenWidth(context),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 24,
-                ),
-                ShadowContainerWithPrefixTextButton(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => BlocProvider<ProfileCubit>.value(
-                        value: context.read<ProfileCubit>()
-                          ..getAllSavedPaymentMethods(isForceToRefresh: true)
-                          ..savedCardsInit(),
-                        child: const SavedCardsScreen(),
-                      ),
-                    ));
-                  },
-                  title: "Saved Cards",
-                  buttonText: "",
-                  prefixIcon: const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 16,
-                    color: AppColors.primaryRed,
-                  ),
-                ),
-                BlocBuilder<LocalizationCubit, LocalizationState>(
-                  builder: (context, state) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Language"),
-                      DropdownButton<LocaleCode>(
-                        value: LocaleCode.en_US,
-                        items: LocaleCode.values
-                            .map((code) => DropdownMenuItem(
-                                  value: code,
-                                  child: Text(code == LocaleCode.en_US
-                                      ? 'English'
-                                      : 'عربي'),
-                                ))
-                            .toList(),
-                        onChanged: (code) {
-                          if (code == LocaleCode.ar_SA) {
-                            context.read<LocalizationCubit>().toArabic();
-                          } else {
-                            context.read<LocalizationCubit>().toEnglish();
-                          }
+          child: BlocBuilder<ProfileCubit, ProfileState>(
+            buildWhen: (previous, current) =>
+                current is LogoutLoadingState ||
+                current is LogoutErrorState ||
+                current is LogoutSuccessState,
+            builder: (context, state) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    if (context
+                        .watch<AuthRepository>()
+                        .customer
+                        .token
+                        .isNotEmpty)
+                      ShadowContainerWithPrefixTextButton(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => BlocProvider<ProfileCubit>.value(
+                              value: context.read<ProfileCubit>()
+                                ..getAllSavedPaymentMethods(
+                                    isForceToRefresh: true)
+                                ..savedCardsInit(),
+                              child: const SavedCardsScreen(),
+                            ),
+                          ));
                         },
+                        title: "Saved Cards",
+                        buttonText: "",
+                        prefixIcon: const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                          color: AppColors.primaryRed,
+                        ),
                       ),
-                    ],
-                  ),
+                    if (context
+                        .watch<AuthRepository>()
+                        .customer
+                        .token
+                        .isNotEmpty)
+                      const SizedBox(
+                        height: 8,
+                      ),
+                    if (context
+                        .watch<AuthRepository>()
+                        .customer
+                        .token
+                        .isNotEmpty)
+                      IconButton(
+                        onPressed: () async {
+                          context.read<ProfileCubit>().logout();
+                        },
+                        icon: state is LogoutLoadingState
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : SizedBox(
+                                height: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.logout_rounded,
+                                      color: AppColors.errorRed,
+                                      size: 16,
+                                    ),
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      "Logout",
+                                      style: AppFonts.inter14ErrorRed400,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ),
+                    if (context.watch<AuthRepository>().customer.token.isEmpty)
+                      ShadowContainerWithPrefixTextButton(
+                        margin: const EdgeInsets.only(top: 8),
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Routes.loginScreen);
+                        },
+                        title: "Login to your account",
+                        buttonText: "",
+                        prefixIcon: const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                          color: AppColors.primaryRed,
+                        ),
+                      ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

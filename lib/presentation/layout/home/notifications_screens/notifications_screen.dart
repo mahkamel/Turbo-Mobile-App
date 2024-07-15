@@ -21,7 +21,7 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
-    context.read<HomeCubit>().getNotifications();
+    context.read<HomeCubit>().getNotifications(isFromNotificationScreen: true);
     super.initState();
   }
 
@@ -57,7 +57,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       : Expanded(
                           child: RefreshIndicator(
                             onRefresh: () async {
-                              context.read<HomeCubit>().getNotifications();
+                              context.read<HomeCubit>().getNotifications(
+                                  isFromNotificationScreen: true);
                             },
                             child: ListView.separated(
                               physics: const BouncingScrollPhysics(),
@@ -68,8 +69,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               itemBuilder: (listViewContext, index) => InkWell(
                                 highlightColor: Colors.transparent,
                                 onTap: () {
+                                  context.read<HomeCubit>().readNotification(
+                                      notifications[index].id);
                                   Navigator.of(context).pushNamed(
-                                    Routes.editRequestScreen,
+                                    Routes.requestStatusScreen,
                                     arguments: RequestStatusScreenArguments(
                                       requestId: notifications[index]
                                           .notificationRequestId,
@@ -83,6 +86,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                   date: notifications[index]
                                       .notificationDate
                                       .toIso8601String(),
+                                  isRead:
+                                      notifications[index].isNotificationRead,
                                 ),
                               ),
                               separatorBuilder: (context, index) =>

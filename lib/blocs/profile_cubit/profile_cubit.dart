@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:turbo/core/helpers/extentions.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 
 import '../../core/helpers/app_regex.dart';
@@ -14,7 +15,9 @@ part 'profile_cubit.freezed.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final PaymentRepository _paymentRepository;
-  ProfileCubit(this._paymentRepository) : super(const ProfileState.initial());
+  final AuthRepository _authRepository;
+  ProfileCubit(this._paymentRepository, this._authRepository)
+      : super(const ProfileState.initial());
 
   bool isEditingSavedCards = false;
 
@@ -42,7 +45,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     clearPaymentFormData();
   }
 
-  void getAllSavedPaymentMethods({bool isForceToRefresh = false}) async {
+  Future<void> getAllSavedPaymentMethods(
+      {bool isForceToRefresh = false}) async {
     emit(const ProfileState.getAllSavedCardsLoading());
     if (isForceToRefresh || _paymentRepository.savedPaymentCards.isEmpty) {
       try {
@@ -143,10 +147,10 @@ class ProfileCubit extends Cubit<ProfileState> {
         );
         res.fold((errMsg) {
           emit(ProfileState.addNewCardError(errMsg));
-        }, (_) {
+        }, (_) async {
           clearPaymentFormData();
+          await getAllSavedPaymentMethods(isForceToRefresh: true);
           emit(const ProfileState.addNewCardSuccess());
-          getAllSavedPaymentMethods(isForceToRefresh: true);
         });
       } catch (e) {
         emit(ProfileState.addNewCardError(e.toString()));
@@ -198,5 +202,16 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
     getAllSavedPaymentMethods(isForceToRefresh: true);
+  }
+
+  void logout() async {
+    emit(const ProfileState.logoutLoading());
+    try {
+      await _authRepository.clearCustomerData();
+      _paymentRepository.savedPaymentCards.clear();
+      emit(const ProfileState.logoutSuccess());
+    } catch (e) {
+      emit(ProfileState.logoutError(e.toString()));
+    }
   }
 }

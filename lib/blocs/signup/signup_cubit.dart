@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -11,7 +12,11 @@ import 'package:turbo/models/district_model.dart';
 
 import '../../core/helpers/app_regex.dart';
 import '../../core/helpers/enums.dart';
+import '../../core/helpers/functions.dart';
 import '../../core/routing/screens_arguments.dart';
+import '../../core/services/local/storage_service.dart';
+import '../../core/services/local/token_service.dart';
+import '../../models/attachment.dart';
 
 part 'signup_state.dart';
 part 'signup_cubit.freezed.dart';
@@ -79,6 +84,31 @@ class SignupCubit extends Cubit<SignupState> {
     weeklyPrice = arguments.weeklyPrice.toDouble();
     monthlyPrice = arguments.monthlyPrice.toDouble();
     citySelectedIndex = authRepository.selectedCityIndex;
+    if (UserTokenService.currentUserToken.isNotEmpty) {
+      currentStep = 1;
+      nationalIdAttachments = findAttachmentFile(
+        type: "nationalId",
+        attachments: authRepository.customer.attachments,
+      );
+      nationalIdOldPaths = nationalIdAttachments?.filePath ?? "";
+      nationalIdInitStatus = nationalIdAttachments?.fileStatus ?? -1;
+      passportAttachments = findAttachmentFile(
+        type: "passport",
+        attachments: authRepository.customer.attachments,
+      );
+      passportOldPaths = passportAttachments?.filePath ?? "";
+      passportInitStatus = passportAttachments?.fileStatus ?? -1;
+    }
+  }
+
+  void changeNationalIdState(int status) {
+    nationalIdInitStatus = status;
+    emit(SignupState.changeNationalIdStatus(state: status));
+  }
+
+  void changePassportState(int status) {
+    passportInitStatus = status;
+    emit(SignupState.changePassportStatus(state: status));
   }
 
   void changeStepIndicator(int index) {
@@ -152,6 +182,7 @@ class SignupCubit extends Cubit<SignupState> {
         ),
       );
     }
+    print("vaaaaa $customerAddressValidation");
   }
 
   void checkLocationValidation() {
@@ -277,29 +308,6 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
-  void getDistrictsByCity(String cityId) async {
-    emit(SignupState.getDistrictByCityLoading(id: cityId));
-    final result =
-        await citiesDistrictsRepository.getDistrictBasedOnCity(cityId);
-    result.fold((errMsg) {
-      emit(SignupState.getDistrictByCityError(errMsg));
-    }, (res) {
-      districts = res;
-      emit(
-        SignupState.getDistrictByCitySuccess(
-          districts: districts,
-          cityId: cityId,
-        ),
-      );
-    });
-  }
-
-  void changeSelectedCityIndex(int index) {
-    citySelectedIndex = index;
-    emit(SignupState.changeSelectedCityIndex(index: index));
-    getDistrictsByCity(citiesDistrictsRepository.cities[citySelectedIndex].id);
-  }
-
   void changeSelectedDistrictId(int index) {
     districtSelectedIndex = index;
     emit(SignupState.changeSelectedCityIndex(index: index));
@@ -330,6 +338,7 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   void calculatePrice() {
+    print("caaaaa ${monthlyPrice} -- ${weeklyPrice} -- ${dailyPrice}");
     calculatedPrice = 0.0;
     print("isssss ${deliveryDate != null && pickedDate != null}");
     if (deliveryDate != null && pickedDate != null) {
@@ -338,13 +347,15 @@ class SignupCubit extends Cubit<SignupState> {
       if (durationInDays >= 0 && durationInDays < 7) {
         calculatedPrice = durationInDays * dailyPrice;
       } else if (durationInDays >= 7 && durationInDays < 30) {
-        calculatedPrice = durationInDays * weeklyPrice;
+        calculatedPrice = durationInDays * (weeklyPrice / 7);
       } else {
-        calculatedPrice = durationInDays * monthlyPrice;
+        calculatedPrice = durationInDays * (monthlyPrice / 30);
       }
+      print("caaaaa ${calculatedPrice} -- ${durationInDays}");
       print(
           "ssssss ${durationInDays} -- $dailyPrice -- ${weeklyPrice} -- $monthlyPrice");
     }
+
     if (isWithPrivateDriver) {
       calculatedPrice += AppConstants.driverFees;
     }
@@ -352,48 +363,137 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   void confirmBookingClicked() async {
-    emit(const SignupState.confirmBookingLoading());
     checkLocationValidation();
     try {
-      if (deliveryDate == null ||
-          deliveryDate == null ||
-          nationalIdFile == null ||
-          passportFiles == null) {
+      if (deliveryDate == null || deliveryDate == null) {
         emit(const SignupState.confirmBookingFailed(
-            errMsg: "Complete all required files"));
+            errMsg: "Complete all required fields"));
       } else if ((deliveryDate != null || deliveryDate != null) &&
           nationalIdFile != null &&
           passportFiles != null &&
           locationController.text.isNotEmpty &&
           AppConstants.vat != -1 &&
           AppConstants.driverFees != -1) {
-        final res = await carRepository.addCarRequest(
-          requestCarId: requestedCarId,
-          requestLocation: locationController.text,
-          requestBranchId: authRepository.selectedBranchId,
-          isWithRequestDriver: isWithPrivateDriver,
-          requestPeriod: pickedDate != null && deliveryDate != null
-              ? deliveryDate!.difference(pickedDate!).inDays
-              : 0,
-          requestFromDate:
-              pickedDate != null ? pickedDate!.toIso8601String() : "",
-          requestToDate:
-              deliveryDate != null ? deliveryDate!.toIso8601String() : "",
-          requestCity: authRepository.selectedCityId,
-          userToken: authRepository.customer.token,
-          requestPrice: double.parse(calculatedPrice.toStringAsFixed(2)),
-          nationalId: nationalIdFile ?? [],
-          passport: passportFiles ?? [],
-        );
-        res.fold(
-          (errMsg) => emit(SignupState.confirmBookingFailed(errMsg: errMsg)),
-          (requestId) => emit(SignupState.confirmBookingSuccess(requestId)),
-        );
+        emit(const SignupState.confirmBookingLoading());
+        if (authRepository.customer.attachments.isNotEmpty) {
+          List<String> userAttachmentsIds = [];
+          for (var attachment in authRepository.customer.attachments) {
+            userAttachmentsIds.add(attachment.id);
+          }
+          final res = await carRepository.addNewRequest(
+            requestCarId: requestedCarId,
+            requestLocation: locationController.text,
+            requestBranchId: authRepository.selectedBranchId,
+            isWithRequestDriver: isWithPrivateDriver,
+            requestPeriod: pickedDate != null && deliveryDate != null
+                ? deliveryDate!.difference(pickedDate!).inDays
+                : 0,
+            requestFromDate:
+                pickedDate != null ? pickedDate!.toIso8601String() : "",
+            requestToDate:
+                deliveryDate != null ? deliveryDate!.toIso8601String() : "",
+            requestCity: authRepository.selectedCityId,
+            userToken: authRepository.customer.token,
+            requestPrice: double.parse(calculatedPrice.toStringAsFixed(2)),
+            attachmentsIds: userAttachmentsIds,
+            requestDailyCalculationPrice:
+                double.parse(calculatedPrice.toStringAsFixed(2)),
+          );
+          res.fold(
+            (errMsg) => emit(SignupState.confirmBookingFailed(errMsg: errMsg)),
+            (requestId) {
+              emit(SignupState.confirmBookingSuccess(requestId));
+            },
+          );
+        } else {
+          final res = await carRepository.addCarRequest(
+            requestCarId: requestedCarId,
+            requestLocation: locationController.text,
+            requestBranchId: authRepository.selectedBranchId,
+            isWithRequestDriver: isWithPrivateDriver,
+            requestPeriod: pickedDate != null && deliveryDate != null
+                ? deliveryDate!.difference(pickedDate!).inDays
+                : 0,
+            requestFromDate:
+                pickedDate != null ? pickedDate!.toIso8601String() : "",
+            requestToDate:
+                deliveryDate != null ? deliveryDate!.toIso8601String() : "",
+            requestCity: authRepository.selectedCityId,
+            userToken: authRepository.customer.token,
+            requestPrice: double.parse(calculatedPrice.toStringAsFixed(2)),
+            nationalId: nationalIdFile ?? [],
+            passport: passportFiles ?? [],
+          );
+          res.fold(
+            (l) => (errMsg) =>
+                emit(SignupState.confirmBookingFailed(errMsg: errMsg)),
+            (res) {
+              List<Attachment> userAttachments = (res['attachmentIds'] as List)
+                  .map(
+                    (e) => Attachment.fromJson(e),
+                  )
+                  .toList();
+
+              authRepository.customer.attachments = userAttachments;
+
+              emit(SignupState.confirmBookingSuccess(res['requestId']));
+            },
+          );
+        }
       }
     } catch (e) {
       emit(
         SignupState.confirmBookingFailed(errMsg: e.toString()),
       );
+    }
+  }
+
+  void updateRequestFile({
+    required String fileId,
+    required String oldPathFiles,
+    required String fileType,
+    required File newFile,
+  }) async {
+    emit(SignupState.saveEditedFileLoading(fileId));
+    try {
+      final res = await carRepository.editRequestFile(
+        fileType: fileType,
+        attachmentId: fileId,
+        oldPathFiles: oldPathFiles,
+        newFile: newFile,
+      );
+
+      res.fold(
+        (errMsg) => emit(SignupState.saveEditedFileError(errMsg, fileId)),
+        (newAttachments) {
+          int index = 0;
+          for (Attachment attachment in authRepository.customer.attachments) {
+            if (attachment.id == fileId) {
+              authRepository.customer.attachments[index] = newAttachments;
+              break;
+            }
+            index++;
+          }
+          StorageService.saveData(
+            "customerData",
+            json.encode(authRepository.customer.toJson()),
+          );
+          nationalIdAttachments = findAttachmentFile(
+            type: "nationalId",
+            attachments: authRepository.customer.attachments,
+          );
+          nationalIdOldPaths = nationalIdAttachments?.filePath ?? "";
+          nationalIdInitStatus = nationalIdAttachments?.fileStatus ?? 0;
+          passportAttachments = findAttachmentFile(
+            type: "passport",
+            attachments: authRepository.customer.attachments,
+          );
+          passportInitStatus = passportAttachments?.fileStatus ?? 0;
+        },
+      );
+      emit(SignupState.saveEditedFileSuccess(fileId));
+    } catch (e) {
+      emit(SignupState.saveEditedFileError(e.toString(), fileId));
     }
   }
 }

@@ -24,14 +24,12 @@ class LoginScreenArguments {
 
 class SignupScreenArguments {
   final String carId;
-  final bool isFromLogin;
   final num dailyPrice;
   final num weeklyPrice;
   final num monthlyPrice;
 
   SignupScreenArguments({
     required this.carId,
-    required this.isFromLogin,
     required this.dailyPrice,
     required this.weeklyPrice,
     required this.monthlyPrice,
@@ -39,11 +37,11 @@ class SignupScreenArguments {
 }
 
 class PaymentScreenArguments {
-  final num value;
+  final num paymentAmount;
   final String carRequestId;
 
   PaymentScreenArguments({
-    required this.value,
+    required this.paymentAmount,
     required this.carRequestId,
   });
 }

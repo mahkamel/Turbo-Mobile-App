@@ -18,15 +18,15 @@ import '../../../core/widgets/text_field_with_header.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({
     super.key,
-    required this.requestedCarId,
-    required this.dailyPrice,
-    required this.weeklyPrice,
-    required this.monthlyPrice,
+    this.requestedCarId,
+    this.dailyPrice,
+    this.weeklyPrice,
+    this.monthlyPrice,
   });
-  final String requestedCarId;
-  final num dailyPrice;
-  final num weeklyPrice;
-  final num monthlyPrice;
+  final String? requestedCarId;
+  final num? dailyPrice;
+  final num? weeklyPrice;
+  final num? monthlyPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -90,15 +90,21 @@ class LoginScreen extends StatelessWidget {
                       message: state.errMsg,
                     );
                   } else if (state is LoginSuccessState) {
-                    Navigator.of(context).pushReplacementNamed(
-                      Routes.signupScreen,
-                      arguments: SignupScreenArguments(
-                          carId: requestedCarId,
-                          isFromLogin: true,
-                          dailyPrice: dailyPrice,
-                          weeklyPrice: weeklyPrice,
-                          monthlyPrice: monthlyPrice),
-                    );
+                    if (requestedCarId != null) {
+                      Navigator.of(context).pushReplacementNamed(
+                        Routes.signupScreen,
+                        arguments: SignupScreenArguments(
+                          carId: requestedCarId!,
+                          dailyPrice: dailyPrice!,
+                          weeklyPrice: weeklyPrice!,
+                          monthlyPrice: monthlyPrice!,
+                        ),
+                      );
+                    } else {
+                      Navigator.of(context).pushReplacementNamed(
+                        Routes.layoutScreen,
+                      );
+                    }
                   }
                 },
                 builder: (context, state) {
@@ -120,16 +126,21 @@ class LoginScreen extends StatelessWidget {
                 text: "dontHaveAccount".getLocale(),
                 buttonText: "signUp".getLocale(),
                 onTap: () {
-                  Navigator.of(context).pushReplacementNamed(
-                    Routes.signupScreen,
-                    arguments: SignupScreenArguments(
-                      carId: requestedCarId,
-                      isFromLogin: true,
-                      dailyPrice: dailyPrice,
-                      weeklyPrice: weeklyPrice,
-                      monthlyPrice: monthlyPrice,
-                    ),
-                  );
+                  if (requestedCarId != null) {
+                    Navigator.of(context).pushReplacementNamed(
+                      Routes.signupScreen,
+                      arguments: SignupScreenArguments(
+                        carId: requestedCarId!,
+                        dailyPrice: dailyPrice!,
+                        weeklyPrice: weeklyPrice!,
+                        monthlyPrice: monthlyPrice!,
+                      ),
+                    );
+                  } else {
+                    Navigator.of(context).pushReplacementNamed(
+                      Routes.signupScreen,
+                    );
+                  }
                 },
               ),
             ],

@@ -35,4 +35,12 @@ class ProfileState with _$ProfileState {
       DeleteSavedCardsSuccessState;
   const factory ProfileState.deleteSavedCardsError(String errMsg) =
       DeleteSavedCardsErrorState;
+
+
+  const factory ProfileState.logoutLoading() =
+  LogoutLoadingState;
+  const factory ProfileState.logoutSuccess() =
+  LogoutSuccessState;
+  const factory ProfileState.logoutError(String errMsg) =
+  LogoutErrorState;
 }

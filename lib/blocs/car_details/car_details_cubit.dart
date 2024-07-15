@@ -44,4 +44,5 @@ class CarDetailsCubit extends Cubit<CarDetailsState> {
       );
     }
   }
+
 }

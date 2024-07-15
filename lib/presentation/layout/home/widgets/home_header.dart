@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
-import 'package:turbo/core/services/local/token_service.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 import 'package:turbo/core/widgets/custom_shimmer.dart';
@@ -113,36 +112,52 @@ class HomeHeader extends StatelessWidget {
                     },
                     icon: const Icon(Icons.keyboard_arrow_down_rounded),
                   ),
-                  if (UserTokenService.currentUserToken.isNotEmpty)
-                    InkWell(
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (navigateContext) =>
-                              BlocProvider<HomeCubit>.value(
-                            value: context.read<HomeCubit>(),
-                            child: const NotificationsScreen(),
-                          ),
-                        ));
-                      },
-                      child: SizedBox(
-                        height: 30,
-                        width: 24,
-                        child: badges.Badge(
-                          badgeStyle: const badges.BadgeStyle(
-                            badgeColor: AppColors.primaryRed,
-                          ),
-                          position: badges.BadgePosition.topEnd(end: -8),
-                          badgeContent: Text(
-                            "${blocWatch.notifications.length}",
-                            style: const TextStyle(
-                              color: AppColors.white,
-                            ),
-                          ),
-                          child: const Icon(Icons.notifications_none_rounded),
-                        ),
-                      ),
-                    ),
+                  BlocBuilder<HomeCubit, HomeState>(
+                    buildWhen: (previous, current) =>
+                        current is GetNotificationsSuccessState,
+                    builder: (context, state) {
+                      var numOfNotifications = blocWatch.notifications
+                          .where(
+                            (element) => element.isNotificationSeen == false,
+                          )
+                          .toList()
+                          .length;
+                      return  context.watch<AuthRepository>().customer.token.isNotEmpty
+                          ? InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (navigateContext) =>
+                                      BlocProvider<HomeCubit>.value(
+                                    value: context.read<HomeCubit>(),
+                                    child: const NotificationsScreen(),
+                                  ),
+                                ));
+                              },
+                              child: SizedBox(
+                                height: 30,
+                                width: 24,
+                                child: badges.Badge(
+                                  showBadge: numOfNotifications != 0,
+                                  badgeStyle: const badges.BadgeStyle(
+                                    badgeColor: AppColors.primaryRed,
+                                  ),
+                                  position:
+                                      badges.BadgePosition.topEnd(end: -8),
+                                  badgeContent: Text(
+                                    "$numOfNotifications",
+                                    style: const TextStyle(
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                      Icons.notifications_none_rounded),
+                                ),
+                              ),
+                            )
+                          : const SizedBox();
+                    },
+                  ),
                 ],
               );
       },
@@ -390,7 +405,7 @@ class HeaderShimmerEffect extends StatelessWidget {
         const CustomShimmer(
           child: Icon(Icons.keyboard_arrow_down_rounded),
         ),
-        if (UserTokenService.currentUserToken.isNotEmpty)
+        if (context.watch<AuthRepository>().customer.token.isNotEmpty)
           const CustomShimmer(
             child: Icon(Icons.notifications_none_rounded),
           ),

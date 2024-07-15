@@ -21,6 +21,16 @@ class AuthServices {
     }
   }
 
+  Future<Response> refreshCustomerData() async {
+    try {
+      Response response = await DioHelper.getData(
+          endpoint: 'customer/refreshCustomerData',);
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
   Future<Response> signupInfoStep({
     required String customerName,
     required String customerEmail,
@@ -60,6 +70,56 @@ class AuthServices {
       Response response = await DioHelper.getData(
         endpoint: 'notification/getNotifications',
       );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> setNotificationsToken(String customerToken , String token) async {
+    try {
+      Response response = await DioHelper.postData(
+          endpoint: 'customer/setTokenForCustomer',
+
+          body: {
+            "customerToken": customerToken,
+          });
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> disableNotificationsToken(String customerToken) async {
+    try {
+      Response response = await DioHelper.postData(
+          endpoint: 'customer/disableTokenForCustomer',
+          body: {
+            "customerToken": customerToken,
+          });
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> setSeenNotifications() async {
+    try {
+      Response response = await DioHelper.postData(
+          endpoint: 'notification/setSeenNotifications', body: {});
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> setReadNotification(String notificationId) async {
+    try {
+      Response response = await DioHelper.postData(
+          endpoint: 'notification/setReadNotification',
+          body: {
+            "notificationId": notificationId,
+          });
       return response;
     } catch (e) {
       throw e.toString();

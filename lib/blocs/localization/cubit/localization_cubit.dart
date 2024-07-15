@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart' show Locale;
 
 import '../../../core/services/local/cache_helper.dart';
-
 part 'localization_state.dart';
 
 class LocalizationCubit extends Cubit<LocalizationState> {
