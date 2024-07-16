@@ -34,6 +34,8 @@ class OrderCubit extends Cubit<OrderState> {
   DateTime? deliveryDate;
 
   double calculatedPrice = 0.0;
+  double calculatedPriceWithVat = 0.0;
+  double pricePerDay = 0.0;
   double dailyPrice = 0;
   double weeklyPrice = 0;
   double monthlyPrice = 0;
@@ -91,19 +93,33 @@ class OrderCubit extends Cubit<OrderState> {
   }
 
   void calculatePrice() {
+    print("caaaaa ${monthlyPrice} -- ${weeklyPrice} -- ${dailyPrice}");
     calculatedPrice = 0.0;
+    pricePerDay = 0.0;
     if (deliveryDate != null && pickedDate != null) {
       final int durationInDays = deliveryDate!.difference(pickedDate!).inDays;
+
       if (durationInDays >= 1 && durationInDays < 7) {
-        calculatedPrice = durationInDays * dailyPrice;
+        pricePerDay = dailyPrice;
       } else if (durationInDays >= 7 && durationInDays < 30) {
-        calculatedPrice = durationInDays * weeklyPrice;
+        pricePerDay = weeklyPrice;
       } else {
-        calculatedPrice = durationInDays * monthlyPrice;
+        pricePerDay = monthlyPrice;
       }
+      calculatedPrice = durationInDays * pricePerDay;
+      print("calcuaeeee $calculatedPrice");
+      calculatedPriceWithVat =
+          (calculatedPrice) + (calculatedPrice * (AppConstants.vat / 100));
+      print(
+          "caaaaa ${calculatedPriceWithVat} -- ${durationInDays} -- ${pricePerDay}");
     }
+
     if (isWithPrivateDriver) {
       calculatedPrice += AppConstants.driverFees;
+      num driverFeesWithFats =
+          (AppConstants.driverFees * (AppConstants.vat / 100)) +
+              AppConstants.driverFees;
+      calculatedPriceWithVat += driverFeesWithFats;
     }
     emit(OrderState.calculateEditedPrice(price: calculatedPrice));
   }
@@ -181,13 +197,17 @@ class OrderCubit extends Cubit<OrderState> {
               ? locationController.text
               : null,
           requestPrice: calculatedPrice != requestStatus!.requestPrice
-              ? calculatedPrice
+              ? calculatedPriceWithVat
               : null,
           requestPeriod: (pickedDate != null && deliveryDate != null) &&
                   (deliveryDate!.difference(pickedDate!).inDays.toString() !=
                       requestStatus!.requestPeriod)
               ? deliveryDate!.difference(pickedDate!).inDays
               : null,
+          requestDailyCalculationPrice:
+              calculatedPrice != requestStatus!.requestPrice
+                  ? pricePerDay
+                  : null,
         );
         res.fold(
           (errMsg) {
@@ -279,7 +299,6 @@ class OrderCubit extends Cubit<OrderState> {
       res.fold(
         (errMsg) => emit(OrderState.submitEditsError(errMsg)),
         (_) {
-
           emit(const OrderState.submitEditsSuccess());
         },
       );

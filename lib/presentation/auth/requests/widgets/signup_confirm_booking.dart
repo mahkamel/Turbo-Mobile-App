@@ -73,7 +73,7 @@ class ConfirmBookingButton extends StatelessWidget {
           Navigator.of(context).pushReplacementNamed(
             Routes.paymentScreen,
             arguments: PaymentScreenArguments(
-              paymentAmount: blocRead.calculatedPrice,
+              paymentAmount: blocRead.calculatedPriceWithVat,
               carRequestId: state.requestId,
             ),
           );
@@ -81,23 +81,13 @@ class ConfirmBookingButton extends StatelessWidget {
       },
       builder: (context, state) {
         var blocWatch = context.watch<SignupCubit>();
-        print("deliveryDate ${blocWatch.deliveryDate == null}");
-        print("pickedDate ${blocWatch.pickedDate == null}");
-        print("sssss ${blocWatch.nationalIdInitStatus}");
-        print("sssss ${blocWatch.passportInitStatus}");
-        print("sssss ${blocWatch.nationalIdInitStatus}");
-        print("sssss ${blocWatch.passportInitStatus}");
-        print(
-            "customerAddressValidation ${blocWatch.locationValidation == TextFieldValidation.valid}");
-
         return DefaultButton(
           loading: state is ConfirmBookingLoadingState,
           marginRight: 16,
           marginLeft: 16,
           marginTop: 24,
           marginBottom: 24,
-          color: blocWatch.locationValidation !=
-                      TextFieldValidation.valid ||
+          color: blocWatch.locationValidation != TextFieldValidation.valid ||
                   blocWatch.deliveryDate == null ||
                   blocWatch.pickedDate == null ||
                   state is SaveRequestEditedFileLoadingState ||
@@ -111,8 +101,7 @@ class ConfirmBookingButton extends StatelessWidget {
           function: () {
             if (state is! ConfirmBookingLoadingState &&
                 state is! SaveRequestEditedFileLoadingState &&
-                blocWatch.locationValidation ==
-                    TextFieldValidation.valid &&
+                blocWatch.locationValidation == TextFieldValidation.valid &&
                 blocWatch.deliveryDate != null &&
                 blocWatch.pickedDate != null &&
                 blocWatch.nationalIdInitStatus != 2 &&
@@ -460,23 +449,70 @@ class RentalPrice extends StatelessWidget {
         var blocWatch = context.watch<SignupCubit>();
         return Padding(
           padding: const EdgeInsetsDirectional.only(start: 20.0),
-          child: Text.rich(
-            TextSpan(
-              text: "Rental price: ",
-              style: AppFonts.inter16TypeGreyHeader600,
-              children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text.rich(
                 TextSpan(
-                  text: "${blocWatch.calculatedPrice.toStringAsFixed(2)} ",
-                  style: AppFonts.inter18Black500,
+                  text: "Rental price: ",
+                  style: AppFonts.inter16TypeGreyHeader600,
+                  children: [
+                    TextSpan(
+                      text: "${blocWatch.calculatedPrice.toStringAsFixed(2)} ",
+                      style: AppFonts.inter18Black500,
+                    ),
+                    TextSpan(
+                      text: "SAR",
+                      style: AppFonts.inter18Black500.copyWith(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              Text.rich(
                 TextSpan(
-                  text: "SAR",
-                  style: AppFonts.inter18Black500.copyWith(
-                    fontSize: 16,
-                  ),
+                  text: "Vat (${AppConstants.vat}%): ",
+                  style: AppFonts.inter16TypeGreyHeader600,
+                  children: [
+                    TextSpan(
+                      text:
+                          "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} ",
+                      style: AppFonts.inter18Black500,
+                    ),
+                    TextSpan(
+                      text: "SAR",
+                      style: AppFonts.inter18Black500.copyWith(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              const Divider(
+                height: 8,
+                color: AppColors.greyBorder,
+              ),
+              Text.rich(
+                TextSpan(
+                  text: "Total: ",
+                  style: AppFonts.inter16TypeGreyHeader600,
+                  children: [
+                    TextSpan(
+                      text:
+                          "${((blocWatch.calculatedPrice * (AppConstants.vat / 100)) + blocWatch.calculatedPrice).toStringAsFixed(2)} ",
+                      style: AppFonts.inter18Black500,
+                    ),
+                    TextSpan(
+                      text: "SAR",
+                      style: AppFonts.inter18Black500.copyWith(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -504,8 +540,8 @@ class DeliveryDateSelection extends StatelessWidget {
               ? context
                   .watch<SignupCubit>()
                   .pickedDate!
-                  .add(const Duration(days: 1, hours: 1))
-              : DateTime.now().add(const Duration(days: 1, hours: 1)),
+                  .add(const Duration(days: 1, minutes: 30))
+              : DateTime.now().add(const Duration(days: 1, minutes: 30)),
           isDeliveryDate: true,
           selectedDateTime: context.watch<SignupCubit>().deliveryDate,
           onDateSelected: (selectedDate) {
@@ -534,8 +570,7 @@ class PickupDateSelection extends StatelessWidget {
         return DateSelection(
           key: const Key("PickupDate"),
           header: "Pickup",
-          //Todo:ediitt
-          minDate: DateTime.now(),
+          minDate: DateTime.now().add(const Duration(hours: 1)),
           selectedDateTime: context.watch<SignupCubit>().pickedDate,
           onDateSelected: (selectedDate) {
             blocRead.pickedDate = selectedDate;

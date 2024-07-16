@@ -24,7 +24,6 @@ class CarDetailsCubit extends Cubit<CarDetailsState> {
           (errMsg) => emit(CarDetailsState.getCarsDetailsError(errMsg)),
           (carDetails) {
             carDetailsData = carDetails;
-            print("ssssss ${carDetails.carDailyPrice}");
             emit(CarDetailsState.getCarsDetailsSuccess(carId));
             if (AppConstants.driverFees == -1) {
               _carRepository.getDriverFees();

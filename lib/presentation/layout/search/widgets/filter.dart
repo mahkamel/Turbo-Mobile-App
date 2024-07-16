@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_multi_slider/flutter_multi_slider.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 
 import '../../../../blocs/search/search_cubit.dart';
@@ -7,7 +8,6 @@ import '../../../../core/helpers/constants.dart';
 import '../../../../core/helpers/dropdown_keys.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
-import '../../../../core/widgets/custom_dropdown.dart';
 import '../../../../core/widgets/default_buttons.dart';
 import '../../../../core/widgets/widget_with_header.dart';
 import 'filter/car_brand_filter.dart';
@@ -157,50 +157,48 @@ class DailyPriceDropdown extends StatelessWidget {
           padding: const EdgeInsetsDirectional.only(top: 24),
           header: "Daily Price",
           headerStyle: AppFonts.inter18HeaderBlack700,
-          widget: CustomDropdown<int>(
-            onTap: () {
-
-            },
-            border: Border.all(
-              color: AppColors.black.withOpacity(0.5),
-            ),
-            paddingLeft: 0,
-            key: priceRangeKey,
-            paddingRight: 0,
-            index: blocWatch.selectedFilterPriceRange,
-            showText: false,
-            listOfValues: const [
-              "1-500",
-              "500-1000",
-              "1000-2000",
-              "More than 2000",
+          widget: Column(
+            children: [
+              MultiSlider(
+                height: 36,
+                divisions: 10,
+                horizontalPadding: 8,
+                indicator: (value) {
+                  return const IndicatorOptions(draw: false);
+                },
+                selectedIndicator: (value) {
+                  return IndicatorOptions(
+                    formatter: (value) {
+                      if (value == 2500) {
+                        return "+2500";
+                      } else {
+                        return value.toStringAsFixed(0);
+                      }
+                    },
+                  );
+                },
+                values: [
+                  blocWatch.minDailyPrice,
+                  blocWatch.maxDailyPrice,
+                ],
+                min: 1,
+                max: 2500,
+                onChanged: (value) {
+                  blocRead.changePriceRangeIndex(min: value[0], max: value[1]);
+                },
+              ),
+              const Padding(
+                padding: EdgeInsetsDirectional.only(start: 4.0 , end: 0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("1"),
+                    Text("+2500"),
+                  ],
+                ),
+              ),
             ],
-            text: "Select Price Range",
-            isCheckedBox: false,
-            onChange: (_, int index) {
-              blocRead.changePriceRangeIndex(index);
-            },
-            items: [
-              "1-500",
-              "500-1000",
-              "1000-2000",
-              "More than 2000",
-            ]
-                .map((element) => element)
-                .toList()
-                .asMap()
-                .entries
-                .map(
-                  (item) => CustomDropdownItem(
-                    key: UniqueKey(),
-                    value: item.key,
-                    child: Text(
-                      item.value,
-                      style: AppFonts.inter15Black400,
-                    ),
-                  ),
-                )
-                .toList(),
           ),
         );
       },

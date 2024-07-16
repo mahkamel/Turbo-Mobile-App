@@ -32,6 +32,9 @@ class SearchCubit extends Cubit<SearchState> {
 
   int selectedFilterPriceRange = -1;
 
+  double minDailyPrice = 1;
+  double maxDailyPrice = 2500;
+
   init() {
     filteredCars = _carRepository.filteredCars;
     if (_carRepository.filteredCars.isNotEmpty) {
@@ -139,37 +142,44 @@ class SearchCubit extends Cubit<SearchState> {
     );
   }
 
-  void changePriceRangeIndex(int newIndex) {
-    selectedFilterPriceRange = newIndex;
-    emit(SearchState.changeSelectedPriceRangeIndex(selectedFilterPriceRange));
+  void changePriceRangeIndex({
+    required double min,
+    required double max,
+  }) {
+    minDailyPrice = min;
+    maxDailyPrice = max;
+    emit(SearchState.changeSelectedPriceRangeIndex(
+        minDailyPrice, maxDailyPrice));
   }
 
   void applyFilter() async {
+    List<String> selectedTypesId = [];
+    List<String> selectedBrandsId = [];
+    for (var type in _carRepository.carTypes) {
+      if (type.isSelected) {
+        selectedTypesId.add(type.id);
+      }
+    }
+    for (var brand in selectedBrands) {
+      selectedBrandsId.add(brand.id);
+    }
+
     isFilteredRes = false;
     isGettingFilterResults = true;
     try {
       emit(const SearchState.getFilteredCarsLoading());
-      List<String> selectedTypesId = [];
-      List<String> selectedBrandsId = [];
-      for (var type in _carRepository.carTypes) {
-        if (type.isSelected) {
-          selectedTypesId.add(type.id);
-        }
-      }
-      for (var brand in selectedBrands) {
-        selectedBrandsId.add(brand.id);
-      }
       final res = await _carRepository.carsFilter(
         carYears: List<String>.from(selectedCarYears),
         carTypes: selectedTypesId,
         carBrands: selectedBrandsId,
-        isWithUnlimited: isWithUnlimitedKM,
+        // isWithUnlimited: isWithUnlimitedKM,
         branchId: _authRepository.selectedBranchId,
-        priceFrom: getFromPriceRange(selectedFilterPriceRange),
-        priceTo: getToPriceRange(selectedFilterPriceRange),
+        priceFrom: minDailyPrice,
+        priceTo: maxDailyPrice == 2500 ? null : maxDailyPrice,
       );
       res.fold(
         (errMsg) {
+          filteredCars = [];
           isGettingFilterResults = false;
           emit(SearchState.getFilteredCarsError(errMsg));
         },
@@ -192,7 +202,7 @@ class SearchCubit extends Cubit<SearchState> {
     selectedCarYears = {};
 
     isWithUnlimitedKM = false;
-    changePriceRangeIndex(-1);
+    changePriceRangeIndex(min: 1, max: 2500);
     brandSearchController.clear();
     emit(const SearchState.filterReset());
   }

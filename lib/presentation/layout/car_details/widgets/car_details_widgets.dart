@@ -8,7 +8,7 @@ import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 
 class PriceCard extends StatelessWidget {
-  const  PriceCard({
+  const PriceCard({
     super.key,
     required this.price,
     required this.period,
@@ -18,12 +18,15 @@ class PriceCard extends StatelessWidget {
   final String period;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          "${period == "day" ? "Daily" : period == "week" ? "Weekly" : "Monthly"} ",
-          style: AppFonts.inter16Black500.copyWith(fontSize: 15),
+        SizedBox(
+          width: 70,
+          child: Text(
+            "${period == "day" ? "Daily" : period == "week" ? "Weekly" : "Monthly"} ",
+            style: AppFonts.inter16Black500.copyWith(fontSize: 15),
+          ),
         ),
         Container(
           height: 40,
@@ -48,7 +51,7 @@ class PriceCard extends StatelessWidget {
                   style: AppFonts.inter16Black500,
                 ),
                 Text(
-                  "SAR",
+                  "SAR/day",
                   style: AppFonts.inter14Grey400.copyWith(fontSize: 12),
                 ),
               ],
@@ -112,32 +115,26 @@ class CarPricesRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("carr dailyy  ${blocRead.carDetailsData.carDailyPrice}");
-    return Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(
-          child: PriceCard(
-            price: blocRead.carDetailsData.carDailyPrice,
-            period: "daySmall".getLocale(),
-          ),
+        PriceCard(
+          price: blocRead.carDetailsData.carDailyPrice,
+          period: "daySmall".getLocale(),
         ),
         const SizedBox(
-          width: 8,
+          height: 8,
         ),
-        Expanded(
-          child: PriceCard(
-            price: blocRead.carDetailsData.carWeaklyPrice,
-            period: "weekSmall".getLocale(),
-          ),
+        PriceCard(
+          price: blocRead.carDetailsData.carWeaklyPrice,
+          period: "weekSmall".getLocale(),
         ),
         const SizedBox(
-          width: 8,
+          height: 8,
         ),
-        Expanded(
-          child: PriceCard(
-            price: blocRead.carDetailsData.carMothlyPrice,
-            period: "monthSmall".getLocale(),
-          ),
+        PriceCard(
+          price: blocRead.carDetailsData.carMothlyPrice,
+          period: "monthSmall".getLocale(),
         ),
       ],
     );

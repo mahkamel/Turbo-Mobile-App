@@ -80,8 +80,24 @@ class CarsByBrandsList extends StatelessWidget {
                         ),
                       )
                     : Expanded(
-                        child: CarsByTypesListview(
-                          carsByBrand: blocWatch.carsByBrand,
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            if (context.read<HomeCubit>().selectedBrandIndex ==
+                                -1) {
+                              context.read<HomeCubit>().getCarsBasedOnBrand();
+                            } else {
+                              context.read<HomeCubit>().getCarsBasedOnBrand(
+                                  brandId: context
+                                      .read<HomeCubit>()
+                                      .carBrands[context
+                                      .read<HomeCubit>()
+                                      .selectedBrandIndex]
+                                      .id);
+                            }
+                          },
+                          child: CarsByTypesListview(
+                            carsByBrand: blocWatch.carsByBrand,
+                          ),
                         ),
                       );
       },

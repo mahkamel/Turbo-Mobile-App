@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:turbo/models/car_media_model.dart';
+
 class GetCarsByBrandsResponse {
   bool status;
   List<CarData> results;
@@ -11,7 +15,7 @@ class GetCarsByBrandsResponse {
       GetCarsByBrandsResponse(
         status: json['status'] as bool,
         results: List<CarData>.from(
-          (json['result'] as List).map((data) => CarData.fromJson(data)),
+          (json['data'] as List).map((data) => CarData.fromJson(data)),
         ),
       );
 }
@@ -36,31 +40,32 @@ class CarData {
 class Car {
   String carId;
   String carYear;
-  String carImg;
   int carDailyPrice;
   Color? color;
   Model model;
   Brand brand;
+  MediaDetails media;
 
   Car({
     required this.carId,
     required this.carYear,
     required this.carDailyPrice,
     this.color,
-    required this.carImg,
     required this.model,
     required this.brand,
+    required this.media,
   });
 
   factory Car.fromJson(Map<String, dynamic> json) => Car(
         carId: json['_id'] ?? "",
         carYear: json['carYear'] ?? "",
-        carImg:
-            "https://www.telegraph.co.uk/content/dam/cars/2022/10/06/TELEMMGLPICT000303818851_trans_NvBQzQNjv4Bqt5zbar6XbM4pjVdFDGnuCuvLaAydVN2IieZzbeiTTKw.jpeg?imwidth=960",
         carDailyPrice: json['carDailyPrice'] ?? 0,
-        color: json['color'] == null ? null : Color.fromJson(json['color']),
+        color: json['color'] == null
+            ? null
+            : CarColor.fromJson(json['color']).colorHexaDecimalBasedValue,
         model: Model.fromJson(json['model']),
         brand: Brand.fromJson(json['brand']),
+        media: MediaDetails.fromJson(json["media"]),
       );
 }
 
@@ -91,13 +96,20 @@ class Brand {
       );
 }
 
-class Color {
-  String? colorHexaDecimalBasedValue; // Make color value nullable
+class CarColor {
+  Color? colorHexaDecimalBasedValue;
 
-  Color({this.colorHexaDecimalBasedValue});
+  CarColor({this.colorHexaDecimalBasedValue});
 
-  factory Color.fromJson(Map<String, dynamic> json) => Color(
-        colorHexaDecimalBasedValue:
-            json['Color_HexaDecimalBasedValue'] ?? "0xffffff",
+  factory CarColor.fromJson(Map<String, dynamic> json) => CarColor(
+        colorHexaDecimalBasedValue: json['Color_HexaDecimalBasedValue'] != null
+            ? hexToColor(json['Color_HexaDecimalBasedValue'])
+            : const Color(0x00ffffff),
       );
+}
+
+Color hexToColor(String hexCode) {
+  hexCode = hexCode.replaceAll('#', '');
+  int colorValue = int.parse(hexCode, radix: 16);
+  return Color(colorValue);
 }

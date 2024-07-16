@@ -113,7 +113,7 @@ class RecommendedCarCard extends StatelessWidget {
           child: Center(
             child: CachedNetworkImage(
               imageUrl: getCompleteFileUrl(
-                car.brand.brandName,
+                car.brand.brandPath,
               ),
               fit: BoxFit.contain,
             ),
@@ -145,7 +145,7 @@ class RecommendedCarCard extends StatelessWidget {
     return Hero(
       tag: car.carId,
       child: CarImage(
-        carImgPath: car.carImg,
+        carImgPath: car.media.mediaLargImageUrl,
       ),
     );
   }

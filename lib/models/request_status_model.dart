@@ -64,7 +64,7 @@ class RequestStatusModel {
       requestTo: DateTime.parse(json['requestTo'] as String),
       requestCity:
           RequestCity.fromJson(json['requestCity'] as Map<String, dynamic>),
-      requestPrice: json['requestPrice'] ?? 0.0,
+      requestPrice: json['requestTotalPrice'] ?? 0.0,
       customerId: json['customerId'] ?? "",
       requestSysDate: DateTime.parse(
           json['requestSysDate'] as String), // Assuming date format

@@ -60,7 +60,8 @@ class _DateSelectionState extends State<DateSelection> {
                   tempDateTime = widget.minDate ??
                       (widget.selectedDateTime ??
                           (widget.isDeliveryDate
-                              ? DateTime.now().add(const Duration(days: 1,hours: 1))
+                              ? DateTime.now()
+                                  .add(const Duration(days: 1, minutes: 30))
                               : DateTime.now().add(const Duration(hours: 1))));
                   showModalBottomSheet(
                     context: context,
@@ -91,9 +92,10 @@ class _DateSelectionState extends State<DateSelection> {
                               initialDateTime: widget.minDate ??
                                   (widget.selectedDateTime ??
                                       (widget.isDeliveryDate
-                                          ? DateTime.now()
-                                              .add(const Duration(days: 1, hours: 1))
-                                          : DateTime.now().add(const Duration(hours: 1)))),
+                                          ? DateTime.now().add(const Duration(
+                                              days: 1, minutes: 30))
+                                          : DateTime.now()
+                                              .add(const Duration(hours: 1)))),
                               mode: CupertinoDatePickerMode.date,
                               onDateTimeChanged: (dateTime) {
                                 setState(() {
@@ -120,8 +122,23 @@ class _DateSelectionState extends State<DateSelection> {
                               ),
                               TextButton(
                                 onPressed: () {
+                                  TimeOfDay timeOfDay = TimeOfDay.fromDateTime(
+                                      widget.selectedDateTime ??
+                                          selectedDateTime ??
+                                          (widget.isDeliveryDate
+                                              ? DateTime.now().add(
+                                                  const Duration(
+                                                      hours: 1, minutes: 30))
+                                              : DateTime.now().add(
+                                                  const Duration(hours: 1))));
+                                  print("tinee of the dat ${timeOfDay.hour} -- ${timeOfDay.minute}");
+
                                   setState(() {
                                     selectedDateTime = tempDateTime;
+                                    selectedDateTime = selectedDateTime!.copyWith(
+                                      hour: timeOfDay.hour,
+                                      minute: timeOfDay.minute,
+                                    );
                                   });
                                   widget.onDateSelected(selectedDateTime);
                                   if (Navigator.of(bsContext).canPop()) {

@@ -61,7 +61,6 @@ class AuthRepository {
   Future<Either<String, CustomerModel>> refreshCustomerData() async {
     try {
       final response = await _authServices.refreshCustomerData();
-      print("sssresds $response");
       if (response.statusCode == 200 && response.data['status']) {
         customer.attachments =
             CustomerModel.fromJson(response.data).attachments;

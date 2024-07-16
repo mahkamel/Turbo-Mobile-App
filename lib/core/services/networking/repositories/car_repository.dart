@@ -98,7 +98,7 @@ class CarRepository {
       );
       if (response.statusCode == 200 && response.data['status']) {
         List<CarData> cars = [];
-        if ((response.data['result'] as List).isNotEmpty) {
+        if ((response.data['data'] as List).isNotEmpty) {
           cars = GetCarsByBrandsResponse.fromJson(response.data).results;
         }
 
@@ -163,24 +163,24 @@ class CarRepository {
     required List<String> carYears,
     required List<String> carTypes,
     required List<String> carBrands,
-    required bool isWithUnlimited,
+    // required bool isWithUnlimited,
     required String branchId,
-    int? priceFrom,
-    int? priceTo,
+    num? priceFrom,
+    num? priceTo,
   }) async {
     try {
       final response = await _carServices.carsFilter(
         carYears: carYears,
         carTypes: carTypes,
         carBrands: carBrands,
-        isWithUnlimited: isWithUnlimited,
+        // isWithUnlimited: isWithUnlimited,
         branchId: branchId,
         priceFrom: priceFrom,
         priceTo: priceTo,
       );
       if (response.statusCode == 200 && response.data['status']) {
         List<CarData> filteredCars = [];
-        if ((response.data['result'] as List).isNotEmpty) {
+        if ((response.data['data'] as List).isNotEmpty) {
           filteredCars =
               GetCarsByBrandsResponse.fromJson(response.data).results;
         }
@@ -206,6 +206,8 @@ class CarRepository {
     required String requestCity,
     required String userToken,
     required num requestPrice,
+    required num requestPriceVat,
+    required num requestDailyCalculationPrice,
     required List<File> nationalId,
     required List<File> passport,
   }) async {
@@ -224,6 +226,8 @@ class CarRepository {
         requestToken: AppConstants.fcmToken,
         nationalIdFiles: nationalId,
         passportFiles: passport,
+        requestPriceVat: requestPriceVat,
+        requestDailyCalculationPrice: requestDailyCalculationPrice,
       );
       if (response.statusCode == 200 && response.data['status']) {
         return Right(response.data);
@@ -248,6 +252,7 @@ class CarRepository {
     required String userToken,
     required num requestPrice,
     required num requestDailyCalculationPrice,
+    required num requestPriceVat,
     required List<String> attachmentsIds,
   }) async {
     try {
@@ -264,6 +269,7 @@ class CarRepository {
         requestPrice: requestPrice,
         requestToken: AppConstants.fcmToken,
         attachmentsIds: attachmentsIds,
+        requestPriceVat: requestPriceVat,
         requestDailyCalculationPrice: requestDailyCalculationPrice,
       );
       if (response.statusCode == 200 && response.data['status']) {
@@ -318,6 +324,7 @@ class CarRepository {
     DateTime? requestForm,
     DateTime? requestTo,
     num? requestPrice,
+    num? requestDailyCalculationPrice,
   }) async {
     try {
       final response = await _requestsService.editRequestBody(
@@ -328,6 +335,7 @@ class CarRepository {
         requestPeriod: requestPeriod,
         requestLocation: requestLocation,
         requestDriver: requestDriver,
+        requestDailyCalculationPrice: requestDailyCalculationPrice,
       );
       if (response.statusCode == 200 && response.data['status']) {
         return const Right("Your data has been saved");

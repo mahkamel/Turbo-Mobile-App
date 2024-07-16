@@ -37,6 +37,7 @@ class RequestsService {
     DateTime? requestForm,
     DateTime? requestTo,
     num? requestPrice,
+    num? requestDailyCalculationPrice,
   }) async {
     try {
       Response response = await DioHelper.postData(
@@ -50,7 +51,8 @@ class RequestsService {
             if (requestForm != null)
               "requestFrom": requestForm.toIso8601String(),
             if (requestTo != null) "requestTo": requestTo.toIso8601String(),
-            if (requestPrice != null) "requestPrice": requestPrice,
+            if (requestPrice != null) "requestTotalPrice": requestPrice,
+            if(requestDailyCalculationPrice != null)"requestDailyCalculationPrice" :requestDailyCalculationPrice,
           }
         },
       );

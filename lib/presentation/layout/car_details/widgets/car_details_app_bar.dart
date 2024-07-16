@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/theming/colors.dart';
+import '../../../../flavors.dart';
 
 class CarDetailsAppBar extends StatelessWidget {
   const CarDetailsAppBar({
@@ -33,7 +34,7 @@ class CarDetailsAppBar extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1,
               child: CachedNetworkImage(
-                imageUrl: carImageUrl,
+                imageUrl: "${FlavorConfig.instance.filesBaseUrl}$carImageUrl",
                 fit: BoxFit.cover,
                 placeholder: (context, url) => const SizedBox(
                   height: 40,

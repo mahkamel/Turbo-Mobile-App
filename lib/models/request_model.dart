@@ -32,7 +32,7 @@ class RequestModel {
   RequestModel.fromJson(Map<String, dynamic> json) {
     requestDriver = json['requestDriver'] ?? false;
     requestStatus = json['requestStatus'] ?? 0;
-    requestPrice = json['requestPrice'] ?? 0;
+    requestPrice = json['requestTotalPrice'] ?? 0;
     id = json['_id'] ?? "";
     requestCarId = (json['requestCarId'] as List)
         .map((dynamic item) =>
