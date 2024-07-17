@@ -23,6 +23,7 @@ class RecommendedCarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("ssss color ${car.color}");
     return InkWell(
       highlightColor: Colors.transparent,
       onTap: () {
@@ -37,10 +38,9 @@ class RecommendedCarCard extends StatelessWidget {
         width: isFromFilter
             ? AppConstants.screenWidth(context) - 32
             : AppConstants.screenWidth(context) * 0.8,
-        padding: EdgeInsetsDirectional.only(
-          top: 8,
-          start: isFromFilter ? 16 : 12,
-          end: isFromFilter ? 16 : 12,
+        padding: EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: isFromFilter ? 14 : 12,
         ),
         margin: const EdgeInsets.only(bottom: 4),
         constraints: !isFromFilter
@@ -72,7 +72,7 @@ class RecommendedCarCard extends StatelessWidget {
               child: _buildBrandAndYearRow(),
             ),
             Text(
-              car.carName,
+              car.model.modelName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppFonts.inter16Black500,
@@ -114,7 +114,7 @@ class RecommendedCarCard extends StatelessWidget {
           child: Center(
             child: CachedNetworkImage(
               imageUrl: getCompleteFileUrl(
-                car.carBrand.first.path,
+                car.brand.brandPath,
               ),
               fit: BoxFit.contain,
             ),
@@ -123,7 +123,7 @@ class RecommendedCarCard extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Text(
-            car.carBrand.first.display,
+            car.brand.brandName,
             style: AppFonts.inter14Black400,
           ),
         ),
@@ -146,7 +146,7 @@ class RecommendedCarCard extends StatelessWidget {
     return Hero(
       tag: car.carId,
       child: CarImage(
-        carImgPath: car.carImg,
+        carImgPath: car.media.mediaMediumImageUrl,
       ),
     );
   }

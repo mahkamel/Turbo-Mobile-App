@@ -104,7 +104,6 @@ class LoginCubit extends Cubit<LoginState> {
           emit(LoginState.loginError(errMsg));
         }, (customer) async {
           _authRepository.customer = customer;
-          print("sccustomeer ${customer.token}");
           UserTokenService.saveUserToken(customer.token);
           await _authRepository.setNotificationToken(AppConstants.fcmToken,customer.token);
           await _authRepository.getNotifications();

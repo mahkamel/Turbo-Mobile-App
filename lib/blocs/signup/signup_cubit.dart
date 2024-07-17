@@ -39,6 +39,8 @@ class SignupCubit extends Cubit<SignupState> {
   int districtSelectedIndex = 0;
 
   double calculatedPrice = 0.0;
+  double calculatedPriceWithVat = 0.0;
+  double pricePerDay = 0.0;
   double dailyPrice = 0;
   double weeklyPrice = 0;
   double monthlyPrice = 0;
@@ -189,7 +191,6 @@ class SignupCubit extends Cubit<SignupState> {
         ),
       );
     }
-    print("vaaaaa $customerAddressValidation");
   }
 
   void checkLocationValidation() {
@@ -345,19 +346,22 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   void calculatePrice() {
-    print("caaaaa ${monthlyPrice} -- ${weeklyPrice} -- ${dailyPrice}");
+    debugPrint("caaaaa ${monthlyPrice} -- ${weeklyPrice} -- ${dailyPrice}");
     calculatedPrice = 0.0;
+    pricePerDay = 0.0;
     if (deliveryDate != null && pickedDate != null) {
       final int durationInDays = deliveryDate!.difference(pickedDate!).inDays;
 
       if (durationInDays >= 1 && durationInDays < 7) {
-        calculatedPrice = durationInDays * dailyPrice;
+        pricePerDay = dailyPrice;
       } else if (durationInDays >= 7 && durationInDays < 30) {
-        calculatedPrice = durationInDays * (weeklyPrice / 7);
+        pricePerDay = weeklyPrice;
       } else {
-        calculatedPrice = durationInDays * (monthlyPrice / 30);
+        pricePerDay = monthlyPrice;
       }
-      print("caaaaa ${calculatedPrice} -- ${durationInDays}");
+      calculatedPrice = durationInDays * pricePerDay;
+      debugPrint(
+          "caaaaa ${calculatedPrice} -- ${durationInDays} -- ${pricePerDay}");
     }
 
     if (isWithPrivateDriver) {
@@ -378,6 +382,8 @@ class SignupCubit extends Cubit<SignupState> {
           locationController.text.isNotEmpty &&
           AppConstants.vat != -1 &&
           AppConstants.driverFees != -1) {
+        calculatedPriceWithVat =
+            calculatedPrice + (calculatedPrice * (AppConstants.vat / 100));
         emit(const SignupState.confirmBookingLoading());
         if (authRepository.customer.attachments.isNotEmpty) {
           List<String> userAttachmentsIds = [];
@@ -398,10 +404,12 @@ class SignupCubit extends Cubit<SignupState> {
                 deliveryDate != null ? deliveryDate!.toIso8601String() : "",
             requestCity: authRepository.selectedCityId,
             userToken: authRepository.customer.token,
-            requestPrice: double.parse(calculatedPrice.toStringAsFixed(2)),
+            requestPrice:
+                double.parse(calculatedPriceWithVat.toStringAsFixed(2)),
             attachmentsIds: userAttachmentsIds,
             requestDailyCalculationPrice:
-                double.parse(calculatedPrice.toStringAsFixed(2)),
+                double.parse(pricePerDay.toStringAsFixed(2)),
+            requestPriceVat: AppConstants.vat,
           );
           res.fold(
             (errMsg) => emit(SignupState.confirmBookingFailed(errMsg: errMsg)),
@@ -410,6 +418,8 @@ class SignupCubit extends Cubit<SignupState> {
             },
           );
         } else {
+          calculatedPriceWithVat =
+              calculatedPrice + (calculatedPrice * (AppConstants.vat / 100));
           final res = await carRepository.addCarRequest(
             requestCarId: requestedCarId,
             requestLocation: locationController.text,
@@ -424,9 +434,13 @@ class SignupCubit extends Cubit<SignupState> {
                 deliveryDate != null ? deliveryDate!.toIso8601String() : "",
             requestCity: authRepository.selectedCityId,
             userToken: authRepository.customer.token,
-            requestPrice: double.parse(calculatedPrice.toStringAsFixed(2)),
+            requestPrice:
+                double.parse(calculatedPriceWithVat.toStringAsFixed(2)),
             nationalId: nationalIdFile ?? [],
             passport: passportFiles ?? [],
+            requestDailyCalculationPrice:
+                double.parse(pricePerDay.toStringAsFixed(2)),
+            requestPriceVat: AppConstants.vat,
           );
           res.fold(
             (l) => (errMsg) =>

@@ -37,18 +37,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
           context.read<OrderCubit>().getAllCustomerRequests();
         }
       },
-      onHide: () {
-        debugPrint("on onHide");
-      },
-      onPause: () {
-        debugPrint("on onPause");
-      },
-      onShow: () {
-        debugPrint("on onShow");
-      },
-      onStateChange: (value) {
-        debugPrint("valueeeee $value");
-      },
     );
   }
 

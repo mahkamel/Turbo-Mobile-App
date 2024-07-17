@@ -57,7 +57,6 @@ class MyApp extends StatelessWidget {
             if (state.locale.languageCode.contains("ar")) {
               AppLocalizationsSetup.isLoadAr = true;
             }
-            print("localweee ${state.locale}");
             return MaterialApp(
               navigatorKey: navigatorKey,
               title: 'Turbo',

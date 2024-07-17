@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
@@ -25,7 +26,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   int selectedBrandIndex = -1;
 
-  Map<String, List<Car>> carsByBrand = {};
+  List<CarData> carsByBrand = [];
   List<CarBrand> carBrands = [];
   List<UserNotificationModel> notifications = [];
 
@@ -180,6 +181,7 @@ class HomeCubit extends Cubit<HomeState> {
         .cities[_authRepository.selectedCityIndex].branches[index].id;
     _authRepository
         .setSelectedBranchIdToCache(_authRepository.selectedBranchId);
+    _carRepository.filteredCars.clear();
   }
 
   void getNotifications({bool isFromNotificationScreen = false}) async {
@@ -230,7 +232,7 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       await _authRepository.refreshCustomerData();
     } catch (e) {
-      print("eeeee $e");
+      debugPrint("eeeee $e");
     }
   }
 }

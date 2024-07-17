@@ -75,7 +75,7 @@ class RequestStatusScreen extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Lottie.asset("assets/lottie/success_booking.json"),
+                        Lottie.asset("assets/lottie/luxury_car_loading.json"),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(

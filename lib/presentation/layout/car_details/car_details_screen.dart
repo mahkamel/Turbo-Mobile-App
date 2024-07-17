@@ -25,6 +25,7 @@ class CardDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("carImg: ${car.media.mediaMediumImageUrl}");
     return Scaffold(
       body: SizedBox(
         height: AppConstants.screenHeight(context),
@@ -37,14 +38,14 @@ class CardDetailsScreen extends StatelessWidget {
                 slivers: [
                   CarDetailsAppBar(
                     carId: car.carId,
-                    carImageUrl: car.carImg,
+                    carImageUrl: car.media.mediaMediumImageUrl,
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate(
                       [
                         CarNameWithBrandImg(
-                          carName: car.carName,
-                          brandImgUrl: car.carBrand.first.path,
+                          carName: car.model.modelName,
+                          brandImgUrl: car.brand.brandPath,
                         ),
                         BlocBuilder<CarDetailsCubit, CarDetailsState>(
                           buildWhen: (previous, current) =>
@@ -98,13 +99,6 @@ class CardDetailsScreen extends StatelessWidget {
                                                     "assets/images/icons/car_details_icons/car_year_icon.png",
                                               ),
                                             ),
-                                            // CarInfoItem(
-                                            //   title: "plateNumber".getLocale(),
-                                            //   info: blocRead.carDetailsData
-                                            //       .carPlateNumber,
-                                            //   iconPath:
-                                            //       "assets/images/icons/car_details_icons/car_plate_icon.png",
-                                            // ),
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   bottom: 4.0),

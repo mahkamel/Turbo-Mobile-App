@@ -1,5 +1,5 @@
-import '../core/helpers/constants.dart';
 import 'car_brand_model.dart';
+import 'car_media_model.dart';
 
 class CarDetailsModel {
   final bool status;
@@ -35,6 +35,7 @@ class CarDetailsData {
   final num carMothlyPrice;
   final num carWeaklyPrice;
   final String carSysDate;
+  List<CarMedia> carMedia;
 
   CarDetailsData({
     required this.carIsFeatured,
@@ -56,9 +57,16 @@ class CarDetailsData {
     required this.carMothlyPrice,
     required this.carWeaklyPrice,
     required this.carSysDate,
+    required this.carMedia,
   });
 
   factory CarDetailsData.fromJson(Map<String, dynamic> json) {
+    List<CarMedia> mediaList = [];
+    if (json['carMedia'] != null) {
+      for (var mediaItem in json['carMedia']) {
+        mediaList.add(CarMedia.fromJson(mediaItem as Map<String, dynamic>));
+      }
+    }
     return CarDetailsData(
       carIsFeatured: json['carIsFeatured'] ?? false,
       carIsActive: json['carIsActive'] ?? false,
@@ -76,13 +84,12 @@ class CarDetailsData {
           : "",
       carColor: json['carColor']["Color_Name"] ?? "",
       carPassengerNo: json['carPassengerNo'] ?? 0,
-      carDailyPrice: ((json['carDailyPrice'] ?? 0.0) * (AppConstants.vat / 100)),
+      carDailyPrice: (json['carDailyPrice'] ?? 0.0),
       carLimitedKiloMeters: json['carLimitedKiloMeters'] ?? 0,
-      carMothlyPrice:
-          (json['carMothlyPrice'] ?? 0.0) * (AppConstants.vat / 100),
-      carWeaklyPrice:
-          (json['carWeaklyPrice'] ?? 0.0) * (AppConstants.vat / 100),
+      carMothlyPrice: (json['carMothlyPrice'] ?? 0.0),
+      carWeaklyPrice: (json['carWeaklyPrice'] ?? 0.0),
       carSysDate: json['carSysDate'] ?? "",
+      carMedia: mediaList,
     );
   }
   factory CarDetailsData.empty() => CarDetailsData(
@@ -110,5 +117,6 @@ class CarDetailsData {
         carMothlyPrice: 0.0,
         carWeaklyPrice: 0.0,
         carSysDate: "",
+        carMedia: [],
       );
 }

@@ -1,122 +1,115 @@
-import 'package:turbo/models/car_brand_model.dart';
+import 'dart:ui';
+
+import 'package:turbo/models/car_media_model.dart';
 
 class GetCarsByBrandsResponse {
   bool status;
-  Cars cars;
+  List<CarData> results;
 
   GetCarsByBrandsResponse({
     required this.status,
-    required this.cars,
+    required this.results,
   });
 
   factory GetCarsByBrandsResponse.fromJson(Map<String, dynamic> json) =>
       GetCarsByBrandsResponse(
         status: json['status'] as bool,
-        cars: Cars.fromJson(json['cars'] as Map<String, dynamic>),
+        results: List<CarData>.from(
+          (json['data'] as List).map((data) => CarData.fromJson(data)),
+        ),
       );
 }
 
-class Cars {
-  Map<String, List<Car>> carTypes;
+class CarData {
+  String carType;
+  List<Car> cars;
 
-  Cars({
-    required this.carTypes,
+  CarData({
+    required this.carType,
+    required this.cars,
   });
 
-  factory Cars.fromJson(Map<String, dynamic> json) {
-    try {
-      return Cars(
-        carTypes: json.map<String, List<Car>>((key, value) {
-          return MapEntry(
-            key,
-            (value as List).map((item) => Car.fromJson(item)).toList(),
-          );
-        }),
+  factory CarData.fromJson(Map<String, dynamic> json) => CarData(
+        carType: json['carType'] ?? "",
+        cars: List<Car>.from(
+          (json['cars'] as List).map((carJson) => Car.fromJson(carJson)),
+        ),
       );
-    } catch (e) {
-      return Cars(
-        carTypes: <String, List<Car>>{},
-      );
-    }
-  }
 }
 
 class Car {
-  String carName;
-  List<CarBrand> carBrand;
-  List<Color> carColor;
-  String carType;
+  String carId;
   String carYear;
   int carDailyPrice;
-  String carId;
-  String carImg;
+  Color? color;
+  Model model;
+  Brand brand;
+  MediaDetails media;
 
   Car({
-    required this.carName,
-    required this.carBrand,
-    required this.carColor,
-    required this.carType,
+    required this.carId,
     required this.carYear,
     required this.carDailyPrice,
-    required this.carId,
-    required this.carImg,
+    this.color,
+    required this.model,
+    required this.brand,
+    required this.media,
   });
 
-  factory Car.fromJson(Map<String, dynamic> json) {
-    return Car(
-      carName: json['carName'] ?? "",
-      carBrand: List<CarBrand>.from((json['carBrand'] as List)
-          .map((brandJson) => CarBrand.fromJson(brandJson))
-          .toList()),
-      carColor: List<Color>.from((json['carColor'] as List)
-          .map((colorJson) => Color.fromJson(colorJson))
-          .toList()),
-      carType: json['carType'] ?? "",
-      carYear: json['carYear'] ?? "",
-      carId: json['id'] ?? "",
-      carDailyPrice: json['carDailyPrice'] ?? 0,
-      carImg:
-          "https://images.unsplash.com/photo-1489824904134-891ab64532f1?q=80&w=2531&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    );
-  }
+  factory Car.fromJson(Map<String, dynamic> json) => Car(
+        carId: json['_id'] ?? "",
+        carYear: json['carYear'] ?? "",
+        carDailyPrice: json['carDailyPrice'] ?? 0,
+        color: json['color'] == null
+            ? null
+            : CarColor.fromJson(json['color']).colorHexaDecimalBasedValue,
+        model: Model.fromJson(json['model']),
+        brand: Brand.fromJson(json['brand']),
+        media: MediaDetails.fromJson(json["media"]),
+      );
 }
 
-class Color {
-  String id;
-  bool colorIsActive;
-  String colorName;
-  String colorSixLettersIdentifier;
-  String? colorHexaDecimalBasedValue;
-  String? colorSecondHexaDecimalBasedValue;
-  String? colorThirdHexaDecimalBasedValue;
-  String? colorDescription;
-  int colorCode;
+class Model {
+  String modelName;
 
-  Color({
-    required this.id,
-    required this.colorIsActive,
-    required this.colorName,
-    required this.colorSixLettersIdentifier,
-    this.colorHexaDecimalBasedValue,
-    this.colorSecondHexaDecimalBasedValue,
-    this.colorThirdHexaDecimalBasedValue,
-    this.colorDescription,
-    required this.colorCode,
+  Model({
+    required this.modelName,
   });
 
-  factory Color.fromJson(Map<String, dynamic> json) {
-    return Color(
-      id: json['_id'] ?? "",
-      colorIsActive: json['Color_IsActive'] ?? false,
-      colorName: json['Color_Name'] ?? "",
-      colorSixLettersIdentifier: json['Color_SixLettersIdentifier'] ?? "",
-      colorHexaDecimalBasedValue: json['Color_HexaDecimalBasedValue'] ?? "",
-      colorSecondHexaDecimalBasedValue:
-          json['Color_SecondHexaDecimalBasedValue'] ?? "",
-      colorThirdHexaDecimalBasedValue:
-          json['Color_ThirdHexaDecimalBasedValue'] ?? "",
-      colorDescription: json['Color_Description'] ?? "",
-      colorCode: json['Color_Code'] ?? 0,
-    );
-  }
+  factory Model.fromJson(Map<String, dynamic> json) => Model(
+        modelName: json['modelName'] ?? "",
+      );
+}
+
+class Brand {
+  String brandName;
+  String brandPath;
+
+  Brand({
+    required this.brandName,
+    required this.brandPath,
+  });
+
+  factory Brand.fromJson(Map<String, dynamic> json) => Brand(
+        brandName: json['brandName'] ?? "",
+        brandPath: json['path'] ?? "",
+      );
+}
+
+class CarColor {
+  Color? colorHexaDecimalBasedValue;
+
+  CarColor({this.colorHexaDecimalBasedValue});
+
+  factory CarColor.fromJson(Map<String, dynamic> json) => CarColor(
+        colorHexaDecimalBasedValue: json['Color_HexaDecimalBasedValue'] != null
+            ? hexToColor(json['Color_HexaDecimalBasedValue'])
+            : const Color(0xffffffff),
+      );
+}
+
+Color hexToColor(String hexCode) {
+  hexCode = hexCode.replaceAll('#', '');
+  int colorValue = int.parse(hexCode, radix: 16);
+  return Color(colorValue);
 }

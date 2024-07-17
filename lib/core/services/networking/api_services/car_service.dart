@@ -71,10 +71,10 @@ class CarServices {
     required List<String> carYears,
     required List<String> carTypes,
     required List<String> carBrands,
-    required bool isWithUnlimited,
+    // required bool isWithUnlimited,
     required String branchId,
-    int? priceFrom,
-    int? priceTo,
+    num? priceFrom,
+    num? priceTo,
   }) async {
     try {
       Map<String, dynamic> filterBody = {};
@@ -96,11 +96,11 @@ class CarServices {
           "carBrand": carBrands,
         });
       }
-      if (isWithUnlimited) {
-        filterBody.addAll({
-          "carLimitedKiloMeters": isWithUnlimited,
-        });
-      }
+      // if (isWithUnlimited) {
+      //   filterBody.addAll({
+      //     "carLimitedKiloMeters": isWithUnlimited,
+      //   });
+      // }
       if (priceFrom != null) {
         filterBody.addAll({
           "priceRange": {
@@ -110,10 +110,7 @@ class CarServices {
         });
       }
 
-      if (carYears.isEmpty &&
-          carTypes.isEmpty &&
-          carBrands.isEmpty &&
-          !isWithUnlimited) {
+      if (carYears.isEmpty && carTypes.isEmpty && carBrands.isEmpty) {
         filterBody.addAll({
           "carIsActive": true,
         });
@@ -142,6 +139,8 @@ class CarServices {
     required String requestCity,
     required String userToken,
     required num requestPrice,
+    required num requestPriceVat,
+    required num requestDailyCalculationPrice,
     required String requestToken,
     required List<File> nationalIdFiles,
     required List<File> passportFiles,
@@ -152,6 +151,7 @@ class CarServices {
           "carId": requestCarId,
           "from": requestFromDate,
         },
+        "requestDailyCalculationPrice": requestDailyCalculationPrice,
         "requestLocation": requestLocation,
         "requestBranch": requestBranchId,
         "requestDriver": isWithRequestDriver,
@@ -159,8 +159,9 @@ class CarServices {
         "requestFrom": requestFromDate,
         "requestTo": requestToDate,
         "requestCity": requestCity,
-        "requestPrice": requestPrice,
+        "requestTotalPrice": requestPrice,
         "requestToken": requestToken,
+        "requestPriceVat": requestPriceVat,
       };
       String jsonData = json.encode(body);
       FormData carRequestForm = FormData();
@@ -215,6 +216,7 @@ class CarServices {
     required String userToken,
     required num requestPrice,
     required num requestDailyCalculationPrice,
+    required num requestPriceVat,
     required String requestToken,
     required List<String> attachmentsIds,
   }) async {
@@ -236,6 +238,7 @@ class CarServices {
           "requestDailyCalculationPrice": requestDailyCalculationPrice,
           "requestToken": requestToken,
           "attachmentsId": attachmentsIds,
+          "requestPriceVat": requestPriceVat,
         }
       };
       Response response = await DioHelper.postData(
