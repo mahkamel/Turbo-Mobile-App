@@ -104,7 +104,7 @@ class CarColor {
   factory CarColor.fromJson(Map<String, dynamic> json) => CarColor(
         colorHexaDecimalBasedValue: json['Color_HexaDecimalBasedValue'] != null
             ? hexToColor(json['Color_HexaDecimalBasedValue'])
-            : const Color(0x00ffffff),
+            : const Color(0xffffffff),
       );
 }
 

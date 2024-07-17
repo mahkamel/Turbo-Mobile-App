@@ -38,7 +38,7 @@ class CardDetailsScreen extends StatelessWidget {
                 slivers: [
                   CarDetailsAppBar(
                     carId: car.carId,
-                    carImageUrl: car.media.mediaLargImageUrl,
+                    carImageUrl: car.media.mediaMediumImageUrl,
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate(

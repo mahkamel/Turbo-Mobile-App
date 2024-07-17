@@ -23,6 +23,7 @@ class RecommendedCarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("ssss color ${car.color}");
     return InkWell(
       highlightColor: Colors.transparent,
       onTap: () {
@@ -145,7 +146,7 @@ class RecommendedCarCard extends StatelessWidget {
     return Hero(
       tag: car.carId,
       child: CarImage(
-        carImgPath: car.media.mediaLargImageUrl,
+        carImgPath: car.media.mediaMediumImageUrl,
       ),
     );
   }

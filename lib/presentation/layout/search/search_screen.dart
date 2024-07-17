@@ -45,7 +45,7 @@ class SearchScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 16.0),
                   child: Center(
                     child: Lottie.asset(
-                      "assets/lottie/car_filter_loading.json",
+                      "assets/lottie/luxury_car_loading.json",
                       height: AppConstants.screenWidth(context) * .6,
                       width: (AppConstants.screenWidth(context) * .6),
                     ),
