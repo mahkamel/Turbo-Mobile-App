@@ -108,8 +108,14 @@ class CarColor {
       );
 }
 
-Color hexToColor(String hexCode) {
-  hexCode = hexCode.replaceAll('#', '');
-  int colorValue = int.parse(hexCode, radix: 16);
-  return Color(colorValue);
+Color hexToColor(String hex) {
+  assert(hex.length == 7 || hex.length == 9,
+      'Color hex string must be 7 or 9 characters long including "#".');
+
+  final int value = int.parse(hex.substring(1), radix: 16);
+  if (hex.length == 9) {
+    return Color(value);
+  } else {
+    return Color(value | 0xFF000000);
+  }
 }

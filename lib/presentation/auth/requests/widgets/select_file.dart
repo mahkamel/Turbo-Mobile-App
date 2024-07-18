@@ -99,6 +99,7 @@ class _SelectFileState extends State<SelectFile> {
   Widget build(BuildContext context) {
     return WidgetWithHeader(
       width: widget.width,
+      isWithBlackHeader: true,
       key: Key(widget.header),
       padding: widget.padding ??
           const EdgeInsetsDirectional.symmetric(horizontal: 18.0),

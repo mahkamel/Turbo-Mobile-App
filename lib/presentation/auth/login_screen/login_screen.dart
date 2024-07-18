@@ -49,26 +49,7 @@ class LoginScreen extends StatelessWidget {
                 buildWhen: (previous, current) =>
                     current is CheckLoginEmailValidationState,
                 builder: (context, state) {
-                  return AuthTextFieldWithHeader(
-                    header: "Email",
-                    hintText: "Enter Email",
-                    isWithValidation: true,
-                    textInputType: TextInputType.emailAddress,
-                    validationText: "Invalid Email Address.",
-                    textEditingController:
-                        context.read<LoginCubit>().emailController,
-                    validation: context.watch<LoginCubit>().emailValidation,
-                    onChange: (value) {
-                      if (value.isEmpty ||
-                          context.read<LoginCubit>().emailValidation !=
-                              TextFieldValidation.normal) {
-                        context.read<LoginCubit>().checkEmailValidationState();
-                      }
-                    },
-                    onSubmit: (value) {
-                      context.read<LoginCubit>().checkEmailValidationState();
-                    },
-                  );
+                  return const LoginEmail();
                 },
               ),
               const SizedBox(
@@ -147,6 +128,36 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class LoginEmail extends StatelessWidget {
+  const LoginEmail({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AuthTextFieldWithHeader(
+      header: "Email",
+      hintText: "Enter Email",
+      isWithValidation: true,
+      textInputType: TextInputType.emailAddress,
+      validationText: "Invalid Email Address.",
+      textEditingController:
+          context.read<LoginCubit>().emailController,
+      validation: context.watch<LoginCubit>().emailValidation,
+      onChange: (value) {
+        if (value.isEmpty ||
+            context.read<LoginCubit>().emailValidation !=
+                TextFieldValidation.normal) {
+          context.read<LoginCubit>().checkEmailValidationState();
+        }
+      },
+      onSubmit: (value) {
+        context.read<LoginCubit>().checkEmailValidationState();
+      },
     );
   }
 }

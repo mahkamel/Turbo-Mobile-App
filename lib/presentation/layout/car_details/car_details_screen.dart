@@ -36,9 +36,12 @@ class CardDetailsScreen extends StatelessWidget {
               CustomScrollView(
                 physics: const ClampingScrollPhysics(),
                 slivers: [
-                  CarDetailsAppBar(
-                    carId: car.carId,
-                    carImageUrl: car.media.mediaMediumImageUrl,
+                  BlocProvider<CarDetailsCubit>.value(
+                    value: context.read<CarDetailsCubit>(),
+                    child: CarDetailsAppBar(
+                      carId: car.carId,
+                      carImageUrl: car.media.mediaMediumImageUrl,
+                    ),
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate(
@@ -146,7 +149,7 @@ class CardDetailsScreen extends StatelessWidget {
                                             ),
                                             CarPricesRow(blocRead: blocRead),
                                             const SizedBox(
-                                              height: 90,
+                                              height: 100,
                                             ),
                                           ],
                                         ),
@@ -159,150 +162,162 @@ class CardDetailsScreen extends StatelessWidget {
                 ],
               ),
               const BackButtonWithBG(),
-              BlocBuilder<CarDetailsCubit, CarDetailsState>(
-                  buildWhen: (previous, current) =>
-                      current is GetCarsDetailsErrorState ||
-                      current is GetCarsDetailsLoadingState ||
-                      current is GetCarsDetailsSuccessState,
-                  builder: (context, state) {
-                    var blocRead = context.read<CarDetailsCubit>();
-                    if (context
-                        .watch<CarDetailsCubit>()
-                        .carDetailsData
-                        .id
-                        .isEmpty) {
-                      return const SizedBox();
-                    } else {
-                      return Align(
-                        alignment: Alignment.bottomCenter,
-                        child: DefaultButton(
-                          marginTop: 20,
-                          marginBottom: 20,
-                          marginRight: 16,
-                          marginLeft: 16,
-                          color: AppColors.primaryBG,
-                          textColor: AppColors.primaryRed,
-                          function: () async {
-                            if (context
-                                .read<AuthRepository>()
-                                .customer
-                                .token
-                                .isEmpty) {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (bsContext) {
-                                  return Container(
-                                    width: AppConstants.screenWidth(bsContext),
-                                    padding:
-                                        const EdgeInsetsDirectional.symmetric(
-                                      horizontal: 20,
-                                      vertical: 18,
-                                    ),
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(8),
-                                          topLeft: Radius.circular(8),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 100,
+                  color: AppColors.white,
+                  child: BlocBuilder<CarDetailsCubit, CarDetailsState>(
+                      buildWhen: (previous, current) =>
+                          current is GetCarsDetailsErrorState ||
+                          current is GetCarsDetailsLoadingState ||
+                          current is GetCarsDetailsSuccessState,
+                      builder: (context, state) {
+                        var blocRead = context.read<CarDetailsCubit>();
+                        if (context
+                            .watch<CarDetailsCubit>()
+                            .carDetailsData
+                            .id
+                            .isEmpty) {
+                          return const SizedBox();
+                        } else {
+                          return Align(
+                            alignment: Alignment.bottomCenter,
+                            child: DefaultButton(
+                              marginTop: 20,
+                              marginBottom: 20,
+                              marginRight: 16,
+                              marginLeft: 16,
+                              color: AppColors.primaryRed,
+                              function: () async {
+                                if (context
+                                    .read<AuthRepository>()
+                                    .customer
+                                    .token
+                                    .isEmpty) {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (bsContext) {
+                                      return Container(
+                                        width:
+                                            AppConstants.screenWidth(bsContext),
+                                        padding: const EdgeInsetsDirectional
+                                            .symmetric(
+                                          horizontal: 20,
+                                          vertical: 18,
                                         ),
-                                        color: AppColors.white),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          "loginRequiredTitle".getLocale(),
-                                          style: AppFonts.inter18HeaderBlack700,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: 8.0,
-                                            bottom: 24,
-                                          ),
-                                          child: Text(
-                                            "loginRequiredContent".getLocale(),
-                                            style: AppFonts.inter14Grey400,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width:
-                                              AppConstants.screenWidth(context),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                  child: DefaultButton(
-                                                text: "Cancel",
-                                                color: AppColors.white,
-                                                textColor: AppColors.primaryRed,
-                                                border: Border.all(
-                                                    color:
-                                                        AppColors.primaryRed),
-                                                function: () {
-                                                  Navigator.of(bsContext).pop();
-                                                },
-                                              )),
-                                              const SizedBox(
-                                                width: 16,
+                                        decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(8),
+                                              topLeft: Radius.circular(8),
+                                            ),
+                                            color: AppColors.white),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              "loginRequiredTitle".getLocale(),
+                                              style: AppFonts
+                                                  .inter18HeaderBlack700,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 8.0,
+                                                bottom: 24,
                                               ),
-                                              Expanded(
-                                                child: DefaultButton(
-                                                  color: AppColors.primaryRed,
-                                                  function: () {
-                                                    Navigator.of(bsContext)
-                                                        .pop();
+                                              child: Text(
+                                                "loginRequiredContent"
+                                                    .getLocale(),
+                                                style: AppFonts.inter14Grey400,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: AppConstants.screenWidth(
+                                                  context),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                      child: DefaultButton(
+                                                    text: "Cancel",
+                                                    color: AppColors.white,
+                                                    textColor:
+                                                        AppColors.primaryRed,
+                                                    border: Border.all(
+                                                        color: AppColors
+                                                            .primaryRed),
+                                                    function: () {
+                                                      Navigator.of(bsContext)
+                                                          .pop();
+                                                    },
+                                                  )),
+                                                  const SizedBox(
+                                                    width: 16,
+                                                  ),
+                                                  Expanded(
+                                                    child: DefaultButton(
+                                                      color:
+                                                          AppColors.primaryRed,
+                                                      function: () {
+                                                        Navigator.of(bsContext)
+                                                            .pop();
 
-                                                    Navigator.pushNamed(
-                                                      context,
-                                                      Routes.loginScreen,
-                                                      arguments:
-                                                          LoginScreenArguments(
-                                                        carId: car.carId,
-                                                        dailyPrice: blocRead
-                                                            .carDetailsData
-                                                            .carDailyPrice,
-                                                        weeklyPrice: blocRead
-                                                            .carDetailsData
-                                                            .carWeaklyPrice,
-                                                        monthlyPrice: blocRead
-                                                            .carDetailsData
-                                                            .carMothlyPrice,
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          Routes.loginScreen,
+                                                          arguments:
+                                                              LoginScreenArguments(
+                                                            carId: car.carId,
+                                                            dailyPrice: blocRead
+                                                                .carDetailsData
+                                                                .carDailyPrice,
+                                                            weeklyPrice: blocRead
+                                                                .carDetailsData
+                                                                .carWeaklyPrice,
+                                                            monthlyPrice: blocRead
+                                                                .carDetailsData
+                                                                .carMothlyPrice,
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  await context
+                                      .read<AuthRepository>()
+                                      .refreshCustomerData()
+                                      .then(
+                                        (value) => Navigator.pushNamed(
+                                          context,
+                                          Routes.signupScreen,
+                                          arguments: SignupScreenArguments(
+                                            carId: car.carId,
+                                            dailyPrice: blocRead
+                                                .carDetailsData.carDailyPrice,
+                                            weeklyPrice: blocRead
+                                                .carDetailsData.carWeaklyPrice,
+                                            monthlyPrice: blocRead
+                                                .carDetailsData.carMothlyPrice,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            } else {
-                              await context
-                                  .read<AuthRepository>()
-                                  .refreshCustomerData()
-                                  .then(
-                                    (value) => Navigator.pushNamed(
-                                      context,
-                                      Routes.signupScreen,
-                                      arguments: SignupScreenArguments(
-                                        carId: car.carId,
-                                        dailyPrice: blocRead
-                                            .carDetailsData.carDailyPrice,
-                                        weeklyPrice: blocRead
-                                            .carDetailsData.carWeaklyPrice,
-                                        monthlyPrice: blocRead
-                                            .carDetailsData.carMothlyPrice,
-                                      ),
-                                    ),
-                                  );
-                            }
-                          },
-                          text: "bookNow".getLocale(),
-                        ),
-                      );
-                    }
-                  }),
+                                      );
+                                }
+                              },
+                              text: "bookNow".getLocale(),
+                            ),
+                          );
+                        }
+                      }),
+                ),
+              ),
             ],
           ),
         ),

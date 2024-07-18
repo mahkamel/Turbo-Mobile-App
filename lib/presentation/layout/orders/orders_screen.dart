@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -169,22 +170,57 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                               CrossAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const CarImage(
-                                              carImgPath:
-                                                  "https://images.unsplash.com/photo-1489824904134-891ab64532f1?q=80&w=2531&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                                            CarImage(
+                                              carImgPath: allRequests[index]
+                                                  .requestCarId
+                                                  .last
+                                                  .carId
+                                                  .carMedia
+                                                  .first
+                                                  .mediaId
+                                                  .mediaMediumImageUrl,
                                             ),
                                             const SizedBox(
                                               height: 8,
                                             ),
-                                            Text(
-                                              allRequests[index]
-                                                  .requestCarId
-                                                  .last
-                                                  .carId
-                                                  .carName,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: AppFonts.inter16Black500,
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 24,
+                                                  width: 24,
+                                                  margin:
+                                                      const EdgeInsetsDirectional
+                                                          .only(end: 2),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color:
+                                                        AppColors.carCardGrey,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Center(
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          getCompleteFileUrl(
+                                                        allRequests[index]
+                                                            .requestCarId
+                                                            .last
+                                                            .carId
+                                                            .carBrand
+                                                            .brandPath,
+                                                      ),
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "${allRequests[index].requestCarId.last.carId.carModel} ${allRequests[index].requestCarId.last.carId.carYear}",
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style:
+                                                      AppFonts.inter16Black500,
+                                                ),
+                                              ],
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
@@ -294,29 +330,39 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                         BorderRadius.circular(
                                                             12),
                                                     color: allRequests[index]
-                                                                .requestStatus ==
-                                                            0
-                                                        ? AppColors.navBarBlack
-                                                            .withOpacity(0.8)
+                                                                .requestPaidStatus ==
+                                                            "pending"
+                                                        ? AppColors.orange
                                                         : allRequests[index]
                                                                     .requestStatus ==
-                                                                1
-                                                            ? AppColors
-                                                                .primaryGreen
+                                                                0
+                                                            ? AppColors.orange
                                                                 .withOpacity(
                                                                     0.8)
-                                                            : Colors.red[400],
+                                                            : allRequests[index]
+                                                                        .requestStatus ==
+                                                                    1
+                                                                ? AppColors
+                                                                    .primaryGreen
+                                                                    .withOpacity(
+                                                                        0.8)
+                                                                : Colors
+                                                                    .red[400],
                                                   ),
                                                   child: Text(
                                                     allRequests[index]
-                                                                .requestStatus ==
-                                                            0
-                                                        ? "Pending"
+                                                                .requestPaidStatus ==
+                                                            "pending"
+                                                        ? "Payment Required"
                                                         : allRequests[index]
                                                                     .requestStatus ==
-                                                                1
-                                                            ? "Approved"
-                                                            : "Rejected",
+                                                                0
+                                                            ? "Pending"
+                                                            : allRequests[index]
+                                                                        .requestStatus ==
+                                                                    1
+                                                                ? "Approved"
+                                                                : "Rejected",
                                                     style: const TextStyle(
                                                       color: AppColors.white,
                                                       fontWeight:

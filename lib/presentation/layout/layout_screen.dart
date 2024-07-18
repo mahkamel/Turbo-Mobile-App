@@ -94,7 +94,7 @@ class LayoutScreen extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/search_nav_icon.svg",
+                    "assets/images/icons/nav_bar_icons/order_nav_icon.svg",
                     colorFilter: ColorFilter.mode(
                       context.watch<LayoutCubit>().navBarIndex == 1
                           ? AppColors.white
@@ -108,15 +108,15 @@ class LayoutScreen extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/history_nav_icon.svg",
+                    "assets/images/icons/nav_bar_icons/search_nav_icon.svg",
                     colorFilter: ColorFilter.mode(
                       context.watch<LayoutCubit>().navBarIndex == 2
                           ? AppColors.white
                           : AppColors.subTextGrey,
                       BlendMode.srcIn,
                     ),
-                    height: 20,
-                    width: 20,
+                    height: 24,
+                    width: 24,
                   ),
                   label: "Orders",
                 ),

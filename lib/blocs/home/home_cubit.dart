@@ -74,7 +74,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  bool isGettingCars  = false;
+  bool isGettingCars = false;
   void getCarsBasedOnBrand({String? brandId}) async {
     carsByBrand.clear();
     isGettingCars = true;
@@ -109,7 +109,13 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       if (_citiesDistrictsRepository.cities.isNotEmpty) {
         getCarsBrandsByBranchId();
-        getCarsBasedOnBrand();
+        if (selectedBrandIndex == -1) {
+          getCarsBasedOnBrand();
+        } else {
+          getCarsBasedOnBrand(
+            brandId: carBrands[selectedBrandIndex].id,
+          );
+        }
         emit(const HomeState.getCitiesSuccess());
       } else {
         final res = await _citiesDistrictsRepository.getCities();
@@ -118,7 +124,13 @@ class HomeCubit extends Cubit<HomeState> {
           (cities) async {
             await getCachedCityAndBranch();
             getCarsBrandsByBranchId();
-            getCarsBasedOnBrand();
+            if (selectedBrandIndex == -1) {
+              getCarsBasedOnBrand();
+            } else {
+              getCarsBasedOnBrand(
+                brandId: carBrands[selectedBrandIndex].id,
+              );
+            }
             emit(const HomeState.getCitiesSuccess());
           },
         );

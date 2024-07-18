@@ -34,21 +34,21 @@ Future<void> configureApp(Flavor flavor) async {
     case Flavor.DEV:
       FlavorConfig(
         name: "Development",
-        baseUrl: getValueFromEnv(AppConstants.baseUrl),
+        baseUrl: getValueFromEnv(AppConstants.devBaseUrl),
         filesBaseUrl: getValueFromEnv(AppConstants.filesBaseUrlDev),
       );
       break;
     case Flavor.QA:
       FlavorConfig(
         name: "QA",
-        baseUrl: getValueFromEnv(AppConstants.baseUrl),
+        baseUrl: getValueFromEnv(AppConstants.qaBasUrl),
         filesBaseUrl: getValueFromEnv(AppConstants.filesBaseUrlQA),
       );
       break;
     case Flavor.PROD:
       FlavorConfig(
         name: "Production",
-        baseUrl: getValueFromEnv(AppConstants.baseUrl),
+        baseUrl: getValueFromEnv(AppConstants.devBaseUrl),
         filesBaseUrl: getValueFromEnv(AppConstants.filesBaseUrlProd),
       );
       break;

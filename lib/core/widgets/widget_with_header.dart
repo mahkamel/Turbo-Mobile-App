@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../helpers/constants.dart';
+import '../theming/colors.dart';
 import '../theming/fonts.dart';
 
 class WidgetWithHeader extends StatelessWidget {
@@ -10,6 +11,7 @@ class WidgetWithHeader extends StatelessWidget {
     required this.widget,
     this.headerStyle,
     this.width,
+    this.isWithBlackHeader = false,
     this.padding = const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
   });
   final String header;
@@ -17,6 +19,7 @@ class WidgetWithHeader extends StatelessWidget {
   final EdgeInsetsDirectional padding;
   final TextStyle? headerStyle;
   final double? width;
+  final bool isWithBlackHeader;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,12 @@ class WidgetWithHeader extends StatelessWidget {
           children: [
             Text(
               header,
-              style:headerStyle ??  AppFonts.inter16Black500,
+              style: headerStyle ??
+                  AppFonts.inter16Black500.copyWith(
+                    color: isWithBlackHeader
+                        ? AppColors.black
+                        : AppColors.primaryRed,
+                  ),
             ),
             const SizedBox(
               height: 8,

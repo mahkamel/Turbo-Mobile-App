@@ -34,7 +34,9 @@ class ChoosePhoneNumber extends StatelessWidget {
           children: [
             Text(
               "Phone Number",
-              style: AppFonts.inter16Black400,
+              style: AppFonts.inter16Black400.copyWith(
+                color: AppColors.primaryRed
+              ),
             ),
             const SizedBox(
               height: 4,

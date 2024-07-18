@@ -31,8 +31,9 @@ class AppConstants {
   static num driverFees = -1;
 
   //env keys
-  static String baseUrl = "BASE_URL";
+  static String devBaseUrl = "BASE_URL_DEV";
   static String filesBaseUrlDev = "FILES_BASE_DEV";
+  static String qaBasUrl = "BASE_URL_QA";
   static String filesBaseUrlQA = "FILES_BASE_QA";
   static String filesBaseUrlProd = "FILES_BASE_LIVE";
   static String customerData = "CUSTOMER_KEY";

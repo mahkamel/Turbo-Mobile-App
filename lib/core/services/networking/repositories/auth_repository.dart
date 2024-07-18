@@ -178,7 +178,8 @@ class AuthRepository {
     }
   }
 
-  Future<Either<String, bool>> setNotificationToken(String token , String authToken) async {
+  Future<Either<String, bool>> setNotificationToken(
+      String token, String authToken) async {
     try {
       final response =
           await _authServices.setNotificationsToken(token, authToken);
@@ -194,8 +195,12 @@ class AuthRepository {
   }
 
   Future<Either<String, bool>> disableNotificationToken(String token) async {
+    print("customer tokenne ${customer.token}");
     try {
-      final response = await _authServices.disableNotificationsToken(token);
+      final response = await _authServices.disableNotificationsToken(
+        customerToken: customer.token,
+        notificationToken: token,
+      );
       if (response.statusCode == 200 && response.data['status']) {
         return const Right(true);
       } else {

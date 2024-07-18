@@ -1,24 +1,12 @@
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:turbo/core/di/dependency_injection.dart';
-import 'package:turbo/core/helpers/functions.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:turbo/models/customer_model.dart';
-import 'package:turbo/turbo_app.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'core/helpers/constants.dart';
-import 'core/services/networking/dio_helper.dart';
-import 'core/services/notifications_service.dart';
-import 'firebase_options.dart';
 
 import 'bloc_observe.dart';
 import 'core/routing/app_router.dart';
 import 'core/services/local/cache_helper.dart';
 import 'flavors.dart';
+import 'main_paths.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -55,11 +43,12 @@ void main() async {
       AppConstants.fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
     }
   }
-  debugPrint("tokeennn: ${AppConstants.fcmToken}");
+  log("tokeennn: ${AppConstants.fcmToken}");
   FirebaseMessaging.instance.setAutoInitEnabled(true);
 
   final CustomerModel? cachedCustomer = await getCustomerData();
-  debugPrint("useeerTokeneee: ${cachedCustomer?.token}");
+  log("useeerTokeneee: ${cachedCustomer?.token}",
+  );
 
   Bloc.observer = MyBlocObserver();
   final bool isFirstTime =
