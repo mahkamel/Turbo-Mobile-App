@@ -63,7 +63,7 @@ class PaymentRepository {
       );
       if (response.statusCode == 200) {
         if (response.data['status']) {
-          if((response.data as Map).containsKey("data")) {
+          if(response.data['data'] is List) {
             savedPaymentCards = (response.data['data'] as List)
               .map((e) => SavedCard.fromJson(e))
               .toList();

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:turbo/core/services/local/token_service.dart';
 
@@ -25,10 +26,10 @@ class DioHelper {
           responseBody: true,
         ),
       );
-    // (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () =>
-    //     HttpClient()
-    //       ..badCertificateCallback =
-    //           (X509Certificate cert, String host, int port) => true;
+    (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () =>
+    HttpClient()
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 
   static Future<Response> getData({
