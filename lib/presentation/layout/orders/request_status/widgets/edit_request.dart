@@ -76,6 +76,7 @@ class EditRequest extends StatelessWidget {
               color: AppColors.divider,
               thickness: 2,
             ),
+
             WidgetWithHeader(
               padding: EdgeInsetsDirectional.zero,
               header: "Files",
@@ -419,40 +420,49 @@ class EditedPrice extends StatelessWidget {
       builder: (context, state) {
         var blocWatch = context.watch<OrderCubit>();
         return Padding(
-          padding: const EdgeInsetsDirectional.only(start: 20.0),
+          padding: const EdgeInsetsDirectional.only(
+            start: 20.0,
+            end: 20.0,
+            top: 8.0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text.rich(
-                TextSpan(
-                  text: "Rental price: ",
-                  style: AppFonts.inter16TypeGreyHeader600,
-                  children: [
-                    TextSpan(
-                      text: "${blocWatch.calculatedPrice.toStringAsFixed(2)} ",
-                      style: AppFonts.inter18Black500,
+              Row(
+                children: [
+                  Text(
+                    "Rental price: ",
+                    style: AppFonts.inter16TypeGreyHeader600,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${blocWatch.calculatedPrice.toStringAsFixed(2)} ",
+                    style: AppFonts.inter18Black500,
+                  ),
+                  Text(
+                    "SAR",
+                    style: AppFonts.inter16Black500.copyWith(
+                      fontSize: 16,
                     ),
-                    TextSpan(
-                      text: "SAR",
-                      style: AppFonts.inter18Black500.copyWith(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Text.rich(
-                TextSpan(
-                  text: "Vat (${AppConstants.vat}%): ",
-                  style: AppFonts.inter16TypeGreyHeader600,
+
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
                   children: [
-                    TextSpan(
-                      text:
-                          "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} ",
-                      style: AppFonts.inter18Black500,
+                    Text(
+                      "Vat (${AppConstants.vat}%): ",
+                      style: AppFonts.inter16TypeGreyHeader600,
                     ),
-                    TextSpan(
-                      text: "SAR",
+                    const Spacer(),
+                    Text(
+                      "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} ",
+                      style: AppFonts.inter16Black500,
+                    ),
+                    Text(
+                      "SAR",
                       style: AppFonts.inter18Black500.copyWith(
                         fontSize: 16,
                       ),
@@ -461,27 +471,32 @@ class EditedPrice extends StatelessWidget {
                 ),
               ),
               const Divider(
-                height: 8,
+                height: 16,
                 color: AppColors.greyBorder,
               ),
-              Text.rich(
-                TextSpan(
-                  text: "Total: ",
-                  style: AppFonts.inter16TypeGreyHeader600,
-                  children: [
-                    TextSpan(
-                      text:
-                          "${((blocWatch.calculatedPrice * (AppConstants.vat / 100)) + blocWatch.calculatedPrice).toStringAsFixed(2)} ",
-                      style: AppFonts.inter18Black500,
+              Row(
+                children: [
+                  Text(
+                    "Total: ",
+                    style: AppFonts.inter16TypeGreyHeader600.copyWith(
+                      color: AppColors.primaryRed,
+                      fontWeight: FontWeight.w700,
                     ),
-                    TextSpan(
-                      text: "SAR",
-                      style: AppFonts.inter18Black500.copyWith(
-                        fontSize: 16,
-                      ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${((blocWatch.calculatedPrice * (AppConstants.vat / 100)) + blocWatch.calculatedPrice).toStringAsFixed(2)} ",
+                    style: AppFonts.inter16Black500.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    "SAR",
+                    style: AppFonts.inter18Black500.copyWith(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -568,21 +583,20 @@ class EditPrivateDriver extends StatelessWidget {
         children: [
           Text(
             "Private Driver?",
-            style: AppFonts.inter16Black500,
+            style: AppFonts.inter16Black500.copyWith(
+                color: AppColors.primaryRed
+            ),
           ),
           const Spacer(),
           BlocBuilder<OrderCubit, OrderState>(
             buildWhen: (previous, current) =>
                 current is ChangeIsWithPrivateEditValueState,
             builder: (context, state) {
-              return Checkbox(
-                visualDensity: VisualDensity.standard,
+              return Switch.adaptive(
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 value: context.watch<OrderCubit>().isWithPrivateDriver,
                 onChanged: (value) {
-                  if (value != null) {
-                    blocRead.changeIsWithPrivateDriverValue(value);
-                  }
+                  blocRead.changeIsWithPrivateDriverValue(value);
                 },
               );
             },

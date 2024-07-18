@@ -93,7 +93,6 @@ class HomeHeader extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    // constraints: const BoxConstraints(),
                     style: const ButtonStyle(
                       tapTargetSize:
                           MaterialTapTargetSize.shrinkWrap, // the '2023' part
@@ -122,7 +121,11 @@ class HomeHeader extends StatelessWidget {
                           )
                           .toList()
                           .length;
-                      return  context.watch<AuthRepository>().customer.token.isNotEmpty
+                      return context
+                              .watch<AuthRepository>()
+                              .customer
+                              .token
+                              .isNotEmpty
                           ? InkWell(
                               borderRadius: BorderRadius.circular(20),
                               onTap: () {
@@ -194,9 +197,15 @@ class SelectCityBottomSheet extends StatelessWidget {
           const SizedBox(
             height: 4,
           ),
-          Text(
-            "Choose City",
-            style: AppFonts.inter18HeaderBlack700,
+          Row(
+            children: [
+              const Icon(Icons.location_city_rounded,),
+              const SizedBox(width: 4,),
+              Text(
+                "Choose City",
+                style: AppFonts.inter18HeaderBlack700,
+              ),
+            ],
           ),
           const SizedBox(
             height: 4,
@@ -227,7 +236,7 @@ class SelectCityBottomSheet extends StatelessWidget {
                                     AppConstants.screenHeight(context) * 0.7,
                               ),
                               padding: const EdgeInsetsDirectional.symmetric(
-                                  horizontal: 16, vertical: 12),
+                                  horizontal: 8, vertical: 12),
                               decoration: BoxDecoration(
                                 color: AppColors.white,
                                 borderRadius: BorderRadius.circular(8),
@@ -235,15 +244,22 @@ class SelectCityBottomSheet extends StatelessWidget {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(
-                                    "Choose Branch",
-                                    style: AppFonts.inter18HeaderBlack700,
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.location_on_outlined,),
+                                      const SizedBox(width: 4,),
+                                      Text(
+                                        "Choose Branch",
+                                        style: AppFonts.inter18HeaderBlack700,
+                                      ),
+                                    ],
                                   ),
                                   const Divider(
                                     height: 24,
                                     color: AppColors.divider,
                                   ),
                                   ListView.builder(
+                                    padding: const EdgeInsets.symmetric(horizontal: 4),
                                     shrinkWrap: true,
                                     itemBuilder: (context, branchIndex) =>
                                         Center(
@@ -259,40 +275,49 @@ class SelectCityBottomSheet extends StatelessWidget {
                                         },
                                         child: SizedBox(
                                           height: 40,
-                                          child: Text(
-                                            context
-                                                .read<
-                                                    CitiesDistrictsRepository>()
-                                                .cities[index]
-                                                .branches[branchIndex]
-                                                .branchName,
-                                            style: AppFonts.inter16Black400
-                                                .copyWith(
-                                              color: context
-                                                              .watch<
-                                                                  AuthRepository>()
-                                                              .selectedCityIndex ==
-                                                          index &&
-                                                      context
-                                                              .watch<
-                                                                  AuthRepository>()
-                                                              .selectedBranchIndex ==
-                                                          branchIndex
-                                                  ? AppColors.primaryRed
-                                                  : AppColors.black,
-                                              fontWeight: context
-                                                              .watch<
-                                                                  AuthRepository>()
-                                                              .selectedCityIndex ==
-                                                          index &&
-                                                      context
-                                                              .watch<
-                                                                  AuthRepository>()
-                                                              .selectedBranchIndex ==
-                                                          branchIndex
-                                                  ? FontWeight.w500
-                                                  : FontWeight.w400,
-                                            ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                context
+                                                    .read<
+                                                        CitiesDistrictsRepository>()
+                                                    .cities[index]
+                                                    .branches[branchIndex]
+                                                    .branchName,
+                                                style: AppFonts.inter16Black400
+                                                    .copyWith(
+                                                  color: AppColors.black,
+                                                  fontWeight: context
+                                                                  .watch<
+                                                                      AuthRepository>()
+                                                                  .selectedCityIndex ==
+                                                              index &&
+                                                          context
+                                                                  .watch<
+                                                                      AuthRepository>()
+                                                                  .selectedBranchIndex ==
+                                                              branchIndex
+                                                      ? FontWeight.w500
+                                                      : FontWeight.w400,
+                                                ),
+                                              ),
+                                              if (context
+                                                          .watch<
+                                                              AuthRepository>()
+                                                          .selectedCityIndex ==
+                                                      index &&
+                                                  context
+                                                          .watch<
+                                                              AuthRepository>()
+                                                          .selectedBranchIndex ==
+                                                      branchIndex)
+                                                const Icon(
+                                                  Icons.check,
+                                                  color: AppColors.primaryRed,
+                                                ),
+                                            ],
                                           ),
                                         ),
                                       ),

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../helpers/constants.dart';
 import '../helpers/enums.dart';
+import '../theming/colors.dart';
 import '../theming/fonts.dart';
 import 'custom_text_fields.dart';
 
@@ -71,7 +72,9 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
           children: [
             Text(
               widget.header,
-              style: AppFonts.inter16Black500,
+              style: AppFonts.inter16Black500.copyWith(
+                color: AppColors.primaryRed,
+              ),
             ),
             const SizedBox(
               height: 8,

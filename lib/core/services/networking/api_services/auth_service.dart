@@ -24,7 +24,8 @@ class AuthServices {
   Future<Response> refreshCustomerData() async {
     try {
       Response response = await DioHelper.getData(
-          endpoint: 'customer/refreshCustomerData',);
+        endpoint: 'customer/refreshCustomerData',
+      );
       return response;
     } catch (e) {
       throw e.toString();
@@ -76,11 +77,11 @@ class AuthServices {
     }
   }
 
-  Future<Response> setNotificationsToken(String customerToken , String token) async {
+  Future<Response> setNotificationsToken(
+      String customerToken, String token) async {
     try {
       Response response = await DioHelper.postData(
           endpoint: 'customer/setTokenForCustomer',
-
           body: {
             "customerToken": customerToken,
           });
@@ -90,12 +91,15 @@ class AuthServices {
     }
   }
 
-  Future<Response> disableNotificationsToken(String customerToken) async {
+  Future<Response> disableNotificationsToken({
+    required String notificationToken,
+    required String customerToken,
+  }) async {
     try {
       Response response = await DioHelper.postData(
           endpoint: 'customer/disableTokenForCustomer',
           body: {
-            "customerToken": customerToken,
+            "customerToken": notificationToken,
           });
       return response;
     } catch (e) {

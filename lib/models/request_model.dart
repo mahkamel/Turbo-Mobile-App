@@ -1,3 +1,6 @@
+import 'car_media_model.dart';
+import 'get_cars_by_brands.dart';
+
 class RequestModel {
   late bool requestDriver;
   late int requestStatus;
@@ -65,7 +68,9 @@ class RequestModel {
 class RequestCarId {
   final RequestCar carId;
 
-  RequestCarId({required this.carId});
+  RequestCarId({
+    required this.carId,
+  });
 
   factory RequestCarId.fromJson(Map<String, dynamic> json) {
     return RequestCarId(
@@ -80,6 +85,10 @@ class RequestCar {
   final num dailyPrice;
   final num monthlyPrice;
   final num weeklyPrice;
+  final List<CarMedia> carMedia;
+  final Brand carBrand;
+  final String carYear;
+  final String carModel;
 
   RequestCar({
     required this.id,
@@ -87,6 +96,10 @@ class RequestCar {
     this.dailyPrice = 0,
     this.weeklyPrice = 0,
     this.monthlyPrice = 0,
+    required this.carMedia,
+    required this.carBrand,
+    required this.carYear,
+    required this.carModel,
   });
 
   factory RequestCar.fromJson(Map<String, dynamic> json) {
@@ -96,6 +109,13 @@ class RequestCar {
       dailyPrice: json['carDailyPrice'] ?? 0.0,
       weeklyPrice: json['carWeaklyPrice'] ?? 0.0,
       monthlyPrice: json['carMothlyPrice'] ?? 0.0,
+      carYear: json['carYear'] ?? "",
+      carBrand: Brand.fromJson(json['carBrand']),
+      carModel: json['carModel']["modelName"] ?? "",
+      carMedia: (json['carMedia'] as List)
+          .map(
+              (dynamic item) => CarMedia.fromJson(item as Map<String, dynamic>))
+          .toList(),
     );
   }
 }

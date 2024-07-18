@@ -67,7 +67,7 @@ class RecommendedCarCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(
                 top: 8.0,
-                bottom: 2.0,
+                bottom: 4.0,
               ),
               child: _buildBrandAndYearRow(),
             ),
@@ -77,22 +77,34 @@ class RecommendedCarCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: AppFonts.inter16Black500,
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text.rich(
-                TextSpan(
-                  text: "${car.carDailyPrice} ${"SAR".getLocale()}",
-                  style: AppFonts.inter16Black500.copyWith(
-                      color: AppColors.primaryRed, fontWeight: FontWeight.w600),
-                  children: [
-                    TextSpan(
-                      text: "/${"daySmall".getLocale()}",
-                      style: AppFonts.inter14Black400
-                          .copyWith(color: AppColors.grey400, fontSize: 16),
-                    ),
-                  ],
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: 20,
+                  width: 20,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: car.color,
+                  ),
                 ),
-              ),
+                Text.rich(
+                  TextSpan(
+                    text: "${car.carDailyPrice} ${"SAR".getLocale()}",
+                    style: AppFonts.inter16Black500.copyWith(
+                        color: AppColors.primaryRed,
+                        fontWeight: FontWeight.w600),
+                    children: [
+                      TextSpan(
+                        text: "/${"daySmall".getLocale()}",
+                        style: AppFonts.inter14Black400
+                            .copyWith(color: AppColors.grey400, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),

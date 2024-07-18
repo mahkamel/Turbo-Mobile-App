@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
@@ -207,8 +208,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   void logout() async {
     emit(const ProfileState.logoutLoading());
     try {
+      await _authRepository.disableNotificationToken(AppConstants.fcmToken);
       await _authRepository.clearCustomerData();
       _paymentRepository.savedPaymentCards.clear();
+
       emit(const ProfileState.logoutSuccess());
     } catch (e) {
       emit(ProfileState.logoutError(e.toString()));

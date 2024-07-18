@@ -31,6 +31,7 @@ class AppColors {
   static const Color lightRed = Color(0xFFFDC4BD);
   static const Color errorRed = Color(0xFFF22104);
   static const Color primaryRed = Color(0xFF8B2828);
+  static const Color orange = Color(0xFFffc107);
   static const Color greyBorder = Color(0xFFD9D9D9);
   static const Color buttonGreyBorder = Color(0xFFB0B0B0);
   static const Color divider = Color(0xFFECECEC);
@@ -40,5 +41,6 @@ class AppColors {
   static const Color savedCardsBgColor = Color(0xFFF8F8FA);
 
   static const Color shimmer = Color(0xffD9D9D9);
+  static const Color labelBrown = Color(0xff543334);
 
 }

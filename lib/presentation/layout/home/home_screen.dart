@@ -30,21 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
           blocRead.getNotifications();
           blocRead.refreshCustomerData();
         }
-        if (blocRead.selectedBrandIndex == -1) {
-          blocRead.getCarsBasedOnBrand();
-        } else {
-          blocRead.getCarsBasedOnBrand(
-              brandId: blocRead.carBrands[blocRead.selectedBrandIndex].id);
-        }
-      },
-      onHide: () {
-        debugPrint("on onHide");
-      },
-      onPause: () {
-        debugPrint("on onPause");
-      },
-      onShow: () {
-        debugPrint("on onShow");
+        blocRead.getCities();
       },
     );
   }
