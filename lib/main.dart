@@ -18,7 +18,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await configureApp(Flavor.QA);
+  await configureApp(Flavor.DEV);
   await DioHelper.init(FlavorConfig.instance.baseUrl);
   await setupGetIt();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
