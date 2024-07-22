@@ -131,7 +131,6 @@ class _DateSelectionState extends State<DateSelection> {
                                                       hours: 1, minutes: 30))
                                               : DateTime.now().add(
                                                   const Duration(hours: 1))));
-                                  print("tinee of the dat ${timeOfDay.hour} -- ${timeOfDay.minute}");
 
                                   setState(() {
                                     selectedDateTime = tempDateTime;

@@ -346,7 +346,6 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   void calculatePrice() {
-    debugPrint("caaaaa ${monthlyPrice} -- ${weeklyPrice} -- ${dailyPrice}");
     calculatedPrice = 0.0;
     pricePerDay = 0.0;
     if (deliveryDate != null && pickedDate != null) {

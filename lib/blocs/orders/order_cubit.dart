@@ -93,7 +93,6 @@ class OrderCubit extends Cubit<OrderState> {
   }
 
   void calculatePrice() {
-    print("caaaaa ${monthlyPrice} -- ${weeklyPrice} -- ${dailyPrice}");
     calculatedPrice = 0.0;
     pricePerDay = 0.0;
     if (deliveryDate != null && pickedDate != null) {
@@ -107,11 +106,8 @@ class OrderCubit extends Cubit<OrderState> {
         pricePerDay = monthlyPrice;
       }
       calculatedPrice = durationInDays * pricePerDay;
-      print("calcuaeeee $calculatedPrice");
       calculatedPriceWithVat =
           (calculatedPrice) + (calculatedPrice * (AppConstants.vat / 100));
-      print(
-          "caaaaa ${calculatedPriceWithVat} -- ${durationInDays} -- ${pricePerDay}");
     }
 
     if (isWithPrivateDriver) {
@@ -145,7 +141,6 @@ class OrderCubit extends Cubit<OrderState> {
             type: "nationalId",
             attachments: status.attachmentsId,
           );
-          print("ssssss ${nationalIdAttachments?.fileStatus}");
           nationalIdOldPaths = nationalIdAttachments?.filePath ?? "";
           nationalIdInitStatus = nationalIdAttachments?.fileStatus ?? -1;
           passportAttachments = findAttachmentFile(

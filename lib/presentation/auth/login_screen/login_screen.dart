@@ -82,8 +82,9 @@ class LoginScreen extends StatelessWidget {
                         ),
                       );
                     } else {
-                      Navigator.of(context).pushReplacementNamed(
+                      Navigator.of(context).pushNamedAndRemoveUntil(
                         Routes.layoutScreen,
+                        (route) => false,
                       );
                     }
                   }

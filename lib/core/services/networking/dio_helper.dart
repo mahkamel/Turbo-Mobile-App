@@ -73,7 +73,6 @@ class DioHelper {
     Object? formData,
     String? token,
   }) async {
-    print("tokeeenenn ${UserTokenService.currentUserToken} -- ${token}");
     dio.options.headers = {
       'Accept': 'application/json',
       if (UserTokenService.currentUserToken.isNotEmpty || token != null)

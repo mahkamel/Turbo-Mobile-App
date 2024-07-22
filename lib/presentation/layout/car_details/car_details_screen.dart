@@ -25,7 +25,6 @@ class CardDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("carImg: ${car.media.mediaMediumImageUrl}");
     return Scaffold(
       body: SizedBox(
         height: AppConstants.screenHeight(context),

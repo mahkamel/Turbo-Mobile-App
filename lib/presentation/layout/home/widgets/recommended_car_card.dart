@@ -23,7 +23,6 @@ class RecommendedCarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("ssss color ${car.color}");
     return InkWell(
       highlightColor: Colors.transparent,
       onTap: () {

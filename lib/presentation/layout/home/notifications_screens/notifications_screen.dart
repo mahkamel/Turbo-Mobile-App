@@ -61,7 +61,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                   isFromNotificationScreen: true);
                             },
                             child: ListView.separated(
-                              physics: const BouncingScrollPhysics(),
+                              physics: const AlwaysScrollableScrollPhysics(),
                               padding: const EdgeInsets.only(
                                 top: 8,
                                 bottom: 20,

@@ -13,7 +13,6 @@ class CarImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("path: ${FlavorConfig.instance.filesBaseUrl}$carImgPath");
     return Container(
       width: double.infinity,
       height: 124,

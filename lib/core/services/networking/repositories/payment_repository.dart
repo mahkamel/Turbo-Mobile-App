@@ -63,11 +63,11 @@ class PaymentRepository {
       );
       if (response.statusCode == 200) {
         if (response.data['status']) {
-          if(response.data['data'] is List) {
+          if (response.data['data'] is List) {
             savedPaymentCards = (response.data['data'] as List)
-              .map((e) => SavedCard.fromJson(e))
-              .toList();
-          }else{
+                .map((e) => SavedCard.fromJson(e))
+                .toList();
+          } else {
             savedPaymentCards = [];
           }
           return Right(savedPaymentCards);
@@ -130,8 +130,8 @@ class PaymentRepository {
     }
   }
 
-  void init(){
-    if(UserTokenService.currentUserToken.isNotEmpty){
+  void init() {
+    if (UserTokenService.currentUserToken.isNotEmpty) {
       getSavedPaymentMethods();
     }
   }
