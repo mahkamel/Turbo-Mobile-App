@@ -107,7 +107,8 @@ class SignupSubmitButton extends StatelessWidget {
               Routes.layoutScreen,
             );
           }
-        } else if (state is SubmitCustomerInfoErrorState) {
+        }
+         else if (state is SubmitCustomerInfoErrorState ) {
           defaultErrorSnackBar(context: context, message: state.errMsg);
         }
       },
@@ -326,13 +327,13 @@ class SignupAddressField extends StatelessWidget {
             }
           },
           header: "Address",
-          hintText: blocRead.customerNameController.text.isEmpty
+          hintText: blocRead.customerAddressController.text.isEmpty
               ? "Please Enter Address"
               : "Please Enter Valid Address",
           isRequiredFiled: true,
           isWithValidation: true,
           textInputType: TextInputType.text,
-          validationText: "Invalid Address Address.",
+          validationText: "Please Enter Valid Address.",
           textEditingController: blocRead.customerAddressController,
           validation: context.watch<SignupCubit>().customerAddressValidation,
           onTapOutside: () {
@@ -371,10 +372,10 @@ class SignupEmailField extends StatelessWidget {
           isRequiredFiled: true,
           hintText: blocRead.customerNameController.text.isEmpty
               ? "Please Enter Email"
-              : "Please Enter Valid Email",
+              : "Please Enter Valid Email.",
           isWithValidation: true,
           textInputType: TextInputType.emailAddress,
-          validationText: "Invalid Email Address.",
+          validationText: "Please Enter Valid Email",
           textEditingController: blocRead.customerEmailController,
           validation: context.watch<SignupCubit>().customerEmailValidation,
           onTap: () {
@@ -429,8 +430,8 @@ class SignupNameField extends StatelessWidget {
           isWithValidation: true,
           textInputType: TextInputType.name,
           validationText: blocRead.customerNameController.text.isEmpty
-              ? "Please Enter Named"
-              : "Please Enter Valid Named",
+              ? "Please Enter Name"
+              : "Please Enter Valid Name.",
           textEditingController: blocRead.customerNameController,
           validation: context.watch<SignupCubit>().customerNameValidation,
           onTapOutside: () {

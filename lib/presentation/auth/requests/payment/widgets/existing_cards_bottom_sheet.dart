@@ -120,26 +120,49 @@ class ExistingCardsBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          DefaultButton(
-            function: () {
-              blocRead.onRemoveSelectedCard();
-              Navigator.of(bottomSheetContext).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => BlocProvider<ProfileCubit>.value(
-                    value: getIt<ProfileCubit>()..savedCardsInit(),
-                    child: const AddNewCardScreen()),
-              ));
-            },
-            borderRadius: 0,
-            marginRight: 20,
-            marginBottom: 34,
-            marginTop: 12.0,
-            color: AppColors.white,
-            border: Border.all(
-              color: AppColors.buttonGreyBorder,
-            ),
-            textColor: AppColors.black,
-            text: "Add New Card",
+          Row(
+            children: [
+              blocRead.selectedSavedCardId != null ? Expanded(
+                child: DefaultButton(
+                  function: () {
+                   blocRead.onRemoveSelectedCard();
+                   Navigator.of(bottomSheetContext).pop();
+                  },
+                  borderRadius: 0,
+                  marginRight: 20,
+                  marginBottom: 34,
+                  marginTop: 12.0,
+                  color: AppColors.white,
+                  border: Border.all(
+                    color: AppColors.buttonGreyBorder,
+                  ),
+                  textColor: AppColors.primaryRed,
+                  text: "Clear Selected Card",
+                ),
+              ) : const SizedBox(),
+              Expanded(
+                child: DefaultButton(
+                  function: () {
+                    Navigator.of(bottomSheetContext).pop();
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => BlocProvider<ProfileCubit>.value(
+                          value: getIt<ProfileCubit>()..savedCardsInit(),
+                          child: const AddNewCardScreen()),
+                    ));
+                  },
+                  borderRadius: 0,
+                  marginRight: 20,
+                  marginBottom: 34,
+                  marginTop: 12.0,
+                  color: AppColors.primaryRed,
+                  // border: Border.all(
+                  //   color: AppColors.buttonGreyBorder,
+                  // ),
+                  textColor: AppColors.white,
+                  text: "Add New Card",
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -285,32 +285,41 @@ class SignupCubit extends Cubit<SignupState> {
     checkAddressValidation();
     checkPasswordValidation();
     checkConfirmPasswordValidation();
-    if (isFieldValid(customerNameController, customerNameValidation) &&
-        isFieldValid(customerEmailController, customerEmailValidation) &&
-        isFieldValid(customerAddressController, customerAddressValidation) &&
-        isFieldValid(confirmPasswordController, confirmPasswordValidation) &&
-        isFieldValid(passwordController, passwordValidation) &&
-        phoneNumber.isNotEmpty &&
-        phoneValidation == TextFieldValidation.valid) {
-      emit(const SignupState.submitCustomerInfoLoading());
-      await Future.delayed(const Duration(seconds: 1));
-      final res = await authRepository.signupInfoStep(
-        customerName: customerNameController.text,
-        customerEmail: customerEmailController.text,
-        customerAddress: customerAddressController.text,
-        customerTelephone: phoneNumber,
-        customerPassword: passwordController.text,
-        customerCountry: country,
-        customerCountryCode: countryIsoCode,
-        customerType: saCitizenSelectedIndex,
-      );
-      res.fold(
-        (errMsg) => emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg)),
-        (_) {
-          emit(const SignupState.submitCustomerInfoSuccess());
-        },
-      );
-    } else {
+    
+    if(isFieldNotEmpty(customerNameController) &&
+      isFieldNotEmpty(customerEmailController) &&
+      isFieldNotEmpty(customerAddressController) &&
+      isFieldNotEmpty(passwordController) &&
+      isFieldNotEmpty(confirmPasswordController) &&
+      phoneNumber.isNotEmpty
+    ){
+          if (isFieldValid(customerNameValidation) &&
+            isFieldValid(customerEmailValidation) &&
+            isFieldValid(customerAddressValidation) &&
+            isFieldValid(passwordValidation) &&
+            isFieldValid(confirmPasswordValidation) &&
+            phoneValidation == TextFieldValidation.valid) {
+              emit(const SignupState.submitCustomerInfoLoading());
+              await Future.delayed(const Duration(seconds: 1));
+              final res = await authRepository.signupInfoStep(
+                customerName: customerNameController.text,
+                customerEmail: customerEmailController.text,
+                customerAddress: customerAddressController.text,
+                customerTelephone: phoneNumber,
+                customerPassword: passwordController.text,
+                customerCountry: country,
+                customerCountryCode: countryIsoCode,
+                customerType: saCitizenSelectedIndex,
+              );
+              res.fold(
+                (errMsg) => emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg)),
+                (_) {
+                  emit(const SignupState.submitCustomerInfoSuccess());
+                },
+              );
+        }
+    }
+     else {
       emit(const SignupState.submitCustomerInfoFailed(
           errMsg: "Please complete all required fields"));
     }
@@ -516,10 +525,17 @@ class SignupCubit extends Cubit<SignupState> {
 }
 
 bool isFieldValid(
-  TextEditingController controller,
   TextFieldValidation validation,
 ) {
-  if (controller.text.isNotEmpty && validation == TextFieldValidation.valid) {
+  if (validation == TextFieldValidation.valid) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool isFieldNotEmpty(TextEditingController controller) {
+  if(controller.text.isNotEmpty){
     return true;
   } else {
     return false;

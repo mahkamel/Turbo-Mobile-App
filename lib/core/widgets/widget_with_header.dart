@@ -5,22 +5,22 @@ import '../theming/colors.dart';
 import '../theming/fonts.dart';
 
 class WidgetWithHeader extends StatelessWidget {
-  const WidgetWithHeader({
-    super.key,
-    required this.header,
-    required this.widget,
-    this.headerStyle,
-    this.width,
-    this.isWithBlackHeader = false,
-    this.padding = const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
-  });
+  const WidgetWithHeader(
+      {super.key,
+      required this.header,
+      required this.widget,
+      this.headerStyle,
+      this.width,
+      this.isWithBlackHeader = false,
+      this.padding = const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
+      this.isRequiredField = false});
   final String header;
   final Widget widget;
   final EdgeInsetsDirectional padding;
   final TextStyle? headerStyle;
   final double? width;
   final bool isWithBlackHeader;
-
+  final bool isRequiredField;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -30,15 +30,37 @@ class WidgetWithHeader extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              header,
-              style: headerStyle ??
-                  AppFonts.inter16Black500.copyWith(
-                    color: isWithBlackHeader
-                        ? AppColors.black
-                        : AppColors.primaryRed,
+            isRequiredField
+                ? Text.rich(
+                    TextSpan(
+                        text: header,
+                        style: headerStyle ??
+                            AppFonts.inter16Black500.copyWith(
+                              color: isWithBlackHeader
+                                  ? AppColors.black
+                                  : AppColors.primaryRed,
+                            ),
+                        children: [
+                          TextSpan(
+                            text: "*",
+                            style: headerStyle ??
+                                AppFonts.inter16Black500.copyWith(
+                                  color: isWithBlackHeader
+                                      ? AppColors.black
+                                      : AppColors.primaryRed,
+                                ),
+                          )
+                        ]),
+                  )
+                : Text(
+                    header,
+                    style: headerStyle ??
+                        AppFonts.inter16Black500.copyWith(
+                          color: isWithBlackHeader
+                              ? AppColors.black
+                              : AppColors.primaryRed,
+                        ),
                   ),
-            ),
             const SizedBox(
               height: 8,
             ),
