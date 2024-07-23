@@ -71,6 +71,7 @@ class CarServices {
     required List<String> carYears,
     required List<String> carTypes,
     required List<String> carBrands,
+    required List<String> carCategories,
     // required bool isWithUnlimited,
     required String branchId,
     num? priceFrom,
@@ -89,6 +90,11 @@ class CarServices {
       if (carTypes.isNotEmpty) {
         filterBody.addAll({
           "carType": carTypes,
+        });
+      }
+      if (carCategories.isNotEmpty) {
+        filterBody.addAll({
+          "carCategory": carCategories,
         });
       }
       if (carBrands.isNotEmpty) {
@@ -110,7 +116,7 @@ class CarServices {
         });
       }
 
-      if (carYears.isEmpty && carTypes.isEmpty && carBrands.isEmpty) {
+      if (carYears.isEmpty && carTypes.isEmpty && carBrands.isEmpty && carCategories.isEmpty) {
         filterBody.addAll({
           "carIsActive": true,
         });
@@ -250,7 +256,16 @@ class CarServices {
       throw e.toString();
     }
   }
+  Future<Response> getAllCategories() async {
+    try {
+      Response response = await DioHelper.getData(endpoint: 'search/getAllCategories');
+      return response;
+    } catch(e) {
+      throw e.toString();
+    }
+  }
 }
+
 
 String getFileName(String filePath) {
   return filePath.split('/').last;

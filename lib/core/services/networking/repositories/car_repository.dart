@@ -12,6 +12,7 @@ import 'package:turbo/models/car_type_model.dart';
 import 'package:turbo/models/get_cars_by_brands.dart';
 import 'package:turbo/models/request_model.dart';
 
+import '../../../../models/car_category_model.dart';
 import '../../../../models/request_status_model.dart';
 import '../api_services/pricing_policy_service.dart';
 import '../api_services/requests_services.dart';
@@ -29,6 +30,7 @@ class CarRepository {
   List<CarBrand> carBrands = [];
   List<CarType> carTypes = [];
   List<CarData> filteredCars = [];
+  List<CarCategory> carCategories = [];
 
   Future<Either<String, List<CarBrand>>> getCarBrands(String branchId) async {
     try {
@@ -163,6 +165,7 @@ class CarRepository {
     required List<String> carYears,
     required List<String> carTypes,
     required List<String> carBrands,
+    required List<String> carCategories,
     // required bool isWithUnlimited,
     required String branchId,
     num? priceFrom,
@@ -177,6 +180,7 @@ class CarRepository {
         branchId: branchId,
         priceFrom: priceFrom,
         priceTo: priceTo,
+        carCategories: carCategories
       );
       if (response.statusCode == 200 && response.data['status']) {
         List<CarData> filteredCars = [];
@@ -388,6 +392,25 @@ class CarRepository {
         return Left(response.data['message']);
       }
     } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, List<CarCategory>>> getAllCategories() async {
+    try {
+      final response = await _carServices.getAllCategories();
+      if(response.data['status']) {
+        carCategories = (response.data['data'] as List).isNotEmpty
+            ? (response.data['data'] as List)
+                .map((cat) => CarCategory.fromJson(cat))
+                .toList()
+            : <CarCategory>[];
+        return right(carCategories);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('getCarCategories Error -- $e');
       return Left(e.toString());
     }
   }

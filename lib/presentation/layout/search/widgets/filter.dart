@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_multi_slider/flutter_multi_slider.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
+import 'package:turbo/presentation/layout/search/widgets/filter/filter_by_list.dart';
 
 import '../../../../blocs/search/search_cubit.dart';
 import '../../../../core/helpers/constants.dart';
@@ -33,6 +34,11 @@ class FilterCars extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            "Car Categories",
+            style: AppFonts.inter18HeaderBlack700,
+          ),
+          const CarCategoriesFilter(),
           Text(
             "Car Types",
             style: AppFonts.inter18HeaderBlack700,

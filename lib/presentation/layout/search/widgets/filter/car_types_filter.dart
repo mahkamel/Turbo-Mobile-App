@@ -37,7 +37,8 @@ class CarTypesFilter extends StatelessWidget {
               current is TypesSelectionState ||
               current is FilterResetState,
           builder: (context, state) {
-            return state is GetSearchCarsTypesLoadingState ? const Center(child: CircularProgressIndicator(),):Wrap(
+            return state is GetSearchCarsTypesLoadingState ? const Center(child: CircularProgressIndicator(),):
+            Wrap(
               runSpacing: 12,
               spacing: 8,
               children: List.generate(
