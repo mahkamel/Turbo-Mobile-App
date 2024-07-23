@@ -16,6 +16,7 @@ class DateSelection extends StatefulWidget {
     this.minDate,
     this.padding,
     this.isDeliveryDate = false,
+    this.isRequired = false
   });
 
   final String header;
@@ -23,6 +24,7 @@ class DateSelection extends StatefulWidget {
   final DateTime? minDate;
   final void Function(DateTime?) onDateSelected;
   final bool isDeliveryDate;
+  final bool isRequired;
   final EdgeInsetsDirectional? padding;
 
   @override
@@ -36,6 +38,7 @@ class _DateSelectionState extends State<DateSelection> {
   Widget build(BuildContext context) {
     return WidgetWithHeader(
       header: "${widget.header} Date",
+      isRequiredField: widget.isRequired,
       padding: widget.padding ??
           const EdgeInsetsDirectional.only(
             bottom: 12,

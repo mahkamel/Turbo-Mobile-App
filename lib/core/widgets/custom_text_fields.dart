@@ -518,9 +518,9 @@ class CustomTextField extends StatelessWidget {
                                   color: AppColors.black.withOpacity(0.5),
                                 ),
                               ),
-                  fillColor: fillColor,
+                  fillColor: enabled ? fillColor : AppColors.borderGrey,
                   enabled: enabled,
-                  filled: false,
+                  filled: enabled ? false : true,
                   disabledBorder:
                       (validationState == TextFieldValidation.notValid)
                           ? OutlineInputBorder(

@@ -120,6 +120,7 @@ class RequiredFilesSection extends StatelessWidget {
     if (context.watch<AuthRepository>().customer.attachments.isEmpty) {
       return WidgetWithHeader(
         header: "Files",
+        isRequiredField: true,
         headerStyle: AppFonts.inter16Black500.copyWith(
           color: AppColors.primaryRed,
           fontSize: 18,
@@ -198,6 +199,7 @@ class _ExistingUserAttachmentsState extends State<ExistingUserAttachments> {
         return WidgetWithHeader(
           padding: const EdgeInsetsDirectional.symmetric(horizontal: 16),
           header: "Files",
+          isRequiredField: true,
           headerStyle: AppFonts.inter16Black500.copyWith(
             color: AppColors.primaryRed,
             fontSize: 18,
@@ -535,6 +537,7 @@ class DeliveryDateSelection extends StatelessWidget {
         return DateSelection(
           key: const Key("DeliveryDate"),
           header: "Delivery",
+          isRequired: true,
           minDate: context.watch<SignupCubit>().pickedDate != null
               ? context
                   .watch<SignupCubit>()
@@ -568,6 +571,7 @@ class PickupDateSelection extends StatelessWidget {
       builder: (context, state) {
         return DateSelection(
           key: const Key("PickupDate"),
+          isRequired: true,
           header: "Pickup",
           minDate: DateTime.now().add(const Duration(hours: 1)),
           selectedDateTime: context.watch<SignupCubit>().pickedDate,
@@ -642,11 +646,11 @@ class BookingLocationField extends StatelessWidget {
         final blocRead = context.read<SignupCubit>();
 
         return AuthTextFieldWithHeader(
-          header: "Pickup Location",
+          header: "Pickup Location*",
           hintText: "Enter Address",
           isWithValidation: true,
           textInputType: TextInputType.name,
-          validationText: "Invalid Address.",
+          validationText: "Please Enter Pickup Address.",
           textEditingController: blocRead.locationController,
           validation: context.watch<SignupCubit>().locationValidation,
           onTapOutside: () {

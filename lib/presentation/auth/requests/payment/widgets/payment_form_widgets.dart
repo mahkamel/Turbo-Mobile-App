@@ -119,9 +119,10 @@ class CVV extends StatelessWidget {
       child: AuthTextFieldWithHeader(
         width: double.infinity,
         horizontalPadding: 0,
+        isRequiredFiled: true,
         header: "CVV",
         hintText: "CVV",
-        validationText: "Enter valid cvv",
+        validationText: "Please Enter Valid CVV." ,
         isWithValidation: true,
         inputFormatters: [
           LengthLimitingTextInputFormatter(3),
@@ -169,10 +170,11 @@ class ExpiryDate extends StatelessWidget {
               : 0),
       child: AuthTextFieldWithHeader(
         horizontalPadding: 0,
+        isRequiredFiled: true,
         width: double.infinity,
         header: "Expiry Date",
         hintText: "MM/YY",
-        validationText: "Enter valid date",
+        validationText: "Please Enter Valid Date.",
         isEnabled: blocRead.selectedSavedCardId != null ? false : true,
         isWithValidation: true,
         inputFormatters: [
@@ -215,7 +217,8 @@ class CardNumber extends StatelessWidget {
     return AuthTextFieldWithHeader(
       header: "Card Number",
       hintText: "Enter Card Number",
-      validationText: "Enter valid number",
+      isRequiredFiled: true,
+      validationText: "Please Enter valid Number.",
       isEnabled: blocRead.selectedSavedCardId != null ? false : true,
       isWithValidation: true,
       inputFormatters: [
@@ -289,10 +292,12 @@ class CardHolderName extends StatelessWidget {
       header: "Cardholder Name",
       hintText: "Enter Name",
       isEnabled: blocRead.selectedSavedCardId != null ? false : true,
+      isRequiredFiled: true,
       textEditingController: blocRead.cardHolderName,
       validation: blocWatch.cardHolderNameValidation,
       isWithValidation: true,
-      validationText: "Enter valid name",
+      validationText: "Please Enter valid name.",
+      
       onChange: (value) {
         if (value.isEmpty ||
             blocRead.cardHolderNameValidation != TextFieldValidation.normal) {

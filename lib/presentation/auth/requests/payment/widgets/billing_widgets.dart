@@ -39,16 +39,17 @@ class BillingFirstAndLastName extends StatelessWidget {
                   child: AuthTextFieldWithHeader(
                     horizontalPadding: 0,
                     width: double.infinity,
+                    isRequiredFiled: true,
                     header: "First Name",
                     hintText: "Enter First Name",
-                    validationText: "Enter valid name",
+                    validationText: "Please Enter Valid Name.",
                     isWithValidation: true,
                     inputFormatters: [
                       NoLeadingOrTrailingSpaceFormatter(),
                     ],
                     textInputType: TextInputType.name,
                     textEditingController: blocRead.billingFirstNameCtrl,
-                    validation: blocWatch.cardExpiryDateValidation,
+                    validation: blocWatch.billingFirstNameValidation,
                     onChange: (value) {
                       if (value.isEmpty ||
                           blocRead.billingFirstNameValidation !=
@@ -91,8 +92,9 @@ class BillingFirstAndLastName extends StatelessWidget {
                     horizontalPadding: 0,
                     header: "Last Name",
                     hintText: "Enter Last Name",
-                    validationText: "Enter valid Name",
+                    validationText: "Please Enter valid Name.",
                     isWithValidation: true,
+                    isRequiredFiled: true,
                     inputFormatters: [
                       NoLeadingOrTrailingSpaceFormatter(),
                     ],
@@ -142,8 +144,9 @@ class BillingPostalCode extends StatelessWidget {
           header: "Postal Code",
           hintText: "Enter Postal Code",
           isWithValidation: true,
+          isRequiredFiled: true,
           textInputType: TextInputType.text,
-          validationText: "Invalid Postal Code.",
+          validationText: "Please Enter Valid Postal Code.",
           textEditingController: blocRead.billingPostalCodeCtrl,
           validation:
           context.watch<PaymentCubit>().billingPostalCodeValidation,
@@ -182,10 +185,11 @@ class BillingAddress extends StatelessWidget {
       builder: (context, state) {
         return AuthTextFieldWithHeader(
           header: "Address",
+          isRequiredFiled: true,
           hintText: "Enter Address",
           isWithValidation: true,
           textInputType: TextInputType.text,
-          validationText: "Invalid Address.",
+          validationText: "Please Enter Valid Address.",
           textEditingController: blocRead.billingAddressCtrl,
           validation:
           context.watch<PaymentCubit>().billingAddressValidation,
@@ -227,7 +231,8 @@ class BillingCity extends StatelessWidget {
           hintText: "Enter City",
           isWithValidation: true,
           textInputType: TextInputType.text,
-          validationText: "Invalid City.",
+          validationText: "Please Enter Valid City.",
+          isRequiredFiled: true,
           textEditingController: blocRead.billingCityCtrl,
           validation: context.watch<PaymentCubit>().billingCityValidation,
           onTapOutside: () {
