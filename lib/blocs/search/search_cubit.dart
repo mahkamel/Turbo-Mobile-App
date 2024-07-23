@@ -41,8 +41,9 @@ class SearchCubit extends Cubit<SearchState> {
       isFilteredRes = true;
 
       emit(const SearchState.getFilteredCarsSuccess());
-      getCarsTypes();
     }
+    getCarsTypes();
+    getCarsCategories();
   }
 
   void unSelectAllBrands() {
@@ -79,7 +80,21 @@ class SearchCubit extends Cubit<SearchState> {
     }
   }
 
+  void getCarsCategories() async {
+    emit(const SearchState.getCarsCategoriesLoading());
+    try {
+      if(_carRepository.carCategories.isEmpty) {
+        await _carRepository.getAllCategories();
+      }
+      print("caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ${_carRepository.carCategories}");
+      emit(const SearchState.getCarsCategoriesSuccess());
+    } catch (e) { 
+      emit(SearchState.getCarsCategoriesError(e.toString()));
+    }
+  }
+
   void getCarsTypes() async {
+    print("Here3");
     emit(const SearchState.getCarsTypesLoading());
     try {
       if (_carRepository.carTypes.isEmpty) {
@@ -142,6 +157,17 @@ class SearchCubit extends Cubit<SearchState> {
     );
   }
 
+  void carCategoriesSelection(int index) {
+    _carRepository.carCategories[index].isSelected =
+        !_carRepository.carCategories[index].isSelected;
+    emit(
+      SearchState.categoriesSelectionState(
+        _carRepository.carCategories[index].categoryName,
+        _carRepository.carCategories[index].isSelected,
+      ),
+    );
+  }
+
   void changePriceRangeIndex({
     required double min,
     required double max,
@@ -155,9 +181,15 @@ class SearchCubit extends Cubit<SearchState> {
   void applyFilter() async {
     List<String> selectedTypesId = [];
     List<String> selectedBrandsId = [];
+    List<String> selectedCategoriesId = [];
     for (var type in _carRepository.carTypes) {
       if (type.isSelected) {
         selectedTypesId.add(type.id);
+      }
+    }
+    for (var type in _carRepository.carCategories) {
+      if (type.isSelected) {
+        selectedCategoriesId.add(type.id);
       }
     }
     for (var brand in selectedBrands) {
@@ -172,6 +204,7 @@ class SearchCubit extends Cubit<SearchState> {
         carYears: List<String>.from(selectedCarYears),
         carTypes: selectedTypesId,
         carBrands: selectedBrandsId,
+        carCategories: selectedCategoriesId,
         // isWithUnlimited: isWithUnlimitedKM,
         branchId: _authRepository.selectedBranchId,
         priceFrom: minDailyPrice,

@@ -32,6 +32,9 @@ class SearchState with _$SearchState {
   const factory SearchState.typesSelectionState(
       final String type, bool isSelected) = TypesSelectionState;
 
+  const factory SearchState.categoriesSelectionState(
+      final String type, bool isSelected) = CategoriesSelectionState;
+
   const factory SearchState.changeSelectedPriceRangeIndex(
     final double min,
     final double max,
@@ -47,4 +50,11 @@ class SearchState with _$SearchState {
       GetFilteredCarsSuccessState;
   const factory SearchState.getFilteredCarsError(final String errMsg) =
       GetFilteredCarsErrorState;
+
+  const factory SearchState.getCarsCategoriesLoading() =
+      GetCarsCategoriesLoadingState;
+  const factory SearchState.getCarsCategoriesSuccess() =
+      GetCarsCategoriesSuccessState;
+  const factory SearchState.getCarsCategoriesError(final String errMsg) =
+      GetCarsCategoriesErrorState;
 }
