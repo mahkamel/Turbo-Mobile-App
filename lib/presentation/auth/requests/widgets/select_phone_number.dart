@@ -32,11 +32,20 @@ class ChoosePhoneNumber extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Phone Number",
-              style: AppFonts.inter16Black400.copyWith(
-                color: AppColors.primaryRed
-              ),
+            Text.rich(
+              TextSpan(
+                  text: "Phone Number",
+                  style: AppFonts.inter16Black500.copyWith(
+                    color: AppColors.primaryRed,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: "*",
+                      style: AppFonts.inter16Black500.copyWith(
+                        color: AppColors.primaryRed,
+                      ),
+                    ),
+                  ]),
             ),
             const SizedBox(
               height: 4,

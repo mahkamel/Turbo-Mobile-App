@@ -31,6 +31,7 @@ class AuthTextFieldWithHeader extends StatefulWidget {
     this.onTapOutside,
     this.suffixIcon,
     this.contentPadding,
+    this.isRequiredFiled = false,
   });
 
   final bool isEnabled;
@@ -39,6 +40,7 @@ class AuthTextFieldWithHeader extends StatefulWidget {
   final String validationText;
   final bool isPassword;
   final bool isMultiLine;
+  final bool isRequiredFiled;
   final bool isWithValidation;
   final TextEditingController textEditingController;
   final TextFieldValidation validation;
@@ -70,12 +72,29 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.header,
-              style: AppFonts.inter16Black500.copyWith(
-                color: AppColors.primaryRed,
-              ),
-            ),
+            widget.isRequiredFiled
+                ? Text.rich(
+                  TextSpan(
+                    text:   widget.header,
+                    style: AppFonts.inter16Black500.copyWith(
+                      color: AppColors.primaryRed,
+                    ),
+                    children: [
+                      TextSpan(
+                      text:   "*",
+                      style: AppFonts.inter16Black500.copyWith(
+                        color: AppColors.primaryRed,
+                      ),
+                      ),
+                    ]
+                  ),
+                  )
+                : Text(
+                    widget.header,
+                    style: AppFonts.inter16Black500.copyWith(
+                      color: AppColors.primaryRed,
+                    ),
+                  ),
             const SizedBox(
               height: 8,
             ),

@@ -42,10 +42,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-*.freezed.dart
 *.env
-*.aiexclude
-*.lock
 /pubspec.lock
 /devtools_options.yaml
 /ios/Podfile.lock
+*.freezed.dart

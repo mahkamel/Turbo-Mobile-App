@@ -30,15 +30,7 @@ class SignupConfirmBooking extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BookingLocationField(),
-          Padding(
-            padding: EdgeInsetsDirectional.only(
-              start: 20.0,
-              end: 10.0,
-              top: 16.0,
-              bottom: 8.0,
-            ),
-            child: PrivateDriverRow(),
-          ),
+          PrivateDriverRow(),
           PickupDateSelection(),
           DeliveryDateSelection(),
           RentalPrice(),
@@ -599,30 +591,41 @@ class PrivateDriverRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final blocRead = context.read<SignupCubit>();
 
-    return Row(
-      children: [
-        Text(
-          "Private Driver?",
-          style: AppFonts.inter16Black500.copyWith(
-            color: AppColors.primaryRed
-          ),
-        ),
-        const Spacer(),
-        BlocBuilder<SignupCubit, SignupState>(
-          buildWhen: (previous, current) =>
-              current is ChangeIsWithPrivateDriverValueState,
-          builder: (context, state) {
-            return Switch.adaptive(
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              value: context.watch<SignupCubit>().isWithPrivateDriver,
-              onChanged: (value) {
-                blocRead.changeIsWithPrivateDriverValue(value);
-              },
-            );
-          },
-        ),
-      ],
-    );
+    return AppConstants.driverFees == -1 || AppConstants.driverFees == 0
+        ? const SizedBox(
+            height: 16,
+          )
+        : Padding(
+            padding: const EdgeInsetsDirectional.only(
+              start: 20.0,
+              end: 10.0,
+              top: 16.0,
+              bottom: 8.0,
+            ),
+            child: Row(
+              children: [
+                Text(
+                  "Private Driver?",
+                  style: AppFonts.inter16Black500
+                      .copyWith(color: AppColors.primaryRed),
+                ),
+                const Spacer(),
+                BlocBuilder<SignupCubit, SignupState>(
+                  buildWhen: (previous, current) =>
+                      current is ChangeIsWithPrivateDriverValueState,
+                  builder: (context, state) {
+                    return Switch.adaptive(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      value: context.watch<SignupCubit>().isWithPrivateDriver,
+                      onChanged: (value) {
+                        blocRead.changeIsWithPrivateDriverValue(value);
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
   }
 }
 

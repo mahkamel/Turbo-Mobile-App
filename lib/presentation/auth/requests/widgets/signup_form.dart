@@ -161,6 +161,7 @@ class SignupConfirmPasswordField extends StatelessWidget {
             }
           },
           header: "Confirm Password",
+          isRequiredFiled: true,
           hintText: "Re-Enter Password",
           isPassword: true,
           isWithValidation: true,
@@ -209,7 +210,10 @@ class SignupPasswordField extends StatelessWidget {
             }
           },
           header: "Password",
-          hintText: "Enter Password",
+          isRequiredFiled: true,
+          hintText: blocRead.customerNameController.text.isEmpty
+              ? "Please Enter Password"
+              : "Please Enter Valid Password",
           isPassword: true,
           isWithValidation: true,
           textInputType: TextInputType.text,
@@ -322,7 +326,10 @@ class SignupAddressField extends StatelessWidget {
             }
           },
           header: "Address",
-          hintText: "Enter Address",
+          hintText: blocRead.customerNameController.text.isEmpty
+              ? "Please Enter Address"
+              : "Please Enter Valid Address",
+          isRequiredFiled: true,
           isWithValidation: true,
           textInputType: TextInputType.text,
           validationText: "Invalid Address Address.",
@@ -361,7 +368,10 @@ class SignupEmailField extends StatelessWidget {
 
         return AuthTextFieldWithHeader(
           header: "Email",
-          hintText: "Enter Email",
+          isRequiredFiled: true,
+          hintText: blocRead.customerNameController.text.isEmpty
+              ? "Please Enter Email"
+              : "Please Enter Valid Email",
           isWithValidation: true,
           textInputType: TextInputType.emailAddress,
           validationText: "Invalid Email Address.",
@@ -413,11 +423,14 @@ class SignupNameField extends StatelessWidget {
               }
             }
           },
+          isRequiredFiled: true,
           header: "Name",
           hintText: "Enter Name",
           isWithValidation: true,
           textInputType: TextInputType.name,
-          validationText: "Invalid Name.",
+          validationText: blocRead.customerNameController.text.isEmpty
+              ? "Please Enter Named"
+              : "Please Enter Valid Named",
           textEditingController: blocRead.customerNameController,
           validation: context.watch<SignupCubit>().customerNameValidation,
           onTapOutside: () {
