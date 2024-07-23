@@ -41,7 +41,7 @@ class LoginPhoneNumber extends StatelessWidget {
                   phoneNumber: value.phoneNumber ?? "",
                   dialCode: value.dialCode ?? "",
                   isoCode: value.isoCode,
-                  country: "", // TODO
+                  country: value.countryName,
                 );
               },
               onInputValidated: (value) {
