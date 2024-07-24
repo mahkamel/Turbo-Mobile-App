@@ -214,13 +214,22 @@ class HomeCubit extends Cubit<HomeState> {
 
           emit(const HomeState.getNotificationsSuccess());
           if (isFromNotificationScreen) {
-            _authRepository.setNotificationsSeen();
+            setNotificationSeen();
           }
         },
       );
     } catch (e) {
       emit(HomeState.getNotificationsError(e.toString()));
     }
+  }
+
+  void setNotificationSeen() async {
+    final result = await _authRepository.setNotificationsSeen();
+    result.fold((errMsg) => emit(HomeState.getNotificationsError(errMsg)),
+        (message) {
+          notifications = message;
+        }
+    );
   }
 
   void readNotification(String notificationId) async {

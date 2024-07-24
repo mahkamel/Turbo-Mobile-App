@@ -132,7 +132,7 @@ class HomeHeader extends StatelessWidget {
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (navigateContext) =>
                                       BlocProvider<HomeCubit>.value(
-                                    value: context.read<HomeCubit>(),
+                                    value: context.read<HomeCubit>()..getNotifications(isFromNotificationScreen: true),
                                     child: const NotificationsScreen(),
                                   ),
                                 ));
