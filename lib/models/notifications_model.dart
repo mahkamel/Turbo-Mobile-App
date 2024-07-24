@@ -6,6 +6,8 @@ class UserNotificationModel {
   String notificationCustomerId;
   String notificationRequestId;
   String notificationType;
+  String notificationUnitNumber;
+  String notificationCustomerName;
   DateTime notificationDate;
 
   UserNotificationModel({
@@ -17,6 +19,8 @@ class UserNotificationModel {
     required this.notificationRequestId,
     required this.notificationType,
     required this.notificationDate,
+    required this.notificationCustomerName,
+    required this.notificationUnitNumber
   });
 
   factory UserNotificationModel.fromJson(Map<String, dynamic> json) =>
@@ -28,6 +32,8 @@ class UserNotificationModel {
         notificationCustomerId: json['notificationCustomerId'] ?? "",
         notificationRequestId: json['notificationRequestId'] ?? "",
         notificationType: json['notificationType'] ?? "",
+        notificationCustomerName: json['notificationCustomerName'] ?? "",
+        notificationUnitNumber: json['notificationUnitNumber'] ?? "",
         notificationDate: DateTime.tryParse(
               json['notificationDate'],
             ) ??

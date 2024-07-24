@@ -148,11 +148,14 @@ class AuthRepository {
     CacheHelper.setData(key: "SelectedBranchId", value: id);
   }
 
-  Future<Either<String, bool>> setNotificationsSeen() async {
+  Future<Either<String, List<UserNotificationModel>>> setNotificationsSeen() async {
     try {
       final response = await _authServices.setSeenNotifications();
       if (response.statusCode == 200 && response.data['status']) {
-        return const Right(true);
+         List<dynamic> data = response.data['data'];
+        final List<UserNotificationModel> notifications =
+            data.map((n) => UserNotificationModel.fromJson(n)).toList();
+        return Right(notifications);
       } else {
         return Left(response.data['message']);
       }
@@ -162,13 +165,16 @@ class AuthRepository {
     }
   }
 
-  Future<Either<String, bool>> setNotificationsRead(
+  Future<Either<String, List<UserNotificationModel>>> setNotificationsRead(
     String notificationId,
   ) async {
     try {
       final response = await _authServices.setReadNotification(notificationId);
       if (response.statusCode == 200 && response.data['status']) {
-        return const Right(true);
+         List<dynamic> data = response.data['data'];
+        final List<UserNotificationModel> notifications =
+            data.map((n) => UserNotificationModel.fromJson(n)).toList();
+        return Right(notifications);
       } else {
         return Left(response.data['message']);
       }
