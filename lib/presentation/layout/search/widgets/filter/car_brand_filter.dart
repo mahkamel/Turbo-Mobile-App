@@ -88,13 +88,13 @@ class CarBrandFilterHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "carBrand".getLocale(),
+          "carBrand".getLocale(context: context),
           style: AppFonts.inter18HeaderBlack700,
         ),
         DefaultButton(
           height: 30,
           width: 72,
-          text: "browse".getLocale(),
+          text: "browse".getLocale(context: context),
           fontSize: 12,
           fontWeight: FontWeight.w700,
           function: () {

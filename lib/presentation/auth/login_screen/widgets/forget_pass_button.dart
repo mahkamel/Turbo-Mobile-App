@@ -31,7 +31,7 @@ class ForgetPasswordButton extends StatelessWidget {
               child: Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
-                  "forgetPassword".getLocale(),
+                  "forgetPassword".getLocale(context: context),
                   style: AppFonts.inter16Black500,
                 ),
               ),

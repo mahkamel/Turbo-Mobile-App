@@ -120,21 +120,21 @@ class CarPricesRow extends StatelessWidget {
       children: [
         PriceCard(
           price: blocRead.carDetailsData.carDailyPrice,
-          period: "daySmall".getLocale(),
+          period: "daySmall".getLocale(context: context),
         ),
         const SizedBox(
           height: 8,
         ),
         PriceCard(
           price: blocRead.carDetailsData.carWeaklyPrice,
-          period: "weekSmall".getLocale(),
+          period: "weekSmall".getLocale(context: context),
         ),
         const SizedBox(
           height: 8,
         ),
         PriceCard(
           price: blocRead.carDetailsData.carMothlyPrice,
-          period: "monthSmall".getLocale(),
+          period: "monthSmall".getLocale(context: context),
         ),
       ],
     );

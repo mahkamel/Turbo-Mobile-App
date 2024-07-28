@@ -70,7 +70,7 @@ class CarsByBrandsList extends StatelessWidget {
                                         0.4,
                                   ),
                                   Text(
-                                    "noCarsBasedOnBrand".getLocale(),
+                                    "noCarsBasedOnBrand".getLocale(context: context),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],

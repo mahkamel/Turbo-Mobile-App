@@ -15,8 +15,8 @@ class LoginPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     var blocRead = context.read<LoginCubit>();
     return AuthTextFieldWithHeader(
-      header: "password".getLocale(),
-      hintText: "enterPassword".getLocale(),
+      header: "password".getLocale(context: context),
+      hintText: "enterPassword".getLocale(context: context),
       isPassword: true,
       isWithValidation: true,
       textInputType: TextInputType.text,

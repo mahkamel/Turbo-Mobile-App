@@ -72,7 +72,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "carInfo".getLocale(),
+                                              "carInfo".getLocale(context: context),
                                               style: AppFonts
                                                   .inter18HeaderBlack700
                                                   .copyWith(
@@ -83,7 +83,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               height: 12,
                                             ),
                                             CarInfoItem(
-                                              title: "model".getLocale(),
+                                              title: "model".getLocale(context: context),
                                               info: blocRead
                                                   .carDetailsData.carModel,
                                               iconPath:
@@ -94,7 +94,7 @@ class CardDetailsScreen extends StatelessWidget {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 4.0),
                                               child: CarInfoItem(
-                                                title: "year".getLocale(),
+                                                title: "year".getLocale(context: context),
                                                 info: blocRead
                                                     .carDetailsData.carYear,
                                                 iconPath:
@@ -105,7 +105,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               padding: const EdgeInsets.only(
                                                   bottom: 4.0),
                                               child: CarInfoItem(
-                                                title: "engine".getLocale(),
+                                                title: "engine".getLocale(context: context),
                                                 info: blocRead
                                                     .carDetailsData.carEngine,
                                                 iconPath:
@@ -113,7 +113,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             CarInfoItem(
-                                              title: "seats".getLocale(),
+                                              title: "seats".getLocale(context: context),
                                               info: blocRead
                                                   .carDetailsData.carPassengerNo
                                                   .toString(),
@@ -127,7 +127,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                               child: CarInfoItem(
                                                 title:
-                                                    "${"limitedKm".getLocale()} (Daily)",
+                                                    "${"limitedKm".getLocale(context: context)} (Daily)",
                                                 info:
                                                     "${blocRead.carDetailsData.carLimitedKiloMeters}"
                                                         .toString(),
@@ -136,7 +136,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             Text(
-                                              "prices".getLocale(),
+                                              "prices".getLocale(context: context),
                                               style: AppFonts
                                                   .inter18HeaderBlack700
                                                   .copyWith(
@@ -215,7 +215,7 @@ class CardDetailsScreen extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              "loginRequiredTitle".getLocale(),
+                                              "loginRequiredTitle".getLocale(context: context),
                                               style: AppFonts
                                                   .inter18HeaderBlack700,
                                             ),
@@ -226,7 +226,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                               child: Text(
                                                 "loginRequiredContent"
-                                                    .getLocale(),
+                                                    .getLocale(context: context),
                                                 style: AppFonts.inter14Grey400,
                                                 textAlign: TextAlign.center,
                                               ),
@@ -310,7 +310,7 @@ class CardDetailsScreen extends StatelessWidget {
                                       );
                                 }
                               },
-                              text: "bookNow".getLocale(),
+                              text: "bookNow".getLocale(context: context),
                             ),
                           );
                         }

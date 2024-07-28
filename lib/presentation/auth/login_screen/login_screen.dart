@@ -39,7 +39,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             children: [
               DefaultHeader(
-                header: "login".getLocale(),
+                header: "login".getLocale(context: context),
                 textAlignment: AlignmentDirectional.center,
               ),
               const SizedBox(
@@ -96,7 +96,7 @@ class LoginScreen extends StatelessWidget {
                     function: () {
                       blocRead.onLoginButtonClicked();
                     },
-                    text: "login".getLocale(),
+                    text: "login".getLocale(context: context),
                     marginTop: 24,
                     marginLeft: 20,
                     marginRight: 20,
@@ -105,8 +105,8 @@ class LoginScreen extends StatelessWidget {
                 },
               ),
               AuthRichText(
-                text: "dontHaveAccount".getLocale(),
-                buttonText: "signUp".getLocale(),
+                text: "dontHaveAccount".getLocale(context: context),
+                buttonText: "signUp".getLocale(context: context),
                 onTap: () {
                   if (requestedCarId != null) {
                     Navigator.of(context).pushReplacementNamed(

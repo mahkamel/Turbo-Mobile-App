@@ -80,7 +80,7 @@ class FirstSelectLangScreen extends StatelessWidget {
                     ),
                   );
                 },
-                text: "done".getLocale(),
+                text: "done".getLocale(context: context),
               ),
             ],
           ),

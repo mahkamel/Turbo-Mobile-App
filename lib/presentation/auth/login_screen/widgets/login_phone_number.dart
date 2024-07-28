@@ -29,7 +29,7 @@ class LoginPhoneNumber extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "phoneNumber".getLocale(),
+            "phoneNumber".getLocale(context: context),
             style: AppFonts.inter16Black500,
           ),
           SizedBox(
@@ -55,7 +55,7 @@ class LoginPhoneNumber extends StatelessWidget {
                   horizontal: 12,
                 ),
                 labelStyle: AppFonts.inter12Black400,
-                hintText: "enterUrPhoneNumber".getLocale(),
+                hintText: "enterUrPhoneNumber".getLocale(context: context),
                 hintStyle: AppFonts.inter12Black400,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(7),

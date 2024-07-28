@@ -45,7 +45,7 @@ class SignupStepper extends StatelessWidget {
                   ),
                 ),
                 customTitle: Text(
-                  'yourInfo'.getLocale(),
+                  'yourInfo'.getLocale(context: context),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -58,7 +58,7 @@ class SignupStepper extends StatelessWidget {
                   ),
                 ),
                 customTitle:  Text(
-                  'completeBooking'.getLocale(),
+                  'completeBooking'.getLocale(context: context),
                   textAlign: TextAlign.center,
                 ),
               ),

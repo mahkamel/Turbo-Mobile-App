@@ -310,7 +310,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  "${allRequests[index].requestPrice} ${"SAR".getLocale()}",
+                                                  "${allRequests[index].requestPrice} ${"SAR".getLocale(context: context)}",
                                                   style: AppFonts
                                                       .inter16Black500
                                                       .copyWith(
