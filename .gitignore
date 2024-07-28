@@ -30,6 +30,9 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+/*.env
+*.env
+.env
 
 # Symbolication related
 app.*.symbols
@@ -42,7 +45,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-*.env
 /pubspec.lock
 /devtools_options.yaml
 /ios/Podfile.lock
