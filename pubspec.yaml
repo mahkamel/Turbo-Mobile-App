@@ -2,7 +2,7 @@ name: turbo
 description: "Turbo Mobile App."
 publish_to: 'none'
 
-version: 1.0.3
+version: 1.0.3+1
 
 environment:
   sdk: '>=3.4.1 <4.0.0'
