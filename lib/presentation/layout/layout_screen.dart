@@ -90,7 +90,7 @@ class LayoutScreen extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
-                  label: 'home'.getLocale(),
+                  label: 'home'.getLocale(context: context),
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -104,7 +104,7 @@ class LayoutScreen extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
-                  label: 'search'.getLocale(),
+                  label: 'search'.getLocale(context: context),
                 ),
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -132,7 +132,7 @@ class LayoutScreen extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
-                  label: 'profile'.getLocale(),
+                  label: 'profile'.getLocale(context: context),
                 ),
               ],
             ),

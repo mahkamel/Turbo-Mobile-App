@@ -43,18 +43,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final List<OnboardingData> onboardingData = [
       OnboardingData(
-        Loc.welcomeTo.getLocale(),
-        Loc.welcomeToSubText.getLocale(),
+        Loc.welcomeTo.getLocale(context: context),
+        Loc.welcomeToSubText.getLocale(context: context),
         'assets/images/onboarding-1.png',
       ),
       OnboardingData(
-        Loc.easyBooking.getLocale(),
-        Loc.easyBookingSubText.getLocale(),
+        Loc.easyBooking.getLocale(context: context),
+        Loc.easyBookingSubText.getLocale(context: context),
         'assets/images/onboarding-2.png',
       ),
       OnboardingData(
-        Loc.enjoyTheRide.getLocale(),
-        Loc.enjoyTheRideSubText.getLocale(),
+        Loc.enjoyTheRide.getLocale(context: context),
+        Loc.enjoyTheRideSubText.getLocale(context: context),
         'assets/images/onboarding-3.png',
       ),
     ];
@@ -127,7 +127,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onPressed: _next,
                   child: Text(
                     _currentIndex == 2
-                        ? "getStarted".getLocale()
+                        ? "getStarted".getLocale(context: context)
                         : Loc.continueButton,
                     style: AppFonts.inter18SubTextGrey400.copyWith(
                         fontWeight: FontWeight.w500,

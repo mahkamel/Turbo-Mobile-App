@@ -14,17 +14,16 @@ extension StringExtension on String {
     return replaceAll(RegExp(r'\s+'), '');
   }
 
-  String getLocale({BuildContext? context}) {
-    if(navigatorKey.currentContext != null) {
-      return AppLocalizations.of(context ?? navigatorKey.currentContext!)?.translate(this) ?? this;
-    }else{
-      return "";
-    }
+  String getLocale({required BuildContext context}) {
+    return AppLocalizations.of(context)?.translate(this) ?? this;
   }
 }
 
 extension Navigation on BuildContext {
-  Future<dynamic> pushNamed(String routeName, {Object? arguments,}) {
+  Future<dynamic> pushNamed(
+    String routeName, {
+    Object? arguments,
+  }) {
     return Navigator.of(this).pushNamed(routeName, arguments: arguments);
   }
 
@@ -33,8 +32,11 @@ extension Navigation on BuildContext {
         .pushReplacementNamed(routeName, arguments: arguments);
   }
 
-  Future<dynamic> pushNamedAndRemoveUntil(String routeName,
-      {Object? arguments, required RoutePredicate predicate,}) {
+  Future<dynamic> pushNamedAndRemoveUntil(
+    String routeName, {
+    Object? arguments,
+    required RoutePredicate predicate,
+  }) {
     return Navigator.of(this)
         .pushNamedAndRemoveUntil(routeName, predicate, arguments: arguments);
   }

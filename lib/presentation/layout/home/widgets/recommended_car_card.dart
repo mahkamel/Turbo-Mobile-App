@@ -89,13 +89,13 @@ class RecommendedCarCard extends StatelessWidget {
                 ),
                 Text.rich(
                   TextSpan(
-                    text: "${car.carDailyPrice} ${"SAR".getLocale()}",
+                    text: "${car.carDailyPrice} ${"SAR".getLocale(context: context)}",
                     style: AppFonts.inter16Black500.copyWith(
                         color: AppColors.primaryRed,
                         fontWeight: FontWeight.w600),
                     children: [
                       TextSpan(
-                        text: "/${"daySmall".getLocale()}",
+                        text: "/${"daySmall".getLocale(context: context)}",
                         style: AppFonts.inter14Black400
                             .copyWith(color: AppColors.grey400, fontSize: 16),
                       ),

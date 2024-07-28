@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
             start: 16,
           ),
           child: Text(
-            "brands".getLocale(),
+            "brands".getLocale(context: context),
             style: AppFonts.inter18HeaderBlack700,
           ),
         ),
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             start: 16,
           ),
           child: Text(
-            "recommendedCars".getLocale(),
+            "recommendedCars".getLocale(context: context),
             style: AppFonts.inter18HeaderBlack700,
           ),
         ),

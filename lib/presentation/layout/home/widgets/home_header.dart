@@ -63,7 +63,7 @@ class HomeHeader extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "yourLocation".getLocale(),
+                          "yourLocation".getLocale(context: context),
                           style: AppFonts.inter12Grey400,
                         ),
                         const SizedBox(

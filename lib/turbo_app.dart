@@ -58,6 +58,11 @@ class MyApp extends StatelessWidget {
             if (state.locale.languageCode.contains("ar")) {
               AppLocalizationsSetup.isLoadAr = true;
             }
+            Locale appLocale = const Locale('en', 'US');
+            if (state is SelectedLocalization) {
+              appLocale = state.locale;
+            }
+
             return MaterialApp(
               navigatorKey: navigatorKey,
               title: 'Turbo',
@@ -66,7 +71,7 @@ class MyApp extends StatelessWidget {
                   AppLocalizationsSetup.localizationsDelegates,
               localeResolutionCallback:
                   AppLocalizationsSetup.localeResolutionCallback,
-              locale: context.watch<LocalizationCubit>().state.locale,
+              locale: appLocale,
               theme: ThemeData(
                 fontFamily: "Inter",
                 scaffoldBackgroundColor: AppColors.white,
@@ -84,7 +89,7 @@ class MyApp extends StatelessWidget {
                       ? true
                       : false,
               initialRoute:
-                  isFirstTime ? Routes.onBoardingScreen : Routes.layoutScreen,
+                  isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
               onGenerateRoute: appRouter.generateRoute,
             );
           },

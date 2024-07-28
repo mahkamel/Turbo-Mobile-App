@@ -61,7 +61,7 @@ class SignupScreen extends StatelessWidget {
                 DefaultHeader(
                   header: UserTokenService.currentUserToken.isNotEmpty
                       ? "Confirm Booking"
-                      : "signUp".getLocale(),
+                      : "signUp".getLocale(context: context),
                   textAlignment: AlignmentDirectional.topCenter,
                   onBackPressed: () {
                     if (UserTokenService.currentUserToken.isEmpty) {
