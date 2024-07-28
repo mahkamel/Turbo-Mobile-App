@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/models/get_cars_by_brands.dart';

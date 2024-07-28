@@ -369,7 +369,7 @@ class SignupCubit extends Cubit<SignupState> {
       }
       calculatedPrice = durationInDays * pricePerDay;
       debugPrint(
-          "caaaaa ${calculatedPrice} -- ${durationInDays} -- ${pricePerDay}");
+          "caaaaa $calculatedPrice -- $durationInDays -- $pricePerDay");
     }
 
     if (isWithPrivateDriver) {
