@@ -12,3 +12,9 @@ export 'core/helpers/constants.dart';
 export 'core/services/networking/dio_helper.dart';
 export 'core/services/notifications_service.dart';
 export 'firebase_options.dart';
+export 'dart:io';
+export 'bloc_observe.dart';
+export 'core/routing/app_router.dart';
+export 'core/services/local/cache_helper.dart';
+export 'flavors.dart';
+

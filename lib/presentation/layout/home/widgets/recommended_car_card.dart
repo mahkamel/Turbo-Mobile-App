@@ -123,8 +123,8 @@ class RecommendedCarCard extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: CachedNetworkImage(
-              imageUrl: getCompleteFileUrl(
+            child: Image.network(
+               getCompleteFileUrl(
                 car.brand.brandPath,
               ),
               fit: BoxFit.contain,

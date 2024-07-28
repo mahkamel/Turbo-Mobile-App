@@ -1,11 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
 
-
-import 'bloc_observe.dart';
-import 'core/routing/app_router.dart';
-import 'core/services/local/cache_helper.dart';
-import 'flavors.dart';
 import 'main_paths.dart';
 
 @pragma('vm:entry-point')
@@ -15,10 +9,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await notificationServices.onInit();
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await configureApp(Flavor.DEV);
+  print("**** current flavor ${F.appFlavor} *****");
+  await configureApp(F.appFlavor?? Flavor.dev);
   await DioHelper.init(FlavorConfig.instance.baseUrl);
   await setupGetIt();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

@@ -201,7 +201,6 @@ class AuthRepository {
   }
 
   Future<Either<String, bool>> disableNotificationToken(String token) async {
-    print("customer tokenne ${customer.token}");
     try {
       final response = await _authServices.disableNotificationsToken(
         customerToken: customer.token,

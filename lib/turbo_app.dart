@@ -13,6 +13,7 @@ import 'core/routing/routes.dart';
 import 'core/services/networking/repositories/auth_repository.dart';
 import 'core/services/networking/repositories/car_repository.dart';
 import 'core/theming/colors.dart';
+import 'flavors.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -78,9 +79,12 @@ class MyApp extends StatelessWidget {
                 ),
                 useMaterial3: true,
               ),
-              debugShowCheckedModeBanner: false,
+              debugShowCheckedModeBanner:
+                  F.appFlavor != null && F.appFlavor == Flavor.dev
+                      ? true
+                      : false,
               initialRoute:
-                  isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
+                  isFirstTime ? Routes.onBoardingScreen : Routes.layoutScreen,
               onGenerateRoute: appRouter.generateRoute,
             );
           },

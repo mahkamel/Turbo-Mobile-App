@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '675552575914',
     projectId: 'turbo-app-53a6a',
     authDomain: 'turbo-app-53a6a.firebaseapp.com',
+    databaseURL: 'https://turbo-app-53a6a-default-rtdb.firebaseio.com',
     storageBucket: 'turbo-app-53a6a.appspot.com',
     measurementId: 'G-RB941ZM42G',
   );
@@ -61,6 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:675552575914:android:b103dbad13c0d6c97e2bd3',
     messagingSenderId: '675552575914',
     projectId: 'turbo-app-53a6a',
+    databaseURL: 'https://turbo-app-53a6a-default-rtdb.firebaseio.com',
     storageBucket: 'turbo-app-53a6a.appspot.com',
   );
 
@@ -69,7 +71,9 @@ class DefaultFirebaseOptions {
     appId: '1:675552575914:ios:792b150e013737097e2bd3',
     messagingSenderId: '675552575914',
     projectId: 'turbo-app-53a6a',
+    databaseURL: 'https://turbo-app-53a6a-default-rtdb.firebaseio.com',
     storageBucket: 'turbo-app-53a6a.appspot.com',
     iosBundleId: 'com.turbo.turbo',
   );
+
 }

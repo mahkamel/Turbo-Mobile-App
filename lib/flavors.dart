@@ -1,7 +1,15 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'main_paths.dart';
 
-import 'core/helpers/constants.dart';
-import 'core/helpers/functions.dart';
+enum Flavor {
+  dev,
+  prod,
+  qa,
+}
+
+class F {
+  static Flavor? appFlavor;
+
+}
 
 class FlavorConfig {
   final String name;
@@ -26,29 +34,28 @@ class FlavorConfig {
   }
 }
 
-enum Flavor { DEV, QA, PROD }
 
 Future<void> configureApp(Flavor flavor) async {
   await dotenv.load(fileName: ".env");
   switch (flavor) {
-    case Flavor.DEV:
+    case Flavor.dev:
       FlavorConfig(
         name: "Development",
         baseUrl: getValueFromEnv(AppConstants.devBaseUrl),
         filesBaseUrl: getValueFromEnv(AppConstants.filesBaseUrlDev),
       );
       break;
-    case Flavor.QA:
+    case Flavor.qa:
       FlavorConfig(
         name: "QA",
         baseUrl: getValueFromEnv(AppConstants.qaBasUrl),
         filesBaseUrl: getValueFromEnv(AppConstants.filesBaseUrlQA),
       );
       break;
-    case Flavor.PROD:
+    case Flavor.prod:
       FlavorConfig(
         name: "Production",
-        baseUrl: getValueFromEnv(AppConstants.devBaseUrl),
+        baseUrl: getValueFromEnv(AppConstants.prodBasUrl),
         filesBaseUrl: getValueFromEnv(AppConstants.filesBaseUrlProd),
       );
       break;

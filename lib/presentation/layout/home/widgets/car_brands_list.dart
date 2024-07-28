@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
@@ -161,10 +160,10 @@ class BrandLogoCircle extends StatelessWidget {
         ),
       ),
       child: Center(
-        child: CachedNetworkImage(
-          imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
+        child: Image.network(
+          "${FlavorConfig.instance.filesBaseUrl}$logoPath",
           fit: BoxFit.contain,
-          placeholder: (context, url) => const SizedBox(),
+          // placeholder: (context, url) => const SizedBox(),
         ),
       ),
     );

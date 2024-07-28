@@ -86,7 +86,6 @@ class SearchCubit extends Cubit<SearchState> {
       if(_carRepository.carCategories.isEmpty) {
         await _carRepository.getAllCategories();
       }
-      print("caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ${_carRepository.carCategories}");
       emit(const SearchState.getCarsCategoriesSuccess());
     } catch (e) { 
       emit(SearchState.getCarsCategoriesError(e.toString()));
@@ -94,7 +93,6 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   void getCarsTypes() async {
-    print("Here3");
     emit(const SearchState.getCarsTypesLoading());
     try {
       if (_carRepository.carTypes.isEmpty) {

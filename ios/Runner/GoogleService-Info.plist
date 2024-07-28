@@ -26,5 +26,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:675552575914:ios:792b150e013737097e2bd3</string>
+	<key>DATABASE_URL</key>
+	<string>https://turbo-app-53a6a-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

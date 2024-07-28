@@ -76,7 +76,6 @@ class EditRequest extends StatelessWidget {
               color: AppColors.divider,
               thickness: 2,
             ),
-
             WidgetWithHeader(
               padding: EdgeInsetsDirectional.zero,
               header: "Files",
@@ -447,7 +446,6 @@ class EditedPrice extends StatelessWidget {
                   ),
                 ],
               ),
-
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Row(
@@ -577,33 +575,36 @@ class EditPrivateDriver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var blocRead = context.read<OrderCubit>();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: Row(
-        children: [
-          Text(
-            "Private Driver?",
-            style: AppFonts.inter16Black500.copyWith(
-                color: AppColors.primaryRed
+    return AppConstants.driverFees == -1 || AppConstants.driverFees == 0
+        ? const SizedBox(
+            height: 16,
+          )
+        : Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Row(
+              children: [
+                Text(
+                  "Private Driver?",
+                  style: AppFonts.inter16Black500
+                      .copyWith(color: AppColors.primaryRed),
+                ),
+                const Spacer(),
+                BlocBuilder<OrderCubit, OrderState>(
+                  buildWhen: (previous, current) =>
+                      current is ChangeIsWithPrivateEditValueState,
+                  builder: (context, state) {
+                    return Switch.adaptive(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      value: context.watch<OrderCubit>().isWithPrivateDriver,
+                      onChanged: (value) {
+                        blocRead.changeIsWithPrivateDriverValue(value);
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
-          ),
-          const Spacer(),
-          BlocBuilder<OrderCubit, OrderState>(
-            buildWhen: (previous, current) =>
-                current is ChangeIsWithPrivateEditValueState,
-            builder: (context, state) {
-              return Switch.adaptive(
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: context.watch<OrderCubit>().isWithPrivateDriver,
-                onChanged: (value) {
-                  blocRead.changeIsWithPrivateDriverValue(value);
-                },
-              );
-            },
-          ),
-        ],
-      ),
-    );
+          );
   }
 }
 

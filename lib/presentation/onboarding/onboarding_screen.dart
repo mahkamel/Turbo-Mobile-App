@@ -126,7 +126,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   onPressed: _next,
                   child: Text(
-                    _currentIndex == 2 ? Loc.getStarted : Loc.continueButton,
+                    _currentIndex == 2
+                        ? "getStarted".getLocale()
+                        : Loc.continueButton,
                     style: AppFonts.inter18SubTextGrey400.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,

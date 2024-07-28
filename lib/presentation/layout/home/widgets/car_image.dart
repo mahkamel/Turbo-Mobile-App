@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:turbo/flavors.dart';
 
@@ -13,6 +12,7 @@ class CarImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("url: ${"${FlavorConfig.instance.filesBaseUrl}$carImgPath"}");
     return Container(
       width: double.infinity,
       height: 124,
@@ -21,19 +21,25 @@ class CarImage extends StatelessWidget {
         color: AppColors.black800,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: CachedNetworkImage(
-        imageUrl: "${FlavorConfig.instance.filesBaseUrl}$carImgPath",
+      child: Image.network(
+        "${FlavorConfig.instance.filesBaseUrl}$carImgPath",
         fit: BoxFit.cover,
-        placeholder: (context, url) => const SizedBox(
-          height: 40,
-          width: 40,
-          child: Center(
-            child: CircularProgressIndicator(
-              color: AppColors.white,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+
+          return const SizedBox(
+            height: 40,
+            width: 40,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: AppColors.white,
+              ),
             ),
-          ),
-        ),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
+          );
+        },
+        errorBuilder: (context, url, error) => const Icon(Icons.error),
       ),
     );
   }
