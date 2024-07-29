@@ -75,6 +75,9 @@ android {
         qa {
             dimension "default"
             resValue "string", "app_name", "Turbo QA"
+            applicationIdSuffix ".qa"
+            versionNameSuffix ".qa"
+
         }
         prod {
             dimension "default"

@@ -43,6 +43,25 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675552575914:android:9638a72d24c52af27e2bd3",
+        "android_client_info": {
+          "package_name": "com.turbo.turbo.qa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3uiFGJf-oWzqmp2xhU12rLWMl3LD-nEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"
