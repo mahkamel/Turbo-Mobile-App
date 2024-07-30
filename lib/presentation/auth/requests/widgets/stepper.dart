@@ -54,6 +54,19 @@ class SignupStepper extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                   child: Opacity(
                     opacity: blocWatch.currentStep == 1 ? 1 : 0.3,
+                    child: const Icon(Icons.info_outline_rounded),
+                  ),
+                ),
+                customTitle: Text(
+                  'mobileVerification'.getLocale(context: context),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              EasyStep(
+                customStep: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Opacity(
+                    opacity: blocWatch.currentStep == 2 ? 1 : 0.3,
                     child: const Icon(Icons.document_scanner_rounded),
                   ),
                 ),

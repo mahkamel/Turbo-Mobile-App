@@ -14,7 +14,8 @@ import 'package:turbo/presentation/onboarding/init_select_lang_screen.dart';
 import '../../blocs/layout/layout_cubit.dart';
 import '../../blocs/orders/order_cubit.dart';
 import '../../presentation/auth/requests/payment/payment_screen.dart';
-import '../../presentation/auth/requests/signup_screen.dart';
+import '../../presentation/auth/sign-up/components/signup-otp-screen.dart';
+import '../../presentation/auth/sign-up/signup_screen.dart';
 import '../../presentation/layout/layout_screen.dart';
 import '../../presentation/layout/orders/request_status/request_status_screen.dart';
 import '../../presentation/onboarding/onboarding_screen.dart';
@@ -45,6 +46,11 @@ class AppRouter {
             create: (context) => getIt<SignupCubit>(),
             child: const SignupScreen(),
           ),
+    Routes.signupOTPScreen: (context, arguments) =>
+    BlocProvider<SignupCubit>.value(
+      value: arguments as SignupCubit,
+      child: const SignupOtpScreen(),
+    ),
     Routes.layoutScreen: (context, _) => BlocProvider<LayoutCubit>(
           create: (context) => getIt<LayoutCubit>(),
           child: const LayoutScreen(),
