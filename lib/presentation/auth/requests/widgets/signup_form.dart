@@ -132,7 +132,9 @@ class SignupSubmitButton extends StatelessWidget {
                 clientTypeKey.currentState!.closeBottomSheet();
               }
             }
-            blocRead.submitCustomerInfo();
+            // blocRead.submitCustomerInfo();
+            blocRead.changeStepIndicator(1);
+
           },
         );
       },

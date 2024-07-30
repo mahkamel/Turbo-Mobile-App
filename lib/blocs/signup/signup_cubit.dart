@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -16,6 +17,7 @@ import '../../core/helpers/functions.dart';
 import '../../core/routing/screens_arguments.dart';
 import '../../core/services/local/storage_service.dart';
 import '../../core/services/local/token_service.dart';
+import '../../main_paths.dart';
 import '../../models/attachment.dart';
 
 part 'signup_state.dart';
@@ -44,6 +46,7 @@ class SignupCubit extends Cubit<SignupState> {
   double dailyPrice = 0;
   double weeklyPrice = 0;
   double monthlyPrice = 0;
+  bool isPhoneVerified = false;
 
   List<File>? nationalIdFile = [];
   List<File>? passportFiles = [];
@@ -55,6 +58,8 @@ class SignupCubit extends Cubit<SignupState> {
   Attachment? passportAttachments;
   String passportOldPaths = "";
   int passportInitStatus = 0;
+  String otpVerificationId = '';
+
 
   TextEditingController customerNameController = TextEditingController();
   TextFieldValidation customerNameValidation = TextFieldValidation.normal;
@@ -83,9 +88,30 @@ class SignupCubit extends Cubit<SignupState> {
   DateTime? deliveryDate;
 
   String requestedCarId = "";
+  Timer? otpTimer;
+  int secondsRemaining = 120;
+  String currentPhoneNumber = '';
 
   TextEditingController locationController = TextEditingController();
   TextFieldValidation locationValidation = TextFieldValidation.normal;
+
+  List<TextEditingController> codeControllers = [
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+  ];
+
+    List<FocusNode> codeFocusNode = [
+      FocusNode(),
+      FocusNode(),
+      FocusNode(),
+      FocusNode(),
+      FocusNode(),
+      FocusNode(),
+    ];
 
   void onInit(SignupScreenArguments arguments) {
     requestedCarId = arguments.carId;
@@ -94,7 +120,7 @@ class SignupCubit extends Cubit<SignupState> {
     monthlyPrice = arguments.monthlyPrice.toDouble();
     citySelectedIndex = authRepository.selectedCityIndex;
     if (UserTokenService.currentUserToken.isNotEmpty) {
-      currentStep = 1;
+      currentStep = 2;
       nationalIdAttachments = findAttachmentFile(
         type: "nationalId",
         attachments: authRepository.customer.attachments,
@@ -108,6 +134,114 @@ class SignupCubit extends Cubit<SignupState> {
       passportOldPaths = passportAttachments?.filePath ?? "";
       passportInitStatus = passportAttachments?.fileStatus ?? -1;
     }
+  }
+
+  bool _areAllControllersFilled(List<TextEditingController> controllers) {
+    for (var controller in controllers) {
+      if (controller.text.isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<void> sendOTP({
+    bool isFromStepOne = false,
+  }) async {
+    emit(const SignupState.sendOTPLoading());
+    await authRepository.sendOTP(phoneNumber).then((value) {
+      value.fold((errMsg) {
+        otpVerificationId = '';
+        emit(
+          SignupState.otpSentFailed(
+            errMsg: errMsg,
+          ),
+        );
+      }, (value) {
+        otpVerificationId = value;
+        emit(
+          SignupState.otpSentSuccessfully(
+            phoneNumber: phoneNumber,
+            verificationID: otpVerificationId,
+            isFromStepOne: isFromStepOne,
+          ),
+        );
+        startTimer();
+      });
+    }).catchError((err) {
+      otpVerificationId = '';
+      emit(
+        SignupState.otpSentFailed(
+          errMsg: err.toString(),
+        ),
+      );
+    });
+  }
+
+  void startTimer({int? optionalSecondsRemaining}) {
+    if (secondsRemaining != 120) {
+      if (otpTimer != null) {
+        otpTimer!.cancel();
+      }
+    }
+    secondsRemaining = optionalSecondsRemaining ?? 120;
+    currentPhoneNumber = phoneNumber;
+    otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      secondsRemaining--;
+      final minutes = secondsRemaining ~/ 60;
+      final seconds = secondsRemaining % 60;
+      final formattedTime = '$minutes:${seconds.toString().padLeft(2, '0')}';
+      emit(
+        SignupState.timerState(
+          remainingTime: formattedTime,
+          phoneNumber: phoneNumber,
+        ),
+      );
+      if (secondsRemaining <= 0) {
+        emit(SignupState.timerFinishedState(
+          phoneNumber: phoneNumber,
+        ));
+        if (otpTimer != null) {
+          otpTimer!.cancel();
+        }
+      }
+    });
+  }
+
+  void checkOTP() {
+    if (_areAllControllersFilled(codeControllers)) {
+      verifyOTP();
+    }
+  }
+
+   Future<void> verifyOTP() async {
+    emit(const SignupState.verifyOTPLoading());
+    String smsCode = codeControllers[0].text +
+        codeControllers[1].text +
+        codeControllers[2].text +
+        codeControllers[3].text +
+        codeControllers[4].text +
+        codeControllers[5].text;
+    await authRepository
+        .verifyOTP(
+      otpVerificationId: otpVerificationId,
+      smsCode: smsCode,
+    )
+        .then((_) {
+      isPhoneVerified = true;
+      emit(
+        SignupState.otpVerifySuccess(
+          smsCode: smsCode,
+          verificationID: otpVerificationId,
+        ),
+      );
+    }).catchError((err) {
+      emit(
+        SignupState.otpVerifyFailed(
+          errMsg: err.toString(),
+        ),
+      );
+    });
   }
 
   void changeNationalIdState(int status) {

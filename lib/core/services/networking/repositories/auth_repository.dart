@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/local/cache_helper.dart';
@@ -18,6 +20,7 @@ class AuthRepository {
   int selectedBranchIndex = 0;
   String selectedBranchId = "";
   String selectedCityId = "";
+  FirebaseAuth auth = FirebaseAuth.instance;
   AuthRepository(
     this._authServices,
   );
@@ -223,4 +226,62 @@ class AuthRepository {
     StorageService.deleteAllData();
     await disableNotificationToken(AppConstants.fcmToken);
   }
+
+  Future<Either<String, String>> sendOTP(String phoneNumber) async {
+    bool isErrorHappened = false;
+    String errMsg = '';
+    String otpVerificationId = '';
+    Completer<String> verificationIdCompleter = Completer<String>();
+    Completer<String> errorCompleter = Completer<String>();
+    try {
+      await auth.verifyPhoneNumber(
+        phoneNumber: '+2$phoneNumber',
+        timeout: const Duration(seconds: 10),
+        verificationCompleted: (PhoneAuthCredential credential) async {},
+        verificationFailed: (FirebaseAuthException e) {
+          isErrorHappened = true;
+          errMsg = e.message.toString();
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          verificationIdCompleter.complete(verificationId);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+      if (!isErrorHappened) {
+        otpVerificationId = await verificationIdCompleter.future;
+        return Right(otpVerificationId);
+      } else {
+        errMsg = await errorCompleter.future;
+        return Left(errMsg);
+      }
+    } on FirebaseAuthException catch (e) {
+      throw e.message.toString();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> verifyOTP({
+    required String smsCode,
+    required String otpVerificationId,
+  }) async {
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: otpVerificationId,
+      smsCode: smsCode,
+    );
+    try {
+      await auth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      if (auth.currentUser != null) {
+        auth.currentUser!.delete();
+      }
+      throw e.message.toString();
+    } catch (e) {
+      if (auth.currentUser != null) {
+        auth.currentUser!.delete();
+      }
+      throw e.toString();
+    }
+  }
+
 }

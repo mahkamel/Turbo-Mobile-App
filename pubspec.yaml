@@ -65,6 +65,7 @@ dependencies:
   flutter_multi_slider: ^2.0.1
 
   card_swiper: 3.0.1
+  firebase_auth: ^5.1.2
 
 dev_dependencies:
   flutter_test:

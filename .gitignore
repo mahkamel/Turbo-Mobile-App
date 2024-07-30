@@ -49,3 +49,4 @@ app.*.map.json
 /devtools_options.yaml
 /ios/Podfile.lock
 *.freezed.dart
+.vscode

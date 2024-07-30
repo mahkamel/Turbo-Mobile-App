@@ -7,6 +7,7 @@ import 'package:turbo/core/services/local/token_service.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_confirm_booking.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_form.dart';
 import 'package:turbo/presentation/auth/requests/widgets/stepper.dart';
+import 'package:turbo/presentation/auth/sign-up/components/signup-otp-screen.dart';
 
 import '../../../core/helpers/constants.dart';
 import '../../../core/helpers/dropdown_keys.dart';
@@ -60,8 +61,8 @@ class SignupScreen extends StatelessWidget {
               children: [
                 DefaultHeader(
                   header: UserTokenService.currentUserToken.isNotEmpty
-                      ? "Confirm Booking"
-                      : "signUp".getLocale(context: context),
+                      ? blocWatch.currentStep == 2 ? "Confirm Booking" : "mobileVerification".getLocale(context: context)
+                      : blocWatch.currentStep == 0 ? "signUp".getLocale(context: context): "mobileVerification".getLocale(context: context),
                   textAlignment: AlignmentDirectional.topCenter,
                   onBackPressed: () {
                     if (UserTokenService.currentUserToken.isEmpty) {
@@ -94,6 +95,18 @@ class SignupScreen extends StatelessWidget {
                         blocWatch.currentStep == 1) &&
                     (((UserTokenService.currentUserToken.isEmpty &&
                             blocWatch.currentStep == 1)) ||
+                        UserTokenService.currentUserToken.isNotEmpty))
+                  const Expanded(
+                    child: Column(
+                      children: [
+                        SignupOtpScreen(),
+                      ],
+                    ),
+                  ),
+                if ((blocWatch.requestedCarId.isNotEmpty &&
+                        blocWatch.currentStep == 2) &&
+                    (((UserTokenService.currentUserToken.isEmpty &&
+                            blocWatch.currentStep == 2)) ||
                         UserTokenService.currentUserToken.isNotEmpty))
                   const Expanded(
                     child: SignupConfirmBooking(),
