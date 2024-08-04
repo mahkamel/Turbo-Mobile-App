@@ -21,6 +21,26 @@ class AuthServices {
     }
   }
 
+  Future<Response> checkUserExistence({
+    required String email,
+    required String phoneNumber,
+  }) async {
+    try {
+      Response response = await DioHelper.postData(
+        endpoint: 'customer/checkCustomerIsExits',
+        body: {
+          "customer": {
+            "customerEmail": email,
+            "customerTelephone": phoneNumber,
+          }
+        },
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
   Future<Response> refreshCustomerData() async {
     try {
       Response response = await DioHelper.getData(

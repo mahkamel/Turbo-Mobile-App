@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
@@ -13,7 +9,6 @@ import 'package:turbo/models/district_model.dart';
 
 import '../../core/helpers/app_regex.dart';
 import '../../core/helpers/enums.dart';
-import '../../core/helpers/functions.dart';
 import '../../core/routing/screens_arguments.dart';
 import '../../core/services/local/storage_service.dart';
 import '../../core/services/local/token_service.dart';
@@ -60,7 +55,6 @@ class SignupCubit extends Cubit<SignupState> {
   int passportInitStatus = 0;
   String otpVerificationId = '';
 
-
   TextEditingController customerNameController = TextEditingController();
   TextFieldValidation customerNameValidation = TextFieldValidation.normal;
 
@@ -88,8 +82,7 @@ class SignupCubit extends Cubit<SignupState> {
   DateTime? deliveryDate;
 
   String requestedCarId = "";
-  Timer? otpTimer;
-  int secondsRemaining = 120;
+
   String currentPhoneNumber = '';
 
   TextEditingController locationController = TextEditingController();
@@ -104,14 +97,14 @@ class SignupCubit extends Cubit<SignupState> {
     TextEditingController(),
   ];
 
-    List<FocusNode> codeFocusNode = [
-      FocusNode(),
-      FocusNode(),
-      FocusNode(),
-      FocusNode(),
-      FocusNode(),
-      FocusNode(),
-    ];
+  List<FocusNode> codeFocusNode = [
+    FocusNode(),
+    FocusNode(),
+    FocusNode(),
+    FocusNode(),
+    FocusNode(),
+    FocusNode(),
+  ];
 
   void onInit(SignupScreenArguments arguments) {
     requestedCarId = arguments.carId;
@@ -134,6 +127,7 @@ class SignupCubit extends Cubit<SignupState> {
       passportOldPaths = passportAttachments?.filePath ?? "";
       passportInitStatus = passportAttachments?.fileStatus ?? -1;
     }
+    clearCodeControllers();
   }
 
   bool _areAllControllersFilled(List<TextEditingController> controllers) {
@@ -145,9 +139,14 @@ class SignupCubit extends Cubit<SignupState> {
     return true;
   }
 
-  Future<void> sendOTP({
-    bool isFromStepOne = false,
-  }) async {
+  void clearCodeControllers() {
+    for (var controller in codeControllers) {
+      controller.clear();
+    }
+  }
+
+  Future<bool> sendOTP() async {
+    bool isOtpSent = false;
     emit(const SignupState.sendOTPLoading());
     await authRepository.sendOTP(phoneNumber).then((value) {
       value.fold((errMsg) {
@@ -159,14 +158,14 @@ class SignupCubit extends Cubit<SignupState> {
         );
       }, (value) {
         otpVerificationId = value;
+        clearCodeControllers();
+        isOtpSent = true;
         emit(
           SignupState.otpSentSuccessfully(
             phoneNumber: phoneNumber,
             verificationID: otpVerificationId,
-            isFromStepOne: isFromStepOne,
           ),
         );
-        startTimer();
       });
     }).catchError((err) {
       otpVerificationId = '';
@@ -176,36 +175,7 @@ class SignupCubit extends Cubit<SignupState> {
         ),
       );
     });
-  }
-
-  void startTimer({int? optionalSecondsRemaining}) {
-    if (secondsRemaining != 120) {
-      if (otpTimer != null) {
-        otpTimer!.cancel();
-      }
-    }
-    secondsRemaining = optionalSecondsRemaining ?? 120;
-    currentPhoneNumber = phoneNumber;
-    otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      secondsRemaining--;
-      final minutes = secondsRemaining ~/ 60;
-      final seconds = secondsRemaining % 60;
-      final formattedTime = '$minutes:${seconds.toString().padLeft(2, '0')}';
-      emit(
-        SignupState.timerState(
-          remainingTime: formattedTime,
-          phoneNumber: phoneNumber,
-        ),
-      );
-      if (secondsRemaining <= 0) {
-        emit(SignupState.timerFinishedState(
-          phoneNumber: phoneNumber,
-        ));
-        if (otpTimer != null) {
-          otpTimer!.cancel();
-        }
-      }
-    });
+    return isOtpSent;
   }
 
   void checkOTP() {
@@ -214,7 +184,7 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
-   Future<void> verifyOTP() async {
+  Future<void> verifyOTP() async {
     emit(const SignupState.verifyOTPLoading());
     String smsCode = codeControllers[0].text +
         codeControllers[1].text +
@@ -227,13 +197,33 @@ class SignupCubit extends Cubit<SignupState> {
       otpVerificationId: otpVerificationId,
       smsCode: smsCode,
     )
-        .then((_) {
+        .then((_) async {
       isPhoneVerified = true;
-      emit(
-        SignupState.otpVerifySuccess(
-          smsCode: smsCode,
-          verificationID: otpVerificationId,
+
+      final res = await authRepository.signupInfoStep(
+        customerName: customerNameController.text,
+        customerEmail: customerEmailController.text,
+        customerAddress: customerAddressController.text,
+        customerTelephone: phoneNumber,
+        customerPassword: passwordController.text,
+        customerCountry: country,
+        customerCountryCode: countryIsoCode,
+        customerType: saCitizenSelectedIndex,
+      );
+      res.fold(
+        (errMsg) => emit(
+          SignupState.otpVerifyFailed(
+            errMsg: errMsg,
+          ),
         ),
+        (_) {
+          emit(
+            SignupState.otpVerifySuccess(
+              smsCode: smsCode,
+              verificationID: otpVerificationId,
+            ),
+          );
+        },
       );
     }).catchError((err) {
       emit(
@@ -419,44 +409,58 @@ class SignupCubit extends Cubit<SignupState> {
     checkAddressValidation();
     checkPasswordValidation();
     checkConfirmPasswordValidation();
-    
-    if(isFieldNotEmpty(customerNameController) &&
-      isFieldNotEmpty(customerEmailController) &&
-      isFieldNotEmpty(customerAddressController) &&
-      isFieldNotEmpty(passwordController) &&
-      isFieldNotEmpty(confirmPasswordController) &&
-      phoneNumber.isNotEmpty
-    ){
-          if (isFieldValid(customerNameValidation) &&
-            isFieldValid(customerEmailValidation) &&
-            isFieldValid(customerAddressValidation) &&
-            isFieldValid(passwordValidation) &&
-            isFieldValid(confirmPasswordValidation) &&
-            phoneValidation == TextFieldValidation.valid) {
-              emit(const SignupState.submitCustomerInfoLoading());
-              await Future.delayed(const Duration(seconds: 1));
-              final res = await authRepository.signupInfoStep(
-                customerName: customerNameController.text,
-                customerEmail: customerEmailController.text,
-                customerAddress: customerAddressController.text,
-                customerTelephone: phoneNumber,
-                customerPassword: passwordController.text,
-                customerCountry: country,
-                customerCountryCode: countryIsoCode,
-                customerType: saCitizenSelectedIndex,
-              );
-              res.fold(
-                (errMsg) => emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg)),
-                (_) {
-                  emit(const SignupState.submitCustomerInfoSuccess());
-                },
-              );
-        }
-    }
-     else {
+
+    if (isFieldNotEmpty(customerNameController) &&
+        isFieldNotEmpty(customerEmailController) &&
+        isFieldNotEmpty(customerAddressController) &&
+        isFieldNotEmpty(passwordController) &&
+        isFieldNotEmpty(confirmPasswordController) &&
+        phoneNumber.isNotEmpty) {
+      if (isFieldValid(customerNameValidation) &&
+          isFieldValid(customerEmailValidation) &&
+          isFieldValid(customerAddressValidation) &&
+          isFieldValid(passwordValidation) &&
+          isFieldValid(confirmPasswordValidation) &&
+          phoneValidation == TextFieldValidation.valid) {
+        emit(const SignupState.submitCustomerInfoLoading());
+        final res = await authRepository.checkUserExistence(
+          email: customerEmailController.text,
+          phoneNumber: phoneNumber,
+        );
+        res.fold(
+          (errMsg) {
+            emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg));
+          },
+          (r) {
+            sendOTP();
+          },
+        );
+      }
+    } else {
       emit(const SignupState.submitCustomerInfoFailed(
           errMsg: "Please complete all required fields"));
     }
+  }
+
+  Future<void> sendCustomerData() async {
+    emit(const SignupState.submitCustomerInfoLoading());
+    await Future.delayed(const Duration(seconds: 1));
+    final res = await authRepository.signupInfoStep(
+      customerName: customerNameController.text,
+      customerEmail: customerEmailController.text,
+      customerAddress: customerAddressController.text,
+      customerTelephone: phoneNumber,
+      customerPassword: passwordController.text,
+      customerCountry: country,
+      customerCountryCode: countryIsoCode,
+      customerType: saCitizenSelectedIndex,
+    );
+    res.fold(
+      (errMsg) => emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg)),
+      (_) {
+        emit(const SignupState.submitCustomerInfoSuccess());
+      },
+    );
   }
 
   void changeSelectedDistrictId(int index) {
@@ -502,8 +506,7 @@ class SignupCubit extends Cubit<SignupState> {
         pricePerDay = monthlyPrice;
       }
       calculatedPrice = durationInDays * pricePerDay;
-      debugPrint(
-          "caaaaa $calculatedPrice -- $durationInDays -- $pricePerDay");
+      debugPrint("caaaaa $calculatedPrice -- $durationInDays -- $pricePerDay");
     }
 
     if (isWithPrivateDriver) {
@@ -669,7 +672,7 @@ bool isFieldValid(
 }
 
 bool isFieldNotEmpty(TextEditingController controller) {
-  if(controller.text.isNotEmpty){
+  if (controller.text.isNotEmpty) {
     return true;
   } else {
     return false;

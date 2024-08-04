@@ -151,11 +151,12 @@ class AuthRepository {
     CacheHelper.setData(key: "SelectedBranchId", value: id);
   }
 
-  Future<Either<String, List<UserNotificationModel>>> setNotificationsSeen() async {
+  Future<Either<String, List<UserNotificationModel>>>
+      setNotificationsSeen() async {
     try {
       final response = await _authServices.setSeenNotifications();
       if (response.statusCode == 200 && response.data['status']) {
-         List<dynamic> data = response.data['data'];
+        List<dynamic> data = response.data['data'];
         final List<UserNotificationModel> notifications =
             data.map((n) => UserNotificationModel.fromJson(n)).toList();
         return Right(notifications);
@@ -174,7 +175,7 @@ class AuthRepository {
     try {
       final response = await _authServices.setReadNotification(notificationId);
       if (response.statusCode == 200 && response.data['status']) {
-         List<dynamic> data = response.data['data'];
+        List<dynamic> data = response.data['data'];
         final List<UserNotificationModel> notifications =
             data.map((n) => UserNotificationModel.fromJson(n)).toList();
         return Right(notifications);
@@ -227,6 +228,31 @@ class AuthRepository {
     await disableNotificationToken(AppConstants.fcmToken);
   }
 
+  Future<Either<String, bool>> checkUserExistence({
+    required String email,
+    required String phoneNumber,
+  }) async {
+    try {
+      final response = await _authServices.checkUserExistence(
+        email: email,
+        phoneNumber: phoneNumber,
+      );
+      if (response.statusCode == 200) {
+        if (response.data['status'] == false) {
+          return const Right(true);
+        } else {
+          return const Left(
+            "User with this information already exists. Please login to access your account.",
+          );
+        }
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
   Future<Either<String, String>> sendOTP(String phoneNumber) async {
     bool isErrorHappened = false;
     String errMsg = '';
@@ -235,7 +261,7 @@ class AuthRepository {
     Completer<String> errorCompleter = Completer<String>();
     try {
       await auth.verifyPhoneNumber(
-        phoneNumber: '+2$phoneNumber',
+        phoneNumber: phoneNumber,
         timeout: const Duration(seconds: 10),
         verificationCompleted: (PhoneAuthCredential credential) async {},
         verificationFailed: (FirebaseAuthException e) {
@@ -283,5 +309,4 @@ class AuthRepository {
       throw e.toString();
     }
   }
-
 }

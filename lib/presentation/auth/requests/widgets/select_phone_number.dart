@@ -101,8 +101,15 @@ class ChoosePhoneNumber extends StatelessWidget {
                   ),
                   autoValidateMode: AutovalidateMode.onUserInteraction,
                   initialValue: PhoneNumber(
-                    dialCode: "+966",
-                    isoCode: "SA",
+                    dialCode: blocRead.dialCode.isNotEmpty
+                        ? blocRead.dialCode
+                        : "+966",
+                    isoCode: blocRead.countryIsoCode.isNotEmpty
+                        ? blocRead.countryIsoCode
+                        : "SA",
+                    phoneNumber: blocRead.phoneNumber.isNotEmpty
+                        ? blocRead.phoneNumber
+                        : null,
                   ),
                 ),
               ),
