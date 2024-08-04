@@ -7,7 +7,6 @@ import 'package:turbo/presentation/auth/requests/widgets/select_phone_number.dar
 
 import '../../../../blocs/signup/signup_cubit.dart';
 import '../../../../core/helpers/enums.dart';
-import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/custom_dropdown.dart';
@@ -94,33 +93,32 @@ class SignupSubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SignupCubit, SignupState>(
       listenWhen: (previous, current) =>
-          current is SubmitCustomerInfoSuccessState ||
+          current is OTPSentSuccessState ||
+          current is OTPSentErrorState ||
           current is SubmitCustomerInfoErrorState,
       listener: (context, state) {
         var blocRead = context.read<SignupCubit>();
 
-        if (state is SubmitCustomerInfoSuccessState) {
-          if (blocRead.requestedCarId.isNotEmpty) {
-            blocRead.changeStepIndicator(1);
-          } else {
-            Navigator.of(context).pushReplacementNamed(
-              Routes.layoutScreen,
-            );
-          }
-        }
-         else if (state is SubmitCustomerInfoErrorState ) {
+        if (state is OTPSentSuccessState) {
+          blocRead.changeStepIndicator(1);
+        } else if (state is SubmitCustomerInfoErrorState) {
+          defaultErrorSnackBar(context: context, message: state.errMsg);
+        } else if (state is OTPSentErrorState) {
           defaultErrorSnackBar(context: context, message: state.errMsg);
         }
       },
       buildWhen: (previous, current) =>
-          current is SubmitCustomerInfoLoadingState ||
-          current is SubmitCustomerInfoSuccessState ||
-          current is SubmitCustomerInfoErrorState,
+          current is SendOTPLoadingState ||
+          current is OTPSentSuccessState ||
+          current is OTPSentErrorState ||
+          current is SubmitCustomerInfoErrorState ||
+          current is SubmitCustomerInfoLoadingState,
       builder: (context, state) {
         var blocRead = context.read<SignupCubit>();
 
         return DefaultButton(
-          loading: state is SubmitCustomerInfoLoadingState,
+          loading: state is SubmitCustomerInfoLoadingState ||
+              state is SendOTPLoadingState,
           marginRight: 16,
           marginLeft: 16,
           marginTop: 24,
@@ -132,9 +130,10 @@ class SignupSubmitButton extends StatelessWidget {
                 clientTypeKey.currentState!.closeBottomSheet();
               }
             }
-            // blocRead.submitCustomerInfo();
-            blocRead.changeStepIndicator(1);
-
+            if (state is! SendOTPLoadingState) {
+              print("sssss ${blocRead.phoneNumber}");
+              blocRead.submitCustomerInfo();
+            }
           },
         );
       },

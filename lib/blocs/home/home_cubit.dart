@@ -35,8 +35,10 @@ class HomeCubit extends Cubit<HomeState> {
   void onInit() {
     try {
       getCities();
-      getNotifications();
-      refreshCustomerData();
+      if (_authRepository.customer.token.isNotEmpty) {
+        getNotifications();
+        refreshCustomerData();
+      }
     } catch (e) {}
   }
 
@@ -227,9 +229,8 @@ class HomeCubit extends Cubit<HomeState> {
     final result = await _authRepository.setNotificationsSeen();
     result.fold((errMsg) => emit(HomeState.getNotificationsError(errMsg)),
         (message) {
-          notifications = message;
-        }
-    );
+      notifications = message;
+    });
   }
 
   void readNotification(String notificationId) async {
@@ -237,13 +238,8 @@ class HomeCubit extends Cubit<HomeState> {
 
     res.fold(
       (_) {},
-      (_) async {
-        for (var notification in notifications) {
-          if (notification.id == notificationId) {
-            notification.isNotificationRead = true;
-            break;
-          }
-        }
+      (res) async {
+        notifications = res;
         emit(HomeState.setReadNotification(notificationId));
       },
     );

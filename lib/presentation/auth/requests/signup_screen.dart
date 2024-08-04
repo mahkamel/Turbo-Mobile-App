@@ -7,7 +7,7 @@ import 'package:turbo/core/services/local/token_service.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_confirm_booking.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_form.dart';
 import 'package:turbo/presentation/auth/requests/widgets/stepper.dart';
-import 'package:turbo/presentation/auth/sign-up/components/signup-otp-screen.dart';
+import 'package:turbo/presentation/auth/requests/widgets/signup-otp-screen.dart';
 
 import '../../../core/helpers/constants.dart';
 import '../../../core/helpers/dropdown_keys.dart';
@@ -29,7 +29,8 @@ class SignupScreen extends StatelessWidget {
         if (didPop) {
           return;
         }
-        if (UserTokenService.currentUserToken.isEmpty) {
+        if (UserTokenService.currentUserToken.isEmpty &&
+            blocRead.currentStep == 0) {
           context.pushReplacementNamed(
             Routes.loginScreen,
             arguments: LoginScreenArguments(
@@ -39,6 +40,9 @@ class SignupScreen extends StatelessWidget {
               monthlyPrice: blocRead.monthlyPrice,
             ),
           );
+        } else if (UserTokenService.currentUserToken.isEmpty &&
+            blocRead.currentStep == 1) {
+          blocRead.changeStepIndicator(0);
         } else if (!didPop) {
           Navigator.of(context).pop();
         }
@@ -61,11 +65,15 @@ class SignupScreen extends StatelessWidget {
               children: [
                 DefaultHeader(
                   header: UserTokenService.currentUserToken.isNotEmpty
-                      ? blocWatch.currentStep == 2 ? "Confirm Booking" : "mobileVerification".getLocale(context: context)
-                      : blocWatch.currentStep == 0 ? "signUp".getLocale(context: context): "mobileVerification".getLocale(context: context),
+                      ? "Confirm Booking"
+                      : UserTokenService.currentUserToken.isEmpty &&
+                              blocRead.currentStep == 0
+                          ? "signUp".getLocale(context: context)
+                          : "mobileVerification".getLocale(context: context),
                   textAlignment: AlignmentDirectional.topCenter,
                   onBackPressed: () {
-                    if (UserTokenService.currentUserToken.isEmpty) {
+                    if (UserTokenService.currentUserToken.isEmpty &&
+                        blocRead.currentStep == 0) {
                       context.pushReplacementNamed(
                         Routes.loginScreen,
                         arguments: LoginScreenArguments(
@@ -75,6 +83,9 @@ class SignupScreen extends StatelessWidget {
                           monthlyPrice: blocRead.monthlyPrice,
                         ),
                       );
+                    } else if (UserTokenService.currentUserToken.isEmpty &&
+                        blocRead.currentStep == 1) {
+                      blocRead.changeStepIndicator(0);
                     } else {
                       Navigator.of(context).pop();
                     }
@@ -97,11 +108,7 @@ class SignupScreen extends StatelessWidget {
                             blocWatch.currentStep == 1)) ||
                         UserTokenService.currentUserToken.isNotEmpty))
                   const Expanded(
-                    child: Column(
-                      children: [
-                        SignupOtpScreen(),
-                      ],
-                    ),
+                    child: SignupOtpScreen(),
                   ),
                 if ((blocWatch.requestedCarId.isNotEmpty &&
                         blocWatch.currentStep == 2) &&

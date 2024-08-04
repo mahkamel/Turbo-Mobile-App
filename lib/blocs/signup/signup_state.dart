@@ -50,7 +50,6 @@ class SignupState with _$SignupState {
   const factory SignupState.otpSentSuccessfully({
     required String phoneNumber,
     required String verificationID,
-    required bool isFromStepOne,
   }) = OTPSentSuccessState;
   const factory SignupState.otpSentFailed({
     required String errMsg,
