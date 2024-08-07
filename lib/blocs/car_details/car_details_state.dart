@@ -10,4 +10,11 @@ class CarDetailsState with _$CarDetailsState {
       GetCarsDetailsSuccessState;
   const factory CarDetailsState.getCarsDetailsError(final String errMsg) =
       GetCarsDetailsErrorState;
+
+  const factory CarDetailsState.refreshCustomerDataLoading() =
+      RefreshCustomerDataLoadingState;
+  const factory CarDetailsState.refreshCustomerDataSuccess() =
+      RefreshCustomerDataSuccessState;
+  const factory CarDetailsState.refreshCustomerDataError(final String errMsg) =
+      RefreshCustomerDataErrorState;
 }

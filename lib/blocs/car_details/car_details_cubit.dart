@@ -4,12 +4,16 @@ import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/models/car_details_model.dart';
 
+import '../../core/services/networking/repositories/auth_repository.dart';
+
 part 'car_details_state.dart';
 part 'car_details_cubit.freezed.dart';
 
 class CarDetailsCubit extends Cubit<CarDetailsState> {
   final CarRepository _carRepository;
-  CarDetailsCubit(this._carRepository) : super(const CarDetailsState.initial());
+  final AuthRepository _authRepository;
+  CarDetailsCubit(this._carRepository, this._authRepository)
+      : super(const CarDetailsState.initial());
   CarDetailsData carDetailsData = CarDetailsData.empty();
 
   void getCarDetails(String carId) async {
@@ -44,4 +48,20 @@ class CarDetailsCubit extends Cubit<CarDetailsState> {
     }
   }
 
+  Future<void> refreshCustomerData() async {
+    emit(const CarDetailsState.refreshCustomerDataLoading());
+    try {
+      final res = await _authRepository.refreshCustomerData();
+      res.fold(
+        (errMsg) {
+          emit(CarDetailsState.refreshCustomerDataError(errMsg));
+        },
+        (_) {
+          emit(const CarDetailsState.refreshCustomerDataSuccess());
+        },
+      );
+    } catch (e) {
+      emit(CarDetailsState.refreshCustomerDataError(e.toString()));
+    }
+  }
 }

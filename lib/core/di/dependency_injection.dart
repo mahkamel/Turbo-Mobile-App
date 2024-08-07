@@ -81,7 +81,10 @@ Future<void> setupGetIt() async {
     ),
   );
   getIt.registerFactory<CarDetailsCubit>(
-    () => CarDetailsCubit(getIt<CarRepository>()),
+    () => CarDetailsCubit(
+      getIt<CarRepository>(),
+      getIt<AuthRepository>(),
+    ),
   );
   getIt.registerFactory<SearchCubit>(
     () => SearchCubit(

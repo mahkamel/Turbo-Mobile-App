@@ -7,7 +7,7 @@ import 'package:turbo/core/services/local/token_service.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_confirm_booking.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_form.dart';
 import 'package:turbo/presentation/auth/requests/widgets/stepper.dart';
-import 'package:turbo/presentation/auth/requests/widgets/signup-otp-screen.dart';
+import 'package:turbo/presentation/auth/requests/widgets/signup_otp_screen.dart';
 
 import '../../../core/helpers/constants.dart';
 import '../../../core/helpers/dropdown_keys.dart';

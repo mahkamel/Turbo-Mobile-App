@@ -32,7 +32,6 @@ class _SignupOtpScreenState extends State<SignupOtpScreen> {
       }
     }
     otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      print("timeerrrr $secondsRemaining");
       secondsRemaining--;
       final minutes = secondsRemaining ~/ 60;
       final seconds = secondsRemaining % 60;
@@ -43,9 +42,7 @@ class _SignupOtpScreenState extends State<SignupOtpScreen> {
       if (secondsRemaining <= 0) {
         setState(() {
           if (otpTimer != null) {
-            print("Cancle timer ");
             otpTimer!.cancel();
-            print("is timer canceled ${otpTimer!}");
           }
         });
       }
@@ -61,9 +58,7 @@ class _SignupOtpScreenState extends State<SignupOtpScreen> {
   @override
   void dispose() {
     if (otpTimer != null) {
-      print("Cancle timer ");
       otpTimer!.cancel();
-      print("is timer canceled ${otpTimer!}");
     }
     super.dispose();
   }
@@ -148,7 +143,6 @@ class _SignupOtpScreenState extends State<SignupOtpScreen> {
                             onTap: () async {
                               await context.read<SignupCubit>().sendOTP().then(
                                 (value) {
-                                  print("valuee ${value}");
                                   if (value) {
                                     startTimer();
                                   }

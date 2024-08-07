@@ -131,7 +131,6 @@ class SignupSubmitButton extends StatelessWidget {
               }
             }
             if (state is! SendOTPLoadingState) {
-              print("sssss ${blocRead.phoneNumber}");
               blocRead.submitCustomerInfo();
             }
           },

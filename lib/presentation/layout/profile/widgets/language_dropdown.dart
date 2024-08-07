@@ -8,7 +8,7 @@ class LanguageDropdown extends StatefulWidget {
   const LanguageDropdown({super.key});
 
   @override
-  _LanguageDropdownState createState() => _LanguageDropdownState();
+  State<LanguageDropdown> createState() => _LanguageDropdownState();
 }
 
 class _LanguageDropdownState extends State<LanguageDropdown> {
@@ -29,7 +29,7 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
         }
         return DropdownButton<String>(
           value: _selectedLocale,
-          items:  [
+          items: [
             DropdownMenuItem(
               value: 'en_US',
               child: Text('English'.getLocale(context: context)),

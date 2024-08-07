@@ -14,7 +14,7 @@ import 'package:turbo/presentation/onboarding/init_select_lang_screen.dart';
 import '../../blocs/layout/layout_cubit.dart';
 import '../../blocs/orders/order_cubit.dart';
 import '../../presentation/auth/requests/payment/payment_screen.dart';
-import '../../presentation/auth/requests/widgets/signup-otp-screen.dart';
+import '../../presentation/auth/requests/widgets/signup_otp_screen.dart';
 import '../../presentation/auth/requests/signup_screen.dart';
 import '../../presentation/layout/layout_screen.dart';
 import '../../presentation/layout/orders/request_status/request_status_screen.dart';

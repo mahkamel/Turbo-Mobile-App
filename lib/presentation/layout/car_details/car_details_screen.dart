@@ -72,7 +72,8 @@ class CardDetailsScreen extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "carInfo".getLocale(context: context),
+                                              "carInfo"
+                                                  .getLocale(context: context),
                                               style: AppFonts
                                                   .inter18HeaderBlack700
                                                   .copyWith(
@@ -83,7 +84,28 @@ class CardDetailsScreen extends StatelessWidget {
                                               height: 12,
                                             ),
                                             CarInfoItem(
-                                              title: "model".getLocale(context: context),
+                                              title: "Category",
+                                              info: blocRead
+                                                  .carDetailsData.carCategory,
+                                              iconPath:
+                                                  "assets/images/icons/car_details_icons/car_category_icon.png",
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                            CarInfoItem(
+                                              title: "Type",
+                                              info: blocRead
+                                                  .carDetailsData.carType,
+                                              iconPath:
+                                                  "assets/images/icons/car_details_icons/car_type_icon.png",
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                            CarInfoItem(
+                                              title: "model"
+                                                  .getLocale(context: context),
                                               info: blocRead
                                                   .carDetailsData.carModel,
                                               iconPath:
@@ -94,7 +116,8 @@ class CardDetailsScreen extends StatelessWidget {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 4.0),
                                               child: CarInfoItem(
-                                                title: "year".getLocale(context: context),
+                                                title: "year".getLocale(
+                                                    context: context),
                                                 info: blocRead
                                                     .carDetailsData.carYear,
                                                 iconPath:
@@ -105,7 +128,8 @@ class CardDetailsScreen extends StatelessWidget {
                                               padding: const EdgeInsets.only(
                                                   bottom: 4.0),
                                               child: CarInfoItem(
-                                                title: "engine".getLocale(context: context),
+                                                title: "engine".getLocale(
+                                                    context: context),
                                                 info: blocRead
                                                     .carDetailsData.carEngine,
                                                 iconPath:
@@ -113,7 +137,8 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             CarInfoItem(
-                                              title: "seats".getLocale(context: context),
+                                              title: "seats"
+                                                  .getLocale(context: context),
                                               info: blocRead
                                                   .carDetailsData.carPassengerNo
                                                   .toString(),
@@ -136,7 +161,8 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             Text(
-                                              "prices".getLocale(context: context),
+                                              "prices"
+                                                  .getLocale(context: context),
                                               style: AppFonts
                                                   .inter18HeaderBlack700
                                                   .copyWith(
@@ -170,7 +196,10 @@ class CardDetailsScreen extends StatelessWidget {
                       buildWhen: (previous, current) =>
                           current is GetCarsDetailsErrorState ||
                           current is GetCarsDetailsLoadingState ||
-                          current is GetCarsDetailsSuccessState,
+                          current is GetCarsDetailsSuccessState ||
+                          current is RefreshCustomerDataLoadingState ||
+                          current is RefreshCustomerDataErrorState ||
+                          current is RefreshCustomerDataSuccessState,
                       builder: (context, state) {
                         var blocRead = context.read<CarDetailsCubit>();
                         if (context
@@ -183,6 +212,7 @@ class CardDetailsScreen extends StatelessWidget {
                           return Align(
                             alignment: Alignment.bottomCenter,
                             child: DefaultButton(
+                              loading: state is RefreshCustomerDataLoadingState,
                               marginTop: 20,
                               marginBottom: 20,
                               marginRight: 16,
@@ -215,7 +245,8 @@ class CardDetailsScreen extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              "loginRequiredTitle".getLocale(context: context),
+                                              "loginRequiredTitle"
+                                                  .getLocale(context: context),
                                               style: AppFonts
                                                   .inter18HeaderBlack700,
                                             ),
@@ -226,7 +257,8 @@ class CardDetailsScreen extends StatelessWidget {
                                               ),
                                               child: Text(
                                                 "loginRequiredContent"
-                                                    .getLocale(context: context),
+                                                    .getLocale(
+                                                        context: context),
                                                 style: AppFonts.inter14Grey400,
                                                 textAlign: TextAlign.center,
                                               ),
@@ -290,24 +322,26 @@ class CardDetailsScreen extends StatelessWidget {
                                     },
                                   );
                                 } else {
-                                  await context
-                                      .read<AuthRepository>()
-                                      .refreshCustomerData()
-                                      .then(
-                                        (value) => Navigator.pushNamed(
-                                          context,
-                                          Routes.signupScreen,
-                                          arguments: SignupScreenArguments(
-                                            carId: car.carId,
-                                            dailyPrice: blocRead
-                                                .carDetailsData.carDailyPrice,
-                                            weeklyPrice: blocRead
-                                                .carDetailsData.carWeaklyPrice,
-                                            monthlyPrice: blocRead
-                                                .carDetailsData.carMothlyPrice,
+                                  if (state
+                                      is! RefreshCustomerDataLoadingState) {
+                                    await blocRead.refreshCustomerData().then(
+                                          (value) => Navigator.pushNamed(
+                                            context,
+                                            Routes.signupScreen,
+                                            arguments: SignupScreenArguments(
+                                              carId: car.carId,
+                                              dailyPrice: blocRead
+                                                  .carDetailsData.carDailyPrice,
+                                              weeklyPrice: blocRead
+                                                  .carDetailsData
+                                                  .carWeaklyPrice,
+                                              monthlyPrice: blocRead
+                                                  .carDetailsData
+                                                  .carMothlyPrice,
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                  }
                                 }
                               },
                               text: "bookNow".getLocale(context: context),
