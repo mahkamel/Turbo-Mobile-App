@@ -194,7 +194,7 @@ class SignupCubit extends Cubit<SignupState> {
         codeControllers[5].text;
     await authRepository
         .verifyOTP(
-      otpVerificationId: otpVerificationId,
+      verificationId: otpVerificationId,
       smsCode: smsCode,
     )
         .then((_) async {

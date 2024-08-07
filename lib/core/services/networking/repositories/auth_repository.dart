@@ -20,7 +20,7 @@ class AuthRepository {
   int selectedBranchIndex = 0;
   String selectedBranchId = "";
   String selectedCityId = "";
-  FirebaseAuth auth = FirebaseAuth.instance;
+
   AuthRepository(
     this._authServices,
   );
@@ -253,60 +253,53 @@ class AuthRepository {
     }
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future<Either<String, String>> sendOTP(String phoneNumber) async {
-    bool isErrorHappened = false;
-    String errMsg = '';
-    String otpVerificationId = '';
-    Completer<String> verificationIdCompleter = Completer<String>();
-    Completer<String> errorCompleter = Completer<String>();
     try {
-      await auth.verifyPhoneNumber(
+      final completer = Completer<Either<String, String>>();
+
+      await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 10),
-        verificationCompleted: (PhoneAuthCredential credential) async {},
+        timeout: const Duration(seconds: 120),
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await _auth.signInWithCredential(credential);
+          completer.complete(const Right('Auto-verified'));
+        },
         verificationFailed: (FirebaseAuthException e) {
-          isErrorHappened = true;
-          errMsg = e.message.toString();
+          completer.complete(Left(e.message ?? 'Verification failed'));
         },
-        codeSent: (String verificationId, int? resendToken) async {
-          verificationIdCompleter.complete(verificationId);
+        codeSent: (String verificationId, int? resendToken) {
+          completer.complete(Right(verificationId));
         },
-        codeAutoRetrievalTimeout: (String verificationId) {},
+        codeAutoRetrievalTimeout: (String verificationId) {
+          // Timeout handling if needed
+        },
       );
-      if (!isErrorHappened) {
-        otpVerificationId = await verificationIdCompleter.future;
-        return Right(otpVerificationId);
-      } else {
-        errMsg = await errorCompleter.future;
-        return Left(errMsg);
-      }
-    } on FirebaseAuthException catch (e) {
-      throw e.message.toString();
+
+      return await completer.future;
     } catch (e) {
-      throw e.toString();
+      return Left(e.toString());
     }
   }
 
-  Future<void> verifyOTP({
+  Future<Either<String, UserCredential>> verifyOTP({
     required String smsCode,
-    required String otpVerificationId,
+    required String verificationId,
   }) async {
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: otpVerificationId,
-      smsCode: smsCode,
-    );
     try {
-      await auth.signInWithCredential(credential);
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
+      return Right(userCredential);
     } on FirebaseAuthException catch (e) {
-      if (auth.currentUser != null) {
-        auth.currentUser!.delete();
-      }
-      throw e.message.toString();
+      print("otpppp ${e.toString()}");
+      return Left(e.message ?? 'Verification failed');
     } catch (e) {
-      if (auth.currentUser != null) {
-        auth.currentUser!.delete();
-      }
-      throw e.toString();
+      return Left(e.toString());
     }
   }
 }
