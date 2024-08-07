@@ -29,7 +29,6 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(
                   height: 24,
                 ),
-
                 BlocBuilder<ProfileCubit, ProfileState>(
                   buildWhen: (previous, current) =>
                       current is LogoutLoadingState ||
@@ -38,7 +37,6 @@ class ProfileScreen extends StatelessWidget {
                   builder: (context, state) {
                     return Column(
                       children: [
-
                         if (context
                             .watch<AuthRepository>()
                             .customer
@@ -65,6 +63,21 @@ class ProfileScreen extends StatelessWidget {
                               color: AppColors.primaryRed,
                             ),
                           ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Language",
+                              style: AppFonts.inter16Black400.copyWith(
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            const LanguageDropdown(),
+                          ],
+                        ),
                         if (context
                             .watch<AuthRepository>()
                             .customer
@@ -130,18 +143,6 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     );
                   },
-                ),
-                const SizedBox(height: 8,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Language",
-                      style:  AppFonts.inter16Black400.copyWith(
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    const LanguageDropdown(),
-                  ],
                 ),
               ],
             ),

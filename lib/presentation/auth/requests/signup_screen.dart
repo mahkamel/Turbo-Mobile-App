@@ -102,11 +102,8 @@ class SignupScreen extends StatelessWidget {
                     ((UserTokenService.currentUserToken.isEmpty &&
                         blocWatch.currentStep == 0)))
                   const InfoStepForm(),
-                if ((blocWatch.requestedCarId.isNotEmpty &&
-                        blocWatch.currentStep == 1) &&
-                    (((UserTokenService.currentUserToken.isEmpty &&
-                            blocWatch.currentStep == 1)) ||
-                        UserTokenService.currentUserToken.isNotEmpty))
+                if (UserTokenService.currentUserToken.isEmpty &&
+                    blocWatch.currentStep == 1)
                   const Expanded(
                     child: SignupOtpScreen(),
                   ),
