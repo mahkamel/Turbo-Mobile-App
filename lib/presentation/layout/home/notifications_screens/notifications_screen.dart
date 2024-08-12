@@ -76,8 +76,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     arguments: RequestStatusScreenArguments(
                                       requestId: notifications[index]
                                           .notificationRequestId,
-                                      //todo: code from notifications
-                                      requestCode: "",
+                                      requestCode:
+                                          notifications[index].requestCode,
                                     ),
                                   );
                                 },
