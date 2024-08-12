@@ -90,7 +90,8 @@ class RequestStatusScreen extends StatelessWidget {
                         ),
                       ],
                     );
-                  } else if (blocWatch.requestStatus!.requestStatus == 2) {
+                  } else if (blocWatch.requestStatus!.requestStatus == 2 ||
+                      blocWatch.requestStatus!.requestStatus == 4) {
                     Attachment? nationalIdResult = findAttachmentFile(
                       type: "nationalId",
                       attachments: blocWatch.requestStatus!.attachmentsId,

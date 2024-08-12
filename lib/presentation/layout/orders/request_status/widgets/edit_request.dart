@@ -79,6 +79,8 @@ class EditRequest extends StatelessWidget {
             WidgetWithHeader(
               padding: EdgeInsetsDirectional.zero,
               header: "Files",
+              isRequiredField:
+                  blocRead.requestStatus?.requestStatus == 4 ? true : false,
               headerStyle: AppFonts.inter16Black500.copyWith(
                 color: AppColors.primaryRed,
                 fontSize: 18,
@@ -123,14 +125,17 @@ class EditRequest extends StatelessWidget {
                   marginBottom: 20,
                   color: state is SaveEditedFileLoadingState ||
                           blocWatch.nationalIdInitStatus == 2 ||
-                          blocWatch.passportInitStatus == 2
+                          blocWatch.passportInitStatus == 2 ||
+                          blocWatch.requestStatus?.requestStatus == 4
                       ? AppColors.greyBorder
                       : AppColors.primaryRed,
                   function: () {
                     if (state is! SubmitEditsLoadingState &&
                         state is! SaveEditedFileLoadingState &&
                         (blocWatch.nationalIdInitStatus != 2) &&
-                        (blocWatch.passportInitStatus != 2)) {
+                        (blocWatch.passportInitStatus != 2) &&
+                        (blocWatch.requestStatus != null &&
+                            blocWatch.requestStatus!.requestStatus != 4)) {
                       blocRead.onSubmitButtonClicked(requestId);
                     }
                   },
