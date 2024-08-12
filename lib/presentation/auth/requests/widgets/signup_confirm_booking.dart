@@ -67,28 +67,40 @@ class ConfirmBookingButton extends StatelessWidget {
             arguments: PaymentScreenArguments(
               paymentAmount: blocRead.calculatedPriceWithVat,
               carRequestId: state.requestId,
+              carRequestCode: state.registerCode,
             ),
           );
         }
       },
       builder: (context, state) {
         var blocWatch = context.watch<SignupCubit>();
+        print("nationaainit ${blocWatch.nationalIdInitStatus}");
+        print("nationaainit ${blocWatch.passportInitStatus}");
+        print("nationaainit ${blocRead.isSaudiOrSaudiResident()}");
+        print(
+            "issss ${((blocWatch.nationalIdInitStatus == -1 || blocWatch.passportInitStatus == -1) || !blocRead.isSaudiOrSaudiResident())}");
+        print(
+            "locationValidation ${blocWatch.locationValidation == TextFieldValidation.valid}");
+        print("deliveryDate ${blocWatch.deliveryDate != null}");
+        print("pickedDate ${blocWatch.pickedDate != null}");
+        print("nationalIdInitStatus ${blocWatch.nationalIdInitStatus}");
+        print("passportInitStatus ${blocWatch.passportInitStatus}");
         return DefaultButton(
           loading: state is ConfirmBookingLoadingState,
           marginRight: 16,
           marginLeft: 16,
           marginTop: 24,
           marginBottom: 24,
-          color: blocWatch.locationValidation != TextFieldValidation.valid ||
-                  blocWatch.deliveryDate == null ||
-                  blocWatch.pickedDate == null ||
-                  state is SaveRequestEditedFileLoadingState ||
-                  blocWatch.nationalIdInitStatus == 2 ||
-                  blocWatch.passportInitStatus == 2 ||
-                  blocWatch.nationalIdInitStatus == -1 ||
-                  blocWatch.passportInitStatus == -1
-              ? AppColors.greyBorder
-              : AppColors.primaryRed,
+          color: blocWatch.locationValidation == TextFieldValidation.valid &&
+                  blocWatch.deliveryDate != null &&
+                  blocWatch.pickedDate != null &&
+                  blocWatch.nationalIdInitStatus != 2 &&
+                  blocWatch.passportInitStatus != 2 &&
+                  ((blocWatch.nationalIdInitStatus != -1 &&
+                          blocWatch.passportInitStatus != -1) ||
+                      blocRead.isSaudiOrSaudiResident())
+              ? AppColors.primaryRed
+              : AppColors.greyBorder,
           text: "Confirm Booking",
           function: () {
             if (state is! ConfirmBookingLoadingState &&
@@ -98,8 +110,9 @@ class ConfirmBookingButton extends StatelessWidget {
                 blocWatch.pickedDate != null &&
                 blocWatch.nationalIdInitStatus != 2 &&
                 blocWatch.passportInitStatus != 2 &&
-                blocWatch.nationalIdInitStatus != -1 &&
-                blocWatch.passportInitStatus != -1) {
+                ((blocWatch.nationalIdInitStatus != -1 &&
+                        blocWatch.passportInitStatus != -1) ||
+                    blocRead.isSaudiOrSaudiResident())) {
               blocRead.confirmBookingClicked();
             }
           },
@@ -120,7 +133,7 @@ class RequiredFilesSection extends StatelessWidget {
     if (context.watch<AuthRepository>().customer.attachments.isEmpty) {
       return WidgetWithHeader(
         header: "Files",
-        isRequiredField: true,
+        isRequiredField: blocRead.isSaudiOrSaudiResident() ? false : true,
         headerStyle: AppFonts.inter16Black500.copyWith(
           color: AppColors.primaryRed,
           fontSize: 18,

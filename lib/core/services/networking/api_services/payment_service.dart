@@ -11,9 +11,7 @@ class PaymentService {
     required String visaCardNumber,
     required String visaCardExpiryMonth,
     required String visaCardExpiryYear,
-    required String billingFirstName,
-    required String billingLastName,
-    required String billingCity,
+    required String billingCustomerName,
     required String billingPostalCode,
     required String billingAddress,
     required String billingVisaLastNo,
@@ -41,9 +39,7 @@ class PaymentService {
     }
     final billing = <String, Map<String, String>>{
       "billing": {
-        "billingFirstName": billingFirstName,
-        "billingLastName": billingLastName,
-        "billingCity": billingCity,
+        "billingCustomerName": billingCustomerName,
         "billingPostalCode": billingPostalCode,
         "billingAddress": billingAddress,
         "billingVisaLastNo": billingVisaLastNo
@@ -55,9 +51,7 @@ class PaymentService {
       "payment": {
         "carRequestId": carRequestId,
         "paymentAmount": paymentAmount,
-        "billingFirstName": billingFirstName,
-        "billingLastName": billingLastName,
-        "billingCity": billingCity,
+        "billingCustomerName": billingCustomerName,
         "billingPostalCode": billingPostalCode,
         "billingAddress": billingAddress,
         "billingVisaLastNo": billingVisaLastNo
@@ -94,13 +88,12 @@ class PaymentService {
     required String cardId,
   }) async {
     try {
-      Response response = await DioHelper.postData(
-          endpoint: 'visacard/deleteVisaCard',
-          body: {
-            "visaCard": {
-              "_id": cardId,
-            }
-          });
+      Response response =
+          await DioHelper.postData(endpoint: 'visacard/deleteVisaCard', body: {
+        "visaCard": {
+          "_id": cardId,
+        }
+      });
       return response;
     } catch (e) {
       throw e.toString();

@@ -13,7 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   debugPrint("**** current flavor ${F.appFlavor} *****");
-  await configureApp(F.appFlavor?? Flavor.dev);
+  await configureApp(F.appFlavor ?? Flavor.dev);
   await DioHelper.init(FlavorConfig.instance.baseUrl);
   await setupGetIt();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -42,8 +42,7 @@ Future<void> main() async {
   FirebaseMessaging.instance.setAutoInitEnabled(true);
 
   final CustomerModel? cachedCustomer = await getCustomerData();
-  log("useeerTokeneee: ${cachedCustomer?.token}",
-  );
+  log("useeerTokeneee: ${cachedCustomer?.token}");
 
   Bloc.observer = MyBlocObserver();
   final bool isFirstTime =

@@ -116,7 +116,10 @@ class CarServices {
         });
       }
 
-      if (carYears.isEmpty && carTypes.isEmpty && carBrands.isEmpty && carCategories.isEmpty) {
+      if (carYears.isEmpty &&
+          carTypes.isEmpty &&
+          carBrands.isEmpty &&
+          carCategories.isEmpty) {
         filterBody.addAll({
           "carIsActive": true,
         });
@@ -147,6 +150,7 @@ class CarServices {
     required num requestPrice,
     required num requestPriceVat,
     required num requestDailyCalculationPrice,
+    required num requestDriverDailyFee,
     required String requestToken,
     required List<File> nationalIdFiles,
     required List<File> passportFiles,
@@ -168,6 +172,7 @@ class CarServices {
         "requestTotalPrice": requestPrice,
         "requestToken": requestToken,
         "requestPriceVat": requestPriceVat,
+        "requestDriverDailyFee": requestDriverDailyFee,
       };
       String jsonData = json.encode(body);
       FormData carRequestForm = FormData();
@@ -201,8 +206,10 @@ class CarServices {
 
       Response response = await DioHelper.postData(
         endpoint: 'car/addCarRequest',
-        formData: carRequestForm,
-        body: {},
+        formData: nationalIdFiles.isNotEmpty && passportFiles.isNotEmpty
+            ? carRequestForm
+            : null,
+        body: {"carRequest": body},
       );
       return response;
     } catch (e) {
@@ -223,6 +230,7 @@ class CarServices {
     required num requestPrice,
     required num requestDailyCalculationPrice,
     required num requestPriceVat,
+    required num requestDriverDailyFee,
     required String requestToken,
     required List<String> attachmentsIds,
   }) async {
@@ -243,8 +251,9 @@ class CarServices {
           "requestTotalPrice": requestPrice,
           "requestDailyCalculationPrice": requestDailyCalculationPrice,
           "requestToken": requestToken,
-          "attachmentsId": attachmentsIds,
           "requestPriceVat": requestPriceVat,
+          "requestDriverDailyFee": requestDriverDailyFee,
+          if (attachmentsIds.isNotEmpty) "attachmentsId": attachmentsIds,
         }
       };
       Response response = await DioHelper.postData(
@@ -256,16 +265,17 @@ class CarServices {
       throw e.toString();
     }
   }
+
   Future<Response> getAllCategories() async {
     try {
-      Response response = await DioHelper.getData(endpoint: 'search/getAllCategories');
+      Response response =
+          await DioHelper.getData(endpoint: 'search/getAllCategories');
       return response;
-    } catch(e) {
+    } catch (e) {
       throw e.toString();
     }
   }
 }
-
 
 String getFileName(String filePath) {
   return filePath.split('/').last;

@@ -9,10 +9,12 @@ class PaymentScreen extends StatelessWidget {
     super.key,
     required this.paymentAmount,
     required this.carRequestId,
+    required this.carRequestCode,
   });
 
   final num paymentAmount;
   final String carRequestId;
+  final String carRequestCode;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class PaymentScreen extends StatelessWidget {
                 child: PaymentForm(
                   value: paymentAmount,
                   carRequestId: carRequestId,
+                  carRequestCode: carRequestCode,
                 ),
               ),
             ],

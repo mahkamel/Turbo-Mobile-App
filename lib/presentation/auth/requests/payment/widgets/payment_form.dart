@@ -5,20 +5,19 @@ import 'package:turbo/presentation/auth/requests/payment/widgets/payment_form_wi
 import 'package:turbo/presentation/status_screens/default_error_screen.dart';
 import 'package:turbo/presentation/status_screens/default_success_screen.dart';
 
-import '../../../../../../core/theming/colors.dart';
-import '../../../../../../core/theming/fonts.dart';
 import '../../../../../../core/widgets/default_buttons.dart';
 import '../../../../../core/routing/routes.dart';
-import 'billing_widgets.dart';
 
 class PaymentForm extends StatelessWidget {
   const PaymentForm({
     super.key,
     required this.value,
     required this.carRequestId,
+    required this.carRequestCode,
   });
   final num value;
   final String carRequestId;
+  final String carRequestCode;
 
   @override
   Widget build(BuildContext context) {
@@ -77,30 +76,6 @@ class PaymentForm extends StatelessWidget {
                 : const SaveCardInfo();
           },
         ),
-        const Divider(
-          height: 32,
-          color: AppColors.divider,
-        ),
-
-        //Billing
-        Padding(
-          padding: const EdgeInsetsDirectional.only(
-            start: 16.0,
-            bottom: 12.0,
-          ),
-          child: Text(
-            "Billing",
-            style: AppFonts.inter18Black500,
-          ),
-        ),
-        const BillingFirstAndLastName(),
-        BillingCity(blocRead: blocRead),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: BillingAddress(blocRead: blocRead),
-        ),
-        BillingPostalCode(blocRead: blocRead),
-
         BlocConsumer<PaymentCubit, PaymentState>(
           listenWhen: (previous, current) =>
               current is SubmitPaymentFormErrorState ||
@@ -114,7 +89,8 @@ class PaymentForm extends StatelessWidget {
                     lottiePath: "assets/lottie/car_pending.json",
                     message:
                         "We are reviewing your documents and will notify you once the review is complete.",
-                    title: "Your request has been submitted successfully!",
+                    title:
+                        "Your request #$carRequestCode has been submitted successfully!",
                     onOkPressed: () {},
                   ),
                 ),

@@ -17,6 +17,34 @@ class SignupState with _$SignupState {
     required TextFieldValidation validation,
   }) = CheckNameValidationState;
 
+  const factory SignupState.checkNationalIdValidation({
+    required String nationalId,
+    required TextFieldValidation validation,
+  }) = CheckNationalIdValidationState;
+
+  const factory SignupState.checkNationalIdExpiryDateValidation({
+    required String date,
+    required TextFieldValidation validation,
+  }) = CheckNationalIdExpiryDateValidationState;
+
+  const factory SignupState.changeNationalIdExpiry({
+    required String date,
+  }) = ChangeNationalIdExpiryState;
+
+  const factory SignupState.checkDrivingLicenceValidation({
+    required String drivingLicence,
+    required TextFieldValidation validation,
+  }) = CheckDrivingLicenceValidationState;
+
+  const factory SignupState.changeDrivingLicenceExpiry({
+    required String date,
+  }) = ChangeDrivingLicenceExpiryState;
+
+  const factory SignupState.checkDrivingLicenceExpiryDateValidation({
+    required String date,
+    required TextFieldValidation validation,
+  }) = CheckDrivingLicenceExpiryDateValidationState;
+
   const factory SignupState.checkMobileNumber({
     required String mobileNumber,
     required TextFieldValidation validation,
@@ -109,8 +137,10 @@ class SignupState with _$SignupState {
 
   const factory SignupState.confirmBookingLoading() =
       ConfirmBookingLoadingState;
-  const factory SignupState.confirmBookingSuccess(final String requestId) =
-      ConfirmBookingSuccessState;
+  const factory SignupState.confirmBookingSuccess({
+    required String requestId,
+    required String registerCode,
+  }) = ConfirmBookingSuccessState;
   const factory SignupState.confirmBookingFailed({
     required String errMsg,
   }) = ConfirmBookingErrorState;

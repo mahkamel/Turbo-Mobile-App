@@ -72,6 +72,9 @@ class _$LayoutStateCopyWithImpl<$Res, $Val extends LayoutState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of LayoutState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -88,6 +91,9 @@ class __$$InitialImplCopyWithImpl<$Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of LayoutState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -195,6 +201,8 @@ class __$$ChangeNavBarIndexStateImplCopyWithImpl<$Res>
       $Res Function(_$ChangeNavBarIndexStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LayoutState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -233,7 +241,9 @@ class _$ChangeNavBarIndexStateImpl implements ChangeNavBarIndexState {
   @override
   int get hashCode => Object.hash(runtimeType, index);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LayoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChangeNavBarIndexStateImplCopyWith<_$ChangeNavBarIndexStateImpl>
@@ -308,7 +318,10 @@ abstract class ChangeNavBarIndexState implements LayoutState {
       _$ChangeNavBarIndexStateImpl;
 
   int get index;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LayoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChangeNavBarIndexStateImplCopyWith<_$ChangeNavBarIndexStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

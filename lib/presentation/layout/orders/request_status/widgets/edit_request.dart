@@ -420,8 +420,8 @@ class EditedPrice extends StatelessWidget {
         var blocWatch = context.watch<OrderCubit>();
         return Padding(
           padding: const EdgeInsetsDirectional.only(
-            start: 20.0,
-            end: 20.0,
+            start: 8.0,
+            end: 8.0,
             top: 8.0,
           ),
           child: Column(
@@ -511,29 +511,25 @@ class EditDeliveryDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OrderCubit, OrderState>(
-      buildWhen: (previous, current) => current is ChangeEditedDatesValueState,
-      builder: (context, state) {
-        var blocWatch = context.watch<OrderCubit>();
-        var blocRead = context.read<OrderCubit>();
-        return DateSelection(
-          padding: const EdgeInsetsDirectional.symmetric(vertical: 16),
-          key: const Key("EditDeliveryDate"),
-          header: "Delivery",
-          minDate: blocWatch.pickedDate != null
-              ? context
-                  .watch<OrderCubit>()
-                  .pickedDate!
-                  .add(const Duration(days: 1, minutes: 30))
-              : DateTime.now().add(const Duration(days: 1, minutes: 30)),
-          isDeliveryDate: true,
-          selectedDateTime: blocWatch.deliveryDate,
-          onDateSelected: (selectedDate) {
-            blocRead.deliveryDate = selectedDate;
-            blocRead.changePickupDateValue();
-            blocRead.calculatePrice();
-          },
-        );
+    var blocRead = context.read<OrderCubit>();
+    return DateSelection(
+      isEnabled: false,
+      padding: const EdgeInsetsDirectional.symmetric(vertical: 16),
+      key: const Key("EditDeliveryDate"),
+      header: "Delivery",
+      minDate: blocRead.pickedDate != null
+          ? context
+              .watch<OrderCubit>()
+              .pickedDate!
+              .add(const Duration(days: 1, minutes: 30))
+          : DateTime.now().add(const Duration(days: 1, minutes: 30)),
+      isDeliveryDate: true,
+      selectedDateTime: blocRead.deliveryDate,
+      initialDate: blocRead.deliveryDate,
+      onDateSelected: (selectedDate) {
+        blocRead.deliveryDate = selectedDate;
+        blocRead.changePickupDateValue();
+        blocRead.calculatePrice();
       },
     );
   }
@@ -551,6 +547,7 @@ class EditPickupDate extends StatelessWidget {
       buildWhen: (previous, current) => current is ChangeEditedDatesValueState,
       builder: (context, state) {
         return DateSelection(
+          isEnabled: false,
           padding: EdgeInsetsDirectional.zero,
           key: const Key("EditPickupDate"),
           header: "Pickup",

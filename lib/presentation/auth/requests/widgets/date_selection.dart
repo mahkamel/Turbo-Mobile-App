@@ -15,16 +15,24 @@ class DateSelection extends StatefulWidget {
     this.selectedDateTime,
     this.minDate,
     this.padding,
+    this.onPressed,
+    this.initialDate,
     this.isDeliveryDate = false,
-    this.isRequired = false
+    this.isRequired = false,
+    this.isWithTime = true,
+    this.isEnabled = true,
   });
 
   final String header;
   final DateTime? selectedDateTime;
   final DateTime? minDate;
+  final DateTime? initialDate;
   final void Function(DateTime?) onDateSelected;
+  final void Function()? onPressed;
   final bool isDeliveryDate;
   final bool isRequired;
+  final bool isWithTime;
+  final bool isEnabled;
   final EdgeInsetsDirectional? padding;
 
   @override
@@ -46,229 +54,281 @@ class _DateSelectionState extends State<DateSelection> {
             end: 20,
           ),
       widget: InkWell(
-        onTap: () {},
+        onTap: () {
+          if (widget.onPressed != null) {
+            widget.onPressed!();
+          }
+        },
         child: Container(
           width: AppConstants.screenWidth(context),
+          padding: widget.isEnabled
+              ? null
+              : const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 12,
+                ),
           decoration: BoxDecoration(
+            color: widget.isEnabled ? null : AppColors.greyBorder,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: AppColors.black.withOpacity(0.5),
+              color: widget.isEnabled
+                  ? AppColors.black.withOpacity(0.5)
+                  : AppColors.black.withOpacity(0.2),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                onPressed: () {
-                  tempDateTime = widget.minDate ??
-                      (widget.selectedDateTime ??
-                          (widget.isDeliveryDate
-                              ? DateTime.now()
-                                  .add(const Duration(days: 1, minutes: 30))
-                              : DateTime.now().add(const Duration(hours: 1))));
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (bsContext) => Container(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      height: 350,
-                      width: AppConstants.screenWidth(context),
-                      color: AppColors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              widget.isEnabled
+                  ? IconButton(
+                      onPressed: () {
+                        if (widget.onPressed != null) {
+                          widget.onPressed!();
+                        }
+                        tempDateTime = widget.minDate ??
+                            (widget.selectedDateTime ??
+                                (widget.isDeliveryDate
+                                    ? DateTime.now().add(
+                                        const Duration(days: 1, minutes: 30))
+                                    : DateTime.now()
+                                        .add(const Duration(hours: 1))));
+                        buildDatePickerBottomSheet(context);
+                      },
+                      icon: Row(
                         children: [
-                          Text(
-                            "${widget.header} Date and Time",
-                            style: AppFonts.inter18Black500,
+                          const Icon(
+                            Icons.calendar_today_rounded,
                           ),
-                          Expanded(
-                            child: CupertinoDatePicker(
-                              // use24hFormat: true,
-                              minimumDate: widget.minDate ??
-                                  (widget.isDeliveryDate
-                                      ? DateTime.now().add(
-                                          const Duration(days: 1, hours: 1))
-                                      : DateTime.now()
-                                          .add(const Duration(hours: 1))),
-                              initialDateTime: widget.minDate ??
-                                  (widget.selectedDateTime ??
-                                      (widget.isDeliveryDate
-                                          ? DateTime.now().add(const Duration(
-                                              days: 1, minutes: 30))
-                                          : DateTime.now()
-                                              .add(const Duration(hours: 1)))),
-                              mode: CupertinoDatePickerMode.date,
-                              onDateTimeChanged: (dateTime) {
-                                setState(() {
-                                  tempDateTime = dateTime;
-                                });
-                              },
-                            ),
+                          const SizedBox(
+                            width: 8,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  if (Navigator.of(bsContext).canPop()) {
-                                    Navigator.of(bsContext).pop();
-                                  }
-                                },
-                                child: Text(
-                                  "Cancel",
-                                  style: AppFonts.inter16Black500.copyWith(
-                                    color: AppColors.errorRed,
-                                  ),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  TimeOfDay timeOfDay = TimeOfDay.fromDateTime(
-                                      widget.selectedDateTime ??
-                                          selectedDateTime ??
-                                          (widget.isDeliveryDate
-                                              ? DateTime.now().add(
-                                                  const Duration(
-                                                      hours: 1, minutes: 30))
-                                              : DateTime.now().add(
-                                                  const Duration(hours: 1))));
-
-                                  setState(() {
-                                    selectedDateTime = tempDateTime;
-                                    selectedDateTime = selectedDateTime!.copyWith(
-                                      hour: timeOfDay.hour,
-                                      minute: timeOfDay.minute,
-                                    );
-                                  });
-                                  widget.onDateSelected(selectedDateTime);
-                                  if (Navigator.of(bsContext).canPop()) {
-                                    Navigator.of(bsContext).pop();
-                                  }
-                                },
-                                child: Text(
-                                  "Confirm",
-                                  style: AppFonts.inter16Black500,
-                                ),
-                              ),
-                            ],
-                          ),
+                          Text(widget.selectedDateTime != null
+                              ? formatDate(widget.selectedDateTime!)
+                              : selectedDateTime != null
+                                  ? formatDate(selectedDateTime!)
+                                  : "Select Date"),
                         ],
                       ),
-                    ),
-                  );
-                },
-                icon: Row(
-                  children: [
-                    const Icon(
-                      Icons.calendar_today_rounded,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(widget.selectedDateTime != null
-                        ? formatDate(widget.selectedDateTime!)
-                        : selectedDateTime != null
-                            ? formatDate(selectedDateTime!)
-                            : "Select Date"),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  if (selectedDateTime != null) {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (timeBSContext) => Container(
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
+                    )
+                  : Row(
+                      children: [
+                        const Icon(
+                          Icons.calendar_today_rounded,
                         ),
-                        height: 350,
-                        width: AppConstants.screenWidth(context),
-                        color: AppColors.white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(widget.selectedDateTime != null
+                            ? formatDate(widget.selectedDateTime!)
+                            : selectedDateTime != null
+                                ? formatDate(selectedDateTime!)
+                                : "Select Date"),
+                      ],
+                    ),
+              if (widget.isWithTime)
+                widget.isEnabled
+                    ? IconButton(
+                        onPressed: () {
+                          if (selectedDateTime != null) {
+                            buildTimePicketBottomSheet(context);
+                          }
+                        },
+                        icon: Row(
                           children: [
-                            Text(
-                              "${widget.header} Time",
-                              style: AppFonts.inter18Black500,
+                            Container(
+                              height: 12,
+                              width: 2,
+                              color: AppColors.grey,
                             ),
-                            Expanded(
-                              child: CupertinoDatePicker(
-                                // use24hFormat: true,
-                                minimumDate: widget.minDate ??
-                                    DateTime.now()
-                                        .add(const Duration(hours: 1)),
-                                initialDateTime: selectedDateTime ??
-                                    DateTime.now()
-                                        .add(const Duration(hours: 1)),
-                                mode: CupertinoDatePickerMode.time,
-                                onDateTimeChanged: (DateTime value) {
-                                  setState(() {
-                                    tempDateTime = value;
-                                  });
-                                },
-                              ),
+                            const SizedBox(
+                              width: 8,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    if (Navigator.of(timeBSContext).canPop()) {
-                                      Navigator.of(timeBSContext).pop();
-                                    }
-                                  },
-                                  child: Text(
-                                    "Cancel",
-                                    style: AppFonts.inter16Black500.copyWith(
-                                      color: AppColors.errorRed,
-                                    ),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedDateTime = tempDateTime;
-                                    });
-                                    widget.onDateSelected(selectedDateTime);
-                                    if (Navigator.of(timeBSContext).canPop()) {
-                                      Navigator.of(timeBSContext).pop();
-                                    }
-                                  },
-                                  child: Text(
-                                    "Confirm",
-                                    style: AppFonts.inter16Black500,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            Text(widget.selectedDateTime != null
+                                ? formatTime(widget.selectedDateTime!)
+                                : "00:00"),
                           ],
                         ),
+                      )
+                    : Row(
+                        children: [
+                          Container(
+                            height: 12,
+                            width: 2,
+                            color: AppColors.grey,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(widget.selectedDateTime != null
+                              ? formatTime(widget.selectedDateTime!)
+                              : "00:00"),
+                        ],
                       ),
-                    );
-                  }
-                },
-                icon: Row(
-                  children: [
-                    Container(
-                      height: 12,
-                      width: 2,
-                      color: AppColors.grey,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(widget.selectedDateTime != null
-                        ? formatTime(widget.selectedDateTime!)
-                        : "00:00"),
-                  ],
-                ),
-              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> buildTimePicketBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (timeBSContext) => Container(
+        padding: const EdgeInsetsDirectional.symmetric(
+          vertical: 12,
+          horizontal: 16,
+        ),
+        height: 350,
+        width: AppConstants.screenWidth(context),
+        color: AppColors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${widget.header} Time",
+              style: AppFonts.inter18Black500,
+            ),
+            Expanded(
+              child: CupertinoDatePicker(
+                // use24hFormat: true,
+                minimumDate: widget.minDate ??
+                    DateTime.now().add(const Duration(hours: 1)),
+                initialDateTime: selectedDateTime ??
+                    DateTime.now().add(const Duration(hours: 1)),
+                mode: CupertinoDatePickerMode.time,
+                onDateTimeChanged: (DateTime value) {
+                  setState(() {
+                    tempDateTime = value;
+                  });
+                },
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    if (Navigator.of(timeBSContext).canPop()) {
+                      Navigator.of(timeBSContext).pop();
+                    }
+                  },
+                  child: Text(
+                    "Cancel",
+                    style: AppFonts.inter16Black500.copyWith(
+                      color: AppColors.errorRed,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedDateTime = tempDateTime;
+                    });
+                    widget.onDateSelected(selectedDateTime);
+                    if (Navigator.of(timeBSContext).canPop()) {
+                      Navigator.of(timeBSContext).pop();
+                    }
+                  },
+                  child: Text(
+                    "Confirm",
+                    style: AppFonts.inter16Black500,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> buildDatePickerBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (bsContext) => Container(
+        padding: const EdgeInsetsDirectional.symmetric(
+          vertical: 12,
+          horizontal: 16,
+        ),
+        height: 350,
+        width: AppConstants.screenWidth(context),
+        color: AppColors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${widget.header} Date and Time",
+              style: AppFonts.inter18Black500,
+            ),
+            Expanded(
+              child: CupertinoDatePicker(
+                // use24hFormat: true,
+                minimumDate: widget.minDate ??
+                    (widget.isDeliveryDate
+                        ? DateTime.now().add(const Duration(days: 1, hours: 1))
+                        : DateTime.now().add(const Duration(hours: 1))),
+                initialDateTime: widget.initialDate ??
+                    widget.minDate ??
+                    (widget.selectedDateTime ??
+                        (widget.isDeliveryDate
+                            ? DateTime.now()
+                                .add(const Duration(days: 1, minutes: 30))
+                            : DateTime.now().add(const Duration(hours: 1)))),
+                mode: CupertinoDatePickerMode.date,
+                onDateTimeChanged: (dateTime) {
+                  setState(() {
+                    tempDateTime = dateTime;
+                  });
+                },
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    if (Navigator.of(bsContext).canPop()) {
+                      Navigator.of(bsContext).pop();
+                    }
+                  },
+                  child: Text(
+                    "Cancel",
+                    style: AppFonts.inter16Black500.copyWith(
+                      color: AppColors.errorRed,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    TimeOfDay timeOfDay = TimeOfDay.fromDateTime(widget
+                            .selectedDateTime ??
+                        selectedDateTime ??
+                        (widget.isDeliveryDate
+                            ? DateTime.now()
+                                .add(const Duration(hours: 1, minutes: 30))
+                            : DateTime.now().add(const Duration(hours: 1))));
+
+                    setState(() {
+                      selectedDateTime = tempDateTime;
+                      selectedDateTime = selectedDateTime!.copyWith(
+                        hour: timeOfDay.hour,
+                        minute: timeOfDay.minute,
+                      );
+                    });
+                    widget.onDateSelected(selectedDateTime);
+                    if (Navigator.of(bsContext).canPop()) {
+                      Navigator.of(bsContext).pop();
+                    }
+                  },
+                  child: Text(
+                    "Confirm",
+                    style: AppFonts.inter16Black500,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -5,6 +5,8 @@ class CustomerModel {
   String customerName;
   String customerEmail;
   String token;
+  String customerAddress;
+  int customerType;
   List<Attachment> attachments;
 
   CustomerModel({
@@ -12,6 +14,8 @@ class CustomerModel {
     required this.customerName,
     required this.customerEmail,
     required this.token,
+    required this.customerAddress,
+    required this.customerType,
     required this.attachments,
   });
 
@@ -21,6 +25,8 @@ class CustomerModel {
       customerName: json['customerDisplayName'] ?? "",
       customerEmail: json['customerEmail'] ?? "",
       token: json['token'] ?? "",
+      customerAddress: json['customerId']['customerAddress'] ?? "",
+      customerType: json['customerId']['customerType'] ?? 0,
       attachments: (json['customerAttachments'] as List)
           .map(
             (e) => Attachment.fromJson(e),
@@ -34,6 +40,8 @@ class CustomerModel {
         customerId = "",
         customerEmail = "",
         attachments = <Attachment>[],
+        customerAddress = '',
+        customerType = 0,
         token = '';
 
   Map<String, dynamic> toJson() => {
@@ -41,6 +49,10 @@ class CustomerModel {
         'customerDisplayName': customerName,
         'customerEmail': customerEmail,
         'token': token,
+        "customerId": {
+          "customerAddress": customerAddress,
+          "customerType": customerType,
+        },
         'customerAttachments': attachments.map((e) => e.toJson()).toList(),
       };
 }

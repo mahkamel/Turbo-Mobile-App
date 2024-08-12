@@ -173,15 +173,14 @@ class CarRepository {
   }) async {
     try {
       final response = await _carServices.carsFilter(
-        carYears: carYears,
-        carTypes: carTypes,
-        carBrands: carBrands,
-        // isWithUnlimited: isWithUnlimited,
-        branchId: branchId,
-        priceFrom: priceFrom,
-        priceTo: priceTo,
-        carCategories: carCategories
-      );
+          carYears: carYears,
+          carTypes: carTypes,
+          carBrands: carBrands,
+          // isWithUnlimited: isWithUnlimited,
+          branchId: branchId,
+          priceFrom: priceFrom,
+          priceTo: priceTo,
+          carCategories: carCategories);
       if (response.statusCode == 200 && response.data['status']) {
         List<CarData> filteredCars = [];
         if ((response.data['data'] as List).isNotEmpty) {
@@ -212,12 +211,14 @@ class CarRepository {
     required num requestPrice,
     required num requestPriceVat,
     required num requestDailyCalculationPrice,
+    required num requestDriverDailyFee,
     required List<File> nationalId,
     required List<File> passport,
   }) async {
     try {
       final response = await _carServices.addCarRequest(
         userToken: userToken,
+        requestDriverDailyFee: AppConstants.driverFees,
         isWithRequestDriver: isWithRequestDriver,
         requestCarId: requestCarId,
         requestCity: requestCity,
@@ -244,7 +245,7 @@ class CarRepository {
     }
   }
 
-  Future<Either<String, String>> addNewRequest({
+  Future<Either<String, Map<String, dynamic>>> addNewRequest({
     required String requestCarId,
     required String requestLocation,
     required String requestBranchId,
@@ -257,6 +258,7 @@ class CarRepository {
     required num requestPrice,
     required num requestDailyCalculationPrice,
     required num requestPriceVat,
+    required num requestDriverDailyFee,
     required List<String> attachmentsIds,
   }) async {
     try {
@@ -275,15 +277,14 @@ class CarRepository {
         attachmentsIds: attachmentsIds,
         requestPriceVat: requestPriceVat,
         requestDailyCalculationPrice: requestDailyCalculationPrice,
+        requestDriverDailyFee: requestDriverDailyFee,
       );
       if (response.statusCode == 200 && response.data['status']) {
-        String requestId = response.data['requestId'];
-        return Right(requestId);
+        return Right(response.data);
       } else {
         return Left(response.data['message']);
       }
     } catch (e) {
-      debugPrint('getCarsByBrand Error -- $e');
       return Left(e.toString());
     }
   }
@@ -399,7 +400,7 @@ class CarRepository {
   Future<Either<String, List<CarCategory>>> getAllCategories() async {
     try {
       final response = await _carServices.getAllCategories();
-      if(response.data['status']) {
+      if (response.data['status']) {
         carCategories = (response.data['data'] as List).isNotEmpty
             ? (response.data['data'] as List)
                 .map((cat) => CarCategory.fromJson(cat))

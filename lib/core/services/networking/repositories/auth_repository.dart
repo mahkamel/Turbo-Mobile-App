@@ -85,6 +85,10 @@ class AuthRepository {
     required String customerCountry,
     required String customerCountryCode,
     required int customerType,
+    required String customerNationalId,
+    required String customerNationalIDExpiryDate,
+    required String? customerDriverLicenseNumber,
+    required String? customerDriverLicenseNumberExpiryDate,
   }) async {
     try {
       final response = await _authServices.signupInfoStep(
@@ -97,13 +101,20 @@ class AuthRepository {
         customerTelephone: customerTelephone,
         customerType: customerType,
         fcmToken: AppConstants.fcmToken,
+        customerNationalId: customerNationalId,
+        customerNationalIDExpiryDate: customerNationalIDExpiryDate,
+        customerDriverLicenseNumber: customerDriverLicenseNumber,
+        customerDriverLicenseNumberExpiryDate:
+            customerDriverLicenseNumberExpiryDate,
       );
       if (response.statusCode == 200 && response.data['status']) {
         customer = CustomerModel(
+          customerAddress: customerAddress,
           customerName: customerName,
           customerId: "",
           customerEmail: customerEmail,
           attachments: <Attachment>[],
+          customerType: customerType,
           token: response.data['token'],
         );
         UserTokenService.saveUserToken(response.data['token']);
@@ -272,9 +283,7 @@ class AuthRepository {
         codeSent: (String verificationId, int? resendToken) {
           completer.complete(Right(verificationId));
         },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          // Timeout handling if needed
-        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
       );
 
       return await completer.future;
@@ -296,7 +305,6 @@ class AuthRepository {
       final userCredential = await _auth.signInWithCredential(credential);
       return Right(userCredential);
     } on FirebaseAuthException catch (e) {
-      print("otpppp ${e.toString()}");
       return Left(e.message ?? 'Verification failed');
     } catch (e) {
       return Left(e.toString());

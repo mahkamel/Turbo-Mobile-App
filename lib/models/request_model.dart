@@ -11,6 +11,7 @@ class RequestModel {
   late RequestBranch requestBranch;
   late String requestPeriod;
   late String requestPaidStatus;
+  late String requestCode;
   late DateTime requestFrom;
   late DateTime requestTo;
   late RequestCity? requestCity;
@@ -30,6 +31,7 @@ class RequestModel {
     this.requestCity,
     required this.requestPrice,
     required this.requestSysDate,
+    required this.requestCode,
   });
 
   RequestModel.fromJson(Map<String, dynamic> json) {
@@ -50,12 +52,14 @@ class RequestModel {
             branchName: "",
           );
     requestPeriod = json['requestPeriod'] ?? "";
+    requestCode = json['requestCode'].toString();
     requestFrom = DateTime.parse(
       json['requestFrom'] ?? "",
     );
     requestTo = DateTime.parse(
       json['requestTo'] ?? "",
     );
+
     requestCity = json['requestCity'] == null
         ? null
         : RequestCity.fromJson(json['requestCity'] as Map<String, dynamic>);

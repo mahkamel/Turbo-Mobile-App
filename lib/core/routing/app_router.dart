@@ -47,10 +47,10 @@ class AppRouter {
             child: const SignupScreen(),
           ),
     Routes.signupOTPScreen: (context, arguments) =>
-    BlocProvider<SignupCubit>.value(
-      value: arguments as SignupCubit,
-      child: const SignupOtpScreen(),
-    ),
+        BlocProvider<SignupCubit>.value(
+          value: arguments as SignupCubit,
+          child: const SignupOtpScreen(),
+        ),
     Routes.layoutScreen: (context, _) => BlocProvider<LayoutCubit>(
           create: (context) => getIt<LayoutCubit>(),
           child: const LayoutScreen(),
@@ -70,6 +70,7 @@ class AppRouter {
           child: PaymentScreen(
             paymentAmount: (arguments as PaymentScreenArguments).paymentAmount,
             carRequestId: arguments.carRequestId,
+            carRequestCode: arguments.carRequestCode,
           ),
         ),
     Routes.requestStatusScreen: (context, arguments) =>
@@ -82,6 +83,7 @@ class AppRouter {
               ),
             child: RequestStatusScreen(
               requestId: (arguments as RequestStatusScreenArguments).requestId,
+              requestCode: arguments.requestCode,
             ),
           ),
         ),

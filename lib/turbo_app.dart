@@ -63,34 +63,38 @@ class MyApp extends StatelessWidget {
               appLocale = state.locale;
             }
 
-            return MaterialApp(
-              navigatorKey: navigatorKey,
-              title: 'Turbo',
-              supportedLocales: AppLocalizationsSetup.supportedLocales,
-              localizationsDelegates:
-                  AppLocalizationsSetup.localizationsDelegates,
-              localeResolutionCallback:
-                  AppLocalizationsSetup.localeResolutionCallback,
-              locale: appLocale,
-              theme: ThemeData(
-                fontFamily: "Inter",
-                scaffoldBackgroundColor: AppColors.white,
-                hoverColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                colorScheme: ColorScheme.fromSeed(
-                  seedColor: AppColors.primaryRed,
+            return MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: const TextScaler.linear(1.0)),
+              child: MaterialApp(
+                navigatorKey: navigatorKey,
+                title: 'Turbo',
+                supportedLocales: AppLocalizationsSetup.supportedLocales,
+                localizationsDelegates:
+                    AppLocalizationsSetup.localizationsDelegates,
+                localeResolutionCallback:
+                    AppLocalizationsSetup.localeResolutionCallback,
+                locale: appLocale,
+                theme: ThemeData(
+                  fontFamily: "Inter",
+                  scaffoldBackgroundColor: AppColors.white,
+                  hoverColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: AppColors.primaryRed,
+                  ),
+                  useMaterial3: true,
                 ),
-                useMaterial3: true,
+                debugShowCheckedModeBanner:
+                    F.appFlavor != null && F.appFlavor == Flavor.dev
+                        ? true
+                        : false,
+                initialRoute:
+                    isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
+                onGenerateRoute: appRouter.generateRoute,
               ),
-              debugShowCheckedModeBanner:
-                  F.appFlavor != null && F.appFlavor == Flavor.dev
-                      ? true
-                      : false,
-              initialRoute:
-                  isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
-              onGenerateRoute: appRouter.generateRoute,
             );
           },
         ),

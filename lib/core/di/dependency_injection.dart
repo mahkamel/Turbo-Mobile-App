@@ -96,6 +96,7 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<PaymentCubit>(
     () => PaymentCubit(
       getIt<PaymentRepository>(),
+      getIt<AuthRepository>(),
     ),
   );
 

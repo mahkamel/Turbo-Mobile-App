@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/core/helpers/dropdown_keys.dart';
 import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
+import 'package:turbo/presentation/auth/requests/widgets/date_selection.dart';
 import 'package:turbo/presentation/auth/requests/widgets/select_phone_number.dart';
 
 import '../../../../blocs/signup/signup_cubit.dart';
@@ -43,6 +44,10 @@ class InfoStepForm extends StatelessWidget {
               SignupAddressField(),
               ChoosePhoneNumber(),
               SignupCitizenStatusDropdown(),
+              SignupNationalIdField(),
+              SignupNationalIdExpiryDateField(),
+              SignupDrivingLicenceField(),
+              SignupDrivingLicenceExpiryDateField(),
               PasswordSectionHeader(),
               SignupPasswordField(),
               SizedBox(
@@ -370,12 +375,12 @@ class SignupEmailField extends StatelessWidget {
         return AuthTextFieldWithHeader(
           header: "Email",
           isRequiredFiled: true,
-          hintText: blocRead.customerNameController.text.isEmpty
-              ? "Please Enter Email"
-              : "Please Enter Valid Email.",
+          hintText: "Please Enter Email",
           isWithValidation: true,
           textInputType: TextInputType.emailAddress,
-          validationText: "Please Enter Valid Email",
+          validationText: blocRead.customerNameController.text.isEmpty
+              ? "Please Enter Email"
+              : "Please Enter Valid Email.",
           textEditingController: blocRead.customerEmailController,
           validation: context.watch<SignupCubit>().customerEmailValidation,
           onTap: () {
@@ -447,6 +452,201 @@ class SignupNameField extends StatelessWidget {
             blocRead.checkUserNameValidation();
           },
         );
+      },
+    );
+  }
+}
+
+class SignupNationalIdField extends StatelessWidget {
+  const SignupNationalIdField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) =>
+          current is CheckNationalIdValidationState,
+      builder: (context, state) {
+        var blocRead = context.read<SignupCubit>();
+
+        return AuthTextFieldWithHeader(
+          widgetPadding: const EdgeInsetsDirectional.symmetric(
+            vertical: 16,
+            horizontal: 18,
+          ),
+          onTap: () {
+            if (clientTypeKey.currentState != null) {
+              if (clientTypeKey.currentState!.isOpen) {
+                clientTypeKey.currentState!.closeBottomSheet();
+              }
+            }
+          },
+          isRequiredFiled: true,
+          header: "National Id Number",
+          hintText: "Enter your National Id Number",
+          isWithValidation: true,
+          textInputType: TextInputType.text,
+          validationText: blocRead.nationalIdController.text.isEmpty
+              ? "Please Enter National Id Number"
+              : "Please Enter Valid National Id Number.",
+          textEditingController: blocRead.nationalIdController,
+          validation: context.watch<SignupCubit>().nationalIdValidation,
+          onTapOutside: () {
+            blocRead.checkNationalIdValidation();
+          },
+          onChange: (value) {
+            if (value.isEmpty ||
+                blocRead.nationalIdValidation != TextFieldValidation.normal) {
+              blocRead.checkNationalIdValidation();
+            }
+          },
+          onSubmit: (value) {
+            blocRead.checkNationalIdValidation();
+          },
+        );
+      },
+    );
+  }
+}
+
+class SignupNationalIdExpiryDateField extends StatelessWidget {
+  const SignupNationalIdExpiryDateField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) => current is ChangeNationalIdExpiryState,
+      builder: (context, state) {
+        var blocRead = context.read<SignupCubit>();
+        var blocWatch = context.watch<SignupCubit>();
+
+        return DateSelection(
+          padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+          onPressed: () {
+            if (clientTypeKey.currentState != null) {
+              if (clientTypeKey.currentState!.isOpen) {
+                clientTypeKey.currentState!.closeBottomSheet();
+              }
+            }
+          },
+          header: "National Id Expiry Date",
+          key: const Key("NationalIdExpiry"),
+          isRequired: true,
+          minDate: DateTime.now(),
+          isWithTime: false,
+          initialDate: blocWatch.nationalIdExpiryDate,
+          selectedDateTime: blocWatch.nationalIdExpiryDate,
+          onDateSelected: (selectedDate) {
+            if (selectedDate != null) {
+              blocRead.changeNationalIdExpiryDate(selectedDate);
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class SignupDrivingLicenceField extends StatelessWidget {
+  const SignupDrivingLicenceField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) =>
+          current is CheckDrivingLicenceValidationState ||
+          current is ChangeSACitizenIndexState,
+      builder: (context, state) {
+        var blocRead = context.read<SignupCubit>();
+        var blocWatch = context.watch<SignupCubit>();
+
+        return blocWatch.isSaudiOrSaudiResident()
+            ? const SizedBox()
+            : AuthTextFieldWithHeader(
+                widgetPadding: const EdgeInsetsDirectional.symmetric(
+                  vertical: 16,
+                  horizontal: 18,
+                ),
+                onTap: () {
+                  if (clientTypeKey.currentState != null) {
+                    if (clientTypeKey.currentState!.isOpen) {
+                      clientTypeKey.currentState!.closeBottomSheet();
+                    }
+                  }
+                },
+                isRequiredFiled: true,
+                header: "Driving Licence Number",
+                hintText: "Enter your Driving Licence Number",
+                isWithValidation: true,
+                textInputType: TextInputType.text,
+                validationText: blocRead.drivingLicenceController.text.isEmpty
+                    ? "Please Enter Driving Licence Number"
+                    : "Please Enter Valid Driving Licence Number.",
+                textEditingController: blocRead.drivingLicenceController,
+                validation:
+                    context.watch<SignupCubit>().drivingLicenceValidation,
+                onTapOutside: () {
+                  blocRead.checkDrivingLicenceValidation();
+                },
+                onChange: (value) {
+                  if (value.isEmpty ||
+                      blocRead.drivingLicenceValidation !=
+                          TextFieldValidation.normal) {
+                    blocRead.checkDrivingLicenceValidation();
+                  }
+                },
+                onSubmit: (value) {
+                  blocRead.checkDrivingLicenceValidation();
+                },
+              );
+      },
+    );
+  }
+}
+
+class SignupDrivingLicenceExpiryDateField extends StatelessWidget {
+  const SignupDrivingLicenceExpiryDateField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) =>
+          current is ChangeDrivingLicenceExpiryState,
+      builder: (context, state) {
+        var blocRead = context.read<SignupCubit>();
+        var blocWatch = context.watch<SignupCubit>();
+
+        return blocWatch.isSaudiOrSaudiResident()
+            ? const SizedBox()
+            : DateSelection(
+                padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+                header: "Driving Licence Expiry Date",
+                onPressed: () {
+                  if (clientTypeKey.currentState != null) {
+                    if (clientTypeKey.currentState!.isOpen) {
+                      clientTypeKey.currentState!.closeBottomSheet();
+                    }
+                  }
+                },
+                key: const Key("DrivingLicenceExpiry"),
+                isRequired: true,
+                minDate: DateTime.now(),
+                isWithTime: false,
+                initialDate: blocWatch.drivingLicenceExpiryDate,
+                selectedDateTime: blocWatch.drivingLicenceExpiryDate,
+                onDateSelected: (selectedDate) {
+                  if (selectedDate != null) {
+                    blocRead.changeDrivingLicenceExpiryDate(selectedDate);
+                  }
+                },
+              );
       },
     );
   }

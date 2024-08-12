@@ -16,9 +16,11 @@ class RequestStatusScreen extends StatelessWidget {
   const RequestStatusScreen({
     super.key,
     required this.requestId,
+    required this.requestCode,
   });
 
   final String requestId;
+  final String requestCode;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,8 @@ class RequestStatusScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const DefaultHeader(
-              header: "",
+            DefaultHeader(
+              header: "#$requestCode",
               textAlignment: AlignmentDirectional.center,
             ),
             const SizedBox(

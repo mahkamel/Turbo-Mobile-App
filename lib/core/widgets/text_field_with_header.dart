@@ -32,6 +32,7 @@ class AuthTextFieldWithHeader extends StatefulWidget {
     this.suffixIcon,
     this.contentPadding,
     this.isRequiredFiled = false,
+    this.widgetPadding,
   });
 
   final bool isEnabled;
@@ -56,6 +57,7 @@ class AuthTextFieldWithHeader extends StatefulWidget {
   final double horizontalPadding;
   final double? width;
   final EdgeInsetsDirectional? contentPadding;
+  final EdgeInsetsDirectional? widgetPadding;
   @override
   State<AuthTextFieldWithHeader> createState() =>
       _AuthTextFieldWithHeaderState();
@@ -68,26 +70,26 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
     return SizedBox(
       width: widget.width ?? AppConstants.screenWidth(context),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
+        padding: widget.widgetPadding ??
+            EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             widget.isRequiredFiled
                 ? Text.rich(
-                  TextSpan(
-                    text:   widget.header,
-                    style: AppFonts.inter16Black500.copyWith(
-                      color: AppColors.primaryRed,
-                    ),
-                    children: [
-                      TextSpan(
-                      text:   "*",
-                      style: AppFonts.inter16Black500.copyWith(
-                        color: AppColors.primaryRed,
-                      ),
-                      ),
-                    ]
-                  ),
+                    TextSpan(
+                        text: widget.header,
+                        style: AppFonts.inter16Black500.copyWith(
+                          color: AppColors.primaryRed,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: "*",
+                            style: AppFonts.inter16Black500.copyWith(
+                              color: AppColors.primaryRed,
+                            ),
+                          ),
+                        ]),
                   )
                 : Text(
                     widget.header,

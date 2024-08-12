@@ -62,6 +62,10 @@ class AuthServices {
     required String customerCountryCode,
     required int customerType,
     required String fcmToken,
+    required String customerNationalId,
+    required String customerNationalIDExpiryDate,
+    required String? customerDriverLicenseNumber,
+    required String? customerDriverLicenseNumberExpiryDate,
   }) async {
     try {
       Response response = await DioHelper.postData(
@@ -77,6 +81,13 @@ class AuthServices {
             "customerCountryCode": customerCountryCode,
             "customerType": customerType, // 0=> saudi , 1=> other
             "customerUserToken": fcmToken,
+            "customerNationalId": customerNationalId,
+            "customerNationalIDExpiryDate": customerNationalIDExpiryDate,
+            if (customerDriverLicenseNumber != null)
+              "customerDriverLicenseNumber": customerDriverLicenseNumber,
+            if (customerDriverLicenseNumberExpiryDate != null)
+              "customerDriverLicenseNumberExpiryDate":
+                  customerDriverLicenseNumberExpiryDate,
           }
         },
       );

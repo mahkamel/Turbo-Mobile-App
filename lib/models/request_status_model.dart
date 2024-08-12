@@ -18,7 +18,7 @@ class RequestStatusModel {
   String customerId;
   String requestPaidStatus;
   DateTime requestSysDate;
-  int requestCode;
+  String requestCode;
   String requestRejectComment;
   DateTime? requestRejectedDate;
 
@@ -66,9 +66,8 @@ class RequestStatusModel {
           RequestCity.fromJson(json['requestCity'] as Map<String, dynamic>),
       requestPrice: json['requestTotalPrice'] ?? 0.0,
       customerId: json['customerId'] ?? "",
-      requestSysDate: DateTime.parse(
-          json['requestSysDate'] as String), // Assuming date format
-      requestCode: json['requestCode'] as int,
+      requestSysDate: DateTime.parse(json['requestSysDate'] as String),
+      requestCode: json['requestCode'].toString(),
       requestRejectComment: json.containsKey("requestRejectComment")
           ? json['requestRejectComment'] ?? ""
           : "",

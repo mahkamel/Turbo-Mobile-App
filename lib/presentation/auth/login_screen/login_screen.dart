@@ -71,7 +71,8 @@ class LoginScreen extends StatelessWidget {
                       message: state.errMsg,
                     );
                   } else if (state is LoginSuccessState) {
-                    if (requestedCarId != null) {
+                    if (requestedCarId != null &&
+                        (requestedCarId?.isNotEmpty ?? false)) {
                       Navigator.of(context).pushReplacementNamed(
                         Routes.signupScreen,
                         arguments: SignupScreenArguments(
@@ -146,8 +147,7 @@ class LoginEmail extends StatelessWidget {
       isWithValidation: true,
       textInputType: TextInputType.emailAddress,
       validationText: "Invalid Email Address.",
-      textEditingController:
-          context.read<LoginCubit>().emailController,
+      textEditingController: context.read<LoginCubit>().emailController,
       validation: context.watch<LoginCubit>().emailValidation,
       onChange: (value) {
         if (value.isEmpty ||

@@ -33,7 +33,6 @@ class SignupCubit extends Cubit<SignupState> {
   int saCitizenSelectedIndex = 0;
 
   int citySelectedIndex = 0;
-  int districtSelectedIndex = 0;
 
   double calculatedPrice = 0.0;
   double calculatedPriceWithVat = 0.0;
@@ -76,10 +75,29 @@ class SignupCubit extends Cubit<SignupState> {
   TextEditingController confirmPasswordController = TextEditingController();
   TextFieldValidation confirmPasswordValidation = TextFieldValidation.normal;
 
+  TextEditingController nationalIdController = TextEditingController();
+  TextFieldValidation nationalIdValidation = TextFieldValidation.normal;
+
+  TextEditingController nationalIdExpiryDateController =
+      TextEditingController();
+  TextFieldValidation nationalIdExpiryDateValidation =
+      TextFieldValidation.normal;
+
+  TextEditingController drivingLicenceController = TextEditingController();
+  TextFieldValidation drivingLicenceValidation = TextFieldValidation.normal;
+
+  TextEditingController drivingLicenceExpiryDateController =
+      TextEditingController();
+  TextFieldValidation drivingLicenceExpiryDateValidation =
+      TextFieldValidation.normal;
+
   bool isWithPrivateDriver = false;
 
   DateTime? pickedDate;
   DateTime? deliveryDate;
+
+  DateTime? nationalIdExpiryDate;
+  DateTime? drivingLicenceExpiryDate;
 
   String requestedCarId = "";
 
@@ -209,6 +227,13 @@ class SignupCubit extends Cubit<SignupState> {
         customerCountry: country,
         customerCountryCode: countryIsoCode,
         customerType: saCitizenSelectedIndex,
+        customerNationalId: nationalIdController.text,
+        customerNationalIDExpiryDate: nationalIdExpiryDate!.toIso8601String(),
+        customerDriverLicenseNumber: drivingLicenceController.text.isNotEmpty
+            ? drivingLicenceController.text
+            : null,
+        customerDriverLicenseNumberExpiryDate:
+            drivingLicenceExpiryDate?.toIso8601String(),
       );
       res.fold(
         (errMsg) => emit(
@@ -270,6 +295,96 @@ class SignupCubit extends Cubit<SignupState> {
         SignupState.checkName(
           name: customerNameController.text,
           validation: customerNameValidation,
+        ),
+      );
+    }
+  }
+
+  void checkNationalIdValidation() {
+    if (nationalIdController.text.isNotEmpty) {
+      nationalIdValidation = TextFieldValidation.valid;
+      emit(
+        SignupState.checkNationalIdValidation(
+          nationalId: nationalIdController.text,
+          validation: nationalIdValidation,
+        ),
+      );
+    } else {
+      nationalIdValidation = TextFieldValidation.notValid;
+      emit(
+        SignupState.checkNationalIdValidation(
+          nationalId: nationalIdController.text,
+          validation: nationalIdValidation,
+        ),
+      );
+    }
+  }
+
+  void changeNationalIdExpiryDate(DateTime date) {
+    nationalIdExpiryDate = date;
+    emit(SignupState.changeNationalIdExpiry(date: date.toIso8601String()));
+  }
+
+  void checkNationalIdExpiryDateValidation() {
+    if (nationalIdExpiryDateController.text.isNotEmpty) {
+      nationalIdExpiryDateValidation = TextFieldValidation.valid;
+      emit(
+        SignupState.checkNationalIdExpiryDateValidation(
+          date: nationalIdExpiryDateController.text,
+          validation: nationalIdExpiryDateValidation,
+        ),
+      );
+    } else {
+      nationalIdExpiryDateValidation = TextFieldValidation.notValid;
+      emit(
+        SignupState.checkNationalIdExpiryDateValidation(
+          date: nationalIdExpiryDateController.text,
+          validation: nationalIdExpiryDateValidation,
+        ),
+      );
+    }
+  }
+
+  void changeDrivingLicenceExpiryDate(DateTime date) {
+    drivingLicenceExpiryDate = date;
+    emit(SignupState.changeDrivingLicenceExpiry(date: date.toIso8601String()));
+  }
+
+  void checkDrivingLicenceValidation() {
+    if (drivingLicenceController.text.isNotEmpty) {
+      drivingLicenceValidation = TextFieldValidation.valid;
+      emit(
+        SignupState.checkDrivingLicenceValidation(
+          drivingLicence: drivingLicenceController.text,
+          validation: drivingLicenceValidation,
+        ),
+      );
+    } else {
+      drivingLicenceValidation = TextFieldValidation.notValid;
+      emit(
+        SignupState.checkDrivingLicenceValidation(
+          drivingLicence: drivingLicenceController.text,
+          validation: drivingLicenceValidation,
+        ),
+      );
+    }
+  }
+
+  void checkDrivingLicenceExpiryDateValidation() {
+    if (drivingLicenceExpiryDateController.text.isNotEmpty) {
+      drivingLicenceExpiryDateValidation = TextFieldValidation.valid;
+      emit(
+        SignupState.checkDrivingLicenceExpiryDateValidation(
+          date: drivingLicenceExpiryDateController.text,
+          validation: drivingLicenceExpiryDateValidation,
+        ),
+      );
+    } else {
+      drivingLicenceExpiryDateValidation = TextFieldValidation.notValid;
+      emit(
+        SignupState.checkDrivingLicenceExpiryDateValidation(
+          date: drivingLicenceExpiryDateController.text,
+          validation: drivingLicenceExpiryDateValidation,
         ),
       );
     }
@@ -409,19 +524,29 @@ class SignupCubit extends Cubit<SignupState> {
     checkAddressValidation();
     checkPasswordValidation();
     checkConfirmPasswordValidation();
+    checkNationalIdValidation();
+    if (isSaudiOrSaudiResident()) {
+      checkDrivingLicenceValidation();
+    }
 
     if (isFieldNotEmpty(customerNameController) &&
         isFieldNotEmpty(customerEmailController) &&
         isFieldNotEmpty(customerAddressController) &&
         isFieldNotEmpty(passwordController) &&
         isFieldNotEmpty(confirmPasswordController) &&
-        phoneNumber.isNotEmpty) {
+        phoneNumber.isNotEmpty &&
+        isFieldNotEmpty(nationalIdController) &&
+        nationalIdExpiryDate != null &&
+        ((isFieldNotEmpty(drivingLicenceController) &&
+                drivingLicenceExpiryDate != null) ||
+            isSaudiOrSaudiResident())) {
       if (isFieldValid(customerNameValidation) &&
           isFieldValid(customerEmailValidation) &&
           isFieldValid(customerAddressValidation) &&
           isFieldValid(passwordValidation) &&
           isFieldValid(confirmPasswordValidation) &&
-          phoneValidation == TextFieldValidation.valid) {
+          phoneValidation == TextFieldValidation.valid &&
+          isFieldValid(nationalIdValidation)) {
         emit(const SignupState.submitCustomerInfoLoading());
         final res = await authRepository.checkUserExistence(
           email: customerEmailController.text,
@@ -440,32 +565,6 @@ class SignupCubit extends Cubit<SignupState> {
       emit(const SignupState.submitCustomerInfoFailed(
           errMsg: "Please complete all required fields"));
     }
-  }
-
-  Future<void> sendCustomerData() async {
-    emit(const SignupState.submitCustomerInfoLoading());
-    await Future.delayed(const Duration(seconds: 1));
-    final res = await authRepository.signupInfoStep(
-      customerName: customerNameController.text,
-      customerEmail: customerEmailController.text,
-      customerAddress: customerAddressController.text,
-      customerTelephone: phoneNumber,
-      customerPassword: passwordController.text,
-      customerCountry: country,
-      customerCountryCode: countryIsoCode,
-      customerType: saCitizenSelectedIndex,
-    );
-    res.fold(
-      (errMsg) => emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg)),
-      (_) {
-        emit(const SignupState.submitCustomerInfoSuccess());
-      },
-    );
-  }
-
-  void changeSelectedDistrictId(int index) {
-    districtSelectedIndex = index;
-    emit(SignupState.changeSelectedCityIndex(index: index));
   }
 
   void changeIsWithPrivateDriverValue(bool value) async {
@@ -522,18 +621,20 @@ class SignupCubit extends Cubit<SignupState> {
         emit(const SignupState.confirmBookingFailed(
             errMsg: "Complete all required fields"));
       } else if ((deliveryDate != null || deliveryDate != null) &&
-          nationalIdFile != null &&
-          passportFiles != null &&
+          ((nationalIdFile != null && passportFiles != null) ||
+              isSaudiOrSaudiResident()) &&
           locationController.text.isNotEmpty &&
           AppConstants.vat != -1 &&
           AppConstants.driverFees != -1) {
         calculatedPriceWithVat =
             calculatedPrice + (calculatedPrice * (AppConstants.vat / 100));
         emit(const SignupState.confirmBookingLoading());
-        if (authRepository.customer.attachments.isNotEmpty) {
+        if (authRepository.customer.token.isNotEmpty) {
           List<String> userAttachmentsIds = [];
-          for (var attachment in authRepository.customer.attachments) {
-            userAttachmentsIds.add(attachment.id);
+          if (authRepository.customer.attachments.isNotEmpty) {
+            for (var attachment in authRepository.customer.attachments) {
+              userAttachmentsIds.add(attachment.id);
+            }
           }
           final res = await carRepository.addNewRequest(
             requestCarId: requestedCarId,
@@ -555,17 +656,21 @@ class SignupCubit extends Cubit<SignupState> {
             requestDailyCalculationPrice:
                 double.parse(pricePerDay.toStringAsFixed(2)),
             requestPriceVat: AppConstants.vat,
+            requestDriverDailyFee: AppConstants.driverFees,
           );
           res.fold(
             (errMsg) => emit(SignupState.confirmBookingFailed(errMsg: errMsg)),
-            (requestId) {
-              emit(SignupState.confirmBookingSuccess(requestId));
+            (res) {
+              emit(SignupState.confirmBookingSuccess(
+                  requestId: res['requestId'],
+                  registerCode: res['registerCode'].toString()));
             },
           );
         } else {
           calculatedPriceWithVat =
               calculatedPrice + (calculatedPrice * (AppConstants.vat / 100));
           final res = await carRepository.addCarRequest(
+            requestDriverDailyFee: AppConstants.driverFees,
             requestCarId: requestedCarId,
             requestLocation: locationController.text,
             requestBranchId: authRepository.selectedBranchId,
@@ -591,15 +696,19 @@ class SignupCubit extends Cubit<SignupState> {
             (l) => (errMsg) =>
                 emit(SignupState.confirmBookingFailed(errMsg: errMsg)),
             (res) {
-              List<Attachment> userAttachments = (res['attachmentIds'] as List)
-                  .map(
-                    (e) => Attachment.fromJson(e),
-                  )
-                  .toList();
+              if (res.containsKey('attachmentIds')) {
+                List<Attachment> userAttachments =
+                    (res['attachmentIds'] as List)
+                        .map(
+                          (e) => Attachment.fromJson(e),
+                        )
+                        .toList();
+                authRepository.customer.attachments = userAttachments;
+              }
 
-              authRepository.customer.attachments = userAttachments;
-
-              emit(SignupState.confirmBookingSuccess(res['requestId']));
+              emit(SignupState.confirmBookingSuccess(
+                  requestId: res['requestId'],
+                  registerCode: res['registerCode'].toString()));
             },
           );
         }
@@ -658,6 +767,13 @@ class SignupCubit extends Cubit<SignupState> {
     } catch (e) {
       emit(SignupState.saveEditedFileError(e.toString(), fileId));
     }
+  }
+
+  bool isSaudiOrSaudiResident() {
+    return dialCode.startsWith("+966") ||
+        (authRepository.customer.customerType == 1
+            ? false
+            : saCitizenSelectedIndex == 0);
   }
 }
 

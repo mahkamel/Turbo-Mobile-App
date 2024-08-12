@@ -125,6 +125,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                             arguments:
                                                 RequestStatusScreenArguments(
                                               requestId: allRequests[index].id,
+                                              requestCode: allRequests[index]
+                                                  .requestCode,
                                             ),
                                           );
                                         } else {
@@ -135,6 +137,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                   .requestPrice,
                                               carRequestId:
                                                   allRequests[index].id,
+                                              carRequestCode: allRequests[index]
+                                                  .requestCode,
                                             ),
                                           );
                                         }
