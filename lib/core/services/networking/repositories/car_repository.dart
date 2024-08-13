@@ -330,6 +330,7 @@ class CarRepository {
     DateTime? requestTo,
     num? requestPrice,
     num? requestDailyCalculationPrice,
+    num? requestDriverDailyFee,
   }) async {
     try {
       final response = await _requestsService.editRequestBody(
@@ -341,6 +342,7 @@ class CarRepository {
         requestLocation: requestLocation,
         requestDriver: requestDriver,
         requestDailyCalculationPrice: requestDailyCalculationPrice,
+        requestDriverDailyFee: requestDriverDailyFee,
       );
       if (response.statusCode == 200 && response.data['status']) {
         return const Right("Your data has been saved");

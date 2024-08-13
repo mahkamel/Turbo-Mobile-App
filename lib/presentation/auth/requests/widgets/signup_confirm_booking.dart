@@ -30,9 +30,10 @@ class SignupConfirmBooking extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BookingLocationField(),
-          PrivateDriverRow(),
+          SizedBox(height: 16),
           PickupDateSelection(),
           DeliveryDateSelection(),
+          PrivateDriverRow(),
           RentalPrice(),
           SizedBox(
             height: 16,
@@ -74,17 +75,6 @@ class ConfirmBookingButton extends StatelessWidget {
       },
       builder: (context, state) {
         var blocWatch = context.watch<SignupCubit>();
-        print("nationaainit ${blocWatch.nationalIdInitStatus}");
-        print("nationaainit ${blocWatch.passportInitStatus}");
-        print("nationaainit ${blocRead.isSaudiOrSaudiResident()}");
-        print(
-            "issss ${((blocWatch.nationalIdInitStatus == -1 || blocWatch.passportInitStatus == -1) || !blocRead.isSaudiOrSaudiResident())}");
-        print(
-            "locationValidation ${blocWatch.locationValidation == TextFieldValidation.valid}");
-        print("deliveryDate ${blocWatch.deliveryDate != null}");
-        print("pickedDate ${blocWatch.pickedDate != null}");
-        print("nationalIdInitStatus ${blocWatch.nationalIdInitStatus}");
-        print("passportInitStatus ${blocWatch.passportInitStatus}");
         return DefaultButton(
           loading: state is ConfirmBookingLoadingState,
           marginRight: 16,
@@ -471,7 +461,7 @@ class RentalPrice extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    "${blocWatch.calculatedPrice.toStringAsFixed(2)} ",
+                    "${(blocWatch.calculatedPrice - blocWatch.calculatedDriverFees).toStringAsFixed(2)} ",
                     style: AppFonts.inter16Black500,
                   ),
                   Text(
@@ -480,25 +470,43 @@ class RentalPrice extends StatelessWidget {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "Vat (${AppConstants.vat}%): ",
-                      style: AppFonts.inter16TypeGreyHeader600,
-                    ),
-                    const Spacer(),
-                    Text(
-                      "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} ",
-                      style: AppFonts.inter16Black500,
-                    ),
-                    Text(
-                      "SAR",
-                      style: AppFonts.inter16Black500,
-                    ),
-                  ],
+              if (blocWatch.isWithPrivateDriver)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Driver fees: ",
+                        style: AppFonts.inter16TypeGreyHeader600,
+                      ),
+                      const Spacer(),
+                      Text(
+                        "${(blocWatch.calculatedDriverFees).toStringAsFixed(2)} ",
+                        style: AppFonts.inter16Black500,
+                      ),
+                      Text(
+                        "SAR",
+                        style: AppFonts.inter16Black500,
+                      ),
+                    ],
+                  ),
                 ),
+              Row(
+                children: [
+                  Text(
+                    "Vat (${AppConstants.vat}%): ",
+                    style: AppFonts.inter16TypeGreyHeader600,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} ",
+                    style: AppFonts.inter16Black500,
+                  ),
+                  Text(
+                    "SAR",
+                    style: AppFonts.inter16Black500,
+                  ),
+                ],
               ),
               const Divider(
                 height: 16,
@@ -616,8 +624,6 @@ class PrivateDriverRow extends StatelessWidget {
             padding: const EdgeInsetsDirectional.only(
               start: 20.0,
               end: 10.0,
-              top: 16.0,
-              bottom: 8.0,
             ),
             child: Row(
               children: [

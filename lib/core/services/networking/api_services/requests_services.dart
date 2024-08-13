@@ -38,6 +38,8 @@ class RequestsService {
     DateTime? requestTo,
     num? requestPrice,
     num? requestDailyCalculationPrice,
+    num? isWithRequestDriver,
+    num? requestDriverDailyFee,
   }) async {
     try {
       Response response = await DioHelper.postData(
@@ -53,6 +55,9 @@ class RequestsService {
             if (requestTo != null) "requestTo": requestTo.toIso8601String(),
             if (requestPrice != null) "requestTotalPrice": requestPrice,
             if(requestDailyCalculationPrice != null)"requestDailyCalculationPrice" :requestDailyCalculationPrice,
+            if (isWithRequestDriver != null && requestDriverDailyFee != null)
+              "requestDriverDailyFee": requestDriverDailyFee,
+
           }
         },
       );

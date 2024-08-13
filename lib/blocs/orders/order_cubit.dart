@@ -35,6 +35,7 @@ class OrderCubit extends Cubit<OrderState> {
 
   double calculatedPrice = 0.0;
   double calculatedPriceWithVat = 0.0;
+  num calculatedDriverFees = 0.0;
   double pricePerDay = 0.0;
   double dailyPrice = 0;
   double weeklyPrice = 0;
@@ -95,6 +96,7 @@ class OrderCubit extends Cubit<OrderState> {
   void calculatePrice() {
     calculatedPrice = 0.0;
     pricePerDay = 0.0;
+    calculatedDriverFees = 0.0;
     if (deliveryDate != null && pickedDate != null) {
       final int durationInDays = deliveryDate!.difference(pickedDate!).inDays;
 
@@ -108,15 +110,19 @@ class OrderCubit extends Cubit<OrderState> {
       calculatedPrice = durationInDays * pricePerDay;
       calculatedPriceWithVat =
           (calculatedPrice) + (calculatedPrice * (AppConstants.vat / 100));
+
+      if (isWithPrivateDriver) {
+        calculatedDriverFees = (AppConstants.driverFees * durationInDays);
+        calculatedPrice += calculatedDriverFees;
+        num driverFeesWithVats =
+            (calculatedDriverFees * (AppConstants.vat / 100)) +
+                calculatedDriverFees;
+        calculatedPriceWithVat += driverFeesWithVats;
+      } else {
+        calculatedDriverFees = 0.0;
+      }
     }
 
-    if (isWithPrivateDriver) {
-      calculatedPrice += AppConstants.driverFees;
-      num driverFeesWithFats =
-          (AppConstants.driverFees * (AppConstants.vat / 100)) +
-              AppConstants.driverFees;
-      calculatedPriceWithVat += driverFeesWithFats;
-    }
     emit(OrderState.calculateEditedPrice(price: calculatedPrice));
   }
 
@@ -203,6 +209,8 @@ class OrderCubit extends Cubit<OrderState> {
               calculatedPrice != requestStatus!.requestPrice
                   ? pricePerDay
                   : null,
+          requestDriverDailyFee:
+              isWithPrivateDriver ? AppConstants.driverFees : null,
         );
         res.fold(
           (errMsg) {

@@ -35,6 +35,7 @@ class SignupCubit extends Cubit<SignupState> {
   int citySelectedIndex = 0;
 
   double calculatedPrice = 0.0;
+  num calculatedDriverFees = 0.0;
   double calculatedPriceWithVat = 0.0;
   double pricePerDay = 0.0;
   double dailyPrice = 0;
@@ -594,6 +595,7 @@ class SignupCubit extends Cubit<SignupState> {
   void calculatePrice() {
     calculatedPrice = 0.0;
     pricePerDay = 0.0;
+    calculatedDriverFees = 0;
     if (deliveryDate != null && pickedDate != null) {
       final int durationInDays = deliveryDate!.difference(pickedDate!).inDays;
 
@@ -605,12 +607,14 @@ class SignupCubit extends Cubit<SignupState> {
         pricePerDay = monthlyPrice;
       }
       calculatedPrice = durationInDays * pricePerDay;
-      debugPrint("caaaaa $calculatedPrice -- $durationInDays -- $pricePerDay");
+      if (isWithPrivateDriver) {
+        calculatedDriverFees = (AppConstants.driverFees * durationInDays);
+        calculatedPrice += calculatedDriverFees;
+      }else{
+        calculatedDriverFees = 0;
+      }
     }
 
-    if (isWithPrivateDriver) {
-      calculatedPrice += AppConstants.driverFees;
-    }
     emit(SignupState.calculatePrice(price: calculatedPrice));
   }
 

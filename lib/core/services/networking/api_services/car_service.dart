@@ -102,11 +102,6 @@ class CarServices {
           "carBrand": carBrands,
         });
       }
-      // if (isWithUnlimited) {
-      //   filterBody.addAll({
-      //     "carLimitedKiloMeters": isWithUnlimited,
-      //   });
-      // }
       if (priceFrom != null) {
         filterBody.addAll({
           "priceRange": {
@@ -252,7 +247,8 @@ class CarServices {
           "requestDailyCalculationPrice": requestDailyCalculationPrice,
           "requestToken": requestToken,
           "requestPriceVat": requestPriceVat,
-          "requestDriverDailyFee": requestDriverDailyFee,
+          if (isWithRequestDriver)
+            "requestDriverDailyFee": requestDriverDailyFee,
           if (attachmentsIds.isNotEmpty) "attachmentsId": attachmentsIds,
         }
       };
