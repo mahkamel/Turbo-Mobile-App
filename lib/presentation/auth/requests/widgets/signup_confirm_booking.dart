@@ -120,50 +120,55 @@ class RequiredFilesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final blocRead = context.read<SignupCubit>();
+    print("is Saudidd ${blocRead.isSaudiOrSaudiResident()}");
     if (context.watch<AuthRepository>().customer.attachments.isEmpty) {
-      return WidgetWithHeader(
-        header: "Files",
-        isRequiredField: blocRead.isSaudiOrSaudiResident() ? false : true,
-        headerStyle: AppFonts.inter16Black500.copyWith(
-          color: AppColors.primaryRed,
-          fontSize: 18,
-        ),
-        widget: Column(
-          children: [
-            SelectFile(
-              key: const Key("NationalIDConfirm"),
-              isFromMyApplication: false,
-              padding: EdgeInsetsDirectional.zero,
-              header: "National ID",
-              onFileSelected: (p0, isSingle) async {
-                blocRead.nationalIdFile = await convertPlatformFileList(p0);
-                blocRead.changeNationalIdState(0);
-              },
-              onPrefixClicked: () {
-                blocRead.nationalIdFile = null;
-                blocRead.changeNationalIdState(-1);
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            SelectFile(
-              key: const Key("PassportConfirm"),
-              isFromMyApplication: false,
-              padding: EdgeInsetsDirectional.zero,
-              header: "Passport",
-              onFileSelected: (p0, isSingle) async {
-                blocRead.passportFiles = await convertPlatformFileList(p0);
-                blocRead.changePassportState(0);
-              },
-              onPrefixClicked: () {
-                blocRead.passportFiles = null;
-                blocRead.changePassportState(-1);
-              },
-            ),
-          ],
-        ),
-      );
+      return blocRead.isSaudiOrSaudiResident()
+          ? const SizedBox()
+          : WidgetWithHeader(
+              header: "Files",
+              isRequiredField: blocRead.isSaudiOrSaudiResident() ? false : true,
+              headerStyle: AppFonts.inter16Black500.copyWith(
+                color: AppColors.primaryRed,
+                fontSize: 18,
+              ),
+              widget: Column(
+                children: [
+                  SelectFile(
+                    key: const Key("NationalIDConfirm"),
+                    isFromMyApplication: false,
+                    padding: EdgeInsetsDirectional.zero,
+                    header: "National ID",
+                    onFileSelected: (p0, isSingle) async {
+                      blocRead.nationalIdFile =
+                          await convertPlatformFileList(p0);
+                      blocRead.changeNationalIdState(0);
+                    },
+                    onPrefixClicked: () {
+                      blocRead.nationalIdFile = null;
+                      blocRead.changeNationalIdState(-1);
+                    },
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  SelectFile(
+                    key: const Key("PassportConfirm"),
+                    isFromMyApplication: false,
+                    padding: EdgeInsetsDirectional.zero,
+                    header: "Passport",
+                    onFileSelected: (p0, isSingle) async {
+                      blocRead.passportFiles =
+                          await convertPlatformFileList(p0);
+                      blocRead.changePassportState(0);
+                    },
+                    onPrefixClicked: () {
+                      blocRead.passportFiles = null;
+                      blocRead.changePassportState(-1);
+                    },
+                  ),
+                ],
+              ),
+            );
     } else {
       return const ExistingUserAttachments();
     }

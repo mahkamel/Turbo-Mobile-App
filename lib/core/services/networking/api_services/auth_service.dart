@@ -83,8 +83,8 @@ class AuthServices {
             "customerUserToken": fcmToken,
             "customerNationalId": customerNationalId,
             "customerNationalIDExpiryDate": customerNationalIDExpiryDate,
-            if (customerDriverLicenseNumber != null)
-              "customerDriverLicenseNumber": customerDriverLicenseNumber,
+            "customerDriverLicenseNumber":
+                customerDriverLicenseNumber ?? customerNationalId,
             if (customerDriverLicenseNumberExpiryDate != null)
               "customerDriverLicenseNumberExpiryDate":
                   customerDriverLicenseNumberExpiryDate,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 
 import '../../../../../blocs/orders/order_cubit.dart';
+import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/helpers/constants.dart';
 import '../../../../../core/helpers/enums.dart';
 import '../../../../../core/theming/colors.dart';
@@ -48,7 +50,9 @@ class EditRequest extends StatelessWidget {
                 errMsg: blocRead.requestStatus!.requestRejectComment,
               ),
             const EditLocation(),
-            const SizedBox(height: 16,),
+            const SizedBox(
+              height: 16,
+            ),
             const EditPickupDate(),
             const EditDeliveryDate(),
             const EditPrivateDriver(),
@@ -72,31 +76,39 @@ class EditRequest extends StatelessWidget {
                 );
               },
             ),
-            const Divider(
-              height: 48,
-              color: AppColors.divider,
-              thickness: 2,
-            ),
-            WidgetWithHeader(
-              padding: EdgeInsetsDirectional.zero,
-              header: "Files",
-              isRequiredField:
-                  blocRead.requestStatus?.requestStatus == 4 ? true : false,
-              headerStyle: AppFonts.inter16Black500.copyWith(
-                color: AppColors.primaryRed,
-                fontSize: 18,
+            if (getIt<AuthRepository>().customer.customerType != 0 ||
+                blocRead.requestStatus!.requestStatus == 4)
+              const Divider(
+                height: 48,
+                color: AppColors.divider,
+                thickness: 2,
               ),
-              widget: EditedFiles(
-                blocRead: blocRead,
-                blocWatch: blocWatch,
-                nationalIDRejectionComment: nationalIdResult != null
-                    ? nationalIdResult?.fileRejectComment ?? ""
-                    : "",
-                passportRejectionComment: passportResult != null
-                    ? passportResult?.fileRejectComment ?? ""
-                    : "",
+            if (getIt<AuthRepository>().customer.customerType != 0 ||
+                blocRead.requestStatus!.requestStatus == 4)
+              WidgetWithHeader(
+                padding: EdgeInsetsDirectional.zero,
+                header: "Files",
+                isRequiredField:
+                    blocRead.requestStatus?.requestStatus == 4 ? true : false,
+                headerStyle: AppFonts.inter16Black500.copyWith(
+                  color: AppColors.primaryRed,
+                  fontSize: 18,
+                ),
+                widget: EditedFiles(
+                  blocRead: blocRead,
+                  blocWatch: blocWatch,
+                  nationalIDRejectionComment: nationalIdResult != null
+                      ? nationalIdResult?.fileRejectComment ?? ""
+                      : "",
+                  passportRejectionComment: passportResult != null
+                      ? passportResult?.fileRejectComment ?? ""
+                      : "",
+                ),
               ),
-            ),
+            if (getIt<AuthRepository>().customer.customerType == 0)
+              const SizedBox(
+                height: 24,
+              ),
             BlocConsumer<OrderCubit, OrderState>(
               listenWhen: (previous, current) =>
                   current is SubmitEditsLoadingState ||
@@ -452,26 +464,26 @@ class EditedPrice extends StatelessWidget {
                   ),
                 ],
               ),
-              if(blocWatch.isWithPrivateDriver)
-              Row(
-                children: [
-                  Text(
-                    "Driver Fees: ",
-                    style: AppFonts.inter16TypeGreyHeader600,
-                  ),
-                  const Spacer(),
-                  Text(
-                    "${blocWatch.calculatedDriverFees.toStringAsFixed(2)} ",
-                    style: AppFonts.inter18Black500,
-                  ),
-                  Text(
-                    "SAR",
-                    style: AppFonts.inter16Black500.copyWith(
-                      fontSize: 16,
+              if (blocWatch.isWithPrivateDriver)
+                Row(
+                  children: [
+                    Text(
+                      "Driver Fees: ",
+                      style: AppFonts.inter16TypeGreyHeader600,
                     ),
-                  ),
-                ],
-              ),
+                    const Spacer(),
+                    Text(
+                      "${blocWatch.calculatedDriverFees.toStringAsFixed(2)} ",
+                      style: AppFonts.inter18Black500,
+                    ),
+                    Text(
+                      "SAR",
+                      style: AppFonts.inter16Black500.copyWith(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
               Row(
                 children: [
                   Text(
@@ -600,28 +612,28 @@ class EditPrivateDriver extends StatelessWidget {
             height: 16,
           )
         : Row(
-          children: [
-            Text(
-              "Private Driver?",
-              style: AppFonts.inter16Black500
-                  .copyWith(color: AppColors.primaryRed),
-            ),
-            const Spacer(),
-            BlocBuilder<OrderCubit, OrderState>(
-              buildWhen: (previous, current) =>
-                  current is ChangeIsWithPrivateEditValueState,
-              builder: (context, state) {
-                return Switch.adaptive(
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  value: context.watch<OrderCubit>().isWithPrivateDriver,
-                  onChanged: (value) {
-                    blocRead.changeIsWithPrivateDriverValue(value);
-                  },
-                );
-              },
-            ),
-          ],
-        );
+            children: [
+              Text(
+                "Private Driver?",
+                style: AppFonts.inter16Black500
+                    .copyWith(color: AppColors.primaryRed),
+              ),
+              const Spacer(),
+              BlocBuilder<OrderCubit, OrderState>(
+                buildWhen: (previous, current) =>
+                    current is ChangeIsWithPrivateEditValueState,
+                builder: (context, state) {
+                  return Switch.adaptive(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    value: context.watch<OrderCubit>().isWithPrivateDriver,
+                    onChanged: (value) {
+                      blocRead.changeIsWithPrivateDriverValue(value);
+                    },
+                  );
+                },
+              ),
+            ],
+          );
   }
 }
 

@@ -623,30 +623,31 @@ class SignupDrivingLicenceExpiryDateField extends StatelessWidget {
         var blocRead = context.read<SignupCubit>();
         var blocWatch = context.watch<SignupCubit>();
 
-        return blocWatch.isSaudiOrSaudiResident()
-            ? const SizedBox()
-            : DateSelection(
-                padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                header: "Driving Licence Expiry Date",
-                onPressed: () {
-                  if (clientTypeKey.currentState != null) {
-                    if (clientTypeKey.currentState!.isOpen) {
-                      clientTypeKey.currentState!.closeBottomSheet();
-                    }
-                  }
-                },
-                key: const Key("DrivingLicenceExpiry"),
-                isRequired: true,
-                minDate: DateTime.now(),
-                isWithTime: false,
-                initialDate: blocWatch.drivingLicenceExpiryDate,
-                selectedDateTime: blocWatch.drivingLicenceExpiryDate,
-                onDateSelected: (selectedDate) {
-                  if (selectedDate != null) {
-                    blocRead.changeDrivingLicenceExpiryDate(selectedDate);
-                  }
-                },
-              );
+        return DateSelection(
+          padding:
+              const EdgeInsetsDirectional.symmetric(horizontal: 20).copyWith(
+            top: blocWatch.isSaudiOrSaudiResident() ? 16 : 0,
+          ),
+          header: "Driving Licence Expiry Date",
+          onPressed: () {
+            if (clientTypeKey.currentState != null) {
+              if (clientTypeKey.currentState!.isOpen) {
+                clientTypeKey.currentState!.closeBottomSheet();
+              }
+            }
+          },
+          key: const Key("DrivingLicenceExpiry"),
+          isRequired: true,
+          minDate: DateTime.now(),
+          isWithTime: false,
+          initialDate: blocWatch.drivingLicenceExpiryDate,
+          selectedDateTime: blocWatch.drivingLicenceExpiryDate,
+          onDateSelected: (selectedDate) {
+            if (selectedDate != null) {
+              blocRead.changeDrivingLicenceExpiryDate(selectedDate);
+            }
+          },
+        );
       },
     );
   }

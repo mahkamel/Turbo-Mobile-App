@@ -79,18 +79,10 @@ class SignupCubit extends Cubit<SignupState> {
   TextEditingController nationalIdController = TextEditingController();
   TextFieldValidation nationalIdValidation = TextFieldValidation.normal;
 
-  TextEditingController nationalIdExpiryDateController =
-      TextEditingController();
-  TextFieldValidation nationalIdExpiryDateValidation =
-      TextFieldValidation.normal;
 
   TextEditingController drivingLicenceController = TextEditingController();
   TextFieldValidation drivingLicenceValidation = TextFieldValidation.normal;
 
-  TextEditingController drivingLicenceExpiryDateController =
-      TextEditingController();
-  TextFieldValidation drivingLicenceExpiryDateValidation =
-      TextFieldValidation.normal;
 
   bool isWithPrivateDriver = false;
 
@@ -326,25 +318,6 @@ class SignupCubit extends Cubit<SignupState> {
     emit(SignupState.changeNationalIdExpiry(date: date.toIso8601String()));
   }
 
-  void checkNationalIdExpiryDateValidation() {
-    if (nationalIdExpiryDateController.text.isNotEmpty) {
-      nationalIdExpiryDateValidation = TextFieldValidation.valid;
-      emit(
-        SignupState.checkNationalIdExpiryDateValidation(
-          date: nationalIdExpiryDateController.text,
-          validation: nationalIdExpiryDateValidation,
-        ),
-      );
-    } else {
-      nationalIdExpiryDateValidation = TextFieldValidation.notValid;
-      emit(
-        SignupState.checkNationalIdExpiryDateValidation(
-          date: nationalIdExpiryDateController.text,
-          validation: nationalIdExpiryDateValidation,
-        ),
-      );
-    }
-  }
 
   void changeDrivingLicenceExpiryDate(DateTime date) {
     drivingLicenceExpiryDate = date;
@@ -366,26 +339,6 @@ class SignupCubit extends Cubit<SignupState> {
         SignupState.checkDrivingLicenceValidation(
           drivingLicence: drivingLicenceController.text,
           validation: drivingLicenceValidation,
-        ),
-      );
-    }
-  }
-
-  void checkDrivingLicenceExpiryDateValidation() {
-    if (drivingLicenceExpiryDateController.text.isNotEmpty) {
-      drivingLicenceExpiryDateValidation = TextFieldValidation.valid;
-      emit(
-        SignupState.checkDrivingLicenceExpiryDateValidation(
-          date: drivingLicenceExpiryDateController.text,
-          validation: drivingLicenceExpiryDateValidation,
-        ),
-      );
-    } else {
-      drivingLicenceExpiryDateValidation = TextFieldValidation.notValid;
-      emit(
-        SignupState.checkDrivingLicenceExpiryDateValidation(
-          date: drivingLicenceExpiryDateController.text,
-          validation: drivingLicenceExpiryDateValidation,
         ),
       );
     }
@@ -538,8 +491,8 @@ class SignupCubit extends Cubit<SignupState> {
         phoneNumber.isNotEmpty &&
         isFieldNotEmpty(nationalIdController) &&
         nationalIdExpiryDate != null &&
-        ((isFieldNotEmpty(drivingLicenceController) &&
-                drivingLicenceExpiryDate != null) ||
+        drivingLicenceExpiryDate != null &&
+        (isFieldNotEmpty(drivingLicenceController) ||
             isSaudiOrSaudiResident())) {
       if (isFieldValid(customerNameValidation) &&
           isFieldValid(customerEmailValidation) &&
@@ -610,7 +563,7 @@ class SignupCubit extends Cubit<SignupState> {
       if (isWithPrivateDriver) {
         calculatedDriverFees = (AppConstants.driverFees * durationInDays);
         calculatedPrice += calculatedDriverFees;
-      }else{
+      } else {
         calculatedDriverFees = 0;
       }
     }

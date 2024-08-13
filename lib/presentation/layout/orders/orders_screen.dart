@@ -224,11 +224,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                   style:
                                                       AppFonts.inter16Black500,
                                                 ),
+                                                const Spacer(),
+                                                Text(
+                                                  "#${allRequests[index].requestCode}",
+                                                  style:
+                                                      AppFonts.inter16Black500,
+                                                ),
                                               ],
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                top: 2.0,
+                                                top: 4.0,
                                                 bottom: 4.0,
                                               ),
                                               child: Row(
@@ -314,7 +320,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  "${allRequests[index].requestPrice} ${"SAR".getLocale(context: context)}",
+                                                  "${allRequests[index].requestPrice.toStringAsFixed(2)} ${"SAR".getLocale(context: context)}",
                                                   style: AppFonts
                                                       .inter16Black500
                                                       .copyWith(
@@ -338,8 +344,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                             "pending"
                                                         ? AppColors.orange
                                                         : allRequests[index]
-                                                                    .requestStatus ==
-                                                                0
+                                                                        .requestStatus ==
+                                                                    0 ||
+                                                                allRequests[index]
+                                                                        .requestStatus ==
+                                                                    4
                                                             ? AppColors.orange
                                                                 .withOpacity(
                                                                     0.8)
@@ -366,7 +375,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                                         .requestStatus ==
                                                                     1
                                                                 ? "Approved"
-                                                                : "Rejected",
+                                                                : allRequests[index]
+                                                                            .requestStatus ==
+                                                                        4
+                                                                    ? "Files Required"
+                                                                    : "Rejected",
                                                     style: const TextStyle(
                                                       color: AppColors.white,
                                                       fontWeight:
