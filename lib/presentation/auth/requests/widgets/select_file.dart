@@ -31,6 +31,7 @@ class SelectFile extends StatefulWidget {
   final bool isShowReplaceWithoutBorder;
   final String prefixImgPath;
   final double? width;
+  final Widget? prefixIcon;
 
   const SelectFile({
     super.key,
@@ -45,6 +46,7 @@ class SelectFile extends StatefulWidget {
     this.marginBottom,
     this.file,
     this.width,
+    this.prefixIcon,
     this.paths = "",
     this.isShowDeleteFile = false,
     this.files,
@@ -177,7 +179,8 @@ class _SelectFileState extends State<SelectFile> {
                             filesName = "";
                           });
                           widget.onPrefixClicked();
-                        } else if (widget.isWarningToReplace || widget.isShowReplaceWithoutBorder) {
+                        } else if (widget.isWarningToReplace ||
+                            widget.isShowReplaceWithoutBorder) {
                           widget.onPrefixClicked();
                           pickFile();
                         } else if ((widget.isFromMyApplication ||
@@ -199,37 +202,40 @@ class _SelectFileState extends State<SelectFile> {
                           widget.onPrefixClicked();
                         }
                       },
-                      icon: (widget.isFromMyApplication ||
-                                  widget.isFromPending) &&
-                              widget.isWarningToReplace || widget.isShowReplaceWithoutBorder
-                          ? Text(
-                              "Replace",
-                              style: AppFonts.inter14TextBlack500,
-                            )
+                      icon: widget.prefixIcon != null
+                          ? widget.prefixIcon!
                           : (widget.isFromMyApplication ||
-                                  (widget.isFromPending &&
-                                          widget.paths.isNotEmpty) &&
-                                      !widget.isShowDeleteFile)
+                                          widget.isFromPending) &&
+                                      widget.isWarningToReplace ||
+                                  widget.isShowReplaceWithoutBorder
                               ? Text(
-                                  "View",
+                                  "Replace",
                                   style: AppFonts.inter14TextBlack500,
                                 )
-                              : Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: AppColors.removeGrey,
-                                      width: 2,
+                              : (widget.isFromMyApplication ||
+                                      (widget.isFromPending &&
+                                              widget.paths.isNotEmpty) &&
+                                          !widget.isShowDeleteFile)
+                                  ? Text(
+                                      "View",
+                                      style: AppFonts.inter14TextBlack500,
+                                    )
+                                  : Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppColors.removeGrey,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: const Icon(
+                                        Icons.clear,
+                                        color: AppColors.removeGrey,
+                                        size: 14,
+                                      ),
                                     ),
-                                  ),
-                                  child: const Icon(
-                                    Icons.clear,
-                                    color: AppColors.removeGrey,
-                                    size: 14,
-                                  ),
-                                ),
                     ),
                   ],
                 )
@@ -411,4 +417,11 @@ Future<List<File>> convertPlatformFileList(
     }
   }
   return files;
+}
+
+Future<File?> convertPlatformFile(PlatformFile? platformFile) async {
+  if (platformFile != null) {
+    return File(platformFile.path!);
+  }
+  return null;
 }

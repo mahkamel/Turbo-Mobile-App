@@ -7,6 +7,7 @@ import '../../../../../blocs/orders/order_cubit.dart';
 import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/helpers/constants.dart';
 import '../../../../../core/helpers/enums.dart';
+import '../../../../../core/helpers/functions.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/widgets/default_buttons.dart';
@@ -17,39 +18,44 @@ import '../../../../../models/attachment.dart';
 import '../../../../auth/requests/widgets/date_selection.dart';
 import '../../../../auth/requests/widgets/select_file.dart';
 
-class EditRequest extends StatelessWidget {
+class EditRequest extends StatefulWidget {
   const EditRequest({
     super.key,
-    required this.blocWatch,
-    required this.blocRead,
-    required this.nationalIdResult,
-    required this.passportResult,
-    required this.requestId,
   });
 
-  final OrderCubit blocWatch;
-  final OrderCubit blocRead;
-  final Attachment? nationalIdResult;
-  final Attachment? passportResult;
-  final String requestId;
+  @override
+  State<EditRequest> createState() => _EditRequestState();
+}
+
+class _EditRequestState extends State<EditRequest> {
+  Attachment? nationalIdResult;
+  Attachment? passportResult;
+  @override
+  void initState() {
+    var blocRead = context.read<OrderCubit>();
+
+    nationalIdResult = findAttachmentFile(
+      type: "nationalId",
+      attachments: blocRead.requestStatus!.attachmentsId,
+    );
+    passportResult = findAttachmentFile(
+      type: "passport",
+      attachments: blocRead.requestStatus!.attachmentsId,
+    );
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (blocRead.requestStatus!.requestRejectComment.isNotEmpty)
-              ErrorMsgContainer(
-                margin: const EdgeInsetsDirectional.only(
-                  top: 12,
-                  bottom: 16,
-                ),
-                errMsg: blocRead.requestStatus!.requestRejectComment,
-              ),
-            const EditLocation(),
+            const ErrMsg(),
+            const IsolatedEditLocation(),
             const SizedBox(
               height: 16,
             ),
@@ -57,108 +63,238 @@ class EditRequest extends StatelessWidget {
             const EditDeliveryDate(),
             const EditPrivateDriver(),
             const EditedPrice(),
-            BlocBuilder<OrderCubit, OrderState>(
-              buildWhen: (previous, current) =>
-                  current is SaveEditedDataLoadingState ||
-                  current is SaveEditedDataSuccessState ||
-                  current is SaveEditedDataErrorState,
-              builder: (context, state) {
-                return DefaultButton(
-                  loading: state is SaveEditedDataLoadingState,
-                  marginTop: 16,
-                  function: () {
-                    blocRead.saveEditedRequestData();
-                  },
-                  border: Border.all(color: AppColors.primaryRed),
-                  color: AppColors.white,
-                  textColor: AppColors.primaryRed,
-                  text: "Save Edits",
-                );
-              },
+            const SaveEditsButton(),
+            const EditDivider(),
+            RepaintBoundary(
+              child: FilesSection(
+                nationalIdResult: nationalIdResult,
+                passportResult: passportResult,
+              ),
             ),
-            if (getIt<AuthRepository>().customer.customerType != 0 ||
-                blocRead.requestStatus!.requestStatus == 4)
-              const Divider(
-                height: 48,
-                color: AppColors.divider,
-                thickness: 2,
-              ),
-            if (getIt<AuthRepository>().customer.customerType != 0 ||
-                blocRead.requestStatus!.requestStatus == 4)
-              WidgetWithHeader(
-                padding: EdgeInsetsDirectional.zero,
-                header: "Files",
-                isRequiredField:
-                    blocRead.requestStatus?.requestStatus == 4 ? true : false,
-                headerStyle: AppFonts.inter16Black500.copyWith(
-                  color: AppColors.primaryRed,
-                  fontSize: 18,
-                ),
-                widget: EditedFiles(
-                  blocRead: blocRead,
-                  blocWatch: blocWatch,
-                  nationalIDRejectionComment: nationalIdResult != null
-                      ? nationalIdResult?.fileRejectComment ?? ""
-                      : "",
-                  passportRejectionComment: passportResult != null
-                      ? passportResult?.fileRejectComment ?? ""
-                      : "",
-                ),
-              ),
-            if (getIt<AuthRepository>().customer.customerType == 0)
-              const SizedBox(
-                height: 24,
-              ),
-            BlocConsumer<OrderCubit, OrderState>(
-              listenWhen: (previous, current) =>
-                  current is SubmitEditsLoadingState ||
-                  current is SubmitEditsSuccessState ||
-                  current is SubmitEditsErrorState,
-              listener: (context, state) {
-                if (state is SubmitEditsErrorState) {
-                  defaultErrorSnackBar(context: context, message: state.errMsg);
-                } else if (state is SubmitEditsSuccessState) {
-                  blocRead.getRequestStatus(requestId);
-                  blocRead.getAllCustomerRequests();
-                }
-              },
-              buildWhen: (previous, current) =>
-                  current is SubmitEditsLoadingState ||
-                  current is SubmitEditsSuccessState ||
-                  current is SubmitEditsErrorState ||
-                  current is SaveEditedFileLoadingState ||
-                  current is SaveEditedFileSuccessState ||
-                  current is SaveEditedFileErrorState,
-              builder: (blocContext, state) {
-                var blocRead = blocContext.read<OrderCubit>();
-                var blocWatch = blocContext.watch<OrderCubit>();
-                return DefaultButton(
-                  loading: state is SubmitEditsLoadingState,
-                  marginTop: 16,
-                  marginBottom: 20,
-                  color: state is SaveEditedFileLoadingState ||
-                          blocWatch.nationalIdInitStatus == 2 ||
-                          blocWatch.passportInitStatus == 2 ||
-                          blocWatch.requestStatus?.requestStatus == 4
-                      ? AppColors.greyBorder
-                      : AppColors.primaryRed,
-                  function: () {
-                    if (state is! SubmitEditsLoadingState &&
-                        state is! SaveEditedFileLoadingState &&
-                        (blocWatch.nationalIdInitStatus != 2) &&
-                        (blocWatch.passportInitStatus != 2) &&
-                        (blocWatch.requestStatus != null &&
-                            blocWatch.requestStatus!.requestStatus != 4)) {
-                      blocRead.onSubmitButtonClicked(requestId);
-                    }
-                  },
-                  text: "Submit",
-                );
-              },
-            ),
+            const SubmitButton(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class FilesSection extends StatelessWidget {
+  const FilesSection({
+    super.key,
+    this.nationalIdResult,
+    this.passportResult,
+  });
+
+  final Attachment? nationalIdResult;
+  final Attachment? passportResult;
+
+  @override
+  Widget build(BuildContext context) {
+    return (getIt<AuthRepository>().customer.customerType != 0 ||
+            (getIt<AuthRepository>().customer.customerType == 0 &&
+                context
+                    .read<OrderCubit>()
+                    .requestStatus!
+                    .attachmentsId
+                    .isNotEmpty) ||
+            context.read<OrderCubit>().requestStatus!.requestStatus == 4)
+        ? WidgetWithHeader(
+            key: const Key("FilesWidget"),
+            padding: EdgeInsetsDirectional.zero,
+            header: "Files",
+            isRequiredField:
+                context.read<OrderCubit>().requestStatus?.requestStatus == 4
+                    ? true
+                    : false,
+            headerStyle: AppFonts.inter16Black500.copyWith(
+              color: AppColors.primaryRed,
+              fontSize: 18,
+            ),
+            widget: RepaintBoundary(
+              key: const Key("EditedFilesKey"),
+              child: EditedFiles(
+                blocRead: context.read<OrderCubit>(),
+                blocWatch: context.read<OrderCubit>(),
+                nationalIDRejectionComment: nationalIdResult != null
+                    ? nationalIdResult?.fileRejectComment ?? ""
+                    : "",
+                passportRejectionComment: passportResult != null
+                    ? passportResult?.fileRejectComment ?? ""
+                    : "",
+              ),
+            ),
+          )
+        : const SizedBox(
+            height: 24,
+          );
+  }
+}
+
+class EditDivider extends StatelessWidget {
+  const EditDivider({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return (getIt<AuthRepository>().customer.customerType != 0 ||
+            context.read<OrderCubit>().requestStatus!.requestStatus == 4)
+        ? const Divider(
+            height: 48,
+            color: AppColors.divider,
+            thickness: 2,
+          )
+        : const SizedBox();
+  }
+}
+
+class ErrMsg extends StatelessWidget {
+  const ErrMsg({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return context
+            .read<OrderCubit>()
+            .requestStatus!
+            .requestRejectComment
+            .isNotEmpty
+        ? ErrorMsgContainer(
+            margin: const EdgeInsetsDirectional.only(
+              top: 12,
+              bottom: 16,
+            ),
+            errMsg:
+                context.read<OrderCubit>().requestStatus!.requestRejectComment,
+          )
+        : const SizedBox();
+  }
+}
+
+class SubmitButton extends StatelessWidget {
+  const SubmitButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var blocRead = context.read<OrderCubit>();
+    return BlocConsumer<OrderCubit, OrderState>(
+      listenWhen: (previous, current) =>
+          current is SubmitEditsLoadingState ||
+          current is SubmitEditsSuccessState ||
+          current is SubmitEditsErrorState,
+      listener: (context, state) {
+        if (state is SubmitEditsErrorState) {
+          defaultErrorSnackBar(context: context, message: state.errMsg);
+        } else if (state is SubmitEditsSuccessState) {
+          blocRead.getRequestStatus(blocRead.requestStatus?.id ?? "");
+          blocRead.getAllCustomerRequests();
+        }
+      },
+      buildWhen: (previous, current) =>
+          current is SubmitEditsLoadingState ||
+          current is SubmitEditsSuccessState ||
+          current is SubmitEditsErrorState ||
+          current is SaveEditedFileLoadingState ||
+          current is SaveEditedFileSuccessState ||
+          current is SaveEditedFileErrorState ||
+          current is SelectNationalIdFileState ||
+          current is SelectPassportFileState,
+      builder: (blocContext, state) {
+        var blocRead = blocContext.read<OrderCubit>();
+        var blocWatch = blocContext.watch<OrderCubit>();
+        print("sssss ${getIt<AuthRepository>().customer.customerType}");
+        print("sssss ${blocWatch.passportAttachments?.fileStatus}");
+        return DefaultButton(
+          loading: state is SubmitEditsLoadingState,
+          marginTop: 16,
+          marginBottom: 20,
+          color: (blocWatch.nationalIdInitStatus != 2) &&
+                  (blocWatch.passportInitStatus != 2) &&
+                  (blocWatch.nationalIdInitStatus != 4) &&
+                  (blocWatch.passportInitStatus != 4) &&
+                  (((((blocWatch.nationalIdAttachments != null &&
+                                  blocWatch.nationalIdAttachments?.fileStatus !=
+                                      2 &&
+                                  blocWatch.nationalIdAttachments?.fileStatus !=
+                                      4) ||
+                              (blocWatch.nationalID != null &&
+                                  getIt<AuthRepository>()
+                                          .customer
+                                          .customerType ==
+                                      0)) &&
+                          ((blocWatch.passportAttachments != null &&
+                                  blocWatch.passportAttachments?.fileStatus !=
+                                      2 &&
+                                  blocWatch.passportAttachments?.fileStatus !=
+                                      4) ||
+                              (blocWatch.passportFiles != null &&
+                                  getIt<AuthRepository>()
+                                          .customer
+                                          .customerType ==
+                                      0)))) ||
+                      getIt<AuthRepository>().customer.customerType == 0)
+              ? AppColors.primaryRed
+              : AppColors.greyBorder,
+          function: () {
+            if (state is! SubmitEditsLoadingState &&
+                state is! SaveEditedFileLoadingState &&
+                (blocWatch.nationalIdInitStatus != 2) &&
+                (blocWatch.passportInitStatus != 2) &&
+                (blocWatch.nationalIdInitStatus != 4) &&
+                (blocWatch.passportInitStatus != 4) &&
+                (((((blocWatch.nationalIdAttachments != null &&
+                                blocWatch.nationalIdAttachments?.fileStatus !=
+                                    2 &&
+                                blocWatch.nationalIdAttachments?.fileStatus !=
+                                    4) ||
+                            (blocWatch.nationalID != null && getIt<AuthRepository>().customer.customerType == 0)) &&
+                        ((blocWatch.passportAttachments != null &&
+                                blocWatch.passportAttachments?.fileStatus !=
+                                    2 &&
+                                blocWatch.passportAttachments?.fileStatus !=
+                                    4) ||
+                            (blocWatch.passportFiles != null && getIt<AuthRepository>().customer.customerType == 0)))) ||
+                    getIt<AuthRepository>().customer.customerType == 0)) {
+              blocRead.onSubmitButtonClicked(blocRead.requestStatus?.id ?? "");
+            }
+          },
+          text: "Submit",
+        );
+      },
+    );
+  }
+}
+
+class SaveEditsButton extends StatelessWidget {
+  const SaveEditsButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var blocRead = context.read<OrderCubit>();
+    return BlocBuilder<OrderCubit, OrderState>(
+      buildWhen: (previous, current) =>
+          current is SaveEditedDataLoadingState ||
+          current is SaveEditedDataSuccessState ||
+          current is SaveEditedDataErrorState,
+      builder: (context, state) {
+        return DefaultButton(
+          loading: state is SaveEditedDataLoadingState,
+          marginTop: 16,
+          function: () {
+            blocRead.saveEditedRequestData();
+          },
+          border: Border.all(color: AppColors.primaryRed),
+          color: AppColors.white,
+          textColor: AppColors.primaryRed,
+          text: "Save Edits",
+        );
+      },
     );
   }
 }
@@ -184,243 +320,286 @@ class EditedFiles extends StatefulWidget {
 class _EditedFilesState extends State<EditedFiles> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RepaintBoundary(
-          key: const Key("EditNationalIdRepaint"),
-          child: SizedBox(
-            height: 110,
-            width: AppConstants.screenWidth(context) - 32,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SelectFile(
-                  width: widget.blocWatch.nationalIdAttachments?.fileStatus == 4
-                      ? AppConstants.screenWidth(context) - 80
-                      : AppConstants.screenWidth(context) - 32,
-                  key: const Key("EditNationalID"),
-                  padding: const EdgeInsetsDirectional.only(bottom: 4),
-                  paths: widget.blocRead.nationalIdAttachments?.filePath ?? "",
-                  header: "National ID",
-                  prefixImgPath: "assets/images/icons/national_id.png",
-                  isFromPending: true,
-                  onFileSelected: (p0, isSingle) async {
-                    widget.blocRead.nationalID =
-                        await convertPlatformFileList(p0);
-                    if (widget.blocRead.nationalIdAttachments != null &&
-                        widget.blocRead.nationalIdAttachments
-                                ?.fileRejectComment !=
-                            null) {
-                      widget.blocRead.nationalIdAttachments?.fileRejectComment =
-                          null;
-                      widget.blocRead.nationalIdAttachments?.filePath = "";
-                      widget.blocRead.nationalIdAttachments?.fileStatus = 4;
-                      setState(() {});
-                    }
-                  },
-                  isWarningToReplace:
-                      widget.blocWatch.nationalIdAttachments?.fileStatus == 2,
-                  onPrefixClicked: () {
-                    if (widget.blocRead.nationalIdAttachments == null ||
-                        (widget.blocRead.nationalIdAttachments != null &&
+    return BlocBuilder<OrderCubit, OrderState>(
+      buildWhen: (previous, current) =>
+          current is SaveEditedFileLoadingState ||
+          current is SaveEditedFileSuccessState ||
+          current is SaveEditedFileErrorState ||
+          current is SelectNationalIdFileState ||
+          current is SelectPassportFileState,
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RepaintBoundary(
+              key: const Key("EditNationalIdRepaint"),
+              child: SizedBox(
+                height: 110,
+                width: AppConstants.screenWidth(context) - 32,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SelectFile(
+                      width:
+                          widget.blocWatch.nationalIdAttachments?.fileStatus ==
+                                  4
+                              ? AppConstants.screenWidth(context) - 80
+                              : AppConstants.screenWidth(context) - 32,
+                      key: const Key("EditNationalID"),
+                      padding: const EdgeInsetsDirectional.only(bottom: 4),
+                      paths:
+                          widget.blocRead.nationalIdAttachments?.filePath ?? "",
+                      header: "National ID",
+                      prefixImgPath: "assets/images/icons/national_id.png",
+                      isFromPending: true,
+                      onFileSelected: (p0, isSingle) async {
+                        widget.blocRead.nationalID =
+                            await convertPlatformFile(p0.first);
+                        if (widget.blocRead.nationalIdAttachments != null &&
                             widget.blocRead.nationalIdAttachments
-                                    ?.fileRejectComment ==
-                                null)) {
-                      widget.blocRead.nationalID = null;
-                      setState(() {});
-                    }
-                  },
-                ),
-                if (widget.blocRead.nationalIdAttachments?.fileStatus == 4)
-                  BlocBuilder<OrderCubit, OrderState>(
-                    buildWhen: (previous, current) {
-                      return (current is SaveEditedFileLoadingState &&
-                              current.fileId ==
-                                  widget.blocRead.nationalIdAttachments?.id) ||
-                          (current is SaveEditedFileSuccessState &&
-                              current.fileId ==
-                                  widget.blocRead.nationalIdAttachments?.id) ||
-                          (current is SaveEditedFileErrorState &&
-                              current.fileId ==
-                                  widget.blocRead.nationalIdAttachments?.id);
-                    },
-                    builder: (context, state) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 28.0),
-                        child: Center(
-                          child: (state is SaveEditedFileLoadingState &&
-                                  state.fileId ==
-                                      widget.blocRead.nationalIdAttachments?.id)
-                              ? const Padding(
-                                  padding:
-                                      EdgeInsetsDirectional.only(start: 8.0),
-                                  child: CircularProgressIndicator(),
-                                )
-                              : IconButton(
-                                  onPressed: () {
-                                    if (widget.blocRead.nationalID != null &&
-                                        widget
-                                            .blocRead.nationalID!.isNotEmpty &&
-                                        widget.blocRead.nationalIdAttachments
-                                                ?.fileStatus !=
-                                            2) {
-                                      context
-                                          .read<OrderCubit>()
-                                          .updateRequestFile(
-                                            fileId: widget
+                                    ?.fileRejectComment !=
+                                null) {
+                          widget.blocRead.nationalIdAttachments
+                              ?.fileRejectComment = null;
+                          widget.blocRead.nationalIdAttachments?.filePath = "";
+                          widget.blocRead.nationalIdAttachments?.fileStatus = 4;
+                        }
+                        widget.blocRead.nationalIdInitStatus = 0;
+                        setState(() {});
+                        widget.blocRead.pickNationalIdFile();
+                      },
+                      isWarningToReplace:
+                          widget.blocWatch.nationalIdAttachments?.fileStatus ==
+                                  2 ||
+                              widget.blocRead.nationalIdInitStatus == 4,
+                      onPrefixClicked: () {
+                        if (widget.blocRead.nationalIdAttachments == null ||
+                            (widget.blocRead.nationalIdAttachments != null &&
+                                widget.blocRead.nationalIdAttachments
+                                        ?.fileRejectComment ==
+                                    null)) {
+                          widget.blocRead.nationalID = null;
+
+                          setState(() {});
+                          widget.blocRead.pickNationalIdFile();
+                        }
+                      },
+                    ),
+                    if (widget.blocRead.nationalIdAttachments?.fileStatus == 4)
+                      BlocBuilder<OrderCubit, OrderState>(
+                        buildWhen: (previous, current) {
+                          return (current is SaveEditedFileLoadingState &&
+                                  current.fileId ==
+                                      widget.blocRead.nationalIdAttachments
+                                          ?.id) ||
+                              (current is SaveEditedFileSuccessState &&
+                                  current.fileId ==
+                                      widget.blocRead.nationalIdAttachments
+                                          ?.id) ||
+                              (current is SaveEditedFileErrorState &&
+                                  current.fileId ==
+                                      widget
+                                          .blocRead.nationalIdAttachments?.id);
+                        },
+                        builder: (context, state) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 28.0),
+                            child: Center(
+                              child: (state is SaveEditedFileLoadingState &&
+                                      state.fileId ==
+                                          widget.blocRead.nationalIdAttachments
+                                              ?.id)
+                                  ? const Padding(
+                                      padding: EdgeInsetsDirectional.only(
+                                          start: 8.0),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : IconButton(
+                                      onPressed: () {
+                                        if (widget.blocRead.nationalID !=
+                                                null &&
+                                            widget
                                                     .blocRead
                                                     .nationalIdAttachments
-                                                    ?.id ??
-                                                "",
-                                            oldPathFiles: widget
-                                                .blocRead.nationalIdOldPaths,
-                                            fileType: "nationalId",
-                                            newFile: widget
-                                                .blocRead.nationalID!.first,
-                                          );
-                                    }
-                                  },
-                                  icon: const Center(
-                                    child: Icon(
-                                      Icons.upload_file_rounded,
-                                      color: AppColors.primaryGreen,
+                                                    ?.fileStatus !=
+                                                2) {
+                                          context
+                                              .read<OrderCubit>()
+                                              .updateRequestFile(
+                                                fileId: widget
+                                                        .blocRead
+                                                        .nationalIdAttachments
+                                                        ?.id ??
+                                                    "",
+                                                oldPathFiles: widget.blocRead
+                                                    .nationalIdOldPaths,
+                                                fileType: "nationalId",
+                                                newFile:
+                                                    widget.blocRead.nationalID!,
+                                              );
+                                        }
+                                      },
+                                      icon: const Center(
+                                        child: Icon(
+                                          Icons.upload_file_rounded,
+                                          color: AppColors.primaryGreen,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                        ),
-                      );
-                    },
-                  ),
-              ],
-            ),
-          ),
-        ),
-        if (widget.blocWatch.nationalIdAttachments?.fileStatus == 2)
-          Text(
-            widget.nationalIDRejectionComment,
-            style: AppFonts.inter14ErrorRed400,
-          ),
-        SizedBox(
-          height:
-              widget.blocWatch.nationalIdAttachments?.fileStatus == 2 ? 8 : 12,
-        ),
-        RepaintBoundary(
-          key: const Key("EditPassportRepaint"),
-          child: SizedBox(
-            height: 110,
-            width: AppConstants.screenWidth(context) - 32,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SelectFile(
-                  width: widget.blocWatch.passportAttachments?.fileStatus == 4
-                      ? AppConstants.screenWidth(context) - 80
-                      : AppConstants.screenWidth(context) - 32,
-                  key: const Key("EditPassport"),
-                  padding: const EdgeInsetsDirectional.only(bottom: 4),
-                  paths: widget.blocRead.passportAttachments?.filePath ?? "",
-                  header: "Passport",
-                  isFromPending: true,
-                  onFileSelected: (p0, isSingle) async {
-                    widget.blocRead.passportFiles =
-                        await convertPlatformFileList(p0);
-                    if (widget.blocRead.passportAttachments != null &&
-                        widget.blocRead.passportAttachments
-                                ?.fileRejectComment !=
-                            null) {
-                      widget.blocRead.passportAttachments?.fileRejectComment =
-                          null;
-                      widget.blocRead.passportAttachments?.filePath = "";
-                      widget.blocRead.passportAttachments?.fileStatus = 4;
-                      setState(() {});
-                    }
-                  },
-                  isWarningToReplace:
-                      widget.blocWatch.passportAttachments?.fileStatus == 2,
-                  onPrefixClicked: () {
-                    if (widget.blocRead.passportAttachments == null ||
-                        (widget.blocRead.passportAttachments != null &&
-                            widget.blocRead.passportAttachments
-                                    ?.fileRejectComment ==
-                                null)) {
-                      widget.blocRead.passportFiles = null;
-                      setState(() {});
-                    }
-                  },
+                            ),
+                          );
+                        },
+                      ),
+                  ],
                 ),
-                if (widget.blocRead.passportAttachments?.fileStatus == 4)
-                  BlocBuilder<OrderCubit, OrderState>(
-                    buildWhen: (previous, current) {
-                      return (current is SaveEditedFileLoadingState &&
-                              current.fileId ==
-                                  widget.blocRead.passportAttachments?.id) ||
-                          (current is SaveEditedFileSuccessState &&
-                              current.fileId ==
-                                  widget.blocRead.passportAttachments?.id) ||
-                          (current is SaveEditedFileErrorState &&
-                              current.fileId ==
-                                  widget.blocRead.passportAttachments?.id);
-                    },
-                    builder: (context, state) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 28.0),
-                        child: Center(
-                          child: (state is SaveEditedFileLoadingState &&
-                                  state.fileId ==
-                                      widget.blocRead.passportAttachments?.id)
-                              ? const Padding(
-                                  padding:
-                                      EdgeInsetsDirectional.only(start: 8.0),
-                                  child: CircularProgressIndicator(),
-                                )
-                              : IconButton(
-                                  onPressed: () {
-                                    if (widget.blocRead.passportFiles != null &&
-                                        widget.blocRead.passportFiles!
-                                            .isNotEmpty &&
-                                        widget.blocRead.passportAttachments
-                                                ?.fileStatus !=
-                                            2) {
-                                      context
-                                          .read<OrderCubit>()
-                                          .updateRequestFile(
-                                            fileId: widget.blocRead
-                                                    .passportAttachments?.id ??
-                                                "",
-                                            oldPathFiles: widget
-                                                .blocRead.passportOldPaths,
-                                            fileType: "passport",
-                                            newFile: widget
-                                                .blocRead.passportFiles!.first,
-                                          );
-                                    }
-                                  },
-                                  icon: const Center(
-                                    child: Icon(
-                                      Icons.upload_file_rounded,
-                                      color: AppColors.primaryGreen,
-                                    ),
-                                  ),
-                                ),
-                        ),
-                      );
-                    },
-                  ),
-              ],
+              ),
             ),
-          ),
-        ),
-        if (widget.blocWatch.passportAttachments?.fileStatus == 2)
-          Text(
-            widget.passportRejectionComment,
-            style: AppFonts.inter14ErrorRed400,
-          ),
-        SizedBox(
-          height:
-              widget.blocWatch.passportAttachments?.fileStatus == 2 ? 8 : 12,
-        ),
-      ],
+            if (widget.blocWatch.nationalIdAttachments?.fileStatus == 2)
+              Text(
+                widget.nationalIDRejectionComment,
+                style: AppFonts.inter14ErrorRed400,
+              ),
+            SizedBox(
+              height: widget.blocWatch.nationalIdAttachments?.fileStatus == 2
+                  ? 8
+                  : 12,
+            ),
+            RepaintBoundary(
+              key: const Key("EditPassportRepaint"),
+              child: SizedBox(
+                height: 110,
+                width: AppConstants.screenWidth(context) - 32,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SelectFile(
+                      width:
+                          widget.blocWatch.passportAttachments?.fileStatus == 4
+                              ? AppConstants.screenWidth(context) - 80
+                              : AppConstants.screenWidth(context) - 32,
+                      key: const Key("EditPassport"),
+                      padding: const EdgeInsetsDirectional.only(bottom: 4),
+                      paths:
+                          widget.blocRead.passportAttachments?.filePath ?? "",
+                      header: "Passport",
+                      prefixIcon: widget.blocRead.passportInitStatus == 4
+                          ? Text(
+                              "Clear",
+                              style: AppFonts.inter14TextBlack500,
+                            )
+                          : null,
+                      isFromPending: true,
+                      onFileSelected: (p0, isSingle) async {
+                        widget.blocRead.passportFiles =
+                            await convertPlatformFile(p0.first);
+                        if (widget.blocRead.passportAttachments != null &&
+                            widget.blocRead.passportAttachments
+                                    ?.fileRejectComment !=
+                                null) {
+                          widget.blocRead.passportAttachments
+                              ?.fileRejectComment = null;
+                          widget.blocRead.passportAttachments?.filePath = "";
+                          widget.blocRead.passportAttachments?.fileStatus = 4;
+                        }
+                        widget.blocRead.passportInitStatus = 0;
+                        setState(() {});
+                        widget.blocRead.pickPassportFile();
+                      },
+                      isWarningToReplace:
+                          widget.blocWatch.passportAttachments?.fileStatus ==
+                                  2 ||
+                              widget.blocRead.passportInitStatus == 4,
+                      onPrefixClicked: () {
+                        if (widget.blocRead.passportAttachments == null ||
+                            (widget.blocRead.passportAttachments != null &&
+                                widget.blocRead.passportAttachments
+                                        ?.fileRejectComment ==
+                                    null)) {
+                          widget.blocRead.passportFiles = null;
+                          setState(() {});
+                          widget.blocRead.pickPassportFile();
+                        }
+                      },
+                    ),
+                    if (widget.blocRead.passportAttachments?.fileStatus == 4)
+                      BlocBuilder<OrderCubit, OrderState>(
+                        buildWhen: (previous, current) {
+                          return (current is SaveEditedFileLoadingState &&
+                                  current.fileId ==
+                                      widget
+                                          .blocRead.passportAttachments?.id) ||
+                              (current is SaveEditedFileSuccessState &&
+                                  current.fileId ==
+                                      widget
+                                          .blocRead.passportAttachments?.id) ||
+                              (current is SaveEditedFileErrorState &&
+                                  current.fileId ==
+                                      widget.blocRead.passportAttachments?.id);
+                        },
+                        builder: (context, state) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 28.0),
+                            child: Center(
+                              child: (state is SaveEditedFileLoadingState &&
+                                      state.fileId ==
+                                          widget
+                                              .blocRead.passportAttachments?.id)
+                                  ? const Padding(
+                                      padding: EdgeInsetsDirectional.only(
+                                          start: 8.0),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : IconButton(
+                                      onPressed: () {
+                                        if (widget.blocRead.passportFiles !=
+                                                null &&
+                                            widget.blocRead.passportAttachments
+                                                    ?.fileStatus !=
+                                                2) {
+                                          context
+                                              .read<OrderCubit>()
+                                              .updateRequestFile(
+                                                fileId: widget
+                                                        .blocRead
+                                                        .passportAttachments
+                                                        ?.id ??
+                                                    "",
+                                                oldPathFiles: widget
+                                                    .blocRead.passportOldPaths,
+                                                fileType: "passport",
+                                                newFile: widget
+                                                    .blocRead.passportFiles!,
+                                              );
+                                        }
+                                      },
+                                      icon: const Center(
+                                        child: Icon(
+                                          Icons.upload_file_rounded,
+                                          color: AppColors.primaryGreen,
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            if (widget.blocWatch.passportAttachments?.fileStatus == 2)
+              Text(
+                widget.passportRejectionComment,
+                style: AppFonts.inter14ErrorRed400,
+              ),
+            SizedBox(
+              height: widget.blocWatch.passportAttachments?.fileStatus == 2
+                  ? 8
+                  : 12,
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -637,31 +816,45 @@ class EditPrivateDriver extends StatelessWidget {
   }
 }
 
-class EditLocation extends StatelessWidget {
-  const EditLocation({
-    super.key,
-  });
+class IsolatedEditLocation extends StatefulWidget {
+  const IsolatedEditLocation({super.key});
+
+  @override
+  State<IsolatedEditLocation> createState() => _IsolatedEditLocationState();
+}
+
+class _IsolatedEditLocationState extends State<IsolatedEditLocation> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    var blocRead = context.read<OrderCubit>();
+    _controller = TextEditingController(text: blocRead.locationController.text);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OrderCubit, OrderState>(
-      buildWhen: (previous, current) => current is SaveEditedDataSuccessState,
-      builder: (context, state) {
-        // var blocWatch = context.watch<OrderCubit>();
-        var blocRead = context.read<OrderCubit>();
-        return AuthTextFieldWithHeader(
-          horizontalPadding: 0,
-          header: "Location",
-          hintText: blocRead.requestStatus!.requestLocation,
-          isWithValidation: true,
-          textInputType: TextInputType.name,
-          validationText: "Invalid Location.",
-          textEditingController: blocRead.locationController,
-          validation: TextFieldValidation.valid,
-          onChange: (value) {},
-          onSubmit: (value) {},
-        );
+    var blocRead = context.read<OrderCubit>();
+    return AuthTextFieldWithHeader(
+      horizontalPadding: 0,
+      header: "Location",
+      hintText: blocRead.requestStatus!.requestLocation,
+      isWithValidation: true,
+      textInputType: TextInputType.name,
+      validationText: "Invalid Location.",
+      textEditingController: _controller,
+      validation: TextFieldValidation.valid,
+      onChange: (value) {
+        blocRead.locationController.text = value;
       },
+      onSubmit: (value) {},
     );
   }
 }

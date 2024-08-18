@@ -17,6 +17,7 @@ import '../../../core/services/local/token_service.dart';
 import '../../../core/services/networking/repositories/auth_repository.dart';
 import '../../../core/theming/colors.dart';
 import '../../../core/theming/fonts.dart';
+import '../../../core/widgets/default_buttons.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -127,6 +128,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                               requestId: allRequests[index].id,
                                               requestCode: allRequests[index]
                                                   .requestCode,
+                                              orderCubit:
+                                                  context.read<OrderCubit>(),
                                             ),
                                           );
                                         } else {
@@ -349,12 +352,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                                 allRequests[index]
                                                                         .requestStatus ==
                                                                     4
-                                                            ? AppColors.orange
+                                                            ? AppColors
+                                                                .orange
                                                                 .withOpacity(
                                                                     0.8)
                                                             : allRequests[index]
-                                                                        .requestStatus ==
-                                                                    1
+                                                                            .requestStatus ==
+                                                                        1 ||
+                                                                    allRequests[index]
+                                                                            .requestStatus ==
+                                                                        3
                                                                 ? AppColors
                                                                     .primaryGreen
                                                                     .withOpacity(
@@ -377,9 +384,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                                 ? "Approved"
                                                                 : allRequests[index]
                                                                             .requestStatus ==
-                                                                        4
-                                                                    ? "Files Required"
-                                                                    : "Rejected",
+                                                                        3
+                                                                    ? "Refund"
+                                                                    : allRequests[index].requestStatus ==
+                                                                            4
+                                                                        ? "Files Required"
+                                                                        : "Rejected",
                                                     style: const TextStyle(
                                                       color: AppColors.white,
                                                       fontWeight:
@@ -390,6 +400,60 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                 ),
                                               ],
                                             ),
+                                            if (allRequests[index]
+                                                    .requestPaidStatus ==
+                                                "pending")
+                                              SizedBox(
+                                                width: AppConstants.screenWidth(
+                                                        context) -
+                                                    32,
+                                                child: Center(
+                                                  child: IconButton(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 16),
+                                                      onPressed: () {
+                                                        showAdaptiveDialog(
+                                                          context: context,
+                                                          builder:
+                                                              (dialogContext) =>
+                                                                  BlocProvider
+                                                                      .value(
+                                                            value: context.read<
+                                                                OrderCubit>(),
+                                                            child:
+                                                                EditRequestStatusDialog(
+                                                              requestId:
+                                                                  allRequests[
+                                                                          index]
+                                                                      .id,
+                                                              requestStatus: 6,
+                                                              reason: "delete",
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                      icon: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          const Icon(
+                                                            Icons
+                                                                .delete_outline_rounded,
+                                                            color: AppColors
+                                                                .errorRed,
+                                                          ),
+                                                          Text(
+                                                            "Delete Request",
+                                                            style: AppFonts
+                                                                .inter16Black500
+                                                                .copyWith(),
+                                                          ),
+                                                        ],
+                                                      )),
+                                                ),
+                                              ),
                                             const SizedBox(
                                               height: 4,
                                             ),
@@ -420,6 +484,126 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class EditRequestStatusDialog extends StatelessWidget {
+  const EditRequestStatusDialog({
+    super.key,
+    required this.reason,
+    required this.requestId,
+    required this.requestStatus,
+     this.orderCubit,
+  });
+
+  final String reason;
+  final String requestId;
+  final int requestStatus;
+  final OrderCubit? orderCubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+              color: AppColors.black.withOpacity(0.05),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              "Confirmation Required",
+              style: AppFonts.inter18Black500,
+              textAlign: TextAlign.center,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 12.0,
+                bottom: 20,
+              ),
+              child: Text(
+                "Are you sure you want to $reason this request? This action cannot be undone.",
+                style: AppFonts.inter14Grey400,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: DefaultButton(
+                    color: AppColors.white,
+                    border: Border.all(color: AppColors.primaryGreen),
+                    textColor: AppColors.primaryGreen,
+                    function: () {
+                      Navigator.pop(context);
+                    },
+                    text: "Cancel",
+                  ),
+                ),
+                const SizedBox(
+                  width: 32,
+                ),
+                Expanded(
+                  child: BlocBuilder<OrderCubit, OrderState>(
+                    buildWhen: (previous, current) =>
+                        current is SubmitEditStatusLoadingState ||
+                        current is SubmitEditStatusErrorState ||
+                        current is SubmitEditStatusSuccessState,
+                    builder: (blocContext, state) {
+                      return DefaultButton(
+                        loading: state is SubmitEditStatusLoadingState,
+                        color: AppColors.errorRed,
+                        function: () async {
+                          if (state is! SubmitEditsLoadingState) {
+                            blocContext
+                                .read<OrderCubit>()
+                                .editRequestStatus(
+                                  requestId: requestId,
+                                  requestStatus: requestStatus,
+                                )
+                                .then((_) {
+                              Navigator.pop(context);
+                              if (reason == "cancel") {
+                                if (orderCubit != null) {
+                                  orderCubit!.getAllCustomerRequests();
+                                }
+                                Navigator.pop(context);
+                              }
+                            });
+                          }
+                        },
+                        text: "Confirm",
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+          ],
+        ),
       ),
     );
   }

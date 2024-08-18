@@ -4,7 +4,6 @@ import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/presentation/layout/profile/saved_cards_screen.dart';
-import 'package:turbo/presentation/layout/profile/widgets/language_dropdown.dart';
 
 import '../../../blocs/profile_cubit/profile_cubit.dart';
 import '../../../core/theming/colors.dart';
@@ -63,21 +62,21 @@ class ProfileScreen extends StatelessWidget {
                               color: AppColors.primaryRed,
                             ),
                           ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Language",
-                              style: AppFonts.inter16Black400.copyWith(
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            const LanguageDropdown(),
-                          ],
-                        ),
+                        // const SizedBox(
+                        //   height: 8,
+                        // ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Text(
+                        //       "Language",
+                        //       style: AppFonts.inter16Black400.copyWith(
+                        //         fontWeight: FontWeight.w300,
+                        //       ),
+                        //     ),
+                        //     const LanguageDropdown(),
+                        //   ],
+                        // ),
                         if (context
                             .watch<AuthRepository>()
                             .customer

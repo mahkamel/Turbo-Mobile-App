@@ -79,10 +79,8 @@ class SignupCubit extends Cubit<SignupState> {
   TextEditingController nationalIdController = TextEditingController();
   TextFieldValidation nationalIdValidation = TextFieldValidation.normal;
 
-
   TextEditingController drivingLicenceController = TextEditingController();
   TextFieldValidation drivingLicenceValidation = TextFieldValidation.normal;
-
 
   bool isWithPrivateDriver = false;
 
@@ -317,7 +315,6 @@ class SignupCubit extends Cubit<SignupState> {
     nationalIdExpiryDate = date;
     emit(SignupState.changeNationalIdExpiry(date: date.toIso8601String()));
   }
-
 
   void changeDrivingLicenceExpiryDate(DateTime date) {
     drivingLicenceExpiryDate = date;
@@ -579,6 +576,7 @@ class SignupCubit extends Cubit<SignupState> {
             errMsg: "Complete all required fields"));
       } else if ((deliveryDate != null || deliveryDate != null) &&
           ((nationalIdFile != null && passportFiles != null) ||
+              (authRepository.customer.attachments.isNotEmpty) ||
               isSaudiOrSaudiResident()) &&
           locationController.text.isNotEmpty &&
           AppConstants.vat != -1 &&
@@ -586,7 +584,8 @@ class SignupCubit extends Cubit<SignupState> {
         calculatedPriceWithVat =
             calculatedPrice + (calculatedPrice * (AppConstants.vat / 100));
         emit(const SignupState.confirmBookingLoading());
-        if (authRepository.customer.token.isNotEmpty) {
+        if (authRepository.customer.attachments.isNotEmpty ||
+            isSaudiOrSaudiResident()) {
           List<String> userAttachmentsIds = [];
           if (authRepository.customer.attachments.isNotEmpty) {
             for (var attachment in authRepository.customer.attachments) {

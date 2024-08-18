@@ -30,6 +30,7 @@ class AuthRepository {
   void setCustomerData(CustomerModel? cachedCustomer) {
     if (cachedCustomer != null) {
       customer = cachedCustomer;
+      print("cusrromsadasd ${customer.customerId}");
       UserTokenService.saveUserToken(customer.token);
       UserTokenService.userTokenFirstTime();
     }
@@ -111,7 +112,7 @@ class AuthRepository {
         customer = CustomerModel(
           customerAddress: customerAddress,
           customerName: customerName,
-          customerId: "",
+          customerId: response.data['id'],
           customerEmail: customerEmail,
           attachments: <Attachment>[],
           customerType: customerType,

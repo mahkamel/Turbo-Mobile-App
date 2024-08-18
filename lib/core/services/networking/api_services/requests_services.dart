@@ -54,10 +54,30 @@ class RequestsService {
               "requestFrom": requestForm.toIso8601String(),
             if (requestTo != null) "requestTo": requestTo.toIso8601String(),
             if (requestPrice != null) "requestTotalPrice": requestPrice,
-            if(requestDailyCalculationPrice != null)"requestDailyCalculationPrice" :requestDailyCalculationPrice,
+            if (requestDailyCalculationPrice != null)
+              "requestDailyCalculationPrice": requestDailyCalculationPrice,
             if (isWithRequestDriver != null && requestDriverDailyFee != null)
               "requestDriverDailyFee": requestDriverDailyFee,
+          }
+        },
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 
+  Future<Response> editRequestStatus({
+    required String requestId,
+    required int requestStatus,
+  }) async {
+    try {
+      Response response = await DioHelper.postData(
+        endpoint: 'car/editCarRequest',
+        body: {
+          "carRequest": {
+            "requestId": requestId,
+            "requestStatus": requestStatus,
           }
         },
       );
@@ -112,6 +132,58 @@ class RequestsService {
             "requestId": requestId,
           },
         },
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> uploadCustomerAttachments({
+    required requestId,
+    required customerId,
+    required userToken,
+    required File? nationalIdFile,
+    required File? passportFile,
+  }) async {
+    try {
+      Map<String, dynamic> body = {
+        "id": requestId,
+        "customerId": customerId,
+      };
+      String jsonData = json.encode(body);
+      FormData customerAttachmentsForm = FormData();
+      customerAttachmentsForm.fields.add(MapEntry("carRequest", jsonData));
+      if (nationalIdFile != null) {
+        final String path = nationalIdFile.path;
+        customerAttachmentsForm.files.add(
+          MapEntry(
+            "nationalId",
+            await MultipartFile.fromFile(
+              path,
+              filename: getFileName(path),
+            ),
+          ),
+        );
+      }
+      if (passportFile != null) {
+        final String path = passportFile.path;
+        customerAttachmentsForm.files.add(
+          MapEntry(
+            "passport",
+            await MultipartFile.fromFile(
+              path,
+              filename: getFileName(path),
+            ),
+          ),
+        );
+      }
+
+      Response response = await DioHelper.postData(
+        endpoint: 'car/addCustomerAttachment',
+        token: userToken,
+        body: {},
+        formData: customerAttachmentsForm,
       );
       return response;
     } catch (e) {

@@ -4,33 +4,83 @@ import 'package:lottie/lottie.dart';
 import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
-import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/layout/orders/request_status/widgets/edit_request.dart';
 
 import '../../../../core/di/dependency_injection.dart';
-import '../../../../core/helpers/functions.dart';
+import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
-import '../../../../models/attachment.dart';
+import '../../../../core/widgets/snackbar.dart';
+import '../orders_screen.dart';
 
 class RequestStatusScreen extends StatelessWidget {
   const RequestStatusScreen({
     super.key,
     required this.requestId,
     required this.requestCode,
+    required this.orderCubit,
   });
 
   final String requestId;
   final String requestCode;
+  final OrderCubit orderCubit;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           children: [
             DefaultHeader(
               header: "#$requestCode",
               textAlignment: AlignmentDirectional.center,
+              alignment: MainAxisAlignment.spaceBetween,
+              suffixIcon: BlocBuilder<OrderCubit, OrderState>(
+                buildWhen: (previous, current) =>
+                    current is GetRequestStatusSuccessState ||
+                    current is GetRequestStatusErrorState ||
+                    current is GetRequestStatusLoadingState,
+                builder: (context, state) {
+                  return (context.watch<OrderCubit>().requestStatus != null &&
+                          (context
+                                      .watch<OrderCubit>()
+                                      .requestStatus!
+                                      .requestStatus ==
+                                  2 ||
+                              context
+                                      .watch<OrderCubit>()
+                                      .requestStatus!
+                                      .requestStatus ==
+                                  4 ||
+                              context
+                                      .watch<OrderCubit>()
+                                      .requestStatus!
+                                      .requestStatus ==
+                                  0))
+                      ? IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                          ),
+                          color: AppColors.primaryRed,
+                          onPressed: () {
+                            showAdaptiveDialog(
+                              context: context,
+                              builder: (dialogContext) => BlocProvider.value(
+                                value: context.read<OrderCubit>(),
+                                child: EditRequestStatusDialog(
+                                  requestId: requestId,
+                                  requestStatus: 5,
+                                  reason: "cancel",
+                                  orderCubit: orderCubit,
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const SizedBox();
+                },
+              ),
             ),
             const SizedBox(
               height: 16,
@@ -48,9 +98,13 @@ class RequestStatusScreen extends StatelessWidget {
                   );
                 }
               },
+              buildWhen: (previous, current) =>
+                  current is GetRequestStatusSuccessState ||
+                  current is GetRequestStatusErrorState ||
+                  current is GetRequestStatusLoadingState,
               builder: (context, state) {
+                print("sssasssasdasd");
                 var blocWatch = context.watch<OrderCubit>();
-                var blocRead = context.read<OrderCubit>();
                 if (state is GetRequestStatusLoadingState) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -90,26 +144,22 @@ class RequestStatusScreen extends StatelessWidget {
                         ),
                       ],
                     );
+                  } else if (blocWatch.requestStatus!.requestStatus == 3) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                        "Congratulations! Your refund is created successfully, please follow up with your bank within 21 days",
+                        style: AppFonts.inter16Black400.copyWith(
+                          fontSize: 17,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
                   } else if (blocWatch.requestStatus!.requestStatus == 2 ||
                       blocWatch.requestStatus!.requestStatus == 4) {
-                    Attachment? nationalIdResult = findAttachmentFile(
-                      type: "nationalId",
-                      attachments: blocWatch.requestStatus!.attachmentsId,
-                    );
-                    Attachment? passportResult = findAttachmentFile(
-                      type: "passport",
-                      attachments: blocWatch.requestStatus!.attachmentsId,
-                    );
-
                     return RepositoryProvider<AuthRepository>.value(
                       value: getIt<AuthRepository>(),
-                      child: EditRequest(
-                        blocWatch: blocWatch,
-                        blocRead: blocRead,
-                        nationalIdResult: nationalIdResult,
-                        passportResult: passportResult,
-                        requestId: requestId,
-                      ),
+                      child: const EditRequest(),
                     );
                   } else {
                     return const SizedBox();

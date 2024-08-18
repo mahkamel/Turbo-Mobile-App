@@ -355,6 +355,26 @@ class CarRepository {
     }
   }
 
+  Future<Either<String, String>> editRequestStatus({
+    required String requestId,
+    required int requestStatus,
+  }) async {
+    try {
+      final response = await _requestsService.editRequestStatus(
+        requestId: requestId,
+        requestStatus: requestStatus,
+      );
+      if (response.statusCode == 200 && response.data['status']) {
+        return const Right("Your data has been saved");
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
+      debugPrint('editRequestBody Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
   Future<Either<String, Attachment>> editRequestFile({
     required String fileType,
     required String attachmentId,
@@ -382,6 +402,34 @@ class CarRepository {
       }
     } catch (e) {
       debugPrint('editRequestFile Error -- $e');
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, List<Attachment>>> uploadCustomerAttachments({
+    required requestId,
+    required customerId,
+    required userToken,
+    required File? nationalIdFile,
+    required File? passportFile,
+  }) async {
+    try {
+      final response = await _requestsService.uploadCustomerAttachments(
+        requestId: requestId,
+        userToken: userToken,
+        customerId: customerId,
+        nationalIdFile: nationalIdFile,
+        passportFile: passportFile,
+      );
+      if (response.statusCode == 200 && response.data['status']) {
+        List<Attachment> attachments = (response.data['attachmentIds'] as List)
+            .map((e) => Attachment.fromJson(e))
+            .toList();
+        return Right(attachments);
+      } else {
+        return Left(response.data['message']);
+      }
+    } catch (e) {
       return Left(e.toString());
     }
   }

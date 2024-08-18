@@ -1,3 +1,4 @@
+import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/models/get_cars_by_brands.dart';
 
 class CardDetailsScreenArguments {
@@ -52,9 +53,11 @@ class PaymentScreenArguments {
 class RequestStatusScreenArguments {
   final String requestId;
   final String requestCode;
+  final OrderCubit orderCubit;
 
   RequestStatusScreenArguments({
     required this.requestId,
     required this.requestCode,
+    required this.orderCubit,
   });
 }

@@ -30,6 +30,7 @@ class DefaultHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: height,
+      width: AppConstants.screenWidth(context),
       margin: EdgeInsets.only(
         top: AppConstants.heightBasedOnFigmaDevice(context, 36),
       ),
@@ -77,7 +78,10 @@ class DefaultHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (suffixIcon != null) suffixIcon!
+              if (suffixIcon != null)
+                Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: suffixIcon!)
             ],
           ),
         ],

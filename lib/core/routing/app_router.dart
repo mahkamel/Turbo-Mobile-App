@@ -84,6 +84,8 @@ class AppRouter {
             child: RequestStatusScreen(
               requestId: (arguments as RequestStatusScreenArguments).requestId,
               requestCode: arguments.requestCode,
+              orderCubit: arguments.orderCubit,
+              // orderCubit: arguments.orderCubit,
             ),
           ),
         ),

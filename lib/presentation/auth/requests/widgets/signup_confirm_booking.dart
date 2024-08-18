@@ -120,7 +120,6 @@ class RequiredFilesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final blocRead = context.read<SignupCubit>();
-    print("is Saudidd ${blocRead.isSaudiOrSaudiResident()}");
     if (context.watch<AuthRepository>().customer.attachments.isEmpty) {
       return blocRead.isSaudiOrSaudiResident()
           ? const SizedBox()

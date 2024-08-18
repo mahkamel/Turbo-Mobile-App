@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
+import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
 
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/widgets/custom_header.dart';
@@ -78,6 +80,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                           .notificationRequestId,
                                       requestCode:
                                           notifications[index].requestCode,
+                                      orderCubit: getIt<OrderCubit>(),
                                     ),
                                   );
                                 },

@@ -41,12 +41,12 @@ class OrderCubit extends Cubit<OrderState> {
   double weeklyPrice = 0;
   double monthlyPrice = 0;
 
-  List<File>? nationalID;
+  File? nationalID;
   Attachment? nationalIdAttachments;
   String nationalIdOldPaths = "";
   int nationalIdInitStatus = 0;
 
-  List<File>? passportFiles;
+  File? passportFiles;
   Attachment? passportAttachments;
   String passportOldPaths = "";
   int passportInitStatus = 0;
@@ -153,8 +153,18 @@ class OrderCubit extends Cubit<OrderState> {
             type: "passport",
             attachments: status.attachmentsId,
           );
+          // passportAttachments?.fileStatus = 2;
           passportOldPaths = passportAttachments?.filePath ?? "";
           passportInitStatus = passportAttachments?.fileStatus ?? -1;
+          if (nationalIdAttachments == null &&
+              requestStatus?.requestStatus == 4) {
+            nationalIdInitStatus = 4;
+          }
+
+          if (passportAttachments == null &&
+              requestStatus?.requestStatus == 4) {
+            passportInitStatus = 4;
+          }
 
           emit(OrderState.getRequestStatusSuccess(requestId));
         },
@@ -263,6 +273,11 @@ class OrderCubit extends Cubit<OrderState> {
       res.fold(
         (errMsg) => emit(OrderState.saveEditedFileError(errMsg, fileId)),
         (newAttachments) {
+          if (fileType == "nationalId") {
+            nationalID = null;
+          } else {
+            passportFiles = null;
+          }
           int index = 0;
           for (Attachment attachment in _authRepository.customer.attachments) {
             if (attachment.id == fileId) {
@@ -297,16 +312,76 @@ class OrderCubit extends Cubit<OrderState> {
 
   void onSubmitButtonClicked(String requestId) async {
     emit(const OrderState.submitEditsLoading());
-    try {
-      final res = await _carRepository.sendPendingRequest(requestId);
-      res.fold(
+    if ((nationalID != null || passportFiles != null) &&
+        (nationalIdAttachments == null && passportAttachments == null)) {
+      final attachmentsRes = await _carRepository.uploadCustomerAttachments(
+        requestId: requestId,
+        customerId: _authRepository.customer.customerId,
+        userToken: _authRepository.customer.token,
+        nationalIdFile: nationalID,
+        passportFile: passportFiles,
+      );
+      attachmentsRes.fold(
         (errMsg) => emit(OrderState.submitEditsError(errMsg)),
+        (attachments) async {
+          try {
+            _authRepository.customer.attachments = attachments;
+            final res = await _carRepository.sendPendingRequest(requestId);
+            res.fold(
+              (errMsg) => emit(OrderState.submitEditsError(errMsg)),
+              (_) {
+                emit(const OrderState.submitEditsSuccess());
+              },
+            );
+          } catch (e) {
+            emit(OrderState.submitEditsError(e.toString()));
+          }
+        },
+      );
+    } else {
+      try {
+        final res = await _carRepository.sendPendingRequest(requestId);
+        res.fold(
+          (errMsg) => emit(OrderState.submitEditsError(errMsg)),
+          (_) {
+            emit(const OrderState.submitEditsSuccess());
+          },
+        );
+      } catch (e) {
+        emit(OrderState.submitEditsError(e.toString()));
+      }
+    }
+  }
+
+  void pickNationalIdFile() {
+    emit(OrderState.selectNationalIdFile(
+        nationalIdAttachments?.fileStatus ?? (nationalIdInitStatus)));
+  }
+
+  void pickPassportFile() {
+    emit(OrderState.selectPassportFile(
+        passportAttachments?.fileStatus ?? passportInitStatus));
+  }
+
+  Future<void> editRequestStatus({
+    required String requestId,
+    required int requestStatus,
+  }) async {
+    emit(const OrderState.submitEditStatusLoading());
+    try {
+      final res = await _carRepository.editRequestStatus(
+        requestId: requestId,
+        requestStatus: requestStatus,
+      );
+      res.fold(
+        (errMsg) => emit(OrderState.submitEditStatusError(errMsg)),
         (_) {
-          emit(const OrderState.submitEditsSuccess());
+          emit(OrderState.submitEditStatusSuccess(requestId, requestStatus));
+          getAllCustomerRequests();
         },
       );
     } catch (e) {
-      emit(OrderState.submitEditsError(e.toString()));
+      emit(OrderState.submitEditStatusError(e.toString()));
     }
   }
 }

@@ -6,21 +6,20 @@ class CarCategory {
   final String categorySysDate;
   bool isSelected;
 
-  CarCategory({
-    this.isSelected = false,
-    required this.categoryIsActive, 
-    required this.id, 
-    required this.categoryName, 
-    required this.categoryDescription, required this.categorySysDate
-  });
+  CarCategory(
+      {this.isSelected = false,
+      required this.categoryIsActive,
+      required this.id,
+      required this.categoryName,
+      required this.categoryDescription,
+      required this.categorySysDate});
 
   factory CarCategory.fromJson(Map<String, dynamic> json) {
     return CarCategory(
-      categoryIsActive: json['categoryIsActive'],
-      id: json['_id'],
-      categoryName: json['categoryName'],
-      categoryDescription: json['categoryDescription'],
-      categorySysDate: json['categorySysDate']
-    );
+        categoryIsActive: json['categoryIsActive'] ?? false,
+        id: json['_id'],
+        categoryName: json['categoryName'],
+        categoryDescription: json['categoryDescription'] ?? "",
+        categorySysDate: json['categorySysDate'] ?? "");
   }
 }
