@@ -143,7 +143,7 @@ class HomeHeader extends StatelessWidget {
                                 child: badges.Badge(
                                   showBadge: numOfNotifications != 0,
                                   badgeStyle: const badges.BadgeStyle(
-                                    badgeColor: AppColors.primaryRed,
+                                    badgeColor: AppColors.primaryBlue,
                                   ),
                                   position:
                                       badges.BadgePosition.topEnd(end: -8),
@@ -315,7 +315,7 @@ class SelectCityBottomSheet extends StatelessWidget {
                                                       branchIndex)
                                                 const Icon(
                                                   Icons.check,
-                                                  color: AppColors.primaryRed,
+                                                  color: AppColors.primaryBlue,
                                                 ),
                                             ],
                                           ),
@@ -363,7 +363,7 @@ class SelectCityBottomSheet extends StatelessWidget {
                                   index)
                                 const Icon(
                                   Icons.check,
-                                  color: AppColors.primaryRed,
+                                  color: AppColors.primaryBlue,
                                 ),
                             ],
                           ),

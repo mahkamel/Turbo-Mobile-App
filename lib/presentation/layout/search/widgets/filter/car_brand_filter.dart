@@ -112,8 +112,8 @@ class CarBrandFilterHeader extends StatelessWidget {
               ),
             );
           },
-          textColor: AppColors.primaryRed,
-          border: Border.all(color: AppColors.primaryRed),
+          textColor: AppColors.primaryBlue,
+          border: Border.all(color: AppColors.primaryBlue),
           color: AppColors.white,
         ),
       ],

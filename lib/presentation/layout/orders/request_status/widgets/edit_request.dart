@@ -108,7 +108,7 @@ class FilesSection extends StatelessWidget {
                     ? true
                     : false,
             headerStyle: AppFonts.inter16Black500.copyWith(
-              color: AppColors.primaryRed,
+              color: AppColors.primaryBlue,
               fontSize: 18,
             ),
             widget: RepaintBoundary(
@@ -237,7 +237,7 @@ class SubmitButton extends StatelessWidget {
                                           .customerType ==
                                       0)))) ||
                       getIt<AuthRepository>().customer.customerType == 0)
-              ? AppColors.primaryRed
+              ? AppColors.primaryBlue
               : AppColors.greyBorder,
           function: () {
             if (state is! SubmitEditsLoadingState &&
@@ -289,9 +289,9 @@ class SaveEditsButton extends StatelessWidget {
           function: () {
             blocRead.saveEditedRequestData();
           },
-          border: Border.all(color: AppColors.primaryRed),
+          border: Border.all(color: AppColors.primaryBlue),
           color: AppColors.white,
-          textColor: AppColors.primaryRed,
+          textColor: AppColors.primaryBlue,
           text: "Save Edits",
         );
       },
@@ -691,7 +691,7 @@ class EditedPrice extends StatelessWidget {
                   Text(
                     "Total: ",
                     style: AppFonts.inter16TypeGreyHeader600.copyWith(
-                      color: AppColors.primaryRed,
+                      color: AppColors.primaryBlue,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -795,7 +795,7 @@ class EditPrivateDriver extends StatelessWidget {
               Text(
                 "Private Driver?",
                 style: AppFonts.inter16Black500
-                    .copyWith(color: AppColors.primaryRed),
+                    .copyWith(color: AppColors.primaryBlue),
               ),
               const Spacer(),
               BlocBuilder<OrderCubit, OrderState>(

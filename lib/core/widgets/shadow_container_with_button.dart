@@ -46,7 +46,7 @@ class ShadowContainerWithPrefixTextButton extends StatelessWidget {
             prefixIcon ??
                 Text(
                   buttonText,
-                  style: AppFonts.inter14PrimaryRed500,
+                  style: AppFonts.inter14PrimaryBlue500,
                 ),
           ],
         ),

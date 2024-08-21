@@ -9,7 +9,7 @@ class DefaultHeader extends StatelessWidget {
     super.key,
     required this.header,
     this.onBackPressed,
-    this.height = 27,
+    this.height = 47,
     this.alignment = MainAxisAlignment.start,
     this.textAlignment,
     this.isShowPrefixIcon = true,
@@ -32,23 +32,23 @@ class DefaultHeader extends StatelessWidget {
       height: height,
       width: AppConstants.screenWidth(context),
       margin: EdgeInsets.only(
-        top: AppConstants.heightBasedOnFigmaDevice(context, 36),
+        top: AppConstants.heightBasedOnFigmaDevice(context, 26),
       ),
       color: Colors.transparent,
       child: Stack(
         alignment: AlignmentDirectional.topStart,
         children: [
           Align(
-            alignment: textAlignment ?? AlignmentDirectional.centerStart,
+            alignment: textAlignment ?? AlignmentDirectional.center,
             child: Padding(
               padding: EdgeInsetsDirectional.only(
                 start: textLeftPadding,
               ),
               child: Text(
                 header,
-                style: AppFonts.inter20HeaderBlack700.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
+                style: AppFonts.ibm24HeaderBlue600.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24,
                 ),
               ),
             ),
@@ -58,7 +58,7 @@ class DefaultHeader extends StatelessWidget {
             children: [
               if (isShowPrefixIcon)
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 4.0),
+                  padding: const EdgeInsetsDirectional.only(start: 16.0),
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,
@@ -68,12 +68,18 @@ class DefaultHeader extends StatelessWidget {
                         () {
                           Navigator.pop(context);
                         },
-                    child: const SizedBox(
-                      height: 25,
-                      width: 40,
-                      child: Icon(
-                        Icons.arrow_back_rounded,
-                        color: AppColors.black,
+                    child: Container(
+                      width: 47,
+                      height: 47,
+                      decoration: const BoxDecoration(
+                         shape: BoxShape.circle,
+                         color: AppColors.grey500,
+
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: AppColors.gold,
+                        size: 24,
                       ),
                     ),
                   ),

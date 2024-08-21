@@ -136,7 +136,7 @@ class ExistingCardsBottomSheet extends StatelessWidget {
                   border: Border.all(
                     color: AppColors.buttonGreyBorder,
                   ),
-                  textColor: AppColors.primaryRed,
+                  textColor: AppColors.primaryBlue,
                   text: "Clear Selected Card",
                 ),
               ) : const SizedBox(),
@@ -154,7 +154,7 @@ class ExistingCardsBottomSheet extends StatelessWidget {
                   marginRight: 20,
                   marginBottom: 34,
                   marginTop: 12.0,
-                  color: AppColors.primaryRed,
+                  color: AppColors.primaryBlue,
                   // border: Border.all(
                   //   color: AppColors.buttonGreyBorder,
                   // ),

@@ -75,7 +75,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 return state is GetAllRequestsLoadingState
                     ? const Center(
                         child: CircularProgressIndicator(
-                          color: AppColors.primaryRed,
+                          color: AppColors.primaryBlue,
                         ),
                       )
                     : Expanded(
@@ -328,7 +328,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                       .inter16Black500
                                                       .copyWith(
                                                           color: AppColors
-                                                              .primaryRed,
+                                                              .primaryBlue,
                                                           fontWeight:
                                                               FontWeight.w600),
                                                 ),

@@ -59,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                             prefixIcon: const Icon(
                               Icons.arrow_forward_ios_rounded,
                               size: 16,
-                              color: AppColors.primaryRed,
+                              color: AppColors.primaryBlue,
                             ),
                           ),
                         // const SizedBox(
@@ -136,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
                             prefixIcon: const Icon(
                               Icons.arrow_forward_ios_rounded,
                               size: 16,
-                              color: AppColors.primaryRed,
+                              color: AppColors.primaryBlue,
                             ),
                           ),
                       ],

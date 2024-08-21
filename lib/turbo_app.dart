@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
                   focusColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   colorScheme: ColorScheme.fromSeed(
-                    seedColor: AppColors.primaryRed,
+                    seedColor: AppColors.primaryBlue,
                   ),
                   useMaterial3: true,
                 ),

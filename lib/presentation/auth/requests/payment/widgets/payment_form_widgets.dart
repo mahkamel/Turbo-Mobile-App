@@ -268,7 +268,7 @@ class CardNumber extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.keyboard_arrow_down_rounded,
-                color: AppColors.primaryRed,
+                color: AppColors.primaryBlue,
               ),
             )
           : null,

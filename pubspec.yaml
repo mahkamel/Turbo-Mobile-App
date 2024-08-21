@@ -96,6 +96,15 @@ flutter:
           weight: 600
         - asset: assets/fonts/Inter/Inter-Bold.ttf
           weight: 700
+    - family: IBM
+      fonts:
+        - asset: assets/fonts/IBM/IBMPlexSans-Medium.ttf
+        - asset: assets/fonts/IBM/IBMPlexSans-Regular.ttf
+        - asset: assets/fonts/IBM/IBMPlexSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/IBM/IBMPlexSans-Bold.ttf
+          weight: 700
+
 
 
 flutter_native_splash:

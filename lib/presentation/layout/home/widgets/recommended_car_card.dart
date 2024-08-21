@@ -91,7 +91,7 @@ class RecommendedCarCard extends StatelessWidget {
                   TextSpan(
                     text: "${car.carDailyPrice} ${"SAR".getLocale(context: context)}",
                     style: AppFonts.inter16Black500.copyWith(
-                        color: AppColors.primaryRed,
+                        color: AppColors.primaryBlue,
                         fontWeight: FontWeight.w600),
                     children: [
                       TextSpan(

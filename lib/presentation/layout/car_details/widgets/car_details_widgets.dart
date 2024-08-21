@@ -165,7 +165,7 @@ class CarNameWithBrandImg extends StatelessWidget {
           Expanded(
             child: Text(
               carName,
-              style: AppFonts.inter20HeaderBlack700,
+              style: AppFonts.ibm24HeaderBlue600,
             ),
           ),
           Padding(

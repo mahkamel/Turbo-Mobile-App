@@ -116,7 +116,7 @@ class LangContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: isSelected
               ? Border.all(
-                  color: AppColors.primaryRed,
+                  color: AppColors.primaryBlue,
                   width: 2,
                 )
               : null,

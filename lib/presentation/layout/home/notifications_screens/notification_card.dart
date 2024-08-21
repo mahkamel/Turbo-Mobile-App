@@ -48,12 +48,12 @@ class NotificationCard extends StatelessWidget {
                   height: 40,
                   margin: const EdgeInsets.only(right: 16),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryRed.withOpacity(0.08),
+                    color: AppColors.primaryBlue.withOpacity(0.08),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.notifications_none_rounded,
-                    color: AppColors.primaryRed,
+                    color: AppColors.primaryBlue,
                   ),
                 ),
                 SizedBox(
