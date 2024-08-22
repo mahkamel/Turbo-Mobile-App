@@ -1,13 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/login/login_cubit.dart';
-import 'package:turbo/core/helpers/enums.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/core/theming/fonts.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
 import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
-import 'package:turbo/core/widgets/text_field_with_header.dart';
 import 'package:turbo/main_paths.dart';
 import 'package:turbo/presentation/auth/forget_password/widgets/confirmPassword.dart';
 import 'package:turbo/presentation/auth/forget_password/widgets/password.dart';
@@ -59,6 +57,12 @@ class CreateNewPassword extends StatelessWidget {
             ),
             const Spacer(),
             BlocConsumer<LoginCubit, LoginState>(
+              listenWhen: (previous, current) {
+                return current is CheckLoginPasswordValidationState ||
+                current is ChangePasswordErrorState ||
+                current is ChangePasswordSuccessState ||
+                current is ChangePasswordLoadingState;
+              },
               listener: (context, state) {
                  if(state is ChangePasswordErrorState) {
                    defaultErrorSnackBar(

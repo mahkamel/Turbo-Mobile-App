@@ -195,7 +195,7 @@ class AuthServices {
           body: {
             "customer": {
               "id": id,
-              "newPasswword": newPassword
+              "newPassword": newPassword
             }
           });
       return response;

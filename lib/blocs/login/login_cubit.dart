@@ -26,6 +26,9 @@ class LoginCubit extends Cubit<LoginState> {
 
   TextEditingController passwordController = TextEditingController();
   TextFieldValidation passwordValidation = TextFieldValidation.normal;
+
+    TextEditingController newPasswordController = TextEditingController();
+  TextFieldValidation newPasswordValidation = TextFieldValidation.normal;
   
   TextEditingController confirmPasswordController = TextEditingController();
   TextFieldValidation confirmPasswordValidation = TextFieldValidation.normal;
@@ -36,6 +39,7 @@ class LoginCubit extends Cubit<LoginState> {
   String dialCode = "";
   String otpVerificationId = '';
   bool isEmailVerified = false;
+  String otpId = '';
   TextFieldValidation phoneValidation = TextFieldValidation.normal;
   
   List<TextEditingController> codeControllers = [
@@ -73,7 +77,7 @@ class LoginCubit extends Cubit<LoginState> {
 
     void checkConfirmPasswordValidation() {
     if (confirmPasswordController.text.isNotEmpty &&
-        confirmPasswordController.text == passwordController.text) {
+        confirmPasswordController.text == newPasswordController.text) {
       confirmPasswordValidation = TextFieldValidation.valid;
       emit(
         LoginState.checkConfirmPassword(
@@ -135,12 +139,27 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void checkPasswordValidation() {
-    print("here");
     if (passwordController.text.isEmpty) {
       passwordValidation = TextFieldValidation.notValid;
     } else {
       passwordValidation = TextFieldValidation.valid;
     }
+    emit(
+      LoginState.checkLoginPassword(
+        password: passwordController.text,
+        validation: passwordValidation,
+      ),
+    );
+  }
+
+  void checkNewPasswordValidation() {
+    if (newPasswordController.text.isNotEmpty && newPasswordController.text.length >= 6 &&
+        AppRegex.hasSpecialCharacter(newPasswordController.text)) {
+      newPasswordValidation = TextFieldValidation.valid;
+    } else {
+      newPasswordValidation = TextFieldValidation.notValid;
+    }
+    checkConfirmPasswordValidation();
     emit(
       LoginState.checkLoginPassword(
         password: passwordController.text,
@@ -201,11 +220,12 @@ class LoginCubit extends Cubit<LoginState> {
             errMsg: "OTP is wrong, please try again!",
           ),
         ),
-        (msg) {
+        (data) {
         isEmailVerified = true;
+        otpId = data['id']!;
           emit(
             LoginState.checkOtpSuccess(
-              success: msg,
+              success: data['msg']!,
             ),
           );
         },
@@ -222,10 +242,10 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> changePassword() async {
     emit(const LoginState.changePasswordLoading());
-    if(passwordValidation == TextFieldValidation.valid &&
+    if(newPasswordValidation == TextFieldValidation.valid &&
         confirmPasswordValidation == TextFieldValidation.valid) {
       await _authRepository
-          .changePassword(id: "123", newPassword: passwordController.text)
+          .changePassword(id: otpId, newPassword: newPasswordController.text)
           .then((value) {
         value.fold((errMsg) {
           emit(LoginState.changePasswordFailed(errMsg: errMsg));
@@ -235,6 +255,8 @@ class LoginCubit extends Cubit<LoginState> {
       }).catchError((err) {
         emit(LoginState.changePasswordFailed(errMsg: err.toString()));
       });
+    } else {
+      checkNewPasswordValidation();
     }
   }
 

@@ -327,7 +327,7 @@ class AuthRepository {
     }
   }
 
-  Future<Either<String, String>> checkOTP({
+  Future<Either<String, Map<String,String>>> checkOTP({
     required String email,
     required String otp,
   }) async {
@@ -336,7 +336,10 @@ class AuthRepository {
       if(response.data['status'] == false) {
         return Left(response.data['message']);
       } else {
-        return const Right("success");
+        return Right({
+          "msg": response.data['message'],
+          "id": response.data['data']
+        });
       }
     }catch (e) {
       return Left(e.toString());
