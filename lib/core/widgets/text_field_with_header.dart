@@ -80,13 +80,13 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
                     TextSpan(
                         text: widget.header,
                         style: AppFonts.inter16Black500.copyWith(
-                          color: AppColors.primaryBlue,
+                          color: AppColors.black,
                         ),
                         children: [
                           TextSpan(
                             text: "*",
                             style: AppFonts.inter16Black500.copyWith(
-                              color: AppColors.primaryBlue,
+                              color: AppColors.black,
                             ),
                           ),
                         ]),

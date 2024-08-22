@@ -36,7 +36,7 @@ class ErrorMsgContainer extends StatelessWidget {
           errMsg,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: AppFonts.inter14ErrorRed400,
+          style: AppFonts.ibm14ErrorRed400,
         ),
       ),
     );

@@ -160,4 +160,47 @@ class AuthServices {
       throw e.toString();
     }
   }
+
+  Future<Response> forgetPassword(String email) async {
+    try {
+      Response response = await DioHelper.postData(
+          endpoint: 'customer/forgetPassword',
+          body: {
+            "email": email,
+          });
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+   Future<Response> checkOTP(String email, String otp) async {
+    try {
+      Response response = await DioHelper.postData(
+          endpoint: 'customer/checkOTP',
+          body: {
+            "email": email,
+            "OTP": otp
+          });
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> changePassword(String id, String newPassword) async {
+    try {
+      Response response = await DioHelper.postData(
+          endpoint: 'customer/changePassword',
+          body: {
+            "customer": {
+              "id": id,
+              "newPasswword": newPassword
+            }
+          });
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }

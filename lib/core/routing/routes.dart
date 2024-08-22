@@ -9,4 +9,6 @@ class Routes {
   static const String requestStatusScreen = '/requestStatusScreen';
   static const String signupOTPScreen = '/signupOTPScreen';
   static const String forgetPasswordScreen = '/forgetPasswordScreen';
+  static const String otpForgetPasswordScreen = '/otpForgetPasswordScreen';
+  static const String createNewPasswordScreen = '/createNewPasswordScreen';
 }
