@@ -15,7 +15,7 @@ class Password extends StatelessWidget {
         onTap: () {},
         header: "Password",
         isRequiredFiled: true,
-        hintText: context.read<LoginCubit>().passwordController.text.isEmpty
+        hintText: context.read<LoginCubit>().newPasswordController.text.isEmpty
               ? "Please Enter Password"
               : "Please Enter Valid Password",
         isPassword: true,
@@ -24,19 +24,19 @@ class Password extends StatelessWidget {
         textInputAction: TextInputAction.next,
         validationText:
             "Password must be 6+ characters long and include at least 1 special character.",
-        textEditingController: context.read<LoginCubit>().passwordController,
-        validation: context.watch<LoginCubit>().passwordValidation,
+        textEditingController: context.read<LoginCubit>().newPasswordController,
+        validation: context.watch<LoginCubit>().newPasswordValidation,
         onChange: (value) {
           if (value.isEmpty ||
-          context.read<LoginCubit>().passwordValidation != TextFieldValidation.normal) {
-          context.read<LoginCubit>().checkPasswordValidation();
+          context.read<LoginCubit>().newPasswordValidation != TextFieldValidation.normal) {
+          context.read<LoginCubit>().checkNewPasswordValidation();
         }
         },
         onSubmit: (value) {
-          context.read<LoginCubit>().checkPasswordValidation();
+          context.read<LoginCubit>().checkNewPasswordValidation();
         },
         onTapOutside: () {
-          context.read<LoginCubit>().checkPasswordValidation();
+          context.read<LoginCubit>().checkNewPasswordValidation();
         },
       ),
     );

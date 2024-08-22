@@ -211,11 +211,7 @@ class _OtpForgetPasswordState extends State<OtpForgetPassword> {
                 builder: (context, state) {
                   return DefaultButton(
                     function: () {
-                      //todo don't forget to remove the navigation
-                      // context.read<LoginCubit>().verifyOTP();
-                      Navigator.of(context).pushReplacementNamed(
-                      Routes.createNewPasswordScreen,
-                      arguments: context.read<LoginCubit>());
+                      context.read<LoginCubit>().verifyOTP();
                     },
                     text: "Verify",
                     marginRight: 41,
