@@ -62,7 +62,7 @@ class SavedCardsScreen extends StatelessWidget {
                                     : "Edit",
                                 style: AppFonts.inter14TextBlack500.copyWith(
                                   fontSize: 16,
-                                  color: AppColors.primaryRed,
+                                  color: AppColors.primaryBlue,
                                 ),
                               ),
                             ),

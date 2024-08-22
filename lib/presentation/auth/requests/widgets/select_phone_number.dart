@@ -36,13 +36,13 @@ class ChoosePhoneNumber extends StatelessWidget {
               TextSpan(
                   text: "Phone Number",
                   style: AppFonts.inter16Black500.copyWith(
-                    color: AppColors.primaryRed,
+                    color: AppColors.primaryBlue,
                   ),
                   children: [
                     TextSpan(
                       text: "*",
                       style: AppFonts.inter16Black500.copyWith(
-                        color: AppColors.primaryRed,
+                        color: AppColors.primaryBlue,
                       ),
                     ),
                   ]),

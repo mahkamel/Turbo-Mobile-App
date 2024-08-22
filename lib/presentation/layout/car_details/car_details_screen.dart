@@ -217,7 +217,7 @@ class CardDetailsScreen extends StatelessWidget {
                               marginBottom: 20,
                               marginRight: 16,
                               marginLeft: 16,
-                              color: AppColors.primaryRed,
+                              color: AppColors.primaryBlue,
                               function: () async {
                                 if (context
                                     .read<AuthRepository>()
@@ -273,10 +273,10 @@ class CardDetailsScreen extends StatelessWidget {
                                                     text: "Cancel",
                                                     color: AppColors.white,
                                                     textColor:
-                                                        AppColors.primaryRed,
+                                                        AppColors.primaryBlue,
                                                     border: Border.all(
                                                         color: AppColors
-                                                            .primaryRed),
+                                                            .primaryBlue),
                                                     function: () {
                                                       Navigator.of(bsContext)
                                                           .pop();
@@ -288,7 +288,7 @@ class CardDetailsScreen extends StatelessWidget {
                                                   Expanded(
                                                     child: DefaultButton(
                                                       color:
-                                                          AppColors.primaryRed,
+                                                          AppColors.primaryBlue,
                                                       function: () {
                                                         Navigator.of(bsContext)
                                                             .pop();

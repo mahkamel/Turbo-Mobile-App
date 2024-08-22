@@ -378,7 +378,7 @@ class SignupEmailField extends StatelessWidget {
           hintText: "Please Enter Email",
           isWithValidation: true,
           textInputType: TextInputType.emailAddress,
-          validationText: blocRead.customerNameController.text.isEmpty
+          validationText: blocRead.customerEmailController.text.isEmpty
               ? "Please Enter Email"
               : "Please Enter Valid Email.",
           textEditingController: blocRead.customerEmailController,

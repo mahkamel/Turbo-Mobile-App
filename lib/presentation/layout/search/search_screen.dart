@@ -36,7 +36,7 @@ class SearchScreen extends StatelessWidget {
                 child: Center(
                   child: Text(
                     "Filter",
-                    style: AppFonts.inter20HeaderBlack700,
+                    style: AppFonts.ibm24HeaderBlue600,
                   ),
                 ),
               ),
@@ -91,7 +91,7 @@ class SearchScreen extends StatelessWidget {
       ),
       floatingActionButton: searchCubitWatch.isFilteredRes
           ? FloatingActionButton(
-              backgroundColor: AppColors.primaryRed,
+              backgroundColor: AppColors.primaryBlue,
               child: const Icon(
                 Icons.clear_rounded,
                 color: AppColors.white,

@@ -89,7 +89,7 @@ class ConfirmBookingButton extends StatelessWidget {
                   ((blocWatch.nationalIdInitStatus != -1 &&
                           blocWatch.passportInitStatus != -1) ||
                       blocRead.isSaudiOrSaudiResident())
-              ? AppColors.primaryRed
+              ? AppColors.primaryBlue
               : AppColors.greyBorder,
           text: "Confirm Booking",
           function: () {
@@ -127,7 +127,7 @@ class RequiredFilesSection extends StatelessWidget {
               header: "Files",
               isRequiredField: blocRead.isSaudiOrSaudiResident() ? false : true,
               headerStyle: AppFonts.inter16Black500.copyWith(
-                color: AppColors.primaryRed,
+                color: AppColors.primaryBlue,
                 fontSize: 18,
               ),
               widget: Column(
@@ -208,7 +208,7 @@ class _ExistingUserAttachmentsState extends State<ExistingUserAttachments> {
           header: "Files",
           isRequiredField: true,
           headerStyle: AppFonts.inter16Black500.copyWith(
-            color: AppColors.primaryRed,
+            color: AppColors.primaryBlue,
             fontSize: 18,
           ),
           widget: Column(
@@ -521,7 +521,7 @@ class RentalPrice extends StatelessWidget {
                   Text(
                     "Total: ",
                     style: AppFonts.inter16TypeGreyHeader600.copyWith(
-                      color: AppColors.primaryRed,
+                      color: AppColors.primaryBlue,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -634,7 +634,7 @@ class PrivateDriverRow extends StatelessWidget {
                 Text(
                   "Private Driver?",
                   style: AppFonts.inter16Black500
-                      .copyWith(color: AppColors.primaryRed),
+                      .copyWith(color: AppColors.primaryBlue),
                 ),
                 const Spacer(),
                 BlocBuilder<SignupCubit, SignupState>(

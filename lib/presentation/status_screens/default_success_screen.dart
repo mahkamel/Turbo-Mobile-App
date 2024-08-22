@@ -56,7 +56,7 @@ class DefaultSuccessScreen extends StatelessWidget {
                   ),
                   child: Text(
                     title,
-                    style: AppFonts.inter20HeaderBlack700,
+                    style: AppFonts.ibm24HeaderBlue600,
                     textAlign: TextAlign.center,
                   ),
                 ),

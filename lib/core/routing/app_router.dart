@@ -7,6 +7,7 @@ import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
+import 'package:turbo/presentation/auth/forget_password/forget_password_screen.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
 import 'package:turbo/presentation/onboarding/init_select_lang_screen.dart';
@@ -36,6 +37,12 @@ class AppRouter {
                 )
               : const LoginScreen(),
         ),
+    Routes.forgetPasswordScreen: (context, arguments) {
+      return BlocProvider.value(
+          value: (arguments as LoginCubit),
+          child: const ForgetPasswordScreen(),
+        );
+    },
     Routes.signupScreen: (context, arguments) => arguments != null
         ? BlocProvider<SignupCubit>(
             create: (context) => getIt<SignupCubit>()

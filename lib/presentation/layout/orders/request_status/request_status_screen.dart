@@ -62,7 +62,7 @@ class RequestStatusScreen extends StatelessWidget {
                           icon: const Icon(
                             Icons.cancel_outlined,
                           ),
-                          color: AppColors.primaryRed,
+                          color: AppColors.primaryBlue,
                           onPressed: () {
                             showAdaptiveDialog(
                               context: context,

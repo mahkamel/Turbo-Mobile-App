@@ -31,7 +31,7 @@ class DefaultButton extends StatelessWidget {
   const DefaultButton({
     super.key,
     required this.function,
-    this.color = AppColors.primaryRed,
+    this.color = AppColors.primaryBlue,
     this.textColor = AppColors.white,
     this.height = 54,
     this.width = double.infinity,
@@ -39,7 +39,7 @@ class DefaultButton extends StatelessWidget {
     this.marginBottom = 0,
     this.text = 'Login',
     this.border,
-    this.borderRadius = 8,
+    this.borderRadius = 20,
     this.marginRight = 0,
     this.marginLeft = 0,
     this.loading = false,
@@ -81,13 +81,13 @@ class DefaultButton extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: defaultLoading(
                       color: color == Colors.transparent || color == Colors.white
-                          ? AppColors.primaryRed
+                          ? AppColors.primaryBlue
                           : Colors.white),
                 )
               : textWidget ??
                   Text(
                     text,
-                    style: AppFonts.inter18White500.copyWith(
+                    style: AppFonts.ibm16White700.copyWith(
                       color: textColor,
                       fontWeight: fontWeight,
                       fontSize: fontSize,

@@ -90,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Text(
                 onboardingData[_currentIndex].subtitle,
                 textAlign: TextAlign.left,
-                style: AppFonts.inter18SubTextGrey400,
+                style: AppFonts.ibm16SubTextGrey400,
               ),
             ),
             const Spacer(),
@@ -129,10 +129,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     _currentIndex == 2
                         ? "getStarted".getLocale(context: context)
                         : Loc.continueButton,
-                    style: AppFonts.inter18SubTextGrey400.copyWith(
+                    style: AppFonts.ibm16SubTextGrey400.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: AppColors.primaryRed),
+                        color: AppColors.primaryBlue),
                   ),
                 ),
                 const SizedBox(

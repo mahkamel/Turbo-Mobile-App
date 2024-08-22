@@ -33,7 +33,7 @@ class AuthRichText extends StatelessWidget {
                 TextSpan(
                   text: " $buttonText",
                   style: AppFonts.inter16Black500
-                      .copyWith(color: AppColors.primaryRed),
+                      .copyWith(color: AppColors.primaryBlue),
                 ),
               ],
             ),

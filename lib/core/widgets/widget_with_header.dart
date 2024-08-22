@@ -38,7 +38,7 @@ class WidgetWithHeader extends StatelessWidget {
                             AppFonts.inter16Black500.copyWith(
                               color: isWithBlackHeader
                                   ? AppColors.black
-                                  : AppColors.primaryRed,
+                                  : AppColors.primaryBlue,
                             ),
                         children: [
                           TextSpan(
@@ -47,7 +47,7 @@ class WidgetWithHeader extends StatelessWidget {
                                 AppFonts.inter16Black500.copyWith(
                                   color: isWithBlackHeader
                                       ? AppColors.black
-                                      : AppColors.primaryRed,
+                                      : AppColors.primaryBlue,
                                 ),
                           )
                         ]),
@@ -58,7 +58,7 @@ class WidgetWithHeader extends StatelessWidget {
                         AppFonts.inter16Black500.copyWith(
                           color: isWithBlackHeader
                               ? AppColors.black
-                              : AppColors.primaryRed,
+                              : AppColors.primaryBlue,
                         ),
                   ),
             const SizedBox(

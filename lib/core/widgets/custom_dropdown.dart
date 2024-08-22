@@ -511,7 +511,7 @@ class CustomDropdownTimeState<T> extends State<CustomDropdownTime<T>>
                                       (338 / 371) -
                                   22,
                               padding: const EdgeInsetsDirectional.only(start: 10),
-                              color: AppColors.primaryRed,
+                              color: AppColors.primaryBlue,
                               child: item.value,
                             ),
                           );

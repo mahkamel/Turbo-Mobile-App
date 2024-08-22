@@ -38,6 +38,7 @@
   "phoneNumber": "رقم الهاتف",
   "enterUrPhoneNumber": "أدخل رقم هاتفك",
   "forgetPassword": "نسيت كلمة المرور؟",
+  "forgetPasswordBody": "أدخل البريد الإلكتروني المرتبط بحسابك وسنرسل لك بريدًا إلكترونيًا يحتوي على تعليمات لإعادة تعيين كلمة المرور الخاصة بك.",
   "yourInfo": "معلوماتك",
   "completeBooking": "تأكيد الحجز",
   "mobileVerification": "تأكيد رقم الهاتف",

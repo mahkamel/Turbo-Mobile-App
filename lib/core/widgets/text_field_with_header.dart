@@ -80,21 +80,21 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
                     TextSpan(
                         text: widget.header,
                         style: AppFonts.inter16Black500.copyWith(
-                          color: AppColors.primaryRed,
+                          color: AppColors.primaryBlue,
                         ),
                         children: [
                           TextSpan(
                             text: "*",
                             style: AppFonts.inter16Black500.copyWith(
-                              color: AppColors.primaryRed,
+                              color: AppColors.primaryBlue,
                             ),
                           ),
                         ]),
                   )
                 : Text(
                     widget.header,
-                    style: AppFonts.inter16Black500.copyWith(
-                      color: AppColors.primaryRed,
+                    style: AppFonts.ibm20Black600.copyWith(
+                      color: AppColors.black,
                     ),
                   ),
             const SizedBox(
@@ -130,7 +130,7 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
                     : null,
                 height: widget.isMultiLine ? 107 : null,
                 onTap: widget.onTap,
-                radius: 7,
+                radius: 20,
                 icon: widget.suffixIcon,
                 maxLines: widget.isMultiLine ? 7 : 1,
                 enabled: widget.isEnabled,
