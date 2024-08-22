@@ -114,7 +114,7 @@ class ProfileScreen extends StatelessWidget {
                                         ),
                                         Text(
                                           "Logout",
-                                          style: AppFonts.inter14ErrorRed400,
+                                          style: AppFonts.ibm14ErrorRed400,
                                         ),
                                       ],
                                     ),

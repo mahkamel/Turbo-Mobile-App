@@ -64,7 +64,7 @@ class HomeHeader extends StatelessWidget {
                       children: [
                         Text(
                           "yourLocation".getLocale(context: context),
-                          style: AppFonts.inter12Grey400,
+                          style: AppFonts.ibm12SubTextGrey600,
                         ),
                         const SizedBox(
                           height: 2,

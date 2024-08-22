@@ -156,7 +156,7 @@ class SavedPaymentCardItem extends StatelessWidget {
                           children: [
                             Text(
                               "Exp date",
-                              style: AppFonts.inter12Grey400.copyWith(
+                              style: AppFonts.ibm12SubTextGrey600.copyWith(
                                 color: AppColors.black.withOpacity(0.4),
                               ),
                             ),

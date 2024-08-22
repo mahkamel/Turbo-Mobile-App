@@ -422,16 +422,16 @@ class AppFonts {
               fontWeight: FontWeight.w400,
               color: AppColors.headerBlack,
             );
-  static TextStyle inter14ErrorRed400 = navigatorKey.currentContext != null &&
+  static TextStyle ibm14ErrorRed400 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'IBM',
           fontSize: 14.0.sp(navigatorKey.currentContext!),
           fontWeight: FontWeight.w400,
           color: AppColors.errorRed,
         )
       : const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'IBM',
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.errorRed,
@@ -499,19 +499,19 @@ class AppFonts {
           fontWeight: FontWeight.w500,
           color: AppColors.black,
         );
-  static TextStyle inter12Grey400 = navigatorKey.currentContext != null &&
+  static TextStyle ibm12SubTextGrey600 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'IBM',
           fontSize: 12.0.sp(navigatorKey.currentContext!),
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey,
+          fontWeight: FontWeight.w600,
+          color: AppColors.subTextGrey,
         )
       : const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'IBM',
           fontSize: 12,
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey,
+          fontWeight: FontWeight.w600,
+          color: AppColors.subTextGrey,
         );
   static TextStyle inter12Black400 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600

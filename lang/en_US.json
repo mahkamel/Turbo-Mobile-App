@@ -39,6 +39,7 @@
   "enterUrPhoneNumber": "Enter your phone number",
   "forgetPassword": "Forget Password?",
   "forgetPasswordBody": "Enter the email associated with your account and we’ll send an email with instructions to reset your password.",
+  "createNewPasswordBody": "Your new password must be different from previous used passwords.",
   "yourInfo": "Your Info",
   "completeBooking": "Confirm Booking",
   "mobileVerification": "OTP",

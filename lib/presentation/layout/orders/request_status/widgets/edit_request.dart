@@ -457,7 +457,7 @@ class _EditedFilesState extends State<EditedFiles> {
             if (widget.blocWatch.nationalIdAttachments?.fileStatus == 2)
               Text(
                 widget.nationalIDRejectionComment,
-                style: AppFonts.inter14ErrorRed400,
+                style: AppFonts.ibm14ErrorRed400,
               ),
             SizedBox(
               height: widget.blocWatch.nationalIdAttachments?.fileStatus == 2
@@ -590,7 +590,7 @@ class _EditedFilesState extends State<EditedFiles> {
             if (widget.blocWatch.passportAttachments?.fileStatus == 2)
               Text(
                 widget.passportRejectionComment,
-                style: AppFonts.inter14ErrorRed400,
+                style: AppFonts.ibm14ErrorRed400,
               ),
             SizedBox(
               height: widget.blocWatch.passportAttachments?.fileStatus == 2

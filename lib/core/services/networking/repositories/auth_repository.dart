@@ -311,4 +311,51 @@ class AuthRepository {
       return Left(e.toString());
     }
   }
+
+  Future<Either<String, String>> forgetPassword({
+    required String email,
+  }) async {
+    try {
+      final response = await _authServices.forgetPassword(email);
+      if(response.data['status'] == false) {
+        return Left(response.data['message']);
+      } else {
+        return const Right("otp");
+      }
+    }catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, String>> checkOTP({
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      final response = await _authServices.checkOTP(email, otp);
+      if(response.data['status'] == false) {
+        return Left(response.data['message']);
+      } else {
+        return const Right("success");
+      }
+    }catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, String>> changePassword({
+    required String id,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await _authServices.changePassword(id, newPassword);
+      if(response.data['status'] == false) {
+        return Left(response.data['message']);
+      } else {
+        return Right(response.data['message']);
+      }
+    }catch (e) {
+      return Left(e.toString());
+    }
+  }
 }

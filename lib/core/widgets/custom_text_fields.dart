@@ -160,7 +160,7 @@ class EmailTextField extends StatelessWidget {
               ),
               child: Text(
                 validateText,
-                style: AppFonts.inter14ErrorRed400,
+                style: AppFonts.ibm14ErrorRed400,
               ),
             ),
         ],
@@ -246,7 +246,7 @@ class PasswordTextField extends StatelessWidget {
             height: 48,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: TextFormField(
               focusNode: focusNode,
@@ -260,12 +260,12 @@ class PasswordTextField extends StatelessWidget {
               onFieldSubmitted: onSubmit,
               obscureText: isObscureText,
               autofillHints: autofill,
-              style: AppFonts.inter12Black400,
+              style: AppFonts.ibm15LightBlack400,
               controller: enabled ? controller : TextEditingController(),
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
                 labelText: label,
-                labelStyle: AppFonts.inter12Black400,
+                labelStyle: AppFonts.ibm15LightBlack400,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 suffixIcon: Padding(
                   padding: const EdgeInsetsDirectional.only(end: 4),
@@ -275,14 +275,14 @@ class PasswordTextField extends StatelessWidget {
                     highlightColor: Colors.transparent,
                     icon: Icon(
                       suffixIcon,
-                      color: AppColors.black,
+                      color: AppColors.gold,
                     ),
                     onPressed: onIconPress,
-                    color: AppColors.black,
+                    color: AppColors.gold,
                   ),
                 ),
                 hintText: hintText ?? "Password",
-                hintStyle: AppFonts.inter12Black400,
+                hintStyle: AppFonts.ibm15subTextGrey400,
                 contentPadding: const EdgeInsetsDirectional.only(
                   start: 16,
                   // end: 16,
@@ -294,25 +294,25 @@ class PasswordTextField extends StatelessWidget {
                         borderSide: const BorderSide(
                           color: AppColors.errorRed,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(20),
                       )
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: AppColors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                          color: AppColors.subTextGrey,
                         ),
                       ),
                 focusedBorder: (fieldValidation == TextFieldValidation.notValid)
                     ? OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: AppColors.black.withOpacity(0.5),
+                        borderSide: const BorderSide(
+                          color: AppColors.subTextGrey,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(20),
                       )
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: AppColors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                          color: AppColors.subTextGrey,
                         ),
                       ),
                 fillColor: AppColors.white,
@@ -323,12 +323,12 @@ class PasswordTextField extends StatelessWidget {
                         borderSide: const BorderSide(
                           color: AppColors.errorRed,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(20),
                       )
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: AppColors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                          color: AppColors.subTextGrey,
                         ),
                       ),
               ),
@@ -345,7 +345,7 @@ class PasswordTextField extends StatelessWidget {
                 ),
                 child: Text(
                   validateText ?? '',
-                  style: AppFonts.inter14ErrorRed400,
+                  style: AppFonts.ibm14ErrorRed400,
                 ),
               ),
             ),
@@ -565,7 +565,7 @@ class CustomTextField extends StatelessWidget {
                   validateText.isNotEmpty
                       ? validateText
                       : "This field cannot be empty",
-                  style: AppFonts.inter14ErrorRed400,
+                  style: AppFonts.ibm14ErrorRed400,
                 ),
               ),
           ],
@@ -584,6 +584,7 @@ Widget codeTextField({
   final int maxNumbers = 1,
   final String hint = '',
   final Function(PointerDownEvent)? onTapOutside,
+  final isFromForgetPassword = false,
   required BuildContext context,
 }) {
   return Container(
@@ -603,15 +604,15 @@ Widget codeTextField({
             FocusManager.instance.primaryFocus?.unfocus();
           },
       textAlign: TextAlign.center,
-      inputFormatters: [
+      inputFormatters: !isFromForgetPassword ? [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(maxNumbers)
-      ],
+      ] : null,
       textInputAction: TextInputAction.next,
       onChanged: onChange,
       style: AppFonts.inter12Black400,
       controller: controller,
-      keyboardType: TextInputType.number,
+      keyboardType: isFromForgetPassword ? TextInputType.text  : TextInputType.number,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: AppFonts.inter12Black400,
