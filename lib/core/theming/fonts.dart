@@ -111,23 +111,39 @@ class AppFonts {
               fontWeight: FontWeight.w700,
               color: AppColors.white,
             );
-  
-
-
-  static TextStyle inter18HeaderBlack700 =
+    
+      static TextStyle ibm10White600 =
       navigatorKey.currentContext != null &&
               AppConstants.screenWidth(navigatorKey.currentContext!) < 600
           ? TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 18.0.sp(navigatorKey.currentContext!),
-              fontWeight: FontWeight.w700,
-              color: AppColors.headerBlack,
+              fontFamily: 'IBM',
+              fontSize: 12.0.sp(navigatorKey.currentContext!),
+              fontWeight: FontWeight.w600,
+              color: AppColors.white,
             )
           : const TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'IBM',
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppColors.white,
+            );
+  
+
+
+  static TextStyle ibm18HeaderBlue600 =
+      navigatorKey.currentContext != null &&
+              AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+          ? TextStyle(
+              fontFamily: 'IBM',
+              fontSize: 18.0.sp(navigatorKey.currentContext!),
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryBlue,
+            )
+          : const TextStyle(
+              fontFamily: 'IBM',
               fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.headerBlack,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryBlue,
             );
 
   static TextStyle inter18Black500 = navigatorKey.currentContext != null &&
@@ -207,6 +223,21 @@ class AppFonts {
               fontWeight: FontWeight.w400,
               color: AppColors.subTextGrey,
             );
+  static TextStyle ibm16Grey400 =
+      navigatorKey.currentContext != null &&
+              AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+          ? TextStyle(
+              fontFamily: 'IBM',
+              fontSize: 16.0.sp(navigatorKey.currentContext!),
+              fontWeight: FontWeight.w400,
+              color: AppColors.grey400,
+            )
+          : const TextStyle(
+              fontFamily: 'IBM',
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: AppColors.grey400,
+            );
 
   static TextStyle inter16LocationBlue600 =
       navigatorKey.currentContext != null &&
@@ -224,17 +255,17 @@ class AppFonts {
               color: AppColors.locationBlue,
             );
 
-  static TextStyle inter16TypeGreyHeader600 =
+  static TextStyle ibm16TypeGreyHeader600 =
       navigatorKey.currentContext != null &&
               AppConstants.screenWidth(navigatorKey.currentContext!) < 600
           ? TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'IBM',
               fontSize: 16.0.sp(navigatorKey.currentContext!),
               fontWeight: FontWeight.w600,
               color: AppColors.typeGreyHeader,
             )
           : const TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'IBM',
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.typeGreyHeader,
@@ -270,19 +301,50 @@ class AppFonts {
           color: AppColors.black,
         );
 
-  static TextStyle inter16Black400 = navigatorKey.currentContext != null &&
+  static TextStyle ibm16LightBlack600 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'IBM',
           fontSize: 16.0.sp(navigatorKey.currentContext!),
-          fontWeight: FontWeight.w400,
-          color: AppColors.black,
+          fontWeight: FontWeight.w600,
+          color: AppColors.lightBlack,
         )
       : const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'IBM',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.lightBlack,
+        );
+  
+  
+  static TextStyle ibm16Gold600 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 16.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w600,
+          color: AppColors.gold,
+        )
+      : const TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.gold,
+        );
+
+    static TextStyle ibm16PrimaryHeader400 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 16.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w400,
+          color: AppColors.primaryBlue,
+        )
+      : const TextStyle(
+          fontFamily: 'IBM',
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          color: AppColors.black,
+          color: AppColors.primaryBlue,
         );
 
   static TextStyle inter16BottomSheetGreyGrey100 =
@@ -346,19 +408,19 @@ class AppFonts {
           color: AppColors.textBlack,
         );
 
-  static TextStyle inter14Grey400 = navigatorKey.currentContext != null &&
+  static TextStyle ibm11Grey400 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 14.0.sp(navigatorKey.currentContext!),
+          fontFamily: 'IBM',
+          fontSize: 11.0.sp(navigatorKey.currentContext!),
           fontWeight: FontWeight.w400,
-          color: AppColors.grey,
+          color: AppColors.grey400,
         )
       : const TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 14,
+          fontFamily: 'IBM',
+          fontSize: 11,
           fontWeight: FontWeight.w400,
-          color: AppColors.grey,
+          color: AppColors.grey400,
         );
 
 
@@ -435,6 +497,20 @@ class AppFonts {
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.errorRed,
+        );
+  static TextStyle ibm10LightBlack700 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 10.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w700,
+          color: AppColors.lightBlack,
+        )
+      : const TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: AppColors.lightBlack,
         );
 
   static TextStyle inter14BottomSheetDarkerGrey400 =
@@ -513,18 +589,32 @@ class AppFonts {
           fontWeight: FontWeight.w600,
           color: AppColors.subTextGrey,
         );
-  static TextStyle inter12Black400 = navigatorKey.currentContext != null &&
+    static TextStyle ibm14SubTextGold600 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 12.0.sp(navigatorKey.currentContext!),
-          fontWeight: FontWeight.w400,
-          color: AppColors.black,
+          fontFamily: 'IBM',
+          fontSize: 14.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w600,
+          color: AppColors.gold,
         )
       : const TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 12,
+          fontFamily: 'IBM',
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: AppColors.gold,
+        );
+  static TextStyle ibm14LightBlack400 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 14.0.sp(navigatorKey.currentContext!),
           fontWeight: FontWeight.w400,
-          color: AppColors.black,
+          color: AppColors.lightBlack,
+        )
+      : const TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: AppColors.lightBlack,
         );
 }

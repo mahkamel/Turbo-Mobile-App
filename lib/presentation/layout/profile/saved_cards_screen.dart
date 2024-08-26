@@ -256,7 +256,7 @@ class DeleteCardsDialog extends StatelessWidget {
               ),
               child: Text(
                 "Are you sure you want to delete this saved credit card? This action cannot be undone.",
-                style: AppFonts.inter14Grey400,
+                style: AppFonts.ibm11Grey400,
                 textAlign: TextAlign.center,
               ),
             ),

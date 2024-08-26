@@ -628,7 +628,7 @@ class EditedPrice extends StatelessWidget {
                 children: [
                   Text(
                     "Rental price: ",
-                    style: AppFonts.inter16TypeGreyHeader600,
+                    style: AppFonts.ibm16TypeGreyHeader600,
                   ),
                   const Spacer(),
                   Text(
@@ -648,7 +648,7 @@ class EditedPrice extends StatelessWidget {
                   children: [
                     Text(
                       "Driver Fees: ",
-                      style: AppFonts.inter16TypeGreyHeader600,
+                      style: AppFonts.ibm16TypeGreyHeader600,
                     ),
                     const Spacer(),
                     Text(
@@ -667,7 +667,7 @@ class EditedPrice extends StatelessWidget {
                 children: [
                   Text(
                     "Vat (${AppConstants.vat}%): ",
-                    style: AppFonts.inter16TypeGreyHeader600,
+                    style: AppFonts.ibm16TypeGreyHeader600,
                   ),
                   const Spacer(),
                   Text(
@@ -690,7 +690,7 @@ class EditedPrice extends StatelessWidget {
                 children: [
                   Text(
                     "Total: ",
-                    style: AppFonts.inter16TypeGreyHeader600.copyWith(
+                    style: AppFonts.ibm16TypeGreyHeader600.copyWith(
                       color: AppColors.primaryBlue,
                       fontWeight: FontWeight.w700,
                     ),

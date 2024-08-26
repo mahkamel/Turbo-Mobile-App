@@ -329,7 +329,7 @@ class TotalAmount extends StatelessWidget {
       child: Text.rich(
         TextSpan(
           text: "Total: ",
-          style: AppFonts.inter16TypeGreyHeader600,
+          style: AppFonts.ibm16TypeGreyHeader600,
           children: [
             TextSpan(
               text: "${value.toStringAsFixed(2)} ",
@@ -343,7 +343,7 @@ class TotalAmount extends StatelessWidget {
             ),
             TextSpan(
               text: " (Including VAT)",
-              style: AppFonts.inter14Grey400,
+              style: AppFonts.ibm11Grey400,
             ),
           ],
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:turbo/core/theming/fonts.dart';
 import 'package:turbo/presentation/layout/home/widgets/recommended_car_card.dart';
 
-import '../../../../core/theming/fonts.dart';
 import '../../../../models/get_cars_by_brands.dart';
 
 class CarsByTypesListview extends StatelessWidget {
@@ -34,11 +34,11 @@ class CarsByTypesListview extends StatelessWidget {
               ),
               child: Text(
                 carType,
-                style: AppFonts.inter16TypeGreyHeader600,
+                style: AppFonts.ibm16TypeGreyHeader600,
               ),
             ),
             SizedBox(
-              height: 240,
+              height: 250,
               child: ListView.separated(
                 itemCount: cars.length,
                 padding: const EdgeInsetsDirectional.only(

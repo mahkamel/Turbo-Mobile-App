@@ -57,6 +57,7 @@ class SelectedCarBrandFilter extends StatelessWidget {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: BrandLogoCircle(
+                          brandName: "todo",
                           logoPath: searchCubitWatch
                               .selectedBrands[index].path,
                           size: 50,
@@ -89,7 +90,7 @@ class CarBrandFilterHeader extends StatelessWidget {
       children: [
         Text(
           "carBrand".getLocale(context: context),
-          style: AppFonts.inter18HeaderBlack700,
+          style: AppFonts.ibm18HeaderBlue600,
         ),
         DefaultButton(
           height: 30,

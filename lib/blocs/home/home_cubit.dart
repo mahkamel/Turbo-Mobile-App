@@ -31,6 +31,7 @@ class HomeCubit extends Cubit<HomeState> {
   List<UserNotificationModel> notifications = [];
 
   bool isFirstGettingCarBrand = true;
+  int tempSelectedCityIndex = -1;
 
   void onInit() {
     try {
@@ -46,6 +47,16 @@ class HomeCubit extends Cubit<HomeState> {
     selectedBrandIndex = newIndex;
     emit(HomeState.changeSelectedBrandIndex(selectedBrandIndex));
   }
+
+
+  void toggleBranchSelector(int index) {
+    if(tempSelectedCityIndex != index){
+    tempSelectedCityIndex = index;}else{
+      tempSelectedCityIndex= -1;
+    }
+    emit(HomeState.toggleBranchState(tempSelectedCityIndex));
+  }
+
 
   void getCarsBrandsByBranchId() async {
     isFirstGettingCarBrand = true;
@@ -78,6 +89,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   bool isGettingCars = false;
   void getCarsBasedOnBrand({String? brandId}) async {
+    print("Aaaaaaaaaaaaaaaaaaaaaaaa $brandId");
     carsByBrand.clear();
     isGettingCars = true;
     emit(const HomeState.getCarsByBrandLoading());

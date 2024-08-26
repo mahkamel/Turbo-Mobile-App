@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
                 locale: appLocale,
                 theme: ThemeData(
                   fontFamily: "Inter",
-                  scaffoldBackgroundColor: AppColors.white,
+                  scaffoldBackgroundColor: AppColors.grey500,
                   hoverColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,

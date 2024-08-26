@@ -36,43 +36,81 @@ class LoginScreen extends StatelessWidget {
         child: SizedBox(
           height: AppConstants.screenHeight(context),
           width: AppConstants.screenWidth(context),
-          child: Column(
-            children: [
-              DefaultHeader(
-                header: "login".getLocale(context: context),
-                textAlignment: AlignmentDirectional.center,
-              ),
-              const SizedBox(
-                height: 48,
-              ),
-              BlocBuilder<LoginCubit, LoginState>(
-                buildWhen: (previous, current) =>
-                    current is CheckLoginEmailValidationState,
-                builder: (context, state) {
-                  return const LoginEmail();
-                },
-              ),
-              const SizedBox(
-                height: 18,
-              ),
-              BlocBuilder<LoginCubit, LoginState>(
-                buildWhen: (previous, current) =>
-                    current is CheckLoginPasswordValidationState,
-                builder: (context, state) {
-                  return const LoginPassword();
-                },
-              ),
-              const ForgetPasswordButton(),
-              BlocConsumer<LoginCubit, LoginState>(
-                listener: (context, state) {
-                  if (state is LoginErrorState) {
-                    defaultErrorSnackBar(
-                      context: context,
-                      message: state.errMsg,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                DefaultHeader(
+                  header: "login".getLocale(context: context),
+                  textAlignment: AlignmentDirectional.center,
+                ),
+                const SizedBox(
+                  height: 48,
+                ),
+                BlocBuilder<LoginCubit, LoginState>(
+                  buildWhen: (previous, current) =>
+                      current is CheckLoginEmailValidationState,
+                  builder: (context, state) {
+                    return const LoginEmail();
+                  },
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                BlocBuilder<LoginCubit, LoginState>(
+                  buildWhen: (previous, current) =>
+                      current is CheckLoginPasswordValidationState,
+                  builder: (context, state) {
+                    return const LoginPassword();
+                  },
+                ),
+                const ForgetPasswordButton(),
+                BlocConsumer<LoginCubit, LoginState>(
+                  listener: (context, state) {
+                    if (state is LoginErrorState) {
+                      defaultErrorSnackBar(
+                        context: context,
+                        message: state.errMsg,
+                      );
+                    } else if (state is LoginSuccessState) {
+                      if (requestedCarId != null &&
+                          (requestedCarId?.isNotEmpty ?? false)) {
+                        Navigator.of(context).pushReplacementNamed(
+                          Routes.signupScreen,
+                          arguments: SignupScreenArguments(
+                            carId: requestedCarId!,
+                            dailyPrice: dailyPrice!,
+                            weeklyPrice: weeklyPrice!,
+                            monthlyPrice: monthlyPrice!,
+                          ),
+                        );
+                      } else {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          Routes.layoutScreen,
+                          (route) => false,
+                        );
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    var blocRead = context.read<LoginCubit>();
+                    return DefaultButton(
+                      loading: state is LoginLoadingState,
+                      function: () {
+                        blocRead.onLoginButtonClicked();
+                      },
+                      text: "login".getLocale(context: context),
+                      marginTop: 24,
+                      marginLeft: 20,
+                      marginRight: 20,
+                      marginBottom: 18,
                     );
-                  } else if (state is LoginSuccessState) {
-                    if (requestedCarId != null &&
-                        (requestedCarId?.isNotEmpty ?? false)) {
+                  },
+                ),
+                AuthRichText(
+                  text: "dontHaveAccount".getLocale(context: context),
+                  buttonText: "signUp".getLocale(context: context),
+                  onTap: () {
+                    if (requestedCarId != null) {
                       Navigator.of(context).pushReplacementNamed(
                         Routes.signupScreen,
                         arguments: SignupScreenArguments(
@@ -83,50 +121,14 @@ class LoginScreen extends StatelessWidget {
                         ),
                       );
                     } else {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        Routes.layoutScreen,
-                        (route) => false,
+                      Navigator.of(context).pushReplacementNamed(
+                        Routes.signupScreen,
                       );
                     }
-                  }
-                },
-                builder: (context, state) {
-                  var blocRead = context.read<LoginCubit>();
-                  return DefaultButton(
-                    loading: state is LoginLoadingState,
-                    function: () {
-                      blocRead.onLoginButtonClicked();
-                    },
-                    text: "login".getLocale(context: context),
-                    marginTop: 24,
-                    marginLeft: 20,
-                    marginRight: 20,
-                    marginBottom: 18,
-                  );
-                },
-              ),
-              AuthRichText(
-                text: "dontHaveAccount".getLocale(context: context),
-                buttonText: "signUp".getLocale(context: context),
-                onTap: () {
-                  if (requestedCarId != null) {
-                    Navigator.of(context).pushReplacementNamed(
-                      Routes.signupScreen,
-                      arguments: SignupScreenArguments(
-                        carId: requestedCarId!,
-                        dailyPrice: dailyPrice!,
-                        weeklyPrice: weeklyPrice!,
-                        monthlyPrice: monthlyPrice!,
-                      ),
-                    );
-                  } else {
-                    Navigator.of(context).pushReplacementNamed(
-                      Routes.signupScreen,
-                    );
-                  }
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

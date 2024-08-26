@@ -36,12 +36,12 @@ class FilterCars extends StatelessWidget {
         children: [
           Text(
             "Car Categories",
-            style: AppFonts.inter18HeaderBlack700,
+            style: AppFonts.ibm18HeaderBlue600,
           ),
           const CarCategoriesFilter(),
           Text(
             "Car Types",
-            style: AppFonts.inter18HeaderBlack700,
+            style: AppFonts.ibm18HeaderBlue600,
           ),
           const CarTypesFilter(),
           const CarBrandFilterHeader(),
@@ -162,7 +162,7 @@ class DailyPriceDropdown extends StatelessWidget {
         return WidgetWithHeader(
           padding: const EdgeInsetsDirectional.only(top: 24),
           header: "Daily Price",
-          headerStyle: AppFonts.inter18HeaderBlack700,
+          headerStyle: AppFonts.ibm18HeaderBlue600,
           widget: Column(
             children: [
               MultiSlider(

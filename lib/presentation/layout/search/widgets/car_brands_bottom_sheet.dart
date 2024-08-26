@@ -39,7 +39,7 @@ class CarBrandsBottomSheet extends StatelessWidget {
         children: [
           Text(
             "Car brands",
-            style: AppFonts.inter18HeaderBlack700,
+            style: AppFonts.ibm18HeaderBlue600,
           ),
           CustomTextField(
             marginTop: 12,
@@ -106,6 +106,7 @@ class CarBrandsBottomSheet extends StatelessWidget {
                                           .carBrands[index]
                                           .path,
                                   size: 50,
+                                  brandName: "todo",
                                 ),
                                 horizontalGap(12),
                                 Text(
@@ -117,7 +118,7 @@ class CarBrandsBottomSheet extends StatelessWidget {
                                           .read<CarRepository>()
                                           .carBrands[index]
                                           .display,
-                                  style: AppFonts.inter12Black400,
+                                  style: AppFonts.ibm14LightBlack400,
                                 ),
                                 const Spacer(),
                                 Checkbox(

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/models/get_cars_by_brands.dart';
@@ -36,10 +38,10 @@ class RecommendedCarCard extends StatelessWidget {
         width: isFromFilter
             ? AppConstants.screenWidth(context) - 32
             : AppConstants.screenWidth(context) * 0.8,
-        padding: EdgeInsets.symmetric(
-          vertical: 8,
-          horizontal: isFromFilter ? 14 : 12,
-        ),
+        // padding: EdgeInsets.symmetric(
+        //   vertical: 8,
+        //   horizontal: isFromFilter ? 14 : 12,
+        // ),
         margin: const EdgeInsets.only(bottom: 4),
         constraints: !isFromFilter
             ? const BoxConstraints(
@@ -48,61 +50,92 @@ class RecommendedCarCard extends StatelessWidget {
             : null,
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.black.withOpacity(0.1),
-                offset: const Offset(0, 3),
-                blurRadius: 8,
-                spreadRadius: 0),
-          ],
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            _carImage(),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 8.0,
-                bottom: 4.0,
-              ),
-              child: _buildBrandAndYearRow(),
-            ),
-            Text(
-              car.model.modelName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppFonts.inter16Black500,
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Stack(
               children: [
-                Container(
-                  height: 20,
-                  width: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: car.color,
-                  ),
-                ),
-                Text.rich(
-                  TextSpan(
-                    text: "${car.carDailyPrice} ${"SAR".getLocale(context: context)}",
-                    style: AppFonts.inter16Black500.copyWith(
-                        color: AppColors.primaryBlue,
-                        fontWeight: FontWeight.w600),
+                _carImage(),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: _buildBrandAndYearRow(),
+                )
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(right: 21.0, left: 18, top: 7),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      TextSpan(
-                        text: "/${"daySmall".getLocale(context: context)}",
-                        style: AppFonts.inter14Black400
-                            .copyWith(color: AppColors.grey400, fontSize: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            car.model.modelName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppFonts.ibm16PrimaryHeader400,
+                          ),
+                          Text(
+                            car.carYear,
+                            style: AppFonts.ibm11Grey400,
+                          ),
+                        ],
                       ),
+                      Text.rich(
+                      TextSpan(
+                        text:
+                            "SAR".getLocale(context: context),
+                        style: AppFonts.ibm11Grey400,
+                        children: [
+                          TextSpan(
+                            text: " ${car.carDailyPrice}",
+                            style: AppFonts.ibm15LightBlack400.copyWith(
+                            fontWeight: FontWeight.w600),
+                          ),
+                          TextSpan(
+                            text: "/${"dayCapital".getLocale(context: context)}",
+                            style: AppFonts.ibm11Grey400
+                          ),
+                        ],
+                      ),
+                    ),
                     ],
                   ),
-                ),
-              ],
+                  const Divider(color: AppColors.divider,),
+                ],
+              ),
+            ),
+           
+            Padding(
+              padding: const EdgeInsets.only(left: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "available Colors".getLocale(context: context),
+                    style: AppFonts.ibm11Grey400.copyWith(
+                      color: AppColors.gold
+                    ),
+                  ),
+                  const SizedBox(height: 6,),
+                  Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: car.color,
+                    ),
+                  ),
+                  
+                ],
+              ),
             ),
           ],
         ),
@@ -110,45 +143,40 @@ class RecommendedCarCard extends StatelessWidget {
     );
   }
 
-  Row _buildBrandAndYearRow() {
-    return Row(
-      children: [
-        Container(
-          height: 24,
-          width: 24,
-          margin: const EdgeInsetsDirectional.only(end: 2),
-          decoration: const BoxDecoration(
-            color: AppColors.carCardGrey,
-            shape: BoxShape.circle,
+  Widget _buildBrandAndYearRow() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX:2, sigmaY:2),
+        child: Container(
+          height: 27,
+          // width: 75,
+          padding: const EdgeInsetsDirectional.symmetric(horizontal: 10 , vertical: 2),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: AppColors.typeGreyHeader.withOpacity(0.5),
+            shape: BoxShape.rectangle,
           ),
-          child: Center(
-            child: Image.network(
-               getCompleteFileUrl(
-                car.brand.brandPath,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.network(
+                getCompleteFileUrl(
+                  car.brand.brandPath,
+                ),
+                fit: BoxFit.contain,
               ),
-              fit: BoxFit.contain,
-            ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Text(
+                  car.brand.brandName,
+                  style: AppFonts.ibm10White600,
+                ),
+              ),
+            ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: Text(
-            car.brand.brandName,
-            style: AppFonts.inter14Black400,
-          ),
-        ),
-        const CircleAvatar(
-          backgroundColor: AppColors.grey600,
-          radius: 2,
-        ),
-        const SizedBox(
-          width: 4,
-        ),
-        Text(
-          car.carYear,
-          style: AppFonts.inter14Black400,
-        ),
-      ],
+      ),
     );
   }
 

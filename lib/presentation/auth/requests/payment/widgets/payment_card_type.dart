@@ -48,7 +48,7 @@ class PaymentCardTypeRow extends StatelessWidget {
           ),
           Text(
             type,
-            style: AppFonts.inter16Black400,
+            style: AppFonts.ibm16LightBlack600,
           ),
         ],
       ),

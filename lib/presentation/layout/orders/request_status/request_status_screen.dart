@@ -119,7 +119,7 @@ class RequestStatusScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
                             "We are reviewing your documents and will notify you once the review is complete.",
-                            style: AppFonts.inter16Black400.copyWith(
+                            style: AppFonts.ibm16LightBlack600.copyWith(
                               fontSize: 17,
                             ),
                             textAlign: TextAlign.center,
@@ -136,7 +136,7 @@ class RequestStatusScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
                             "Congratulations! Your car rental request is approved!.",
-                            style: AppFonts.inter16Black400.copyWith(
+                            style: AppFonts.ibm16LightBlack600.copyWith(
                               fontSize: 17,
                             ),
                             textAlign: TextAlign.center,
@@ -149,7 +149,7 @@ class RequestStatusScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Text(
                         "Congratulations! Your refund is created successfully, please follow up with your bank within 21 days",
-                        style: AppFonts.inter16Black400.copyWith(
+                        style: AppFonts.ibm16LightBlack600.copyWith(
                           fontSize: 17,
                         ),
                         textAlign: TextAlign.center,

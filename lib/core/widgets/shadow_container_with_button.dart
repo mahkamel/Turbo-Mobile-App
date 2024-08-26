@@ -38,10 +38,10 @@ class ShadowContainerWithPrefixTextButton extends StatelessWidget {
             Text(
               title,
               style: buttonText.isNotEmpty
-                  ? AppFonts.inter16Black400.copyWith(
+                  ? AppFonts.ibm16LightBlack600.copyWith(
                       fontWeight: FontWeight.w300,
                     )
-                  : AppFonts.inter16Black400,
+                  : AppFonts.ibm16LightBlack600,
             ),
             prefixIcon ??
                 Text(

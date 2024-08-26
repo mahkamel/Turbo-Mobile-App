@@ -16,7 +16,7 @@ class BrandsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 85,
+      height: 86,
       child: BlocBuilder<HomeCubit, HomeState>(
         buildWhen: (previous, current) =>
             current is GetCarsBrandsLoadingState ||
@@ -33,6 +33,7 @@ class BrandsList extends StatelessWidget {
                   : ListView.separated(
                       padding: const EdgeInsetsDirectional.symmetric(
                         horizontal: 16,
+                        vertical: 6
                       ),
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) => InkWell(
@@ -48,28 +49,14 @@ class BrandsList extends StatelessWidget {
                             blocRead.getCarsBasedOnBrand();
                           }
                         },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
+                        child: 
                             BrandLogoCircle(
                               logoPath: blocRead.carBrands[index].path,
                               isWithBlackBorder:
                                   blocWatch.selectedBrandIndex == index,
+                              brandName: blocRead.carBrands[index].brandName
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
-                              child: Text(
-                                blocRead.carBrands[index].brandName,
-                                style: AppFonts.inter14Black400.copyWith(
-                                  fontWeight:
-                                      blocWatch.selectedBrandIndex == index
-                                          ? FontWeight.w500
-                                          : FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          
                       ),
                       separatorBuilder: (context, index) => const SizedBox(
                         width: 16,
@@ -137,34 +124,57 @@ class BrandLogoCircle extends StatelessWidget {
   const BrandLogoCircle({
     super.key,
     required this.logoPath,
-    this.size = 60,
+    required this.brandName,
+    this.size = 72,
     this.isWithBlackBorder = false,
   });
 
   final double size;
   final bool isWithBlackBorder;
   final String logoPath;
+  final String brandName;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: size,
       height: size,
-      padding: const EdgeInsets.all(8),
+      constraints: BoxConstraints(maxHeight: size),
+      // padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.white,
-        shape: BoxShape.circle,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isWithBlackBorder
               ? AppColors.headerBlack
               : AppColors.headerBlack.withOpacity(0.1),
         ),
+        boxShadow:  [
+          BoxShadow(
+            blurRadius: 6,
+            spreadRadius: 2,
+            offset: const Offset(0, 2),
+            color:
+                AppColors.black.withOpacity(0.15)
+          )
+        ]
       ),
-      child: Center(
-        child: CachedNetworkImage(
-          imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
-          placeholder: (context, url) => const SizedBox(),
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CachedNetworkImage(
+            width: 35,
+            height: 35,
+            imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
+            placeholder: (context, url) => const SizedBox(),
+          ),
+          const SizedBox(height: 4,),
+          Text(
+            brandName,
+            style: AppFonts.ibm10LightBlack700
+          ),
+        ],
       ),
     );
   }
