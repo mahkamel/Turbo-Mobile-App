@@ -30,7 +30,6 @@ class AuthRepository {
   void setCustomerData(CustomerModel? cachedCustomer) {
     if (cachedCustomer != null) {
       customer = cachedCustomer;
-      print("cusrromsadasd ${customer.customerId}");
       UserTokenService.saveUserToken(customer.token);
       UserTokenService.userTokenFirstTime();
     }
@@ -109,7 +108,6 @@ class AuthRepository {
             customerDriverLicenseNumberExpiryDate,
       );
       if (response.statusCode == 200 && response.data['status']) {
-        print("ssssreasdasd ${response.data['id']}");
         customer = CustomerModel(
           customerAddress: customerAddress,
           customerName: customerName,

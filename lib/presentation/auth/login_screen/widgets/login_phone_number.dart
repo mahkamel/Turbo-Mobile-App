@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:turbo/blocs/localization/cubit/localization_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../blocs/login/login_cubit.dart';
@@ -47,8 +45,8 @@ class LoginPhoneNumber extends StatelessWidget {
               onInputValidated: (value) {
                 blocRead.checkPhoneValidation(value);
               },
-              locale:
-                  context.read<LocalizationCubit>().state.locale.languageCode,
+              // locale:
+              //     context.read<LocalizationCubit>().state.locale.languageCode,
               inputDecoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 4,

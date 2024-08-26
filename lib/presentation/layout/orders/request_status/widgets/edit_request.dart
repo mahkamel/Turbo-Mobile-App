@@ -206,8 +206,6 @@ class SubmitButton extends StatelessWidget {
       builder: (blocContext, state) {
         var blocRead = blocContext.read<OrderCubit>();
         var blocWatch = blocContext.watch<OrderCubit>();
-        print("sssss ${getIt<AuthRepository>().customer.customerType}");
-        print("sssss ${blocWatch.passportAttachments?.fileStatus}");
         return DefaultButton(
           loading: state is SubmitEditsLoadingState,
           marginTop: 16,

@@ -7,7 +7,7 @@ import 'package:turbo/core/widgets/custom_header.dart';
 import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/main_paths.dart';
-import 'package:turbo/presentation/auth/forget_password/widgets/confirmPassword.dart';
+import 'package:turbo/presentation/auth/forget_password/widgets/confirm_password.dart';
 import 'package:turbo/presentation/auth/forget_password/widgets/password.dart';
 
 class CreateNewPassword extends StatelessWidget {
@@ -52,7 +52,7 @@ class CreateNewPassword extends StatelessWidget {
               buildWhen: (previous, current) =>
                   current is CheckConfirmPasswordValidationState,
               builder: (context, state) {
-                return const Confirmpassword();
+                return const ConfirmPassword();
               },
             ),
             const Spacer(),
