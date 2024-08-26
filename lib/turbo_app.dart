@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             .copyWith(textScaler: const TextScaler.linear(1.0)),
         child: MaterialApp(
           navigatorKey: navigatorKey,
-          title: 'Turbo',
+          title: 'DS Rent',
           supportedLocales: AppLocalizationsSetup.supportedLocales,
           localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
           localeResolutionCallback:

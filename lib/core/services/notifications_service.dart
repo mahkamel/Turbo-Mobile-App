@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../theming/colors.dart';
 
-
 class NotificationServices {
   final AwesomeNotifications _awesomeNotifications = AwesomeNotifications();
 
@@ -15,7 +14,8 @@ class NotificationServices {
       NotificationSettings? settings;
       if (Platform.isAndroid) {
         await _awesomeNotifications.isNotificationAllowed().then(
-              (value) async {
+          (value) async {
+            print("valueeee $value");
             if (value) {
               AwesomeNotifications().initialize(
                   null,
@@ -25,7 +25,7 @@ class NotificationServices {
                       channelKey: 'basic_channel',
                       channelName: 'Basic notifications',
                       channelDescription:
-                      'Notification channel for basic tests',
+                          'Notification channel for basic tests',
                       ledColor: AppColors.primaryGreen,
                       playSound: true,
                       importance: NotificationImportance.High,
@@ -56,6 +56,55 @@ class NotificationServices {
                 badge: true,
                 sound: true,
               );
+            } else {
+              print("reqqq");
+              await _awesomeNotifications
+                  .requestPermissionToSendNotifications()
+                  .then(
+                (value) async {
+                  if (await _awesomeNotifications.isNotificationAllowed()) {
+                    AwesomeNotifications().initialize(
+                        null,
+                        [
+                          NotificationChannel(
+                            channelGroupKey: 'basic_channel_group',
+                            channelKey: 'basic_channel',
+                            channelName: 'Basic notifications',
+                            channelDescription:
+                                'Notification channel for basic tests',
+                            ledColor: AppColors.primaryGreen,
+                            playSound: true,
+                            importance: NotificationImportance.High,
+                            channelShowBadge: true,
+                            enableVibration: true,
+                            enableLights: true,
+                          )
+                        ],
+                        // Channel groups are only visual and are not required
+                        channelGroups: [
+                          NotificationChannelGroup(
+                              channelGroupKey: 'basic_channel_group',
+                              channelGroupName: 'Basic group')
+                        ],
+                        debug: true);
+                    settings = await firebaseMessaging.requestPermission(
+                      alert: true,
+                      announcement: false,
+                      badge: true,
+                      carPlay: false,
+                      criticalAlert: false,
+                      provisional: false,
+                      sound: true,
+                    );
+                    await FirebaseMessaging.instance
+                        .setForegroundNotificationPresentationOptions(
+                      alert: true,
+                      badge: true,
+                      sound: true,
+                    );
+                  }
+                },
+              );
             }
           },
         );
@@ -68,7 +117,6 @@ class NotificationServices {
               title: notification?.title ?? '',
               body: notification?.body,
               imageUrl: notification?.android?.imageUrl,
-
               payload: message.data
                   .map((key, value) => MapEntry(key, value.toString())),
             );
@@ -77,7 +125,6 @@ class NotificationServices {
       }
     } catch (e) {}
   }
-
 
   void showNotification({
     required String title,

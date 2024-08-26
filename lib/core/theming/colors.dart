@@ -16,6 +16,8 @@ class AppColors {
   static const Color bottomSheetGrey = Color(0xFF474A56);
   static const Color toggleBlack = Color(0xFF2E2E2E);
   static const Color toggleGrey = Color(0xFFEEEEEE);
+  static const Color onboardingBrown = Color(0xFF706148);
+  static const Color secondary = Color(0xFFC29F67);
 
   static const Color grey = Color(0xFF535559);
   static const Color grey700 = Color(0xFF4D4D4D);
@@ -34,7 +36,6 @@ class AppColors {
   static const Color errorRed = Color(0xFFF22104);
   static const Color primaryBlue = Color(0xFF2E4063);
   static const Color orange = Color(0xFFffc107);
-  static const Color gold = Color(0xFFC29F67);
   static const Color greyBorder = Color(0xFFD9D9D9);
   static const Color buttonGreyBorder = Color(0xFFB0B0B0);
   static const Color divider = Color(0xFFADB4BE);

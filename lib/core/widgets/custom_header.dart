@@ -78,7 +78,7 @@ class DefaultHeader extends StatelessWidget {
                       ),
                       child: const Icon(
                         Icons.arrow_back_ios_rounded,
-                        color: AppColors.gold,
+                        color: AppColors.secondary,
                         size: 24,
                       ),
                     ),

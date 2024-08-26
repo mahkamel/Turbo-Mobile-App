@@ -275,10 +275,10 @@ class PasswordTextField extends StatelessWidget {
                     highlightColor: Colors.transparent,
                     icon: Icon(
                       suffixIcon,
-                      color: AppColors.gold,
+                      color: AppColors.secondary,
                     ),
                     onPressed: onIconPress,
-                    color: AppColors.gold,
+                    color: AppColors.secondary,
                   ),
                 ),
                 hintText: hintText ?? "Password",

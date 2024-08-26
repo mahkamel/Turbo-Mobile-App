@@ -121,7 +121,7 @@ class RecommendedCarCard extends StatelessWidget {
                   Text(
                     "available Colors".getLocale(context: context),
                     style: AppFonts.ibm11Grey400.copyWith(
-                      color: AppColors.gold
+                      color: AppColors.secondary
                     ),
                   ),
                   const SizedBox(height: 6,),

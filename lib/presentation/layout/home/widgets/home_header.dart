@@ -90,7 +90,7 @@ class HomeHeader extends StatelessWidget {
                                   ),
                                   const Icon(
                                     Icons.arrow_drop_down,
-                                    color: AppColors.gold,
+                                    color: AppColors.secondary,
                                   ),
                                 ],
                               );
@@ -161,7 +161,7 @@ class HomeHeader extends StatelessWidget {
                                   child: const Center(
                                       child: Icon(
                                     Icons.notifications,
-                                    color: AppColors.gold,
+                                    color: AppColors.secondary,
                                     size: 24,
                                   )),
                                 ),
@@ -208,7 +208,7 @@ class SelectCityBottomSheet extends StatelessWidget {
           ),
           Row(
             children: [
-              const Icon(Icons.location_city_rounded, color: AppColors.gold),
+              const Icon(Icons.location_city_rounded, color: AppColors.secondary),
               const SizedBox(
                 width: 4,
               ),
