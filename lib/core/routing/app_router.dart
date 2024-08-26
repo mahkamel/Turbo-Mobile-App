@@ -12,7 +12,6 @@ import 'package:turbo/presentation/auth/forget_password/screens/otp_forget_passw
 import 'package:turbo/presentation/auth/forget_password/screens/create_new_password_screen.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
-import 'package:turbo/presentation/onboarding/init_select_lang_screen.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
 import '../../blocs/orders/order_cubit.dart';
@@ -26,7 +25,6 @@ import '../di/dependency_injection.dart';
 
 class AppRouter {
   static final Map<String, Widget Function(BuildContext, dynamic)> _routes = {
-    Routes.initLangScreen: (context, _) => const FirstSelectLangScreen(),
     Routes.onBoardingScreen: (context, _) => const OnboardingScreen(),
     Routes.loginScreen: (context, arguments) => BlocProvider<LoginCubit>(
           create: (context) => getIt<LoginCubit>(),

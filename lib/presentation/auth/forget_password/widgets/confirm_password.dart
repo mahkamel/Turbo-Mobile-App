@@ -4,8 +4,8 @@ import 'package:turbo/blocs/login/login_cubit.dart';
 import 'package:turbo/core/helpers/enums.dart';
 import 'package:turbo/core/widgets/text_field_with_header.dart';
 
-class Confirmpassword extends StatelessWidget {
-  const Confirmpassword({super.key});
+class ConfirmPassword extends StatelessWidget {
+  const ConfirmPassword({super.key});
 
   @override
   Widget build(BuildContext context) {

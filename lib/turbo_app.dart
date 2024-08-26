@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner:
               F.appFlavor != null && F.appFlavor == Flavor.dev ? true : false,
           initialRoute:
-              isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
+              isFirstTime ? Routes.onBoardingScreen : Routes.layoutScreen,
           onGenerateRoute: appRouter.generateRoute,
         ),
       ),

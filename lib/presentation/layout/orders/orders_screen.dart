@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:turbo/blocs/localization/cubit/localization_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/helpers/functions.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
@@ -269,12 +268,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                   formatDateTime(
                                                     allRequests[index]
                                                         .requestFrom,
-                                                    locale: context
-                                                        .read<
-                                                            LocalizationCubit>()
-                                                        .state
-                                                        .locale
-                                                        .languageCode,
                                                   ),
                                                   style: AppFonts
                                                       .inter14Black400
@@ -298,12 +291,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                   formatDateTime(
                                                     allRequests[index]
                                                         .requestTo,
-                                                    locale: context
-                                                        .read<
-                                                            LocalizationCubit>()
-                                                        .state
-                                                        .locale
-                                                        .languageCode,
+                                                    // locale: context
+                                                    //     .read<
+                                                    //         LocalizationCubit>()
+                                                    //     .state
+                                                    //     .locale
+                                                    //     .languageCode,
                                                   ),
                                                   style: AppFonts
                                                       .inter14Black400
@@ -391,9 +384,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                                             4
                                                                         ? "Files Required"
                                                                         : allRequests[index].requestStatus ==
-                                                        5
-                                                        ? "Cancelled"
-                                                        :"Rejected",
+                                                                                5
+                                                                            ? "Cancelled"
+                                                                            : "Rejected",
                                                     style: const TextStyle(
                                                       color: AppColors.white,
                                                       fontWeight:

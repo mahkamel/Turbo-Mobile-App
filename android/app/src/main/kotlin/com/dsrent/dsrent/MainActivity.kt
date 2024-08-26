@@ -1,4 +1,4 @@
-package com.turbo.turbo
+package com.dsrent.dsrent
 
 import io.flutter.embedding.android.FlutterActivity
 

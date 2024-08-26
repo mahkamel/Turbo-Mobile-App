@@ -8,6 +8,63 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:675552575914:android:011aadf7a1590d617e2bd3",
+        "android_client_info": {
+          "package_name": "com.dsrent.dsrent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3uiFGJf-oWzqmp2xhU12rLWMl3LD-nEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675552575914:android:87ddbf808c200a3a7e2bd3",
+        "android_client_info": {
+          "package_name": "com.dsrent.dsrent.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3uiFGJf-oWzqmp2xhU12rLWMl3LD-nEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675552575914:android:5033ebb0575010647e2bd3",
+        "android_client_info": {
+          "package_name": "com.dsrent.dsrent.qa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3uiFGJf-oWzqmp2xhU12rLWMl3LD-nEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:675552575914:android:b103dbad13c0d6c97e2bd3",
         "android_client_info": {
           "package_name": "com.turbo.turbo"

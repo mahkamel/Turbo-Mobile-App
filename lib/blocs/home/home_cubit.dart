@@ -89,7 +89,6 @@ class HomeCubit extends Cubit<HomeState> {
 
   bool isGettingCars = false;
   void getCarsBasedOnBrand({String? brandId}) async {
-    print("Aaaaaaaaaaaaaaaaaaaaaaaa $brandId");
     carsByBrand.clear();
     isGettingCars = true;
     emit(const HomeState.getCarsByBrandLoading());
