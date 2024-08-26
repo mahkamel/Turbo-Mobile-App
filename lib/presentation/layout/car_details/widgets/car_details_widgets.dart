@@ -52,7 +52,7 @@ class PriceCard extends StatelessWidget {
                 ),
                 Text(
                   "SAR/day",
-                  style: AppFonts.inter14Grey400.copyWith(fontSize: 12),
+                  style: AppFonts.ibm11Grey400.copyWith(fontSize: 12),
                 ),
               ],
             ),
@@ -94,7 +94,7 @@ class CarInfoItem extends StatelessWidget {
         ),
         Text(
           "$title: ",
-          style: AppFonts.inter14Grey400.copyWith(fontSize: 16),
+          style: AppFonts.ibm11Grey400.copyWith(fontSize: 16),
         ),
         Text(
           info,

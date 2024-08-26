@@ -100,7 +100,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     ),
                                     Text(
                                       "You don't have any past rentals yet,\nExplore our wide selection of cars to find the perfect one for your next trip.",
-                                      style: AppFonts.inter16Black400,
+                                      style: AppFonts.ibm16LightBlack600,
                                       textAlign: TextAlign.center,
                                     )
                                   ],
@@ -479,7 +479,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 "To view your current and past rentals, please login to your account",
-                style: AppFonts.inter16Black400,
+                style: AppFonts.ibm16LightBlack600,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -543,7 +543,7 @@ class EditRequestStatusDialog extends StatelessWidget {
               ),
               child: Text(
                 "Are you sure you want to $reason this request? This action cannot be undone.",
-                style: AppFonts.inter14Grey400,
+                style: AppFonts.ibm11Grey400,
                 textAlign: TextAlign.center,
               ),
             ),

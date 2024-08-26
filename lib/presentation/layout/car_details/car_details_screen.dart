@@ -75,7 +75,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               "carInfo"
                                                   .getLocale(context: context),
                                               style: AppFonts
-                                                  .inter18HeaderBlack700
+                                                  .ibm18HeaderBlue600
                                                   .copyWith(
                                                 color: AppColors.grey700,
                                               ),
@@ -164,7 +164,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               "prices"
                                                   .getLocale(context: context),
                                               style: AppFonts
-                                                  .inter18HeaderBlack700
+                                                  .ibm18HeaderBlue600
                                                   .copyWith(
                                                 color: AppColors.grey700,
                                               ),
@@ -248,7 +248,7 @@ class CardDetailsScreen extends StatelessWidget {
                                               "loginRequiredTitle"
                                                   .getLocale(context: context),
                                               style: AppFonts
-                                                  .inter18HeaderBlack700,
+                                                  .ibm18HeaderBlue600,
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
@@ -259,7 +259,7 @@ class CardDetailsScreen extends StatelessWidget {
                                                 "loginRequiredContent"
                                                     .getLocale(
                                                         context: context),
-                                                style: AppFonts.inter14Grey400,
+                                                style: AppFonts.ibm11Grey400,
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),

@@ -70,7 +70,8 @@ class CarsByBrandsList extends StatelessWidget {
                                         0.4,
                                   ),
                                   Text(
-                                    "noCarsBasedOnBrand".getLocale(context: context),
+                                    "noCarsBasedOnBrand"
+                                        .getLocale(context: context),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -90,8 +91,8 @@ class CarsByBrandsList extends StatelessWidget {
                                   brandId: context
                                       .read<HomeCubit>()
                                       .carBrands[context
-                                      .read<HomeCubit>()
-                                      .selectedBrandIndex]
+                                          .read<HomeCubit>()
+                                          .selectedBrandIndex]
                                       .id);
                             }
                           },

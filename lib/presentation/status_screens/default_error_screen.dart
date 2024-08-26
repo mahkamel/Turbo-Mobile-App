@@ -43,7 +43,7 @@ class DefaultErrorScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 19.0),
                 child: Text(
                   errMsg,
-                  style: AppFonts.inter16Black400,
+                  style: AppFonts.ibm16LightBlack600,
                   textAlign: TextAlign.center,
                 ),
               ),

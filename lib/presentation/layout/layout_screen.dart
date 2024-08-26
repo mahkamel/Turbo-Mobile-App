@@ -66,11 +66,11 @@ class LayoutScreen extends StatelessWidget {
               backgroundColor: AppColors.navBarBlack,
               selectedItemColor: AppColors.white,
               unselectedItemColor: AppColors.navBarUnSelected,
-              selectedLabelStyle: AppFonts.inter12Black400.copyWith(
+              selectedLabelStyle: AppFonts.ibm14LightBlack400.copyWith(
                 fontWeight: FontWeight.w500,
                 fontSize: 13,
               ),
-              unselectedLabelStyle: AppFonts.inter12Black400,
+              unselectedLabelStyle: AppFonts.ibm14LightBlack400,
               currentIndex: context.watch<LayoutCubit>().navBarIndex,
               elevation: 0,
               type: BottomNavigationBarType.fixed,

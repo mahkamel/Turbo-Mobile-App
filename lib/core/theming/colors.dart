@@ -20,7 +20,7 @@ class AppColors {
   static const Color grey = Color(0xFF535559);
   static const Color grey700 = Color(0xFF4D4D4D);
   static const Color grey600 = Color(0xFF666666);
-  static const Color grey400 = Color(0xFF999999);
+  static const Color grey400 = Color(0xFF969696);
   static const Color grey500 = Color(0xFFF5F5F7);
   static const Color carCardGrey = Color(0xFFF5F6FA);
   static const Color typeGreyHeader = Color(0xFF696969);
@@ -37,7 +37,7 @@ class AppColors {
   static const Color gold = Color(0xFFC29F67);
   static const Color greyBorder = Color(0xFFD9D9D9);
   static const Color buttonGreyBorder = Color(0xFFB0B0B0);
-  static const Color divider = Color(0xFFECECEC);
+  static const Color divider = Color(0xFFADB4BE);
   static const Color carDetailsGrey = Color.fromRGBO(242, 242, 242, 1);
   static const Color borderGrey = Color(0xFFB0AAAA);
   static const Color bottomSheetDarkerGrey = Color(0xFF8A8A8A);

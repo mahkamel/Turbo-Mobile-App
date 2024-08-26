@@ -94,7 +94,7 @@ class EmailTextField extends StatelessWidget {
               textInputAction: textInputAction,
               onFieldSubmitted: onSubmit,
               autofillHints: autofill,
-              style: AppFonts.inter12Black400,
+              style: AppFonts.ibm14LightBlack400,
               controller: enabled ? controller : TextEditingController(),
               keyboardType: textInputType,
               decoration: InputDecoration(
@@ -110,9 +110,9 @@ class EmailTextField extends StatelessWidget {
                     : null,
                 labelText: label,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelStyle: AppFonts.inter12Black400,
+                labelStyle: AppFonts.ibm14LightBlack400,
                 hintText: hint,
-                hintStyle: AppFonts.inter12Black400,
+                hintStyle: AppFonts.ibm14LightBlack400,
                 contentPadding: const EdgeInsetsDirectional.only(
                   start: 16,
                   end: 12,
@@ -469,7 +469,7 @@ class CustomTextField extends StatelessWidget {
                 keyboardType: textInputType,
                 textInputAction: textInputAction,
                 onFieldSubmitted: onSubmit,
-                style: AppFonts.inter12Black400.copyWith(
+                style: AppFonts.ibm14LightBlack400.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -610,12 +610,12 @@ Widget codeTextField({
       ] : null,
       textInputAction: TextInputAction.next,
       onChanged: onChange,
-      style: AppFonts.inter12Black400,
+      style: AppFonts.ibm14LightBlack400,
       controller: controller,
       keyboardType: isFromForgetPassword ? TextInputType.text  : TextInputType.number,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: AppFonts.inter12Black400,
+        hintStyle: AppFonts.ibm14LightBlack400,
         // isDense: true,
         contentPadding: const EdgeInsetsDirectional.only(bottom: 24, start: 4),
         border: OutlineInputBorder(

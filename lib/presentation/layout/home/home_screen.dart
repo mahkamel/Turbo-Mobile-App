@@ -56,25 +56,25 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Padding(
           padding: const EdgeInsetsDirectional.only(
-            top: 20.0,
+            top: 40.0,
             bottom: 8.0,
             start: 16,
           ),
           child: Text(
             "brands".getLocale(context: context),
-            style: AppFonts.inter18HeaderBlack700,
+            style: AppFonts.ibm18HeaderBlue600,
           ),
         ),
         const BrandsList(),
         Padding(
           padding: const EdgeInsetsDirectional.only(
-            top: 16,
-            bottom: 8,
+            top: 26,
+            bottom: 14,
             start: 16,
           ),
           child: Text(
             "recommendedCars".getLocale(context: context),
-            style: AppFonts.inter18HeaderBlack700,
+            style: AppFonts.ibm18HeaderBlue600,
           ),
         ),
         const CarsByBrandsList(),

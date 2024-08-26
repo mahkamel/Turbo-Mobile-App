@@ -79,9 +79,9 @@ class ChoosePhoneNumber extends StatelessWidget {
                       vertical: 4,
                       horizontal: 12,
                     ),
-                    labelStyle: AppFonts.inter12Black400,
+                    labelStyle: AppFonts.ibm14LightBlack400,
                     hintText: "Enter your phone number",
-                    hintStyle: AppFonts.inter12Black400,
+                    hintStyle: AppFonts.ibm14LightBlack400,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
                       borderSide: const BorderSide(

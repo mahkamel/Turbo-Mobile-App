@@ -97,7 +97,7 @@ class CarYearFilterHeader extends StatelessWidget {
       children: [
         Text(
           "Car Year",
-          style: AppFonts.inter18HeaderBlack700,
+          style: AppFonts.ibm18HeaderBlue600,
         ),
         DefaultButton(
           height: 30,

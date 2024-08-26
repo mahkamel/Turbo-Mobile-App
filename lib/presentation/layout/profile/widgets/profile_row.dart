@@ -61,7 +61,7 @@ class ProfileRow extends StatelessWidget {
                   value,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.end,
-                  style: AppFonts.inter14Grey400,
+                  style: AppFonts.ibm11Grey400,
                 ),
               ),
             if (isWithArrow)
