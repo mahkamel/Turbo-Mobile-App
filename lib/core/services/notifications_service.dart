@@ -15,7 +15,6 @@ class NotificationServices {
       if (Platform.isAndroid) {
         await _awesomeNotifications.isNotificationAllowed().then(
           (value) async {
-            print("valueeee $value");
             if (value) {
               AwesomeNotifications().initialize(
                   null,
@@ -57,7 +56,6 @@ class NotificationServices {
                 sound: true,
               );
             } else {
-              print("reqqq");
               await _awesomeNotifications
                   .requestPermissionToSendNotifications()
                   .then(
