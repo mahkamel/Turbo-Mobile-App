@@ -4,6 +4,7 @@ import 'package:turbo/core/services/networking/repositories/cities_districts_rep
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 import 'package:turbo/models/customer_model.dart';
 
+import 'blocs/localization/localization/app_localization_setup.dart';
 import 'core/di/dependency_injection.dart';
 import 'core/helpers/constants.dart' show navigatorKey;
 import 'core/routing/app_router.dart';
@@ -50,7 +51,11 @@ class MyApp extends StatelessWidget {
             .copyWith(textScaler: const TextScaler.linear(1.0)),
         child: MaterialApp(
           navigatorKey: navigatorKey,
-          title: 'DS Rent',
+          title: 'Turbo',
+          supportedLocales: AppLocalizationsSetup.supportedLocales,
+          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+          localeResolutionCallback:
+              AppLocalizationsSetup.localeResolutionCallback,
           locale: const Locale("en", "US"),
           theme: ThemeData(
             fontFamily: "IBM",

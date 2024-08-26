@@ -16,7 +16,7 @@ class BrandsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 86,
+      height: 90,
       child: BlocBuilder<HomeCubit, HomeState>(
         buildWhen: (previous, current) =>
             current is GetCarsBrandsLoadingState ||
@@ -33,7 +33,7 @@ class BrandsList extends StatelessWidget {
                   : ListView.separated(
                       padding: const EdgeInsetsDirectional.symmetric(
                         horizontal: 16,
-                        vertical: 6
+                        vertical: 8
                       ),
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) => InkWell(
@@ -152,7 +152,7 @@ class BrandLogoCircle extends StatelessWidget {
         ),
         boxShadow:  [
           BoxShadow(
-            blurRadius: 6,
+            blurRadius: 4,
             spreadRadius: 2,
             offset: const Offset(0, 2),
             color:
