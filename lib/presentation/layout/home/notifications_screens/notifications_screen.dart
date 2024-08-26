@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
+import 'package:turbo/core/theming/colors.dart';
 
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/helpers/constants.dart';
@@ -85,14 +87,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                   );
                                 },
                                 child: NotificationCard(
-                                  title: notifications[index].notificationType,
                                   subTitle:
                                       notifications[index].notificationMessage,
                                   date: notifications[index]
                                       .notificationDate
                                       .toIso8601String(),
-                                  isRead:
-                                      notifications[index].isNotificationRead,
+
+                                  type: notifications[index].notificationType
                                 ),
                               ),
                               separatorBuilder: (context, index) =>

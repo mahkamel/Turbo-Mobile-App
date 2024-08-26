@@ -34,6 +34,7 @@ class AppColors {
   static const Color errorRed = Color(0xFFF22104);
   static const Color primaryBlue = Color(0xFF2E4063);
   static const Color orange = Color(0xFFffc107);
+  static const Color darkOrange = Color(0xFFEB9800);
   static const Color gold = Color(0xFFC29F67);
   static const Color greyBorder = Color(0xFFD9D9D9);
   static const Color buttonGreyBorder = Color(0xFFB0B0B0);
@@ -45,5 +46,7 @@ class AppColors {
 
   static const Color shimmer = Color(0xffD9D9D9);
   static const Color labelBrown = Color(0xff543334);
+  static const Color red = Color(0xffB02D2D);
+  static const Color green = Color(0xFF3D853D);
 
 }
