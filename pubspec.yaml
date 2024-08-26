@@ -108,15 +108,15 @@ flutter:
 
 
 flutter_native_splash:
-  color: "#EEE9E9"
-  image: assets/images/logo.png
+  color: "#FFFFFF"
+  image: assets/images/ds_logo.png
   android: true
   ios: true
-  color_dark: "#EEE9E9"
+  color_dark: "#FFFFFF"
 
 
 android_12:
-  image: assets/images/logo.png
-  icon_background_color: "#EEE9E9"
-  image_dark: assets/images/logo.png
-  icon_background_color_dark: "#EEE9E9"
+  image: assets/images/ds_logo.png
+  icon_background_color: "#FFFFFF"
+  image_dark: assets/images/ds_logo.png
+  icon_background_color_dark: "#FFFFFF"

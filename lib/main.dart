@@ -42,7 +42,9 @@ Future<void> main() async {
   FirebaseMessaging.instance.setAutoInitEnabled(true);
 
   final CustomerModel? cachedCustomer = await getCustomerData();
+  log("useeerTokeneee: ${cachedCustomer?.attachments.length}");
   log("useeerTokeneee: ${cachedCustomer?.token}");
+  log("useeerTokeneee: ${cachedCustomer?.customerId}");
 
   Bloc.observer = MyBlocObserver();
   final bool isFirstTime =

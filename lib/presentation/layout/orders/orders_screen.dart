@@ -346,28 +346,29 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                                 .requestPaidStatus ==
                                                             "pending"
                                                         ? AppColors.orange
-                                                        : allRequests[index]
-                                                                        .requestStatus ==
+                                                        : allRequests[index].requestStatus ==
                                                                     0 ||
                                                                 allRequests[index]
                                                                         .requestStatus ==
                                                                     4
-                                                            ? AppColors
-                                                                .orange
+                                                            ? AppColors.orange
                                                                 .withOpacity(
                                                                     0.8)
-                                                            : allRequests[index]
-                                                                            .requestStatus ==
+                                                            : allRequests[index].requestStatus ==
                                                                         1 ||
-                                                                    allRequests[index]
-                                                                            .requestStatus ==
+                                                                    allRequests[index].requestStatus ==
                                                                         3
                                                                 ? AppColors
                                                                     .primaryGreen
                                                                     .withOpacity(
                                                                         0.8)
-                                                                : Colors
-                                                                    .red[400],
+                                                                : allRequests[index]
+                                                                            .requestStatus ==
+                                                                        5
+                                                                    ? AppColors
+                                                                        .grey400
+                                                                    : Colors
+                                                                        .red[400],
                                                   ),
                                                   child: Text(
                                                     allRequests[index]
@@ -389,7 +390,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                                     : allRequests[index].requestStatus ==
                                                                             4
                                                                         ? "Files Required"
-                                                                        : "Rejected",
+                                                                        : allRequests[index].requestStatus ==
+                                                        5
+                                                        ? "Cancelled"
+                                                        :"Rejected",
                                                     style: const TextStyle(
                                                       color: AppColors.white,
                                                       fontWeight:
@@ -495,7 +499,7 @@ class EditRequestStatusDialog extends StatelessWidget {
     required this.reason,
     required this.requestId,
     required this.requestStatus,
-     this.orderCubit,
+    this.orderCubit,
   });
 
   final String reason;

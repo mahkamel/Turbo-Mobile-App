@@ -96,6 +96,8 @@ class RequestStatusScreen extends StatelessWidget {
                     context: context,
                     message: "Your Data has been saved Successfully",
                   );
+                } else if (state is SubmitEditsSuccessState) {
+                  orderCubit.getAllCustomerRequests();
                 }
               },
               buildWhen: (previous, current) =>
@@ -103,7 +105,6 @@ class RequestStatusScreen extends StatelessWidget {
                   current is GetRequestStatusErrorState ||
                   current is GetRequestStatusLoadingState,
               builder: (context, state) {
-                print("sssasssasdasd");
                 var blocWatch = context.watch<OrderCubit>();
                 if (state is GetRequestStatusLoadingState) {
                   return const Center(
@@ -160,6 +161,23 @@ class RequestStatusScreen extends StatelessWidget {
                     return RepositoryProvider<AuthRepository>.value(
                       value: getIt<AuthRepository>(),
                       child: const EditRequest(),
+                    );
+                  } else if (blocWatch.requestStatus!.requestStatus == 5) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset("assets/images/pending_request.jpg"),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
+                            "We are reviewing your cancellation request and will notify you once the review is complete.",
+                            style: AppFonts.inter16Black400.copyWith(
+                              fontSize: 17,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
                     );
                   } else {
                     return const SizedBox();
