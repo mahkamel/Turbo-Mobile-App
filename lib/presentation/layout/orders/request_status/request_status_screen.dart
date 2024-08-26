@@ -171,7 +171,7 @@ class RequestStatusScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
                             "We are reviewing your cancellation request and will notify you once the review is complete.",
-                            style: AppFonts.inter16Black400.copyWith(
+                            style: AppFonts.inter16Black600.copyWith(
                               fontSize: 17,
                             ),
                             textAlign: TextAlign.center,
