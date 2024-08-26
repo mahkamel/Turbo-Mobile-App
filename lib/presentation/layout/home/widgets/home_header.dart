@@ -85,7 +85,7 @@ class HomeHeader extends StatelessWidget {
                                     size: 20,
                                   ),
                                   Text(
-                                    "${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName} ",
+                                    context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName,
                                     style: AppFonts.ibm14SubTextGold600,
                                   ),
                                   const Icon(

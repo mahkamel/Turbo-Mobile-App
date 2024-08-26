@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
+import 'package:turbo/core/theming/fonts.dart';
 import 'package:turbo/core/widgets/custom_shimmer.dart';
 
 import '../../../../core/helpers/constants.dart';
@@ -63,16 +64,21 @@ class CarsByBrandsList extends StatelessWidget {
                                 // top: 48,
                               ),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SvgPicture.asset(
-                                    "assets/images/icons/no_results_founded.svg",
-                                    height: AppConstants.screenHeight(context) *
-                                        0.4,
+                                   Lottie.asset(
+                                    "assets/lottie/no_result.json",
+                                    height: AppConstants.screenWidth(context) * .6,
+                                    width: (AppConstants.screenWidth(context) * .8),
                                   ),
+                                  const SizedBox(height: 20,),
                                   Text(
                                     "noCarsBasedOnBrand"
                                         .getLocale(context: context),
                                     textAlign: TextAlign.center,
+                                    style: AppFonts.ibm24HeaderBlue600.copyWith(
+                                      fontSize: 18
+                                    )
                                   ),
                                 ],
                               ),

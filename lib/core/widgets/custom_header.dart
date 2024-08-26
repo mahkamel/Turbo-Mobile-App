@@ -73,7 +73,7 @@ class DefaultHeader extends StatelessWidget {
                       height: 47,
                       decoration: const BoxDecoration(
                          shape: BoxShape.circle,
-                         color: AppColors.grey500,
+                         color: AppColors.white,
 
                       ),
                       child: const Icon(

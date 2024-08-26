@@ -57,23 +57,28 @@ class SearchScreen extends StatelessWidget {
                       ? searchCubitWatch.filteredCars.isEmpty
                           ? SizedBox(
                               width: AppConstants.screenWidth(context),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/images/icons/no_results_founded.svg",
-                                    height: AppConstants.screenHeight(context) *
-                                        0.4,
-                                  ),
-                                  Text(
-                                    "We couldn't find anything matching your search.",
-                                    style:
-                                        AppFonts.inter14HeaderBlack400.copyWith(
-                                      fontSize: 16,
+                              child: Padding(
+                                padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                      SizedBox(height: AppConstants.screenWidth(context) * .15,),
+                                   Lottie.asset(
+                                      "assets/lottie/no_result.json",
+                                       height: AppConstants.screenWidth(context) * .6,
+                                      width: (AppConstants.screenWidth(context) * .8),
                                     ),
-                                    textAlign: TextAlign.center,
-                                  )
-                                ],
+                                    const SizedBox(height: 20,),
+                                    Text(
+                                      "No results found! Try another search properties.",
+                                      style:
+                                          AppFonts.ibm24HeaderBlue600.copyWith(
+                                        fontSize: 18,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           : CarsByTypesListview(
