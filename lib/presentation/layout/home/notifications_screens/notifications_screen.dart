@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
-import 'package:turbo/core/theming/colors.dart';
 
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/helpers/constants.dart';
