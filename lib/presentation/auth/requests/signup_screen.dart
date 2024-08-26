@@ -25,7 +25,7 @@ class SignupScreen extends StatelessWidget {
     var blocRead = context.read<SignupCubit>();
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop , res) async {
+      onPopInvoked: (didPop) async {
         if (didPop) {
           return;
         }
