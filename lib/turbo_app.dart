@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:turbo/blocs/localization/cubit/localization_cubit.dart';
 import 'package:turbo/core/services/networking/repositories/cities_districts_repository.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 import 'package:turbo/models/customer_model.dart';
@@ -47,56 +46,34 @@ class MyApp extends StatelessWidget {
           value: getIt<CitiesDistrictsRepository>()..getCities(),
         ),
       ],
-      child: BlocProvider<LocalizationCubit>(
-        create: (context) => LocalizationCubit()..onInit(),
-        child: BlocBuilder<LocalizationCubit, LocalizationState>(
-          buildWhen: (previous, current) {
-            return current is SelectedLocalization ||
-                previous is SelectedLocalization;
-          },
-          builder: (context, state) {
-            if (state.locale.languageCode.contains("ar")) {
-              AppLocalizationsSetup.isLoadAr = true;
-            }
-            Locale appLocale = const Locale('en', 'US');
-            if (state is SelectedLocalization) {
-              appLocale = state.locale;
-            }
-
-            return MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(textScaler: const TextScaler.linear(1.0)),
-              child: MaterialApp(
-                navigatorKey: navigatorKey,
-                title: 'Turbo',
-                supportedLocales: AppLocalizationsSetup.supportedLocales,
-                localizationsDelegates:
-                    AppLocalizationsSetup.localizationsDelegates,
-                localeResolutionCallback:
-                    AppLocalizationsSetup.localeResolutionCallback,
-                locale: appLocale,
-                theme: ThemeData(
-                  fontFamily: "Inter",
-                  scaffoldBackgroundColor: AppColors.grey500,
-                  hoverColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: AppColors.primaryBlue,
-                  ),
-                  useMaterial3: true,
-                ),
-                debugShowCheckedModeBanner:
-                    F.appFlavor != null && F.appFlavor == Flavor.dev
-                        ? true
-                        : false,
-                initialRoute:
-                    isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
-                onGenerateRoute: appRouter.generateRoute,
-              ),
-            );
-          },
+      child: MediaQuery(
+        data: MediaQuery.of(context)
+            .copyWith(textScaler: const TextScaler.linear(1.0)),
+        child: MaterialApp(
+          navigatorKey: navigatorKey,
+          title: 'Turbo',
+          supportedLocales: AppLocalizationsSetup.supportedLocales,
+          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+          localeResolutionCallback:
+              AppLocalizationsSetup.localeResolutionCallback,
+          locale: const Locale("en", "US"),
+          theme: ThemeData(
+            fontFamily: "IBM",
+            scaffoldBackgroundColor: AppColors.grey500,
+            hoverColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primaryBlue,
+            ),
+            useMaterial3: true,
+          ),
+          debugShowCheckedModeBanner:
+              F.appFlavor != null && F.appFlavor == Flavor.dev ? true : false,
+          initialRoute:
+              isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
+          onGenerateRoute: appRouter.generateRoute,
         ),
       ),
     );
