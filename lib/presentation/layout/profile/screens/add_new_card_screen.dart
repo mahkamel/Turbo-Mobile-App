@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/helpers/constants.dart';
-import '../../../../core/helpers/enums.dart';
-import '../../../../core/helpers/functions.dart';
-import '../../../blocs/profile_cubit/profile_cubit.dart';
-import '../../../core/widgets/custom_header.dart';
-import '../../../core/widgets/default_buttons.dart';
-import '../../../core/widgets/snackbar.dart';
-import '../../../core/widgets/text_field_with_header.dart';
+import '../../../../../core/helpers/constants.dart';
+import '../../../../../core/helpers/enums.dart';
+import '../../../../../core/helpers/functions.dart';
+import '../../../../blocs/profile_cubit/profile_cubit.dart';
+import '../../../../core/widgets/custom_header.dart';
+import '../../../../core/widgets/default_buttons.dart';
+import '../../../../core/widgets/snackbar.dart';
+import '../../../../core/widgets/text_field_with_header.dart';
 
 class AddNewCardScreen extends StatelessWidget {
   const AddNewCardScreen({super.key});

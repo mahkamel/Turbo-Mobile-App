@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
+import 'package:turbo/core/theming/fonts.dart';
+import 'package:turbo/main_paths.dart';
 
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/helpers/constants.dart';
@@ -62,7 +65,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               context.read<HomeCubit>().getNotifications(
                                   isFromNotificationScreen: true);
                             },
-                            child: ListView.separated(
+                            child: notifications.isEmpty ? Column(
+                              children: [
+                                const SizedBox(height: 72,),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 70, right: 70, bottom: 60),
+                                  child: Text("There is no notification at this time. Please check again later!", style: AppFonts.ibm16PrimaryHeader400,),
+                                ),
+                                Image.asset("assets/images/notification.png", width: 220)
+                              ],
+                            )
+                             : ListView.separated(
                               physics: const AlwaysScrollableScrollPhysics(),
                               padding: const EdgeInsets.only(
                                 top: 8,

@@ -7,7 +7,7 @@ import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/core/helpers/extentions.dart';
-import 'package:turbo/presentation/layout/profile/profile_screen.dart';
+import 'package:turbo/presentation/layout/profile/screens/profile_screen.dart';
 import 'package:turbo/presentation/layout/search/search_screen.dart';
 
 import '../../blocs/home/home_cubit.dart';

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/car_details/car_details_cubit.dart';
 import 'package:turbo/blocs/login/login_cubit.dart';
 import 'package:turbo/blocs/payment/payment_cubit.dart';
+import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/core/routing/screens_arguments.dart';
@@ -12,6 +13,10 @@ import 'package:turbo/presentation/auth/forget_password/screens/otp_forget_passw
 import 'package:turbo/presentation/auth/forget_password/screens/create_new_password_screen.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
+import 'package:turbo/presentation/layout/profile/screens/change_password_screen.dart';
+import 'package:turbo/presentation/layout/profile/screens/delete_account_screen.dart';
+import 'package:turbo/presentation/layout/profile/screens/edit_account_screen.dart';
+import 'package:turbo/presentation/layout/profile/screens/orders_history_screen.dart';
 
 import '../../blocs/layout/layout_cubit.dart';
 import '../../blocs/orders/order_cubit.dart';
@@ -51,10 +56,29 @@ class AppRouter {
       );
     },
 
-     Routes.createNewPasswordScreen: (context, arguments) {
+    Routes.createNewPasswordScreen: (context, arguments) {
       return BlocProvider.value(
         value: (arguments as LoginCubit),
         child: const CreateNewPassword(),
+      );
+    },
+
+    Routes.editAccountScreen: (context, arguments) {
+      return BlocProvider.value(
+        value: (arguments as ProfileCubit),
+        child: const EditAccountScreen(),
+      );
+    },
+    Routes.changePasswordScreen: (context, arguments) {
+      return BlocProvider.value(
+        value: (arguments as ProfileCubit),
+        child: const ChangePasswordScreen(),
+      );
+    },
+    Routes.deleteAccountScreen: (context, arguments) {
+      return BlocProvider.value(
+        value: (arguments as ProfileCubit),
+        child: const DeleteAccountScreen(),
       );
     },
     

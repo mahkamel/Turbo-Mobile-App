@@ -11,4 +11,8 @@ class Routes {
   static const String forgetPasswordScreen = '/forgetPasswordScreen';
   static const String otpForgetPasswordScreen = '/otpForgetPasswordScreen';
   static const String createNewPasswordScreen = '/createNewPasswordScreen';
+  static const String editAccountScreen = '/editAccountScreen';
+  static const String paymentMethodsScreen = '/paymentMethodsScreen';
+  static const String changePasswordScreen = '/changePasswordScreen';
+  static const String deleteAccountScreen = '/deleteAccountScreen';
 }

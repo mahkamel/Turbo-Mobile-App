@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/presentation/layout/profile/widgets/saved_cards_widgets.dart';
 
-import '../../../../core/helpers/constants.dart';
-import '../../../../core/theming/colors.dart';
-import '../../../blocs/profile_cubit/profile_cubit.dart';
-import '../../../core/theming/fonts.dart';
-import '../../../core/widgets/custom_header.dart';
-import '../../../core/widgets/default_buttons.dart';
+import '../../../../../core/helpers/constants.dart';
+import '../../../../../core/theming/colors.dart';
+import '../../../../blocs/profile_cubit/profile_cubit.dart';
+import '../../../../core/theming/fonts.dart';
+import '../../../../core/widgets/custom_header.dart';
+import '../../../../core/widgets/default_buttons.dart';
 import 'add_new_card_screen.dart';
 
 class SavedCardsScreen extends StatelessWidget {
@@ -24,7 +24,7 @@ class SavedCardsScreen extends StatelessWidget {
           child: Column(
             children: [
               DefaultHeader(
-                header: "Saved Cards",
+                header: "Payment Methods",
                 textAlignment: AlignmentDirectional.center,
                 alignment: MainAxisAlignment.spaceBetween,
                 isShowPrefixIcon: true,
