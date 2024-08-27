@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
-import 'package:turbo/presentation/layout/profile/add_new_card_screen.dart';
+import 'package:turbo/presentation/layout/profile/screens/add_new_card_screen.dart';
 
 import '../../../../../blocs/payment/payment_cubit.dart';
 import '../../../../../blocs/profile_cubit/profile_cubit.dart';

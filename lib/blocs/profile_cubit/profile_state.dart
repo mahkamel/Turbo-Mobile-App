@@ -36,6 +36,16 @@ class ProfileState with _$ProfileState {
   const factory ProfileState.deleteSavedCardsError(String errMsg) =
       DeleteSavedCardsErrorState;
 
+  const factory ProfileState.checkProfileAddress({
+    required String address,
+    required TextFieldValidation validation,
+  }) = CheckProfileAddressValidationState;
+
+  const factory ProfileState.checkProfileName({
+    required String name,
+    required TextFieldValidation validation,
+  }) = CheckProfileNameValidationState;
+
 
   const factory ProfileState.logoutLoading() =
   LogoutLoadingState;

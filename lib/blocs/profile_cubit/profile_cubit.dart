@@ -28,14 +28,22 @@ class ProfileCubit extends Cubit<ProfileState> {
   TextEditingController cardNumber = TextEditingController();
   TextEditingController cardExpiryDate = TextEditingController();
   TextEditingController cardCVV = TextEditingController();
+  TextEditingController profileName = TextEditingController();
+  TextEditingController profileEmail = TextEditingController();
+  TextEditingController profileAddress = TextEditingController();
+  TextEditingController profilePhoneNumber = TextEditingController();
+  TextEditingController profileNationalIdNumber = TextEditingController();
+  
 
   TextFieldValidation cardHolderNameValidation = TextFieldValidation.normal;
   TextFieldValidation cardNumberValidation = TextFieldValidation.normal;
   TextFieldValidation cardExpiryDateValidation = TextFieldValidation.normal;
   TextFieldValidation cardCVVValidation = TextFieldValidation.normal;
+  TextFieldValidation profileNameValidation = TextFieldValidation.normal;
+  TextFieldValidation profileAddressValidation = TextFieldValidation.normal;
+
 
   List<SavedCard> savedPaymentCards = [];
-
   void savedCardsInit() {
     savedCardsIdsToBeDeleted.clear();
     isEditingSavedCards = false;
@@ -78,6 +86,46 @@ class ProfileCubit extends Cubit<ProfileState> {
       cardHolderNameValidation = TextFieldValidation.notValid;
     }
     emit(ProfileState.checkCardToSaveHolderName(cardHolderNameValidation));
+  }
+
+  void checkProfileNameValidation() {
+    if (profileName.text.isNotEmpty) {
+      profileNameValidation = TextFieldValidation.valid;
+      emit(
+        ProfileState.checkProfileName(
+          name: profileName.text,
+          validation: profileNameValidation,
+        ),
+      );
+    } else {
+      profileNameValidation = TextFieldValidation.notValid;
+      emit(
+        ProfileState.checkProfileName(
+          name: profileName.text,
+          validation: profileNameValidation,
+        ),
+      );
+    }
+  }
+
+  void checkProfileAddressValidation() {
+    if (profileAddress.text.isNotEmpty) {
+      profileAddressValidation = TextFieldValidation.valid;
+      emit(
+        ProfileState.checkProfileAddress(
+          address: profileAddress.text,
+          validation: profileAddressValidation,
+        ),
+      );
+    } else {
+      profileAddressValidation = TextFieldValidation.notValid;
+      emit(
+        ProfileState.checkProfileAddress(
+          address: profileAddress.text,
+          validation: profileAddressValidation,
+        ),
+      );
+    }
   }
 
   void checkCardNumberValidation() {

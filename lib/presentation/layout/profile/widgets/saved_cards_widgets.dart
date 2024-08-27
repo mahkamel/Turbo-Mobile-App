@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../blocs/profile_cubit/profile_cubit.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/default_buttons.dart';
-import '../add_new_card_screen.dart';
+import '../screens/add_new_card_screen.dart';
 
 class EmptySavedCards extends StatelessWidget {
   const EmptySavedCards({
@@ -20,8 +21,8 @@ class EmptySavedCards extends StatelessWidget {
         SizedBox(
           height: AppConstants.heightBasedOnFigmaDevice(context, 48),
         ),
-        Image.asset(
-          "assets/images/card_to_wallet.jpg",
+        Lottie.asset(
+          "assets/lottie/card.json",
           height: AppConstants.heightBasedOnFigmaDevice(context, 340),
         ),
         Padding(
@@ -29,27 +30,35 @@ class EmptySavedCards extends StatelessWidget {
             vertical: 16.0,
             horizontal: 20.0,
           ),
-          child: Text(
-            "You haven't saved any Visa cards yet. Add a new card to securely store it for future use.",
-            textAlign: TextAlign.center,
-            style: AppFonts.inter15Black400,
+          child: Column(
+            children: [
+              Text(
+                "Add your first credit card for payment",
+                textAlign: TextAlign.center,
+                style: AppFonts.ibm24HeaderBlue600,
+              ),
+              const SizedBox(height: 10,),
+              Text(
+                "This credit card will be used by default for billing.",
+                textAlign: TextAlign.center,
+                style: AppFonts.ibm12SubTextGrey600,
+              ),
+            ],
           ),
         ),
-        DefaultButton(
-          marginTop: 16,
-          width: 155,
-          function: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => BlocProvider<ProfileCubit>.value(
-                  value: context.read<ProfileCubit>()..savedCardsInit(),
-                  child: const AddNewCardScreen()),
-            ));
-          },
-          border: Border.all(color: AppColors.primaryGreen),
-          color: AppColors.white,
-          textColor: AppColors.primaryGreen,
-          text: "Add A Card",
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 16),
+        //   child: DefaultButton(
+        //     function: () {
+        //       Navigator.of(context).push(MaterialPageRoute(
+        //         builder: (_) => BlocProvider<ProfileCubit>.value(
+        //             value: context.read<ProfileCubit>()..savedCardsInit(),
+        //             child: const AddNewCardScreen()),
+        //       ));
+        //     },
+        //     text: "Add A Card",
+        //   ),
+        // ),
       ],
     );
   }
