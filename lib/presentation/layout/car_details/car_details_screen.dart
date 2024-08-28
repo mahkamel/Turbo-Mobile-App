@@ -36,233 +36,236 @@ class CardDetailsScreen extends StatelessWidget {
         child: SafeArea(
           child: Stack(
             children: [
-              CustomScrollView(
-                physics: const ClampingScrollPhysics(),
-                slivers: [
-                  BlocProvider<CarDetailsCubit>.value(
-                    value: context.read<CarDetailsCubit>(),
-                    child: CarDetailsAppBar(
-                      carId: car.carId,
-                      carImageUrl: car.media.mediaMediumImageUrl,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: CustomScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  slivers: [
+                    BlocProvider<CarDetailsCubit>.value(
+                      value: context.read<CarDetailsCubit>(),
+                      child: CarDetailsAppBar(
+                        carId: car.carId,
+                        carImageUrl: car.media.mediaMediumImageUrl,
+                      ),
                     ),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: AppColors.white.withOpacity(0.15),
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20))),
-                          child: Column(
-                             mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CarNameWithBrandImg(
-                                carName: car.model.modelName,
-                                brandImgUrl: car.brand.brandPath,
-                              ),
-                              BlocBuilder<CarDetailsCubit, CarDetailsState>(
-                                buildWhen: (previous, current) =>
-                                    current is GetCarsDetailsErrorState ||
-                                    current is GetCarsDetailsLoadingState ||
-                                    current is GetCarsDetailsSuccessState,
-                                builder: (context, state) {
-                                  var blocRead =
-                                      context.read<CarDetailsCubit>();
-                                  var blocWatch =
-                                      context.watch<CarDetailsCubit>();
-                                  List<CarItem> carInfoItems = [
-                                    CarItem(
-                                      title: "Category",
-                                      info: blocRead
-                                          .carDetailsData
-                                          .carCategory,
-                                      iconPath:
-                                          "assets/images/icons/car_details_icons/category.svg",
-                                    ),
-                                    CarItem(
-                                      title: "Type",
-                                      info: blocRead
-                                          .carDetailsData.carType,
-                                      iconPath:
-                                          "assets/images/icons/car.svg",
-                                    ),
-                                    CarItem(
-                                      title: "model".getLocale(
-                                          context: context),
-                                      info: blocRead
-                                          .carDetailsData
-                                          .carModel,
-                                      iconPath:
-                                          "assets/images/icons/car_details_icons/model.svg",
-                                    ),
-                                    CarItem(
-                                      title: "year".getLocale(
-                                          context: context),
-                                      info: blocRead
-                                          .carDetailsData
-                                          .carYear,
-                                      iconPath:
-                                          "assets/images/icons/car_details_icons/year.svg",
-                                    ),
-                                    CarItem(
-                                      title: "engine".getLocale(
-                                          context: context),
-                                      info: blocRead
-                                          .carDetailsData
-                                          .carEngine,
-                                      iconPath:
-                                          "assets/images/icons/car_details_icons/engine.svg",
-                                    ),
-                                    CarItem(
-                                      title: "seats".getLocale(
-                                          context: context),
-                                      info: blocRead
-                                          .carDetailsData
-                                          .carPassengerNo
-                                          .toString(),
-                                      iconPath:
-                                          "assets/images/icons/car_details_icons/seats.svg",
-                                    ),
-                                    CarItem(
-                                      title:
-                                          "${"limitedKm".getLocale(context: context)} (Daily)",
-                                      info:
-                                          "${blocRead.carDetailsData.carLimitedKiloMeters}"
-                                              .toString(),
-                                      iconPath:
-                                          "assets/images/icons/car_details_icons/limitedKM.svg",
-                                    ),
-                                  ];
-                                  return state is GetCarsDetailsLoadingState
-                                      ? SizedBox(
-                                     height:   AppConstants.screenHeight(context) * .45,
-                                        child: const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                      )
-                                      : blocWatch.carDetailsData.id.isEmpty
-                                          ? const SizedBox()
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 16.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                          'assets/images/icons/car.svg'),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        "carInfo".getLocale(
-                                                            context: context),
-                                                        style: AppFonts
-                                                            .ibm18HeaderBlue600
-                                                            .copyWith(
-                                                          color: AppColors
-                                                              .lightBlack,
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          Container(
+                            decoration: const BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20))),
+                            child: Column(
+                               mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CarNameWithBrandImg(
+                                  carName: car.model.modelName,
+                                  brandImgUrl: car.brand.brandPath,
+                                ),
+                                BlocBuilder<CarDetailsCubit, CarDetailsState>(
+                                  buildWhen: (previous, current) =>
+                                      current is GetCarsDetailsErrorState ||
+                                      current is GetCarsDetailsLoadingState ||
+                                      current is GetCarsDetailsSuccessState,
+                                  builder: (context, state) {
+                                    var blocRead =
+                                        context.read<CarDetailsCubit>();
+                                    var blocWatch =
+                                        context.watch<CarDetailsCubit>();
+                                    List<CarItem> carInfoItems = [
+                                      CarItem(
+                                        title: "Category",
+                                        info: blocRead
+                                            .carDetailsData
+                                            .carCategory,
+                                        iconPath:
+                                            "assets/images/icons/car_details_icons/category.svg",
+                                      ),
+                                      CarItem(
+                                        title: "Type",
+                                        info: blocRead
+                                            .carDetailsData.carType,
+                                        iconPath:
+                                            "assets/images/icons/car.svg",
+                                      ),
+                                      CarItem(
+                                        title: "model".getLocale(
+                                            context: context),
+                                        info: blocRead
+                                            .carDetailsData
+                                            .carModel,
+                                        iconPath:
+                                            "assets/images/icons/car_details_icons/model.svg",
+                                      ),
+                                      CarItem(
+                                        title: "year".getLocale(
+                                            context: context),
+                                        info: blocRead
+                                            .carDetailsData
+                                            .carYear,
+                                        iconPath:
+                                            "assets/images/icons/car_details_icons/year.svg",
+                                      ),
+                                      CarItem(
+                                        title: "engine".getLocale(
+                                            context: context),
+                                        info: blocRead
+                                            .carDetailsData
+                                            .carEngine,
+                                        iconPath:
+                                            "assets/images/icons/car_details_icons/engine.svg",
+                                      ),
+                                      CarItem(
+                                        title: "seats".getLocale(
+                                            context: context),
+                                        info: blocRead
+                                            .carDetailsData
+                                            .carPassengerNo
+                                            .toString(),
+                                        iconPath:
+                                            "assets/images/icons/car_details_icons/seats.svg",
+                                      ),
+                                      CarItem(
+                                        title:
+                                            "${"limitedKm".getLocale(context: context)} (Daily)",
+                                        info:
+                                            "${blocRead.carDetailsData.carLimitedKiloMeters}"
+                                                .toString(),
+                                        iconPath:
+                                            "assets/images/icons/car_details_icons/limitedKM.svg",
+                                      ),
+                                    ];
+                                    return state is GetCarsDetailsLoadingState
+                                        ? SizedBox(
+                                       height:   AppConstants.screenHeight(context) * .45,
+                                          child: const Center(
+                                              child: CircularProgressIndicator(),
+                                            ),
+                                        )
+                                        : blocWatch.carDetailsData.id.isEmpty
+                                            ? const SizedBox()
+                                            : Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16.0),
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                            'assets/images/icons/car.svg'),
+                                                        const SizedBox(
+                                                          width: 10,
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  SizedBox(
-                                                    width: AppConstants.screenWidth(context),
-                                                    child: GridView.builder(
-                                                      shrinkWrap: true,
-                                                      physics: const NeverScrollableScrollPhysics(),
-                                                      
-                                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 2, 
-                                                        childAspectRatio: 3.6,
-                                                        // crossAxisSpacing: 10,
-                                                        mainAxisSpacing: 10,
-                                                         
-                                                      ),
-                                                      itemCount: carInfoItems.length,
-                                                      itemBuilder: (context, index) {
-                                                        return CarInfoItem(title: carInfoItems[index].title, info: carInfoItems[index].info, iconPath: carInfoItems[index].iconPath);
-                                                      },
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 20),
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        padding: const EdgeInsets.all(2),
-                                                        // margin: const EdgeInsets.only(right: 4),
-                                                        decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.gold),
-                                                        child: const Icon(Icons.color_lens, color: AppColors.white, size: 18,)
-                                                        ),
-                                                        const SizedBox(width: 10,),
                                                         Text(
-                                                          "available Colors".getLocale(context: context),
+                                                          "carInfo".getLocale(
+                                                              context: context),
                                                           style: AppFonts
-                                                                  .ibm18HeaderBlue600
-                                                                  .copyWith(
-                                                                color: AppColors.lightBlack,
+                                                              .ibm18HeaderBlue600
+                                                              .copyWith(
+                                                            color: AppColors
+                                                                .lightBlack,
                                                           ),
                                                         ),
-                                                    ],
-                                                  ),
-                                                  
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.only(
-                                                      start: 29.0 , end: 16.0 , bottom: 30, top: 10),
-                                                    child: CarColors(colors: blocRead.carDetailsData.carColor,),
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        padding: const EdgeInsets.all(2),
-                                                        // margin: const EdgeInsets.only(right: 4),
-                                                        decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.gold),
-                                                        child: const Icon(Icons.attach_money_rounded, color: AppColors.white, size: 18,)
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 10),
+                                                    SizedBox(
+                                                      width: AppConstants.screenWidth(context),
+                                                      child: GridView.builder(
+                                                        shrinkWrap: true,
+                                                        physics: const NeverScrollableScrollPhysics(),
+                                                        
+                                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                          crossAxisCount: 2, 
+                                                          childAspectRatio: 3.6,
+                                                          // crossAxisSpacing: 10,
+                                                          mainAxisSpacing: 10,
+                                                           
                                                         ),
-                                                        const SizedBox(width: 10,),
-                                                      Text(
-                                                        "prices".getLocale(
-                                                            context: context),
-                                                        style: AppFonts
-                                                            .ibm18HeaderBlue600
-                                                            .copyWith(
-                                                          color: AppColors.lightBlack,
-                                                        ),
+                                                        itemCount: carInfoItems.length,
+                                                        itemBuilder: (context, index) {
+                                                          return CarInfoItem(title: carInfoItems[index].title, info: carInfoItems[index].info, iconPath: carInfoItems[index].iconPath);
+                                                        },
                                                       ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 30,
-                                                  ),
-                                                  Center(child: CarPricesRow(blocRead: blocRead)),
-                                                  const SizedBox(
-                                                    height: 100,
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                },
-                              ),
-                            ],
+                                                    ),
+                                                    const SizedBox(height: 20),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          padding: const EdgeInsets.all(2),
+                                                          // margin: const EdgeInsets.only(right: 4),
+                                                          decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.gold),
+                                                          child: const Icon(Icons.color_lens, color: AppColors.white, size: 18,)
+                                                          ),
+                                                          const SizedBox(width: 10,),
+                                                          Text(
+                                                            "available Colors".getLocale(context: context),
+                                                            style: AppFonts
+                                                                    .ibm18HeaderBlue600
+                                                                    .copyWith(
+                                                                  color: AppColors.lightBlack,
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    ),
+                                                    
+                                                    Padding(
+                                                      padding: const EdgeInsetsDirectional.only(
+                                                        start: 29.0 , end: 16.0 , bottom: 30, top: 10),
+                                                      child: CarColors(colors: blocRead.carDetailsData.carColor,),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          padding: const EdgeInsets.all(2),
+                                                          // margin: const EdgeInsets.only(right: 4),
+                                                          decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.gold),
+                                                          child: const Icon(Icons.attach_money_rounded, color: AppColors.white, size: 18,)
+                                                          ),
+                                                          const SizedBox(width: 10,),
+                                                        Text(
+                                                          "prices".getLocale(
+                                                              context: context),
+                                                          style: AppFonts
+                                                              .ibm18HeaderBlue600
+                                                              .copyWith(
+                                                            color: AppColors.lightBlack,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 30,
+                                                    ),
+                                                    Center(child: CarPricesRow(blocRead: blocRead)),
+                                                    const SizedBox(
+                                                      height: 100,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const BackButtonWithBG(),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 100,
+                  height: 90,
                   color: AppColors.white,
                   child: BlocBuilder<CarDetailsCubit, CarDetailsState>(
                       buildWhen: (previous, current) =>

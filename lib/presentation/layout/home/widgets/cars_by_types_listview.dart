@@ -38,7 +38,7 @@ class CarsByTypesListview extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 250,
+              height: 225,
               child: ListView.separated(
                 itemCount: cars.length,
                 padding: const EdgeInsetsDirectional.only(
