@@ -25,10 +25,10 @@ class CarDetailsData {
   final String carCategory;
   final String carYear;
   final String carEngine;
-  // final String carPlateNumber;
+  final String carPlateNumber;
   final String carChassis;
   final String carModel;
-  final String carColor;
+  final List<CarColor> carColor;
   final num carPassengerNo;
   final num carDailyPrice;
   final num carLimitedKiloMeters;
@@ -47,7 +47,7 @@ class CarDetailsData {
     required this.carCategory,
     required this.carYear,
     required this.carEngine,
-    // required this.carPlateNumber,
+    required this.carPlateNumber,
     required this.carChassis,
     required this.carModel,
     required this.carColor,
@@ -62,9 +62,16 @@ class CarDetailsData {
 
   factory CarDetailsData.fromJson(Map<String, dynamic> json) {
     List<CarMedia> mediaList = [];
+    List<CarColor> colorList = [];
     if (json['carMedia'] != null) {
       for (var mediaItem in json['carMedia']) {
         mediaList.add(CarMedia.fromJson(mediaItem as Map<String, dynamic>));
+      }
+    }
+
+    if (json['carColor'] != null) {
+      for (var carColorItem in json['carColor']) {
+        colorList.add(CarColor.fromJson(carColorItem as Map<String, dynamic>));
       }
     }
     return CarDetailsData(
@@ -77,12 +84,12 @@ class CarDetailsData {
       carCategory: json['carCategory']["categoryName"] ?? "",
       carYear: json['carYear'] ?? "",
       carEngine: json['carEngine'] ?? "",
-      // carPlateNumber: json['carPlateNumber'] ?? "",
+      carPlateNumber: json['carPlateNumber'] ?? "",
       carChassis: json['carChassis'] ?? "",
       carModel: json.containsKey("carModel") && json['carModel'] != null
           ? json['carModel']["modelName"] ?? ""
           : "",
-      carColor: json['carColor']["Color_Name"] ?? "",
+      carColor: colorList,
       carPassengerNo: json['carPassengerNo'] ?? 0,
       carDailyPrice: (json['carDailyPrice'] ?? 0.0),
       carLimitedKiloMeters: json['carLimitedKiloMeters'] ?? 0,
@@ -107,10 +114,10 @@ class CarDetailsData {
         carCategory: "",
         carYear: "",
         carEngine: "",
-        // carPlateNumber: "",
+        carPlateNumber: "",
         carChassis: "",
         carModel: "",
-        carColor: "",
+        carColor: [],
         carPassengerNo: 0,
         carDailyPrice: 0.0,
         carLimitedKiloMeters: 0,
@@ -119,4 +126,16 @@ class CarDetailsData {
         carSysDate: "",
         carMedia: [],
       );
+}
+
+
+class CarColor {
+  final String color;
+  final String carId;
+
+  const CarColor({required this.color, required this.carId});
+
+  factory CarColor.fromJson(Map<String, dynamic> json) {
+    return CarColor(color: json['color'] as String, carId: json['carId'] as String);
+  }
 }

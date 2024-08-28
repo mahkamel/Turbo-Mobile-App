@@ -10,18 +10,23 @@ class BackButtonWithBG extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
-      width: 40,
+      width: 47,
+      height: 47,
       margin: const EdgeInsetsDirectional.only(
         top: 20,
         start: 16,
       ),
-      decoration: BoxDecoration(
-        color: AppColors.black.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const BackButton(
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
         color: AppColors.white,
-      ),);
+      ),
+      child: IconButton(onPressed: (){Navigator.of(context).pop();},
+        icon: const Icon(
+          Icons.arrow_back_ios_rounded,
+          color: AppColors.secondary,
+          size: 24,
+        ),
+      ),
+    );
   }
 }
