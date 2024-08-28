@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../blocs/car_details/car_details_cubit.dart';
@@ -21,7 +22,7 @@ class PriceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 95,
-      width: double.infinity,
+      width: AppConstants.screenWidth(context) * 0.25,
       // margin: const EdgeInsets.only(top: 4),
       padding: const EdgeInsetsDirectional.all(10),
       constraints: const BoxConstraints(
