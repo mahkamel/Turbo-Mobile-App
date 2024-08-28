@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/core/helpers/enums.dart';
-import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/theming/colors.dart';
 import 'package:turbo/core/widgets/text_field_with_header.dart';
 

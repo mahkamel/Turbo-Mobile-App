@@ -4,6 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../theming/colors.dart';
+import 'local/cache_helper.dart';
 
 class NotificationServices {
   final AwesomeNotifications _awesomeNotifications = AwesomeNotifications();
@@ -15,6 +16,7 @@ class NotificationServices {
       if (Platform.isAndroid) {
         await _awesomeNotifications.isNotificationAllowed().then(
           (value) async {
+            CacheHelper.setData(key: "NotificationRequest", value: value);
             if (value) {
               AwesomeNotifications().initialize(
                   null,
@@ -58,9 +60,11 @@ class NotificationServices {
             } else {
               await _awesomeNotifications
                   .requestPermissionToSendNotifications()
-                  .then(
+                  .then(  
                 (value) async {
                   if (await _awesomeNotifications.isNotificationAllowed()) {
+                    CacheHelper.setData(
+                        key: "NotificationRequest", value: true);
                     AwesomeNotifications().initialize(
                         null,
                         [
@@ -100,6 +104,9 @@ class NotificationServices {
                       badge: true,
                       sound: true,
                     );
+                  } else {
+                    CacheHelper.setData(
+                        key: "NotificationRequest", value: false);
                   }
                 },
               );
