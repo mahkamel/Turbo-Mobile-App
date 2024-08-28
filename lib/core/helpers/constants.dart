@@ -15,8 +15,8 @@ class AppConstants {
   }
 
   static double widthBasedOnFigmaDevice(BuildContext context, double width) =>
-      MediaQuery.sizeOf(context).width * (width / 390) >= width
-          ? MediaQuery.sizeOf(context).width * (width / 390)
+      MediaQuery.sizeOf(context).width * (width / 375) >= width
+          ? MediaQuery.sizeOf(context).width * (width / 375)
           : width;
 
   static SizedBox verticalGap(double height) {
