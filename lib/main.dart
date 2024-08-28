@@ -16,7 +16,6 @@ Future<void> main() async {
   await configureApp(F.appFlavor ?? Flavor.dev);
   await DioHelper.init(FlavorConfig.instance.baseUrl);
   await setupGetIt();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await Future.wait([
     CacheHelper.init(),
     Firebase.initializeApp(
@@ -24,19 +23,24 @@ Future<void> main() async {
     ),
   ]);
 
-  NotificationServices().onInit();
-  await Future.delayed(const Duration(seconds: 1));
-  if (Platform.isIOS) {
-    if (await FirebaseMessaging.instance.getAPNSToken() != null) {
-      AppConstants.fcmToken =
-          await FirebaseMessaging.instance.getToken() ?? "";
-    }
-  } else {
-    AppConstants.fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
-  }
-  log("tokeennn: ${AppConstants.fcmToken}");
-  FirebaseMessaging.instance.setAutoInitEnabled(true);
+  bool isNotificationAllowed =
+      await CacheHelper.getData(key: "NotificationRequest") ?? true;
+  if (isNotificationAllowed) {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+    NotificationServices().onInit();
+    await Future.delayed(const Duration(seconds: 1));
+    if (Platform.isIOS) {
+      if (await FirebaseMessaging.instance.getAPNSToken() != null) {
+        AppConstants.fcmToken =
+            await FirebaseMessaging.instance.getToken() ?? "";
+      }
+    } else {
+      AppConstants.fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+    }
+    log("tokeennn: ${AppConstants.fcmToken}");
+    FirebaseMessaging.instance.setAutoInitEnabled(true);
+  }
   final CustomerModel? cachedCustomer = await getCustomerData();
   log("useeerTokeneee: ${cachedCustomer?.token}");
 

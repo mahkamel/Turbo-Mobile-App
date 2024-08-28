@@ -46,35 +46,38 @@ class MyApp extends StatelessWidget {
           value: getIt<CitiesDistrictsRepository>()..getCities(),
         ),
       ],
-      child: MediaQuery(
-        data: MediaQuery.of(context)
-            .copyWith(textScaler: const TextScaler.linear(1.0)),
-        child: MaterialApp(
-          navigatorKey: navigatorKey,
-          title: 'DS Rent',
-          supportedLocales: AppLocalizationsSetup.supportedLocales,
-          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-          localeResolutionCallback:
-              AppLocalizationsSetup.localeResolutionCallback,
-          locale: const Locale("en", "US"),
-          theme: ThemeData(
-            fontFamily: "IBM",
-            scaffoldBackgroundColor: AppColors.grey500,
-            hoverColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: AppColors.primaryBlue,
-            ),
-            useMaterial3: true,
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        title: 'DS Rent',
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(1.0)),
+            child: child!,
+          );
+        },
+        supportedLocales: AppLocalizationsSetup.supportedLocales,
+        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+        localeResolutionCallback:
+            AppLocalizationsSetup.localeResolutionCallback,
+        locale: const Locale("en", "US"),
+        theme: ThemeData(
+          fontFamily: "IBM",
+          scaffoldBackgroundColor: AppColors.grey500,
+          hoverColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primaryBlue,
           ),
-          debugShowCheckedModeBanner:
-              F.appFlavor != null && F.appFlavor == Flavor.dev ? true : false,
-          initialRoute:
-              isFirstTime ? Routes.onBoardingScreen : Routes.layoutScreen,
-          onGenerateRoute: appRouter.generateRoute,
+          useMaterial3: true,
         ),
+        debugShowCheckedModeBanner:
+            F.appFlavor != null && F.appFlavor == Flavor.dev ? true : false,
+        initialRoute:
+            isFirstTime ? Routes.onBoardingScreen : Routes.layoutScreen,
+        onGenerateRoute: appRouter.generateRoute,
       ),
     );
   }

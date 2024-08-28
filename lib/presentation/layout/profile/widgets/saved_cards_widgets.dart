@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../../blocs/profile_cubit/profile_cubit.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
-import '../../../../core/widgets/default_buttons.dart';
-import '../screens/add_new_card_screen.dart';
 
 class EmptySavedCards extends StatelessWidget {
   const EmptySavedCards({
