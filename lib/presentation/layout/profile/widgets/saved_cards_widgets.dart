@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../../blocs/profile_cubit/profile_cubit.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
+import '../../../../core/widgets/default_buttons.dart';
+import '../screens/add_new_card_screen.dart';
 
 class EmptySavedCards extends StatelessWidget {
   const EmptySavedCards({
@@ -13,27 +19,32 @@ class EmptySavedCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(
-          height: AppConstants.heightBasedOnFigmaDevice(context, 48),
-        ),
-        Lottie.asset(
-          "assets/lottie/card.json",
-          height: AppConstants.heightBasedOnFigmaDevice(context, 340),
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 16.0,
             horizontal: 20.0,
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
+              SizedBox(
+                height: AppConstants.heightBasedOnFigmaDevice(context, 48),
+              ),
+              Lottie.asset(
+                "assets/lottie/card.json",
+                // height: AppConstants.heightBasedOnFigmaDevice(context, 340),
+              ),
               Text(
                 "Add your first credit card for payment",
                 textAlign: TextAlign.center,
                 style: AppFonts.ibm24HeaderBlue600,
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               Text(
                 "This credit card will be used by default for billing.",
                 textAlign: TextAlign.center,
@@ -42,133 +53,86 @@ class EmptySavedCards extends StatelessWidget {
             ],
           ),
         ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 16),
-        //   child: DefaultButton(
-        //     function: () {
-        //       Navigator.of(context).push(MaterialPageRoute(
-        //         builder: (_) => BlocProvider<ProfileCubit>.value(
-        //             value: context.read<ProfileCubit>()..savedCardsInit(),
-        //             child: const AddNewCardScreen()),
-        //       ));
-        //     },
-        //     text: "Add A Card",
-        //   ),
-        // ),
+        //  const AddNewCardButton()
       ],
     );
   }
 }
 
 class SavedPaymentCardItem extends StatelessWidget {
-  const SavedPaymentCardItem({
-    super.key,
-    required this.name,
-    required this.cardNumbers,
-    required this.expDate,
-    this.isEditing = true,
-    required this.isCheckToBeDeleted,
-    required this.onChanged,
-  });
+  const SavedPaymentCardItem(
+      {super.key,
+      required this.cardNumbers,
+      required this.expDate,
+      this.isDefault = true,
+      this.isFromDelete = false,
+      // required this.isCheckToBeDeleted,
+      required this.cardType,
+      required this.cardId});
 
-  final String name;
   final String cardNumbers;
+  final String cardType;
   final String expDate;
-  final bool isEditing;
-  final bool isCheckToBeDeleted;
-  final void Function(bool? value) onChanged;
+  final bool isDefault;
+  final bool isFromDelete;
+  final String cardId;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: AppConstants.screenWidth(context),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+    return Container(
+      height: 103,
+      width: AppConstants.screenWidth(context) - 32,
+      decoration: BoxDecoration(
+          color: AppColors.grey500,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.subTextGrey)),
+      child: Stack(
         children: [
-          if (isEditing)
-            Checkbox(
-              value: isCheckToBeDeleted,
-              onChanged: onChanged,
+          savedCardBackground(),
+          Padding(
+            padding: const EdgeInsets.all(
+              10,
             ),
-          if (!isEditing)
-            const SizedBox(
-              width: 20,
-            ),
-          Container(
-            // curve: Curves.easeInOut,
-            // duration: const Duration(milliseconds: 150),\
-            height: 160,
-            width: isEditing
-                ? AppConstants.screenWidth(context) - 68
-                : AppConstants.screenWidth(context) - 40,
-            decoration: BoxDecoration(
-              color: AppColors.buttonGreyBorder.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Stack(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.center,
-                      colors: [
-                        AppColors.white.withOpacity(0.4),
-                        AppColors.white.withOpacity(0.4),
-                        // AppColors.buttonGreyBorder.withOpacity(0.2),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(
-                    16,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(
+                  width: AppConstants.screenWidth(context) - 52,
+                  child: Row(
                     children: [
-                      Text(
-                        name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppFonts.inter18White500.copyWith(
-                          color: AppColors.bottomSheetGrey,
-                        ),
+                      getCardTypeIcon(cardType),
+                      const SizedBox(
+                        width: 8,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const FourStars(),
-                            const FourStars(),
-                            const FourStars(),
-                            Text(
-                              cardNumbers,
-                              style: AppFonts.inter24White600.copyWith(
-                                color: AppColors.bottomSheetGrey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
+                      Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              "Exp date",
-                              style: AppFonts.ibm12SubTextGrey600.copyWith(
-                                color: AppColors.black.withOpacity(0.4),
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "**** $cardNumbers",
+                                  style: AppFonts.ibm12SubTextGrey600.copyWith(
+                                    color: AppColors.lightBlack,
+                                  ),
+                                ),
+                                isFromDelete
+                                    ? const SizedBox()
+                                    : EditDeleteIcons(
+                                        cardId: cardId,
+                                        cardNumbers: cardNumbers,
+                                        cardType: cardType,
+                                        expDate: expDate,
+                                        isFromDelete: isFromDelete,
+                                      )
+                              ],
                             ),
                             Text(
-                              expDate,
-                              style: AppFonts.inter14White500.copyWith(
-                                color: AppColors.bottomSheetGrey,
+                              "Expires $expDate",
+                              style: AppFonts.ibm11Grey400.copyWith(
+                                color: AppColors.lightBlack,
                               ),
                             ),
                           ],
@@ -177,29 +141,162 @@ class SavedPaymentCardItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.center,
-                      colors: [
-                        Colors.white10,
-                        Colors.white10,
-                      ],
-                    ),
-                  ),
+                const SizedBox(
+                  height: 10,
                 ),
+                setDefaultCard(isDefault),
               ],
             ),
           ),
-          const SizedBox(
-            width: 20,
-          ),
+          savedCardLinearBackground(),
         ],
       ),
     );
   }
+}
+
+class EditDeleteIcons extends StatelessWidget {
+  final String cardNumbers;
+  final String cardType;
+  final String expDate;
+  final bool isFromDelete;
+  final String cardId;
+  const EditDeleteIcons(
+      {super.key,
+      required this.cardNumbers,
+      required this.cardType,
+      required this.expDate,
+      required this.isFromDelete,
+      required this.cardId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+            height: 27,
+            decoration: const BoxDecoration(
+                color: AppColors.darkOrange, shape: BoxShape.circle),
+            child: IconButton(
+                onPressed: () {
+                  print("hello");
+                },
+                icon: const Icon(
+                  Icons.edit,
+                  size: 12,
+                  color: AppColors.white,
+                ))),
+        Container(
+            height: 27,
+            decoration: const BoxDecoration(
+                color: AppColors.red, shape: BoxShape.circle),
+            child: IconButton(
+                onPressed: () {
+                  showAdaptiveDialog(
+                    context: context,
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<ProfileCubit>()
+                        ..clearPaymentFormData(),
+                      child: DeleteCardsDialog(
+                        blocRead: context.read<ProfileCubit>(),
+                        cardNumbers: cardNumbers,
+                        cardType: cardType,
+                        expDate: expDate,
+                        isFromDelete: true,
+                        cardId: cardId,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  size: 12,
+                  color: AppColors.white,
+                )))
+      ],
+    );
+  }
+}
+
+Widget setDefaultCard(bool isDefault) {
+  if (isDefault) {
+    return Container(
+      width: 87,
+      height: 20,
+      decoration: BoxDecoration(
+        color: AppColors.darkGreen.withOpacity(0.30),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Center(
+          child: Text(
+        "Default",
+        style: AppFonts.ibm11Grey400.copyWith(color: AppColors.green),
+      )),
+    );
+  } else {
+    return SizedBox(
+      height: 20,
+      width: 100,
+      child: DefaultButton(
+        function: () {},
+        text: "Set as default",
+        textStyle: AppFonts.ibm11Grey400.copyWith(color: AppColors.white),
+      ),
+    );
+  }
+}
+
+Widget savedCardLinearBackground() {
+  return IgnorePointer(
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.center,
+          colors: [
+            Colors.white10,
+            Colors.white10,
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+SvgPicture getCardTypeIcon(String cardType) {
+  switch (cardType) {
+    case "visa":
+      return SvgPicture.asset(
+        "assets/images/visa.svg",
+      );
+    case "mastercard":
+      return SvgPicture.asset(
+        "assets/images/mastercard.svg",
+      );
+    case "amex":
+      return SvgPicture.asset(
+        "assets/images/americanExpress.svg",
+      );
+    default:
+      return SvgPicture.asset('assets/images/card.svg');
+  }
+}
+
+Widget savedCardBackground() {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.center,
+        colors: [
+          AppColors.white.withOpacity(0.4),
+          AppColors.white.withOpacity(0.4),
+        ],
+      ),
+    ),
+  );
 }
 
 class FourStars extends StatelessWidget {
@@ -210,11 +307,143 @@ class FourStars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.only(right: 4.0),
       child: Text(
         "****",
-        style: AppFonts.inter24White600.copyWith(
-          color: AppColors.bottomSheetGrey,
+        style: AppFonts.ibm12SubTextGrey600.copyWith(
+          color: AppColors.lightBlack,
+        ),
+      ),
+    );
+  }
+}
+
+class AddNewCardButton extends StatelessWidget {
+  const AddNewCardButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultButton(
+      key: const ValueKey<String>("AddNewCardKey"),
+      marginBottom: 40,
+      marginTop: 32,
+      marginLeft: 20,
+      marginRight: 20,
+      function: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => BlocProvider<ProfileCubit>.value(
+              value: context.read<ProfileCubit>()..savedCardsInit(),
+              child: const AddNewCardScreen()),
+        ));
+      },
+      text: "Add New Card",
+    );
+  }
+}
+
+class CardsRow extends StatelessWidget {
+  const CardsRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SvgPicture.asset('assets/images/visa.svg'),
+        SvgPicture.asset('assets/images/americanExpress.svg'),
+        SvgPicture.asset('assets/images/masterCard.svg'),
+      ],
+    );
+  }
+}
+
+class DeleteCardsDialog extends StatelessWidget {
+  const DeleteCardsDialog({
+    super.key,
+    required this.blocRead,
+    required this.cardNumbers,
+    required this.cardType,
+    required this.expDate,
+    required this.isFromDelete,
+    required this.cardId,
+  });
+
+  final ProfileCubit blocRead;
+  final String cardNumbers;
+  final String cardType;
+  final String expDate;
+  final bool isFromDelete;
+  final String cardId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 27,
+          vertical: 25,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Are you sure you want to delete this card?",
+              style: AppFonts.ibm24HeaderBlue600,
+              textAlign: TextAlign.center,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 30.0,
+                bottom: 30,
+              ),
+              child: SavedPaymentCardItem(
+                cardId: cardId,
+                cardType: cardType,
+                cardNumbers: cardNumbers,
+                expDate: expDate,
+                isFromDelete: true,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: DefaultButton(
+                    color: AppColors.white,
+                    border: Border.all(color: AppColors.primaryBlue),
+                    width: 90,
+                    borderRadius: 20,
+                    textColor: AppColors.primaryBlue,
+                    function: () {
+                      Navigator.pop(context);
+                    },
+                    text: "Cancel",
+                  ),
+                ),
+                const SizedBox(
+                  width: 32,
+                ),
+                Expanded(
+                  child: DefaultButton(
+                    color: AppColors.darkRed,
+                    width: 90,
+                    borderRadius: 20,
+                    textColor: AppColors.white,
+                    function: () {
+                      blocRead.deleteCardFromSaved(cardId);
+                      Navigator.pop(context);
+                    },
+                    text: "Delete",
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -514,8 +514,8 @@ class CustomTextField extends StatelessWidget {
                           : border ??
                               OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: AppColors.black.withOpacity(0.5),
+                                borderSide: const BorderSide(
+                                  color: AppColors.black,
                                 ),
                               ),
                   fillColor: enabled ? fillColor : AppColors.borderGrey,
@@ -547,8 +547,8 @@ class CustomTextField extends StatelessWidget {
                           : border ??
                               OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: AppColors.subTextGrey
+                                borderSide: BorderSide(
+                                  color: AppColors.black.withOpacity(0.5),
                                 ),
                               ),
                 ),

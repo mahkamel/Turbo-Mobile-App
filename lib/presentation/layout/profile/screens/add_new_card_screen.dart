@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/presentation/layout/profile/widgets/saved_cards_widgets.dart';
 
 import '../../../../../core/helpers/constants.dart';
 import '../../../../../core/helpers/enums.dart';
@@ -25,29 +26,37 @@ class AddNewCardScreen extends StatelessWidget {
           child: Column(
             children: [
               DefaultHeader(
-                header: "Add New Card",
+                header: "Add Card",
                 textAlignment: AlignmentDirectional.center,
-              ),
-              SizedBox(
-                height: 24,
               ),
               Expanded(
                 child: SingleChildScrollView(
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
                   padding: EdgeInsets.only(
-                    top: 12,
+                    top: 24,
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      CardHolderName(),
-                      CardNumber(),
-                      ExpiryDate(),
-                      AddCardButton(),
+                      Column(
+                        children: [
+                          CardsRow(),
+                          Padding(
+                            padding: EdgeInsets.only(left: 16, right: 16, bottom: 15),
+                            child: Divider(),
+                          ),
+                          CardHolderName(),
+                          CardNumber(),
+                          ExpiryDate(),
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ),
+              AddCardButton(),
             ],
           ),
         ),
@@ -248,7 +257,7 @@ class CardNumber extends StatelessWidget {
           var blocRead = context.read<ProfileCubit>();
           var blocWatch = context.watch<ProfileCubit>();
           return AuthTextFieldWithHeader(
-            header: "Card Number",
+            header: "Cardholder Number",
             hintText: "Enter Card Number",
             validationText: "Enter valid number",
             isWithValidation: true,

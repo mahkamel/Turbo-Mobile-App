@@ -35,27 +35,37 @@ class EditAccountScreen extends StatelessWidget {
               DefaultHeader(header: "Edit Profile",onBackPressed: () => Navigator.of(context).pop(),),
               const SizedBox(height: 100,),
               const Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ProfileName(),
-                      ProfileEmail(),
-                      ProfileAddress(),
-                      ProfilePhoneNumber(),
-                      ProfileNationalId(),
-                    ],
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ProfileName(),
+                        ProfileEmail(),
+                        ProfileAddress(),
+                        ProfilePhoneNumber(),
+                        ProfileNationalId(),
+                      ],
+                    ),
                   ),
                 ),
               ),
               
-              DefaultButton(
-                function: () {
-                  // context.read<LoginCubit>().changePassword();
-                },
-                text: "Save",
-                marginRight: 16,
-                marginLeft: 16,
-                marginBottom: 30,
+              SizedBox(
+                height: 90,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: DefaultButton(
+                    function: () {
+                      // context.read<LoginCubit>().changePassword();
+                    },
+                    text: "Save",
+                     marginTop: 20,
+                              marginBottom: 20,
+                              marginRight: 16,
+                              marginLeft: 16,
+                  ),
+                ),
               ),
             ],
           ),

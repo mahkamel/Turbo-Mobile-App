@@ -49,6 +49,8 @@ class AppColors {
   static const Color shimmer = Color(0xffD9D9D9);
   static const Color labelBrown = Color(0xff543334);
   static const Color red = Color(0xffB02D2D);
+  static const Color darkRed = Color(0xFF8B2828);
   static const Color green = Color(0xFF3D853D);
+  static const Color darkGreen = Color(0xFF047F04);
 
 }

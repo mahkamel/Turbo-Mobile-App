@@ -230,26 +230,23 @@ class ProfileCubit extends Cubit<ProfileState> {
         index, savedPaymentCards[index].isSelected));
   }
 
-  void deleteCardFromSaved() async {
-    if (savedCardsIdsToBeDeleted.isNotEmpty) {
-      emit(const ProfileState.deleteSavedCardsLoading());
-      for (var cardId in savedCardsIdsToBeDeleted) {
-        try {
-          final res =
-              await _paymentRepository.deleteSavedPaymentMethods(cardId);
-          res.fold((errMsg) {
-            emit(ProfileState.deleteSavedCardsError(errMsg));
-          }, (_) {
-            savedPaymentCards.removeWhere((element) => element.id == cardId);
-            _paymentRepository.savedPaymentCards
-                .removeWhere((element) => element.id == cardId);
-            emit(ProfileState.deleteSavedCardsSuccess(cardId));
-          });
-        } catch (e) {
-          emit(ProfileState.deleteSavedCardsError(e.toString()));
-        }
+  void deleteCardFromSaved(String cardId) async {
+    emit(const ProfileState.deleteSavedCardsLoading());
+      try {
+        final res =
+            await _paymentRepository.deleteSavedPaymentMethods(cardId);
+        res.fold((errMsg) {
+          emit(ProfileState.deleteSavedCardsError(errMsg));
+        }, (_) {
+          savedPaymentCards.removeWhere((element) => element.id == cardId);
+          _paymentRepository.savedPaymentCards
+              .removeWhere((element) => element.id == cardId);
+          emit(ProfileState.deleteSavedCardsSuccess(cardId));
+        });
+      } catch (e) {
+        emit(ProfileState.deleteSavedCardsError(e.toString()));
       }
-    }
+    
     getAllSavedPaymentMethods(isForceToRefresh: true);
   }
 
