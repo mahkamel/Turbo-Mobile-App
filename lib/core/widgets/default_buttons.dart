@@ -28,6 +28,7 @@ class DefaultButton extends StatelessWidget {
   final String text;
   final Border? border;
   final Widget? textWidget;
+  final TextStyle? textStyle;
   const DefaultButton({
     super.key,
     required this.function,
@@ -46,6 +47,7 @@ class DefaultButton extends StatelessWidget {
     this.textWidget,
     this.fontSize,
     this.fontWeight,
+    this.textStyle,
   });
 
   @override
@@ -87,7 +89,7 @@ class DefaultButton extends StatelessWidget {
               : textWidget ??
                   Text(
                     text,
-                    style: AppFonts.ibm16White700.copyWith(
+                    style: textStyle ?? AppFonts.ibm16White700.copyWith(
                       color: textColor,
                       fontWeight: fontWeight,
                       fontSize: fontSize,

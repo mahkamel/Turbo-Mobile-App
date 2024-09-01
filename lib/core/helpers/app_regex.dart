@@ -59,6 +59,7 @@ class AppRegex {
       'mastercard':
           r'^5[1-5][0-9]{14}|^(222[1-9]|22[3-9]\\d|2[3-6]\\d{2}|27[0-1]\\d|2720)[0-9]{12}$',
       'amex': r'^3[47][0-9]{13}$',
+      'other': r'^[0-9]{16}$',
     };
 
     String? cardType = _detectCardType(cardNumber);
@@ -79,6 +80,6 @@ class AppRegex {
     } else if (RegExp(r'^3[47]').hasMatch(cardNumber)) {
       return 'amex';
     }
-    return null;
+    return 'other';
   }
 }

@@ -33,6 +33,7 @@ class AuthTextFieldWithHeader extends StatefulWidget {
     this.contentPadding,
     this.isRequiredFiled = false,
     this.widgetPadding,
+    this.hintStyle
   });
 
   final bool isEnabled;
@@ -58,6 +59,7 @@ class AuthTextFieldWithHeader extends StatefulWidget {
   final double? width;
   final EdgeInsetsDirectional? contentPadding;
   final EdgeInsetsDirectional? widgetPadding;
+  final TextStyle? hintStyle;
   @override
   State<AuthTextFieldWithHeader> createState() =>
       _AuthTextFieldWithHeaderState();
@@ -148,6 +150,7 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
                 validateText: widget.validationText,
                 validatePadding: 4,
                 hint: widget.hintText,
+                hintStyle: widget.isEnabled ? AppFonts.ibm15subTextGrey400 : AppFonts.ibm15subTextGrey400.copyWith(color: AppColors.grey600),
               ),
           ],
         ),
