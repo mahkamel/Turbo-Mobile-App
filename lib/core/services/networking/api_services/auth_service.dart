@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:turbo/core/services/networking/api_services/car_service.dart';
+import 'package:turbo/main_paths.dart';
 
 import '../dio_helper.dart';
 
@@ -203,4 +207,47 @@ class AuthServices {
       throw e.toString();
     }
   }
+  Future<Response> editCustomer(String customerName, String customerAddress, File? image) async {
+    Response response;
+    try {
+      if(image != null) {
+        Map<String, String> requestBody = {
+          "customerDisplayName": customerName,
+          "customerAddress": customerAddress
+        };
+        String jsonData = json.encode(requestBody);
+
+        FormData formData = FormData();
+        formData.fields.add(MapEntry('customer', jsonData));
+        formData.files.add(
+              MapEntry(
+                'files',
+                await MultipartFile.fromFile(
+                  image.path,
+                  filename: getFileName(image.path),
+                ),
+              ),
+            );
+        response = await DioHelper.postData(
+          endpoint: 'customer/editCustomer',
+          formData:formData, 
+          body: {}
+        );
+        return response;
+      } else {
+        response = await DioHelper.postData(
+            endpoint: 'customer/editCustomer',
+            body: {
+              "customer": {
+                "customerDisplayName": customerName,
+                "customerAddress": customerAddress
+              },
+            });
+      }
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }
+

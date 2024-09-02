@@ -17,7 +17,7 @@ class ProfileEmail extends StatelessWidget {
             isRequiredFiled: false,
             hintText: "Please Enter Email",
             isEnabled: false,
-            isWithValidation: true,
+            isWithValidation: false,
             textInputType: TextInputType.emailAddress,
             textEditingController: blocRead.profileEmail,
             validation: TextFieldValidation.normal,

@@ -7,7 +7,10 @@ class CustomerModel {
   String token;
   String customerAddress;
   int customerType;
+  String customerTelephone;
+  String customerNationalId;
   List<Attachment> attachments;
+  String? customerImageProfilePath;
 
   CustomerModel({
     required this.customerId,
@@ -17,6 +20,9 @@ class CustomerModel {
     required this.customerAddress,
     required this.customerType,
     required this.attachments,
+    required this.customerTelephone,
+    required this.customerNationalId,
+    this.customerImageProfilePath,
   });
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +33,9 @@ class CustomerModel {
       token: json['token'] ?? "",
       customerAddress: json['customerId']['customerAddress'] ?? "",
       customerType: json['customerId']['customerType'] ?? 0,
+      customerTelephone: json['customerId']['customerTelephone'] ?? "",
+      customerNationalId: json['customerId']['customerNationalId'] ?? "",
+      customerImageProfilePath: json['customerId']['customerImageProfilePath'] ?? "",
       attachments: (json['customerAttachments'] as List)
           .map(
             (e) => Attachment.fromJson(e),
@@ -42,6 +51,9 @@ class CustomerModel {
         attachments = <Attachment>[],
         customerAddress = '',
         customerType = 0,
+        customerTelephone = '',
+        customerNationalId = '',
+        customerImageProfilePath = '',
         token = '';
 
   Map<String, dynamic> toJson() => {
@@ -52,6 +64,9 @@ class CustomerModel {
         "customerId": {
           "customerAddress": customerAddress,
           "customerType": customerType,
+          'customerTelephone': customerTelephone,
+          'customerNationalId': customerNationalId,
+          'customerImageProfilePath' : customerImageProfilePath,
         },
         'customerAttachments': attachments.map((e) => e.toJson()).toList(),
       };

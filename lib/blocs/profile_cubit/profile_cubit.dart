@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
+import 'package:turbo/main_paths.dart';
 
 import '../../core/helpers/app_regex.dart';
 import '../../core/helpers/enums.dart';
@@ -33,16 +35,13 @@ class ProfileCubit extends Cubit<ProfileState> {
   TextEditingController profileAddress = TextEditingController();
   TextEditingController profilePhoneNumber = TextEditingController();
   TextEditingController profileNationalIdNumber = TextEditingController();
-  
-
   TextFieldValidation cardHolderNameValidation = TextFieldValidation.normal;
   TextFieldValidation cardNumberValidation = TextFieldValidation.normal;
   TextFieldValidation cardExpiryDateValidation = TextFieldValidation.normal;
   TextFieldValidation cardCVVValidation = TextFieldValidation.normal;
-  TextFieldValidation profileNameValidation = TextFieldValidation.normal;
-  TextFieldValidation profileAddressValidation = TextFieldValidation.normal;
 
-
+  File? profileImage; 
+  
   List<SavedCard> savedPaymentCards = [];
   void savedCardsInit() {
     savedCardsIdsToBeDeleted.clear();
@@ -86,46 +85,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       cardHolderNameValidation = TextFieldValidation.notValid;
     }
     emit(ProfileState.checkCardToSaveHolderName(cardHolderNameValidation));
-  }
-
-  void checkProfileNameValidation() {
-    if (profileName.text.isNotEmpty) {
-      profileNameValidation = TextFieldValidation.valid;
-      emit(
-        ProfileState.checkProfileName(
-          name: profileName.text,
-          validation: profileNameValidation,
-        ),
-      );
-    } else {
-      profileNameValidation = TextFieldValidation.notValid;
-      emit(
-        ProfileState.checkProfileName(
-          name: profileName.text,
-          validation: profileNameValidation,
-        ),
-      );
-    }
-  }
-
-  void checkProfileAddressValidation() {
-    if (profileAddress.text.isNotEmpty) {
-      profileAddressValidation = TextFieldValidation.valid;
-      emit(
-        ProfileState.checkProfileAddress(
-          address: profileAddress.text,
-          validation: profileAddressValidation,
-        ),
-      );
-    } else {
-      profileAddressValidation = TextFieldValidation.notValid;
-      emit(
-        ProfileState.checkProfileAddress(
-          address: profileAddress.text,
-          validation: profileAddressValidation,
-        ),
-      );
-    }
   }
 
   void checkCardNumberValidation() {
@@ -260,6 +219,32 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(const ProfileState.logoutSuccess());
     } catch (e) {
       emit(ProfileState.logoutError(e.toString()));
+    }
+  }
+
+  void editProfile() async {
+    emit(const ProfileState.editProfileLoading());
+    try{
+      final Either<String, String> res;
+      String name = profileName.text.isNotEmpty ? profileName.text :
+          _authRepository.customer.customerName;
+      String address = profileAddress.text.isNotEmpty ? profileAddress.text :
+          _authRepository.customer.customerAddress;
+      if(profileImage == null) {
+        res = await _authRepository.editCustomer(customerName: name, customerAddress: address);
+      } else {
+        res = await _authRepository.editCustomer(customerName: name, customerAddress: address, image: profileImage);
+      }
+      res.fold((errMsg) {
+        emit(ProfileState.editProfileError(errMsg));
+      }, (success) {
+        emit(ProfileState.editProfileSuccess(success));
+        profileName.text = '';
+        profileAddress.text = '';
+      });
+    }
+    catch(e) {
+      emit(ProfileState.editProfileError(e.toString()));
     }
   }
 }
