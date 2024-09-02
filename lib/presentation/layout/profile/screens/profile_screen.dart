@@ -46,7 +46,7 @@ class ProfileScreen extends StatelessWidget {
                                 .copyWith(color: AppColors.lightBlack),
                           ),
                           Text(
-                            authWatch.customer.customerEmail,
+                            authWatch.customer.customerTelephone,
                             style: AppFonts.ibm24HeaderBlue600.copyWith(
                                 color: AppColors.lightBlack, fontSize: 18),
                           ),
@@ -148,26 +148,6 @@ class ProfileScreen extends StatelessWidget {
                               const Center(child: CircularProgressIndicator()),
                         ),
                     ]),
-                  // ShadowContainerWithPrefixTextButton(
-                  //   onTap: () {
-                  //     Navigator.of(context).push(MaterialPageRoute(
-                  //       builder: (_) => BlocProvider<ProfileCubit>.value(
-                  //         value: context.read<ProfileCubit>()
-                  //           ..getAllSavedPaymentMethods(
-                  //               isForceToRefresh: true)
-                  //           ..savedCardsInit(),
-                  //         child: const SavedCardsScreen(),
-                  //       ),
-                  //     ));
-                  //   },
-                  //   title: "Saved Cards",
-                  //   buttonText: "",
-                  //   prefixIcon: const Icon(
-                  //     Icons.arrow_forward_ios_rounded,
-                  //     size: 16,
-                  //     color: AppColors.primaryBlue,
-                  //   ),
-                  // ),
                   if (context.watch<AuthRepository>().customer.token.isEmpty)
                     Padding(
                       padding: const EdgeInsets.all(16.0),

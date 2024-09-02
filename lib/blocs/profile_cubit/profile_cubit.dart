@@ -226,25 +226,43 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(const ProfileState.editProfileLoading());
     try{
       final Either<String, String> res;
-      String name = profileName.text.isNotEmpty ? profileName.text :
-          _authRepository.customer.customerName;
-      String address = profileAddress.text.isNotEmpty ? profileAddress.text :
-          _authRepository.customer.customerAddress;
-      if(profileImage == null) {
-        res = await _authRepository.editCustomer(customerName: name, customerAddress: address);
+      if(profileName.text.isNotEmpty || profileAddress.text.isNotEmpty) {
+        String? name = profileName.text.isNotEmpty ? profileName.text :
+            null;
+        String? address = profileAddress.text.isNotEmpty ? profileAddress.text :
+            null;
+        if(profileImage == null) {
+          res = await _authRepository.editCustomer(customerName: name, customerAddress: address);
+        } else {
+          res = await _authRepository.editCustomer(customerName: name, customerAddress: address, image: profileImage);
+        }
+        res.fold((errMsg) {
+          emit(ProfileState.editProfileError(errMsg));
+        }, (success) {
+          emit(ProfileState.editProfileSuccess(success));
+          profileName.text = '';
+          profileAddress.text = '';
+        });
       } else {
-        res = await _authRepository.editCustomer(customerName: name, customerAddress: address, image: profileImage);
+        emit(const ProfileState.editProfileEmpty());
       }
-      res.fold((errMsg) {
-        emit(ProfileState.editProfileError(errMsg));
-      }, (success) {
-        emit(ProfileState.editProfileSuccess(success));
-        profileName.text = '';
-        profileAddress.text = '';
-      });
     }
     catch(e) {
       emit(ProfileState.editProfileError(e.toString()));
     }
   }
+  void deleteProfile() async {
+    emit(const ProfileState.deleteProfileLoading());
+    try {
+      final res = await _authRepository.deleteCustomer();
+      res.fold((errMsg) {
+        emit(ProfileState.deleteProfileError(errMsg));
+      }, (msg) {
+        emit(ProfileState.deleteProfileSuccess(msg));
+      });
+    } catch(e) {
+      emit(ProfileState.deleteProfileError(e.toString()));
+    }
+  }
 }
+
