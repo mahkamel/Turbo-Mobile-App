@@ -26,14 +26,15 @@ class ProfileScreen extends StatelessWidget {
             buildWhen: (previous, current) =>
                 current is LogoutLoadingState ||
                 current is LogoutErrorState ||
-                current is LogoutSuccessState,
+                current is LogoutSuccessState ||
+                current is EditProfileSuccessState,
             builder: (context, state) {
               var authWatch = context.watch<AuthRepository>();
+
               return Column(
                 children: [
                   if (authWatch.customer.token.isNotEmpty)
                     Stack(children: [
-                 
                       Column(
                         children: [
                           const SizedBox(
@@ -137,14 +138,14 @@ class ProfileScreen extends StatelessWidget {
                           )
                         ],
                       ),
-                        if(state is LogoutLoadingState)
+                      if (state is LogoutLoadingState)
                         Container(
-                            width: AppConstants.screenWidth(context)  ,
-                            height: AppConstants.screenHeight(context) - 96,
-                            decoration: BoxDecoration(
-                              color: AppColors.black.withOpacity(0.15)
-                            ),
-                          child: const Center(child: CircularProgressIndicator()),
+                          width: AppConstants.screenWidth(context),
+                          height: AppConstants.screenHeight(context) - 96,
+                          decoration: BoxDecoration(
+                              color: AppColors.black.withOpacity(0.15)),
+                          child:
+                              const Center(child: CircularProgressIndicator()),
                         ),
                     ]),
                   // ShadowContainerWithPrefixTextButton(

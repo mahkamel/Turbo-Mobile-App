@@ -53,4 +53,13 @@ class ProfileState with _$ProfileState {
   LogoutSuccessState;
   const factory ProfileState.logoutError(String errMsg) =
   LogoutErrorState;
+
+  const factory ProfileState.editProfileLoading() =
+  EditProfileLoadingState;
+  const factory ProfileState.editProfileSuccess(String success) =
+  EditProfileSuccessState;
+  const factory ProfileState.editProfileError(String errMsg) =
+  EditProfileErrorState;
+
+
 }

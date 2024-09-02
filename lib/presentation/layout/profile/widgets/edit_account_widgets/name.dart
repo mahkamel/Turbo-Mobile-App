@@ -5,16 +5,18 @@ import 'package:turbo/core/helpers/enums.dart';
 import 'package:turbo/core/theming/colors.dart';
 import 'package:turbo/core/widgets/text_field_with_header.dart';
 
+import '../../../../../core/services/networking/repositories/auth_repository.dart';
+
 class ProfileName extends StatelessWidget {
   const ProfileName({super.key});
 
   @override
     Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
-      buildWhen: (previous, current) => current is CheckProfileNameValidationState,
+      buildWhen: (previous, current) => current is EditProfileSuccessState,
       builder: (context, state) {
         var blocRead = context.read<ProfileCubit>();
-        // blocRead.profileName.text = context.read<AuthRepository>().customer.customerName;
+        var customerName = context.watch<AuthRepository>().customer.customerName;
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: AuthTextFieldWithHeader(
@@ -22,25 +24,16 @@ class ProfileName extends StatelessWidget {
             suffixIcon: const Icon(Icons.edit, color: AppColors.gold,),
             isRequiredFiled: false,
             header: "Name",
-            hintText: "Enter Name",
-            isWithValidation: true,
+            hintText: customerName,
+            isWithValidation: false,
             textInputType: TextInputType.name,
-            validationText: blocRead.profileName.text.isEmpty
-                ? "Please Enter Name"
-                : "Please Enter Valid Name.",
             textEditingController: blocRead.profileName,
-            validation: context.watch<ProfileCubit>().profileNameValidation,
+            validation: TextFieldValidation.normal,
             onTapOutside: () {
-              blocRead.checkProfileNameValidation();
             },
             onChange: (value) {
-              if (value.isEmpty ||
-                  blocRead.profileNameValidation != TextFieldValidation.normal) {
-                blocRead.checkProfileNameValidation();
-              }
             },
             onSubmit: (value) {
-              blocRead.checkProfileNameValidation();
             },
           ),
         );

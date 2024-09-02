@@ -4,6 +4,7 @@ import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
+import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/layout/profile/widgets/edit_account_widgets/address.dart';
 import 'package:turbo/presentation/layout/profile/widgets/edit_account_widgets/email.dart';
 import 'package:turbo/presentation/layout/profile/widgets/edit_account_widgets/name.dart';
@@ -19,11 +20,10 @@ class EditAccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var blocRead = context.read<ProfileCubit>();
     var authRead = context.read<AuthRepository>();
-    blocRead.profileName.text = authRead.customer.customerName;
     blocRead.profileEmail.text = authRead.customer.customerEmail;
-    blocRead.profileAddress.text = authRead.customer.customerAddress;
-    // blocRead.profilePhoneNumber.text = authRead.customer.cus;
-    // blocRead.profileNationalIdNumber = authRead.customer.
+    blocRead.profilePhoneNumber.text = authRead.customer.customerTelephone;
+    blocRead.profileNationalIdNumber.text =
+        authRead.customer.customerNationalId;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -32,8 +32,13 @@ class EditAccountScreen extends StatelessWidget {
           width: AppConstants.screenWidth(context),
           child: Column(
             children: [
-              DefaultHeader(header: "Edit Profile",onBackPressed: () => Navigator.of(context).pop(),),
-              const SizedBox(height: 100,),
+              DefaultHeader(
+                header: "Edit Profile",
+                onBackPressed: () => Navigator.of(context).pop(),
+              ),
+              const SizedBox(
+                height: 100,
+              ),
               const Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 8),
@@ -50,22 +55,36 @@ class EditAccountScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
-              SizedBox(
-                height: 90,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: DefaultButton(
-                    function: () {
-                      // context.read<LoginCubit>().changePassword();
-                    },
-                    text: "Save",
-                     marginTop: 20,
-                              marginBottom: 20,
-                              marginRight: 16,
-                              marginLeft: 16,
-                  ),
-                ),
+              BlocConsumer<ProfileCubit, ProfileState>(
+                listener: (context, state) {
+                  if(state is EditProfileErrorState) {
+                    defaultErrorSnackBar(
+                      context: context,
+                      message: state.errMsg,
+                    );
+                  } else if(state is EditProfileSuccessState) {
+                    defaultSuccessSnackBar(context: context, message: state.success);
+                  }
+                },
+                builder: (context, state) {
+                  return SizedBox(
+                    height: 90,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: DefaultButton(
+                        function: () {
+                          context.read<ProfileCubit>().editProfile();
+                        },
+                        loading: state is EditProfileLoadingState,
+                        text: "Save",
+                        marginTop: 20,
+                        marginBottom: 20,
+                        marginRight: 16,
+                        marginLeft: 16,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),

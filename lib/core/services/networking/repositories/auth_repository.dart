@@ -8,6 +8,7 @@ import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/services/local/cache_helper.dart';
 import 'package:turbo/core/services/local/storage_service.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
+import 'package:turbo/main_paths.dart';
 import 'package:turbo/models/attachment.dart';
 import 'package:turbo/models/customer_model.dart';
 
@@ -110,6 +111,8 @@ class AuthRepository {
       if (response.statusCode == 200 && response.data['status']) {
         customer = CustomerModel(
           customerAddress: customerAddress,
+          customerTelephone: customerTelephone,
+          customerNationalId: customerNationalId,
           customerName: customerName,
           customerId: response.data['id'],
           customerEmail: customerEmail,
@@ -357,6 +360,30 @@ class AuthRepository {
         return Right(response.data['message']);
       }
     }catch (e) {
+      return Left(e.toString());
+    }
+  }
+  Future<Either<String, String>> editCustomer({
+    required String customerName,
+    required String customerAddress,
+    File? image
+  }) async {
+    try {
+      final response  = await _authServices.editCustomer(customerName, customerAddress, image);
+      if(response.data['status'] == false) {
+        return Left(response.data['message']);
+      } else {
+        final Map<String, dynamic> data = response.data['data'];
+        customer.customerName = data['customerName'];
+        customer.customerAddress = data['customerAddress'];
+        customer.customerImageProfilePath = data['customerImageProfilePath'];
+        StorageService.saveData(
+          "customerData",
+          json.encode(customer.toJson()),
+        );
+        return Right(response.data['message']);
+      }
+    } catch(e) {
       return Left(e.toString());
     }
   }

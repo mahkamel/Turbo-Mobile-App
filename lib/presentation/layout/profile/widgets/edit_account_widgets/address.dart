@@ -5,6 +5,8 @@ import 'package:turbo/core/helpers/enums.dart';
 import 'package:turbo/core/theming/colors.dart';
 import 'package:turbo/core/widgets/text_field_with_header.dart';
 
+import '../../../../../core/services/networking/repositories/auth_repository.dart';
+
 class ProfileAddress extends StatelessWidget {
   const ProfileAddress({super.key});
 
@@ -12,9 +14,10 @@ class ProfileAddress extends StatelessWidget {
    @override
     Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
-      buildWhen: (previous, current) => current is CheckProfileAddressValidationState,
+      buildWhen: (previous, current) => current is EditProfileSuccessState,
       builder: (context, state) {
         var blocRead = context.read<ProfileCubit>();
+        var customerAddress = context.watch<AuthRepository>().customer.customerAddress;
         return Padding(
           padding: const EdgeInsets.only(bottom: 15.0),
           child: AuthTextFieldWithHeader(
@@ -22,26 +25,14 @@ class ProfileAddress extends StatelessWidget {
             onTap: () {},
             isRequiredFiled: false,
             header: "Address",
-            hintText: "Enter Address",
-            isWithValidation: true,
+            hintText: customerAddress,
+            isWithValidation: false,
             textInputType: TextInputType.name,
-            validationText: blocRead.profileAddress.text.isEmpty
-                ? "Please Enter Address"
-                : "Please Enter Valid Address.",
             textEditingController: blocRead.profileAddress,
-            validation: context.watch<ProfileCubit>().profileAddressValidation,
-            onTapOutside: () {
-              blocRead.checkProfileAddressValidation();
-            },
-            onChange: (value) {
-              if (value.isEmpty ||
-                  blocRead.profileAddressValidation != TextFieldValidation.normal) {
-                blocRead.checkProfileAddressValidation();
-              }
-            },
-            onSubmit: (value) {
-              blocRead.checkProfileAddressValidation();
-            },
+            validation: TextFieldValidation.normal,
+            onTapOutside: () {},
+            onChange: (value) {},
+            onSubmit: (value) {},
           ),
         );
       },
