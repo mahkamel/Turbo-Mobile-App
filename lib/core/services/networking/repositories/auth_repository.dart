@@ -364,8 +364,8 @@ class AuthRepository {
     }
   }
   Future<Either<String, String>> editCustomer({
-    required String customerName,
-    required String customerAddress,
+    required String? customerName,
+    required String? customerAddress,
     File? image
   }) async {
     try {
@@ -387,4 +387,17 @@ class AuthRepository {
       return Left(e.toString());
     }
   }
+  Future<Either<String, String>> deleteCustomer() async {
+    try {
+      final response = await _authServices.deleteCustomer();
+      if(response.data['status'] == false) {
+        return Left(response.data['message']);
+      } else {
+        return Right(response.data['message']);
+      }
+    } catch(e) {
+      return Left(e.toString());
+    }
+  }
 }
+

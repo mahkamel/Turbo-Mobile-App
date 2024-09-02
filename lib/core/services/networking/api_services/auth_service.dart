@@ -133,6 +133,7 @@ class AuthServices {
     try {
       Response response = await DioHelper.postData(
           endpoint: 'customer/disableTokenForCustomer',
+          token: customerToken,
           body: {
             "customerToken": notificationToken,
           });
@@ -207,13 +208,15 @@ class AuthServices {
       throw e.toString();
     }
   }
-  Future<Response> editCustomer(String customerName, String customerAddress, File? image) async {
+  Future<Response> editCustomer(String? customerName, String? customerAddress, File? image) async {
     Response response;
     try {
       if(image != null) {
         Map<String, String> requestBody = {
-          "customerDisplayName": customerName,
-          "customerAddress": customerAddress
+          if(customerName != null) 
+            "customerDisplayName": customerName,
+          if(customerAddress != null)
+            "customerAddress": customerAddress
         };
         String jsonData = json.encode(requestBody);
 
@@ -239,11 +242,29 @@ class AuthServices {
             endpoint: 'customer/editCustomer',
             body: {
               "customer": {
-                "customerDisplayName": customerName,
-                "customerAddress": customerAddress
+                if(customerName != null)
+                  "customerDisplayName": customerName,
+                if(customerAddress != null)
+                  "customerAddress": customerAddress
               },
             });
       }
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> deleteCustomer() async {
+    try {
+      Response response = await DioHelper.postData(
+        endpoint: 'customer/editCustomer',
+        body: {
+          "customer":{
+              "customerIsActive":false
+          }
+        }
+      );
       return response;
     } catch (e) {
       throw e.toString();

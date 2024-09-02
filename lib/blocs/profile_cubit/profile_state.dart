@@ -60,6 +60,13 @@ class ProfileState with _$ProfileState {
   EditProfileSuccessState;
   const factory ProfileState.editProfileError(String errMsg) =
   EditProfileErrorState;
+  const factory ProfileState.editProfileEmpty() =
+  EditProfileEmptyState;
 
-
+  const factory ProfileState.deleteProfileLoading() =
+  DeleteProfileLoadingState;
+  const factory ProfileState.deleteProfileSuccess(String success) =
+  DeleteProfileSuccessState;
+  const factory ProfileState.deleteProfileError(String errMsg) =
+  DeleteProfileErrorState;
 }
