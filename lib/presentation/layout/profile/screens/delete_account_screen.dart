@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/theming/colors.dart';
 import 'package:turbo/core/theming/fonts.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
+import 'package:turbo/core/widgets/default_dialog.dart';
 import 'package:turbo/presentation/layout/profile/widgets/delete_account_widgets/text_with_bullet.dart';
 
+import '../../../../core/routing/routes.dart';
 import '../../../../core/widgets/default_buttons.dart';
 import '../../../../core/widgets/snackbar.dart';
 
@@ -60,73 +63,95 @@ class DeleteAccountScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              BlocConsumer<ProfileCubit, ProfileState>(
-                listenWhen: (previous, current) {
-                  return current is DeleteProfileErrorState ||
-                      current is DeleteProfileSuccessState ||
-                      current is DeleteProfileLoadingState ||
-                      current is LogoutErrorState ||
-                      current is LogoutLoadingState ||
-                      current is LogoutSuccessState;
-                },
-                listener: (context, state) {
-                  if(state is DeleteProfileErrorState){
-                    defaultErrorSnackBar(context: context, message: state.errMsg);
-                  } else if(state is LogoutErrorState){
-                    defaultErrorSnackBar(context: context, message: state.errMsg);
-                  } else if(state is LogoutSuccessState){
-                    Navigator.of(context).pop();
-                  }
-                },
-                builder: (context, state) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 90,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: DefaultButton(
-                              function: () {
-                                context.read<ProfileCubit>().deleteProfile();
-                                context.read<ProfileCubit>().logout();
-                              },
-                              loading: state is DeleteProfileLoadingState || state is LogoutLoadingState,
-                              text: "Delete",
-                              marginTop: 20,
-                              marginBottom: 20,
-                              marginRight: 16,
-                              marginLeft: 16,
-                              borderRadius: 20,
-                              color: AppColors.grey500,
-                              border: Border.all(color: AppColors.darkRed),
-                              textColor: AppColors.darkRed,
-                            ),
-                          ),
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 90,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: DefaultButton(
+                          function: () {
+                            showAdaptiveDialog(
+                              context: context,
+                              builder: (dialogContext) => BlocProvider.value(
+                                value: context.read<ProfileCubit>()
+                                  ..clearPaymentFormData(),
+                                child: BlocConsumer<ProfileCubit, ProfileState>(
+                                  listenWhen: (previous, current) {
+                                      return current is DeleteProfileErrorState ||
+                                          current is DeleteProfileSuccessState ||
+                                          current is DeleteProfileLoadingState ||
+                                          current is LogoutErrorState ||
+                                          current is LogoutLoadingState ||
+                                          current is LogoutSuccessState;
+                                    },
+                                    listener: (context, state) {
+                                      if(state is DeleteProfileErrorState){
+                                        defaultErrorSnackBar(context: context, message: state.errMsg);
+                                      } else if(state is LogoutErrorState){
+                                        defaultErrorSnackBar(context: context, message: state.errMsg);
+                                      } else if(state is LogoutSuccessState){
+                                        if (Navigator.of(dialogContext).canPop()) {
+                                          Navigator.of(dialogContext).popUntil(ModalRoute.withName(Routes.layoutScreen));
+                                        }
+                                      }
+                                    },
+                                  builder: (context, state) {
+                                    return DefaultDialog(
+                                      secondButtonColor: AppColors.darkRed,
+                                      onSecondButtonTapped: () {
+                                        context
+                                            .read<ProfileCubit>()
+                                            .deleteProfile();
+                                        context.read<ProfileCubit>().logout();
+                                      },
+                                      loading:
+                                          state is DeleteProfileLoadingState ||
+                                              state is LogoutLoadingState,
+                                      title:
+                                          "Are you sure to delete your account?",
+                                      subTitle:
+                                          "Deleting your account will remove your data. You can restore your account by signing up again with the same email.",
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          text: "Delete",
+                          marginTop: 20,
+                          marginBottom: 20,
+                          marginRight: 16,
+                          marginLeft: 16,
+                          borderRadius: 20,
+                          color: AppColors.grey500,
+                          border: Border.all(color: AppColors.darkRed),
+                          textColor: AppColors.darkRed,
                         ),
                       ),
-                      Expanded(
-                        child: SizedBox(
-                          height: 90,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: DefaultButton(
-                              function: () {
-                                Navigator.of(context).pop();
-                              },
-                              // loading: state is EditProfileLoadingState,
-                              text: "Keep Account",
-                              marginTop: 20,
-                              marginBottom: 20,
-                              marginRight: 16,
-                              marginLeft: 16,
-                            ),
-                          ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 90,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: DefaultButton(
+                          function: () {
+                            Navigator.of(context).pop();
+                          },
+                          // loading: state is EditProfileLoadingState,
+                          text: "Keep Account",
+                          marginTop: 20,
+                          marginBottom: 20,
+                          marginRight: 16,
+                          marginLeft: 16,
                         ),
                       ),
-                    ],
-                  );
-                },
+                    ),
+                  ),
+                ],
               )
             ],
           ),

@@ -10,6 +10,7 @@ import '../../../../core/helpers/constants.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/default_buttons.dart';
+import '../../../../core/widgets/default_dialog.dart';
 import '../screens/add_new_card_screen.dart';
 
 class EmptySavedCards extends StatelessWidget {
@@ -82,8 +83,11 @@ class SavedPaymentCardItem extends StatelessWidget {
   final bool isExpired;
   @override
   Widget build(BuildContext context) {
+    bool defaultCard = context.read<ProfileCubit>()
+                              .savedPaymentCards[index]
+                              .isCardDefault;
     return Container(
-      height: 103,
+      height: 105,
       width: AppConstants.screenWidth(context) - 32,
       decoration: BoxDecoration(
           color: AppColors.grey500,
@@ -124,7 +128,7 @@ class SavedPaymentCardItem extends StatelessWidget {
                                 isFromDelete
                                     ? const SizedBox()
                                     : EditDeleteIcons(
-                                      index: index,
+                                        index: index,
                                         isExpired: isExpired,
                                         cardId: cardId,
                                         cardNumbers: cardNumbers,
@@ -166,7 +170,8 @@ class SavedPaymentCardItem extends StatelessWidget {
                   buildWhen: (previous, current) {
                     return current is SetDefaultCardSuccessState ||
                         current is SetDefaultCardErrorState ||
-                        current is SetDefaultCardLoadingState;
+                        (current is SetDefaultCardLoadingState &&
+                            current.id == cardId);
                   },
                   builder: (context, state) {
                     return DefaultCardButton(
@@ -175,10 +180,12 @@ class SavedPaymentCardItem extends StatelessWidget {
                       isExpired: isExpired,
                       index: index,
                       isLoading: state is SetDefaultCardLoadingState,
-                      isDefault: context
-                          .watch<ProfileCubit>()
-                          .savedPaymentCards[index]
-                          .isCardDefault,
+                      isDefault: isFromDelete
+                          ? defaultCard
+                          : context
+                              .watch<ProfileCubit>()
+                              .savedPaymentCards[index]
+                              .isCardDefault,
                     );
                   },
                 ),
@@ -201,15 +208,14 @@ class EditDeleteIcons extends StatelessWidget {
   final bool isExpired;
   final int index;
   const EditDeleteIcons(
-      { super.key,
-        required this.cardNumbers,
-        required this.cardType,
-        required this.expDate,
-        required this.isFromDelete,
-        required this.cardId,
-        required this.isExpired,
-        required this.index
-      });
+      {super.key,
+      required this.cardNumbers,
+      required this.cardType,
+      required this.expDate,
+      required this.isFromDelete,
+      required this.cardId,
+      required this.isExpired,
+      required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -221,10 +227,12 @@ class EditDeleteIcons extends StatelessWidget {
                 color: AppColors.darkOrange, shape: BoxShape.circle),
             child: IconButton(
                 onPressed: () {
-                   Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => BlocProvider<ProfileCubit>.value(
                         value: context.read<ProfileCubit>(),
-                        child: AddNewCardScreen(index: index,)),
+                        child: AddNewCardScreen(
+                          index: index,
+                        )),
                   ));
                 },
                 icon: const Icon(
@@ -233,34 +241,58 @@ class EditDeleteIcons extends StatelessWidget {
                   color: AppColors.white,
                 ))),
         Container(
-            height: 27,
-            decoration: const BoxDecoration(
-                color: AppColors.red, shape: BoxShape.circle),
-            child: IconButton(
-                onPressed: () {
-                  showAdaptiveDialog(
-                    context: context,
-                    builder: (_) => BlocProvider.value(
-                      value: context.read<ProfileCubit>()
-                        ..clearPaymentFormData(),
-                      child: DeleteCardsDialog(
-                        isExpired: isExpired,
-                        blocRead: context.read<ProfileCubit>(),
-                        cardNumbers: cardNumbers,
-                        cardType: cardType,
-                        expDate: expDate,
-                        isFromDelete: true,
-                        cardId: cardId,
-                        index: index
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.delete,
-                  size: 12,
-                  color: AppColors.white,
-                )))
+          height: 27,
+          decoration:
+              const BoxDecoration(color: AppColors.red, shape: BoxShape.circle),
+          child: IconButton(
+            onPressed: () {
+              showAdaptiveDialog(
+                context: context,
+                builder: (dialogContext) => BlocProvider.value(
+                  value: context.read<ProfileCubit>()..clearPaymentFormData(),
+                  child: BlocConsumer<ProfileCubit, ProfileState>(
+                    listener: (context, state) {
+                      if (state is DeleteSavedCardsErrorState) {
+                        defaultErrorSnackBar(
+                            context: context, message: state.errMsg);
+                      } else if (state is DeleteSavedCardsSuccessState) {
+                        if (Navigator.of(dialogContext).canPop()) {
+                          Navigator.of(dialogContext).pop();
+                        }
+                      }
+                    },
+                    builder: (context, state) {
+                      return DefaultDialog(
+                        title: "Are you sure you want to delete this card?",
+                        widgetCard: SavedPaymentCardItem(
+                          isExpired: isExpired,
+                          cardId: cardId,
+                          cardType: cardType,
+                          cardNumbers: cardNumbers,
+                          expDate: expDate,
+                          isFromDelete: true,
+                          index: index,
+                        ),
+                        loading: state is DeleteSavedCardsLoadingState,
+                        onSecondButtonTapped: () {
+                          context
+                              .read<ProfileCubit>()
+                              .deleteCardFromSaved(cardId);
+                        },
+                        secondButtonColor: AppColors.darkRed,
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.delete,
+              size: 12,
+              color: AppColors.white,
+            ),
+          ),
+        )
       ],
     );
   }
@@ -299,13 +331,21 @@ class DefaultCardButton extends StatelessWidget {
           style: AppFonts.ibm11Grey400.copyWith(color: AppColors.green),
         )),
       );
-    } 
-    else if(isDefault == false && isExpired == false && isFromDelete == false){
+    } else if (isDefault == false &&
+        isExpired == false &&
+        isFromDelete == false) {
+          print("hhhhh");
       return isLoading
           ? const SizedBox(
-              height: 20, width: 20, child: CircularProgressIndicator())
+              height: 24,
+              width: 100,
+              child: Center(
+                child: SizedBox(
+                    height: 24, width: 24, child: CircularProgressIndicator()),
+              ),
+            )
           : SizedBox(
-              height: 20,
+              height: 24,
               width: 100,
               child: DefaultButton(
                 function: () {
@@ -316,10 +356,9 @@ class DefaultCardButton extends StatelessWidget {
                     AppFonts.ibm11Grey400.copyWith(color: AppColors.white),
               ),
             );
-    } else if(isFromDelete && isExpired == false) {
+    } else if (isFromDelete && isExpired == false) {
       return const SizedBox();
-    } 
-    else {
+    } else {
       return Container(
         width: 87,
         height: 20,
@@ -356,7 +395,6 @@ Widget savedCardLinearBackground() {
 }
 
 SvgPicture getCardTypeIcon(String cardType) {
-  print(cardType);
   switch (cardType) {
     case "visa":
       return SvgPicture.asset(
@@ -446,104 +484,6 @@ class CardsRow extends StatelessWidget {
         SvgPicture.asset('assets/images/americanExpress.svg'),
         SvgPicture.asset('assets/images/masterCard.svg'),
       ],
-    );
-  }
-}
-
-class DeleteCardsDialog extends StatelessWidget {
-  const DeleteCardsDialog(
-      {super.key,
-      required this.blocRead,
-      required this.cardNumbers,
-      required this.cardType,
-      required this.expDate,
-      required this.isFromDelete,
-      required this.cardId,
-      required this.isExpired,
-      required this.index
-      });
-
-  final ProfileCubit blocRead;
-  final String cardNumbers;
-  final String cardType;
-  final String expDate;
-  final bool isFromDelete;
-  final String cardId;
-  final bool isExpired;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 27,
-          vertical: 25,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Are you sure you want to delete this card?",
-              style: AppFonts.ibm24HeaderBlue600,
-              textAlign: TextAlign.center,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 30.0,
-                bottom: 30,
-              ),
-              child: SavedPaymentCardItem(
-                isExpired: isExpired,
-                cardId: cardId,
-                cardType: cardType,
-                cardNumbers: cardNumbers,
-                expDate: expDate,
-                isFromDelete: true,
-                index: index,
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: DefaultButton(
-                    color: AppColors.white,
-                    border: Border.all(color: AppColors.primaryBlue),
-                    width: 90,
-                    borderRadius: 20,
-                    textColor: AppColors.primaryBlue,
-                    function: () {
-                      Navigator.pop(context);
-                    },
-                    text: "Cancel",
-                  ),
-                ),
-                const SizedBox(
-                  width: 32,
-                ),
-                Expanded(
-                  child: DefaultButton(
-                    color: AppColors.darkRed,
-                    width: 90,
-                    borderRadius: 20,
-                    textColor: AppColors.white,
-                    function: () {
-                      blocRead.deleteCardFromSaved(cardId);
-                      Navigator.pop(context);
-                    },
-                    text: "Delete",
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
