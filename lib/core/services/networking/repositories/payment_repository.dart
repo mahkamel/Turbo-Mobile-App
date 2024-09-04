@@ -103,6 +103,7 @@ class PaymentRepository {
     required String visaCardNumber,
     required String visaCardExpiryMonth,
     required String visaCardExpiryYear,
+    required String visaCardType
   }) async {
     try {
       final response = await _paymentService.addNewPaymentMethod(
@@ -111,6 +112,7 @@ class PaymentRepository {
         visaCardNumber: visaCardNumber,
         visaCardExpiryMonth: visaCardExpiryMonth,
         visaCardExpiryYear: visaCardExpiryYear,
+        visaCardType: visaCardType
       );
       if (response.statusCode == 200) {
         if (response.data['status']) {
@@ -122,6 +124,42 @@ class PaymentRepository {
         return Left(response.data['message']);
       }
     } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, String>> setDefaultCard(String cardId) async {
+    try {
+      final response = await _paymentService.setDefaultCard(cardId: cardId);
+      if(response.data['status'] == false) {
+        return Left(response.data['message']);
+      } else {
+        return Right(response.data['message']);
+      }
+    } catch(e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, String>> editPaymentCard(
+    String cardId,
+    String? cardHolderName,
+    String? cardExpiryMonth,
+    String? cardExpiryYear,
+  ) async{
+    try {
+      final response = await _paymentService.editPaymentMethod(
+        cardId: cardId,
+        cardHolderName: cardHolderName,
+        cardExpiryMonth: cardExpiryMonth,
+        cardExpiryYear: cardExpiryYear
+      );
+      if(response.data['statuse'] == false) {
+        return Left(response.data['message']);
+      } else {
+        return Right(response.data['message']);
+      }
+    } catch(e) {
       return Left(e.toString());
     }
   }

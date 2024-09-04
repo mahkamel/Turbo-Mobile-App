@@ -62,7 +62,7 @@ class AppRegex {
       'other': r'^[0-9]{16}$',
     };
 
-    String? cardType = _detectCardType(cardNumber);
+    String? cardType = detectCardType(cardNumber);
     if (cardType != null) {
       String? pattern = cardPatterns[cardType.toLowerCase()];
       if (pattern != null) {
@@ -72,12 +72,14 @@ class AppRegex {
     return false;
   }
 
-  static String? _detectCardType(String cardNumber) {
+  static String? detectCardType(String cardNumber) {
+    print("card numbber $cardNumber");
     if (cardNumber.startsWith('4')) {
       return 'visa';
     } else if (RegExp(r'^5[1-5]').hasMatch(cardNumber)) {
       return 'mastercard';
-    } else if (RegExp(r'^3[47]').hasMatch(cardNumber)) {
+    } else if (RegExp(r'^3[47][0-9]{13}$').hasMatch(cardNumber)) {
+      print("amex");
       return 'amex';
     }
     return 'other';

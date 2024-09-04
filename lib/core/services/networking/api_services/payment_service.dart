@@ -106,6 +106,7 @@ class PaymentService {
     required String visaCardNumber,
     required String visaCardExpiryMonth,
     required String visaCardExpiryYear,
+    required String visaCardType
   }) async {
     try {
       Response response = await DioHelper.postData(
@@ -116,10 +117,57 @@ class PaymentService {
               "visaCardNumber": visaCardNumber,
               "visaCardExpiryMonth": visaCardExpiryMonth,
               "visaCardExpiryYear": visaCardExpiryYear,
+              "visaCardType": visaCardType,
             }
           });
       return response;
     } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> setDefaultCard({
+    required String cardId,
+  }) async {
+    try {
+      Response response = await DioHelper.postData(
+        endpoint: 'visacard/editPaymentMethod',
+        body: {
+          "visaCard": {
+            "visaCardIsDefault": true,
+            "id": cardId,
+          }
+        },
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Response> editPaymentMethod({
+    required String cardId,
+    String? cardHolderName,
+    String? cardExpiryMonth,
+    String? cardExpiryYear,
+  }) async {
+    try {
+      Response response = await DioHelper.postData(
+        endpoint: "visacard/editPaymentMethod",
+        body: {
+          "visaCard": {
+            "id":cardId,
+            if(cardHolderName != null) 
+              "visaCardName": cardHolderName,
+            if(cardExpiryMonth != null)
+              "visaCardExpiryMonth": cardExpiryMonth,
+            if(cardExpiryYear != null)
+              "visaCardExpiryYear": cardExpiryYear,
+          }
+        }
+      );
+      return response;
+    } catch(e) {
       throw e.toString();
     }
   }

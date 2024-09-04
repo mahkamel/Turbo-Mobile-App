@@ -98,7 +98,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileState.checkCardToSaveNumber(cardNumberValidation));
   }
 
-  void checkExpiryDateValidation() {
+  void checkExpiryDateValidation({bool isFromEdit = false}) {
     if (cardExpiryDate.text.isEmpty) {
       cardExpiryDateValidation = TextFieldValidation.notValid;
     } else {
@@ -107,6 +107,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       } else {
         cardExpiryDateValidation = TextFieldValidation.notValid;
       }
+    }
+    if(isFromEdit) {
+       cardExpiryDateValidation = TextFieldValidation.valid;
     }
     emit(ProfileState.checkCardToSaveExpiryDate(cardExpiryDateValidation));
   }
@@ -149,6 +152,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       try {
         final res = await _paymentRepository.addNewCard(
           visaCardName: cardHolderName.text,
+          visaCardType: AppRegex.detectCardType(cardNumber.text.removeWhiteSpaces())!,
           visaCardNumber: cardNumber.text.removeWhiteSpaces(),
           visaCardExpiryMonth: cardExpiryDate.text.split('/')[0],
           visaCardExpiryYear: cardExpiryDate.text.split('/')[1],
@@ -166,6 +170,53 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  void setDefaultCard(String cardId, int? index) async {
+    emit(const ProfileState.setDefaultCardLoading());
+    try {
+      final res = await _paymentRepository.setDefaultCard(cardId);
+      res.fold((errMsg) {
+        emit(ProfileState.setDefaultCardError(errMsg));
+      }, (msg) async {
+        savedPaymentCards[index!].isCardDefault = true;
+        for(int i = 0; i < savedPaymentCards.length; i++) {
+          if(i != index) {
+            savedPaymentCards[i].isCardDefault = false;
+          }
+        }
+        emit(ProfileState.setDefaultCardSuccess(msg));
+      });
+    } catch (e) {
+      emit(ProfileState.setDefaultCardError(e.toString()));
+    }
+  }
+
+  void editPaymentCard(int index) async {
+    if(cardHolderName.text.isNotEmpty || cardExpiryDate.text.isNotEmpty) {
+      String? name = cardHolderName.text.isNotEmpty ? cardHolderName.text : null;
+      String? expMonth = cardExpiryDate.text.isNotEmpty ? cardExpiryDate.text.split('/')[0] : null;   
+      String? expYear = cardExpiryDate.text.isNotEmpty ? cardExpiryDate.text.split('/')[1] : null;      
+
+      emit(const ProfileState.editPaymentCardLoading());
+      try {
+        final res = await _paymentRepository.editPaymentCard(savedPaymentCards[index].id, name, expMonth, expYear);
+        res.fold((errMsg) {
+          emit(ProfileState.editPaymentCardError(errMsg));
+        }, (msg) async{
+          clearPaymentFormData();
+          await getAllSavedPaymentMethods(isForceToRefresh: true);
+          emit(ProfileState.editPaymentCardSuccess(msg));
+        });
+      } catch(e) {
+        emit(ProfileState.editPaymentCardError(e.toString()));
+      }
+          
+    
+    } else {
+        emit(const ProfileState.editPaymentCardEmpty());
+    }
+
+    
+  }
   void changeIsEditingSavedCardsValue() {
     isEditingSavedCards = !isEditingSavedCards;
     if (!isEditingSavedCards) {

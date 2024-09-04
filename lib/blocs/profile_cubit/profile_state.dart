@@ -69,4 +69,20 @@ class ProfileState with _$ProfileState {
   DeleteProfileSuccessState;
   const factory ProfileState.deleteProfileError(String errMsg) =
   DeleteProfileErrorState;
+
+  const factory ProfileState.setDefaultCardLoading() =
+  SetDefaultCardLoadingState;
+  const factory ProfileState.setDefaultCardSuccess(String success) =
+  SetDefaultCardSuccessState;
+  const factory ProfileState.setDefaultCardError(String errMsg) =
+  SetDefaultCardErrorState;
+
+  const factory ProfileState.editPaymentCardLoading() =
+  EditPaymentCardLoadingState;
+  const factory ProfileState.editPaymentCardSuccess(String success) =
+  EditPaymentCardSuccessState;
+  const factory ProfileState.editPaymentCardError(String errMsg) =
+  EditPaymentCardErrorState;
+  const factory ProfileState.editPaymentCardEmpty() =
+  EditPaymentCardEmptyState;
 }
