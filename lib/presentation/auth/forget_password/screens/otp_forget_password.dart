@@ -81,6 +81,29 @@ class _OtpForgetPasswordState extends State<OtpForgetPassword> {
                       arguments: context.read<LoginCubit>());
                 },
               ),
+                Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Check Your mail",
+                      style: AppFonts.ibm24HeaderBlue600,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Text(
+                        "Please enter the OTP (One-Time Password) that was sent to your email to reset your password.",
+                        style: AppFonts.ibm12SubTextGrey600,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               RepaintBoundary(
                 key: const Key("OTPTimer"),
                 child: Text(
@@ -95,7 +118,6 @@ class _OtpForgetPasswordState extends State<OtpForgetPassword> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  //todo
                   ...List.generate(6, (index) {
                     return codeTextField(
                         context: context,
@@ -161,25 +183,7 @@ class _OtpForgetPasswordState extends State<OtpForgetPassword> {
                           : const SizedBox();
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Check Your mail",
-                      style: AppFonts.ibm24HeaderBlue600,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "We have sent a password rest instructions to your email.",
-                      style: AppFonts.ibm12SubTextGrey600,
-                    ),
-                  ],
-                ),
-              ),
+            
               const Spacer(),
               BlocConsumer<LoginCubit, LoginState>(
                 listenWhen: (previous, current) =>

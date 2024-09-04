@@ -13,7 +13,6 @@ import 'package:turbo/presentation/auth/forget_password/screens/otp_forget_passw
 import 'package:turbo/presentation/auth/forget_password/screens/create_new_password_screen.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
-import 'package:turbo/presentation/layout/profile/screens/change_password_screen.dart';
 import 'package:turbo/presentation/layout/profile/screens/delete_account_screen.dart';
 import 'package:turbo/presentation/layout/profile/screens/edit_account_screen.dart';
 
@@ -66,12 +65,6 @@ class AppRouter {
       return BlocProvider.value(
         value: (arguments as ProfileCubit),
         child: const EditAccountScreen(),
-      );
-    },
-    Routes.changePasswordScreen: (context, arguments) {
-      return BlocProvider.value(
-        value: (arguments as ProfileCubit),
-        child: const ChangePasswordScreen(),
       );
     },
     Routes.deleteAccountScreen: (context, arguments) {

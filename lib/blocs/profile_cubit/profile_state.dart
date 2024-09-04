@@ -70,7 +70,7 @@ class ProfileState with _$ProfileState {
   const factory ProfileState.deleteProfileError(String errMsg) =
   DeleteProfileErrorState;
 
-  const factory ProfileState.setDefaultCardLoading() =
+  const factory ProfileState.setDefaultCardLoading(String id) =
   SetDefaultCardLoadingState;
   const factory ProfileState.setDefaultCardSuccess(String success) =
   SetDefaultCardSuccessState;

@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:turbo/core/helpers/constants.dart';
+import 'package:turbo/blocs/login/login_cubit.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/widgets/custom_list_tile.dart';
+import 'package:turbo/main_paths.dart';
+import 'package:turbo/presentation/auth/forget_password/screens/create_new_password_screen.dart';
 import 'package:turbo/presentation/layout/profile/screens/saved_cards_screen.dart';
 
 import '../../../../blocs/profile_cubit/profile_cubit.dart';
@@ -100,10 +101,14 @@ class ProfileScreen extends StatelessWidget {
                                     text: "Change Password",
                                     isLogout: false,
                                     onTap: () {
-                                      Navigator.of(context).pushNamed(
-                                          Routes.changePasswordScreen,
-                                          arguments:
-                                              context.read<ProfileCubit>());
+                                     Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => BlocProvider<LoginCubit>(
+                                            create: (_) => getIt<LoginCubit>(),
+                                            child: const CreateNewPassword(isFromProfile: true,),
+                                          ),
+                                        ),
+                                      );
                                     }),
                                 const Divider(
                                   color: AppColors.divider,

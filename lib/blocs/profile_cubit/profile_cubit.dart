@@ -40,8 +40,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   TextFieldValidation cardExpiryDateValidation = TextFieldValidation.normal;
   TextFieldValidation cardCVVValidation = TextFieldValidation.normal;
 
-  File? profileImage; 
-  
+  File? profileImage;
+
   List<SavedCard> savedPaymentCards = [];
   void savedCardsInit() {
     savedCardsIdsToBeDeleted.clear();
@@ -108,8 +108,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         cardExpiryDateValidation = TextFieldValidation.notValid;
       }
     }
-    if(isFromEdit) {
-       cardExpiryDateValidation = TextFieldValidation.valid;
+    if (isFromEdit) {
+      cardExpiryDateValidation = TextFieldValidation.valid;
     }
     emit(ProfileState.checkCardToSaveExpiryDate(cardExpiryDateValidation));
   }
@@ -152,7 +152,8 @@ class ProfileCubit extends Cubit<ProfileState> {
       try {
         final res = await _paymentRepository.addNewCard(
           visaCardName: cardHolderName.text,
-          visaCardType: AppRegex.detectCardType(cardNumber.text.removeWhiteSpaces())!,
+          visaCardType:
+              AppRegex.detectCardType(cardNumber.text.removeWhiteSpaces())!,
           visaCardNumber: cardNumber.text.removeWhiteSpaces(),
           visaCardExpiryMonth: cardExpiryDate.text.split('/')[0],
           visaCardExpiryYear: cardExpiryDate.text.split('/')[1],
@@ -171,15 +172,15 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void setDefaultCard(String cardId, int? index) async {
-    emit(const ProfileState.setDefaultCardLoading());
+    emit(ProfileState.setDefaultCardLoading(cardId));
     try {
       final res = await _paymentRepository.setDefaultCard(cardId);
       res.fold((errMsg) {
         emit(ProfileState.setDefaultCardError(errMsg));
       }, (msg) async {
         savedPaymentCards[index!].isCardDefault = true;
-        for(int i = 0; i < savedPaymentCards.length; i++) {
-          if(i != index) {
+        for (int i = 0; i < savedPaymentCards.length; i++) {
+          if (i != index) {
             savedPaymentCards[i].isCardDefault = false;
           }
         }
@@ -191,32 +192,35 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void editPaymentCard(int index) async {
-    if(cardHolderName.text.isNotEmpty || cardExpiryDate.text.isNotEmpty) {
-      String? name = cardHolderName.text.isNotEmpty ? cardHolderName.text : null;
-      String? expMonth = cardExpiryDate.text.isNotEmpty ? cardExpiryDate.text.split('/')[0] : null;   
-      String? expYear = cardExpiryDate.text.isNotEmpty ? cardExpiryDate.text.split('/')[1] : null;      
+    if (cardHolderName.text.isNotEmpty || cardExpiryDate.text.isNotEmpty) {
+      String? name =
+          cardHolderName.text.isNotEmpty ? cardHolderName.text : null;
+      String? expMonth = cardExpiryDate.text.isNotEmpty
+          ? cardExpiryDate.text.split('/')[0]
+          : null;
+      String? expYear = cardExpiryDate.text.isNotEmpty
+          ? cardExpiryDate.text.split('/')[1]
+          : null;
 
       emit(const ProfileState.editPaymentCardLoading());
       try {
-        final res = await _paymentRepository.editPaymentCard(savedPaymentCards[index].id, name, expMonth, expYear);
+        final res = await _paymentRepository.editPaymentCard(
+            savedPaymentCards[index].id, name, expMonth, expYear);
         res.fold((errMsg) {
           emit(ProfileState.editPaymentCardError(errMsg));
-        }, (msg) async{
+        }, (msg) async {
           clearPaymentFormData();
           await getAllSavedPaymentMethods(isForceToRefresh: true);
           emit(ProfileState.editPaymentCardSuccess(msg));
         });
-      } catch(e) {
+      } catch (e) {
         emit(ProfileState.editPaymentCardError(e.toString()));
       }
-          
-    
     } else {
-        emit(const ProfileState.editPaymentCardEmpty());
+      emit(const ProfileState.editPaymentCardEmpty());
     }
-
-    
   }
+
   void changeIsEditingSavedCardsValue() {
     isEditingSavedCards = !isEditingSavedCards;
     if (!isEditingSavedCards) {
@@ -242,22 +246,20 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void deleteCardFromSaved(String cardId) async {
     emit(const ProfileState.deleteSavedCardsLoading());
-      try {
-        final res =
-            await _paymentRepository.deleteSavedPaymentMethods(cardId);
-        res.fold((errMsg) {
-          emit(ProfileState.deleteSavedCardsError(errMsg));
-        }, (_) {
-          savedPaymentCards.removeWhere((element) => element.id == cardId);
-          _paymentRepository.savedPaymentCards
-              .removeWhere((element) => element.id == cardId);
-          emit(ProfileState.deleteSavedCardsSuccess(cardId));
-        });
-      } catch (e) {
-        emit(ProfileState.deleteSavedCardsError(e.toString()));
-      }
-    
-    getAllSavedPaymentMethods(isForceToRefresh: true);
+    try {
+      final res = await _paymentRepository.deleteSavedPaymentMethods(cardId);
+      res.fold((errMsg) {
+        emit(ProfileState.deleteSavedCardsError(errMsg));
+      }, (_) {
+        _paymentRepository.savedPaymentCards
+            .removeWhere((element) => element.id == cardId);
+        savedPaymentCards = _paymentRepository.savedPaymentCards;
+
+        emit(ProfileState.deleteSavedCardsSuccess(cardId));
+      });
+    } catch (e) {
+      emit(ProfileState.deleteSavedCardsError(e.toString()));
+    }
   }
 
   void logout() async {
@@ -275,17 +277,20 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void editProfile() async {
     emit(const ProfileState.editProfileLoading());
-    try{
+    try {
       final Either<String, String> res;
-      if(profileName.text.isNotEmpty || profileAddress.text.isNotEmpty) {
-        String? name = profileName.text.isNotEmpty ? profileName.text :
-            null;
-        String? address = profileAddress.text.isNotEmpty ? profileAddress.text :
-            null;
-        if(profileImage == null) {
-          res = await _authRepository.editCustomer(customerName: name, customerAddress: address);
+      if (profileName.text.isNotEmpty || profileAddress.text.isNotEmpty) {
+        String? name = profileName.text.isNotEmpty ? profileName.text : null;
+        String? address =
+            profileAddress.text.isNotEmpty ? profileAddress.text : null;
+        if (profileImage == null) {
+          res = await _authRepository.editCustomer(
+              customerName: name, customerAddress: address);
         } else {
-          res = await _authRepository.editCustomer(customerName: name, customerAddress: address, image: profileImage);
+          res = await _authRepository.editCustomer(
+              customerName: name,
+              customerAddress: address,
+              image: profileImage);
         }
         res.fold((errMsg) {
           emit(ProfileState.editProfileError(errMsg));
@@ -297,11 +302,11 @@ class ProfileCubit extends Cubit<ProfileState> {
       } else {
         emit(const ProfileState.editProfileEmpty());
       }
-    }
-    catch(e) {
+    } catch (e) {
       emit(ProfileState.editProfileError(e.toString()));
     }
   }
+
   void deleteProfile() async {
     emit(const ProfileState.deleteProfileLoading());
     try {
@@ -311,9 +316,8 @@ class ProfileCubit extends Cubit<ProfileState> {
       }, (msg) {
         emit(ProfileState.deleteProfileSuccess(msg));
       });
-    } catch(e) {
+    } catch (e) {
       emit(ProfileState.deleteProfileError(e.toString()));
     }
   }
 }
-
