@@ -13,7 +13,8 @@ import '../../../../core/widgets/snackbar.dart';
 import '../../../../core/widgets/text_field_with_header.dart';
 
 class AddNewCardScreen extends StatelessWidget {
-  const AddNewCardScreen({super.key});
+  final int? index;
+  const AddNewCardScreen({super.key, this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +23,18 @@ class AddNewCardScreen extends StatelessWidget {
       body: SizedBox(
         height: AppConstants.screenHeight(context),
         width: AppConstants.screenWidth(context),
-        child: const SafeArea(
+        child: SafeArea(
           child: Column(
             children: [
               DefaultHeader(
-                header: "Add Card",
+                header: index != null ? "Edit Card" : "Add Card",
                 textAlignment: AlignmentDirectional.center,
               ),
               Expanded(
                 child: SingleChildScrollView(
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     top: 24,
                   ),
                   child: Column(
@@ -42,21 +43,21 @@ class AddNewCardScreen extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          CardsRow(),
-                          Padding(
+                          const CardsRow(),
+                          const Padding(
                             padding: EdgeInsets.only(left: 16, right: 16, bottom: 15),
                             child: Divider(),
                           ),
-                          CardHolderName(),
-                          CardNumber(),
-                          ExpiryDate(),
+                          CardHolderName(index: index,),
+                          CardNumber(index: index),
+                          ExpiryDate(index: index),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
-              AddCardButton(),
+              AddCardButton(index: index,),
             ],
           ),
         ),
@@ -66,43 +67,54 @@ class AddNewCardScreen extends StatelessWidget {
 }
 
 class AddCardButton extends StatelessWidget {
+  final int? index;
   const AddCardButton({
     super.key,
+    this.index,
   });
 
   @override
+
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileCubit, ProfileState>(
       listenWhen: (previous, current) =>
-          current is AddNewCardErrorState || current is AddNewCardSuccessState,
+          current is AddNewCardErrorState || current is AddNewCardSuccessState
+          || current is EditPaymentCardErrorState || current is EditPaymentCardSuccessState,
       listener: (context, state) {
         if (state is AddNewCardSuccessState) {
-          // defaultSuccessSnackBar(
-          //   context: context,
-          //   message: "Visa Card Added Successfully",
-          // );
-
           Navigator.of(context).pop();
         } else if (state is AddNewCardErrorState) {
           defaultErrorSnackBar(
             context: context,
             message: state.errMsg,
           );
+        } else if(state is EditPaymentCardErrorState) {
+          defaultErrorSnackBar(
+            context: context,
+            message: state.errMsg,
+          );
+        } else if(state is EditPaymentCardSuccessState) {
+          defaultSuccessSnackBar(context: context, message: state.success);
         }
       },
       buildWhen: (previous, current) =>
           current is AddNewCardLoadingState ||
           current is AddNewCardErrorState ||
-          current is AddNewCardSuccessState,
+          current is AddNewCardSuccessState ||
+          current is EditPaymentCardErrorState ||
+          current is EditPaymentCardSuccessState ||
+          current is EditPaymentCardLoadingState,
       builder: (context, state) {
         return DefaultButton(
-          loading: state is AddNewCardLoadingState,
+          loading: state is AddNewCardLoadingState || state is EditPaymentCardLoadingState,
           function: () {
-            if (state is! AddNewCardLoadingState) {
+            if (index != null) {
+              context.read<ProfileCubit>().editPaymentCard(index!);
+            } else {
               context.read<ProfileCubit>().addNewPaymentCard();
             }
           },
-          text: "Add Card",
+          text: index != null ? "Edit Card": "Add Card",
           marginRight: 20,
           marginLeft: 20,
           marginTop: 30,
@@ -114,8 +126,10 @@ class AddCardButton extends StatelessWidget {
 }
 
 class ExpiryDate extends StatelessWidget {
+  final int? index;
   const ExpiryDate({
     super.key,
+    this.index
   });
 
   @override
@@ -130,28 +144,32 @@ class ExpiryDate extends StatelessWidget {
             child: BlocBuilder<ProfileCubit, ProfileState>(
               buildWhen: (previous, current) =>
                   current is CheckCardToSaveExpiryDateState ||
-                  current is CheckCardToSaveCVVState,
+                  current is CheckCardToSaveCVVState ||
+                  current is EditPaymentCardSuccessState,
+                  
               builder: (context, state) {
                 var blocRead = context.read<ProfileCubit>();
                 var blocWatch = context.watch<ProfileCubit>();
                 return Padding(
                   padding: EdgeInsets.only(
                       bottom:
-                          (context.watch<ProfileCubit>().cardCVVValidation ==
+                          ((context.watch<ProfileCubit>().cardCVVValidation ==
                                       TextFieldValidation.notValid &&
-                                  context
-                                          .watch<ProfileCubit>()
-                                          .cardExpiryDateValidation !=
-                                      TextFieldValidation.notValid)
+                            context
+                                    .watch<ProfileCubit>()
+                                    .cardExpiryDateValidation !=
+                            TextFieldValidation.notValid && index == null
+                            )
+                          )
                               ? 28
                               : 0),
                   child: AuthTextFieldWithHeader(
                     horizontalPadding: 0,
                     width: double.infinity,
                     header: "Expiry Date",
-                    hintText: "MM/YY",
+                    hintText: index == null ? "MM/YY" : "${blocRead.savedPaymentCards[index!].visaCardExpiryMonth} / ${blocRead.savedPaymentCards[index!].visaCardExpiryYear}",
                     validationText: "Enter valid date",
-                    isWithValidation: true,
+                    isWithValidation: index != null && blocRead.cardExpiryDate.text.isEmpty ? false : true,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(5),
@@ -162,18 +180,38 @@ class ExpiryDate extends StatelessWidget {
                       decimal: false,
                     ),
                     textEditingController: blocRead.cardExpiryDate,
-                    validation: blocWatch.cardExpiryDateValidation,
+                    validation: index != null && blocRead.cardExpiryDate.text.isEmpty ? TextFieldValidation.normal : blocWatch.cardExpiryDateValidation,
                     onChange: (value) {
-                      if (value.isEmpty ||
+                      if (
+                        ((value.isEmpty ||
                           blocRead.cardExpiryDateValidation !=
-                              TextFieldValidation.normal) {
+                              TextFieldValidation.normal) && index == null)
+                        ) {
                         context
                             .read<ProfileCubit>()
                             .checkExpiryDateValidation();
                       }
+
+                      if(((value.isNotEmpty ||
+                          blocRead.cardExpiryDateValidation !=
+                              TextFieldValidation.normal) && index != null)) {
+                                
+                                context
+                            .read<ProfileCubit>()
+                            .checkExpiryDateValidation();
+                      }
+                      if(value.isEmpty && index != null) {
+                        context
+                            .read<ProfileCubit>()
+                            .checkExpiryDateValidation(isFromEdit: true);
+                      }
                     },
                     onSubmit: (_) {
-                      blocRead.checkExpiryDateValidation();
+                      if(index == null) {
+                        blocRead.checkExpiryDateValidation();
+                      } else if(index != null && blocRead.cardExpiryDate.text.isEmpty) {
+                        blocRead.checkExpiryDateValidation();
+                      }
                     },
                   ),
                 );
@@ -208,6 +246,7 @@ class ExpiryDate extends StatelessWidget {
                     hintText: "CVV",
                     validationText: "Enter valid cvv",
                     isWithValidation: true,
+                    isEnabled: index == null ? true: false,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(3),
                       FilteringTextInputFormatter.digitsOnly,
@@ -232,7 +271,7 @@ class ExpiryDate extends StatelessWidget {
                 );
               },
             ),
-          ),
+          )
         ],
       ),
     );
@@ -240,8 +279,10 @@ class ExpiryDate extends StatelessWidget {
 }
 
 class CardNumber extends StatelessWidget {
+  final int? index;
   const CardNumber({
     super.key,
+    this.index
   });
 
   @override
@@ -252,15 +293,15 @@ class CardNumber extends StatelessWidget {
         bottom: 17.0,
       ),
       child: BlocBuilder<ProfileCubit, ProfileState>(
-        buildWhen: (previous, current) => current is CheckCardToSaveNumberState,
+        buildWhen: (previous, current) => current is CheckCardToSaveNumberState || current is EditPaymentCardSuccessState,
         builder: (context, state) {
           var blocRead = context.read<ProfileCubit>();
           var blocWatch = context.watch<ProfileCubit>();
           return AuthTextFieldWithHeader(
             header: "Cardholder Number",
-            hintText: "Enter Card Number",
+            hintText: index == null ? "Enter Card Number" :  "**** **** **** ${blocRead.savedPaymentCards[index!].visaCardNumber}",
             validationText: "Enter valid number",
-            isWithValidation: true,
+            isWithValidation: index == null ? true : false,
             inputFormatters: [
               LengthLimitingTextInputFormatter(19),
               FilteringTextInputFormatter.digitsOnly,
@@ -271,16 +312,19 @@ class CardNumber extends StatelessWidget {
               decimal: false,
             ),
             textEditingController: blocRead.cardNumber,
-            validation: blocWatch.cardNumberValidation,
+            validation: index == null ? blocWatch.cardNumberValidation : TextFieldValidation.normal,
             onChange: (value) {
-              if (value.isEmpty ||
-                  blocRead.cardNumberValidation != TextFieldValidation.normal) {
+              if ((value.isEmpty ||
+                  blocRead.cardNumberValidation != TextFieldValidation.normal) && index == null) {
                 context.read<ProfileCubit>().checkCardNumberValidation();
               }
             },
             onSubmit: (_) {
-              blocRead.checkCardNumberValidation();
+              if(index == null) {
+                blocRead.checkCardNumberValidation();
+              }
             },
+            isEnabled: index == null ? true : false,
           );
         },
       ),
@@ -289,34 +333,39 @@ class CardNumber extends StatelessWidget {
 }
 
 class CardHolderName extends StatelessWidget {
+  final int? index;
   const CardHolderName({
     super.key,
+    this.index,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
       buildWhen: (previous, current) =>
-          current is CheckCardToSaveHolderNameState,
+          current is CheckCardToSaveHolderNameState ||
+          current is EditPaymentCardSuccessState,
       builder: (context, state) {
         var blocRead = context.read<ProfileCubit>();
         var blocWatch = context.watch<ProfileCubit>();
         return AuthTextFieldWithHeader(
           header: "Cardholder Name",
-          hintText: "Enter Name",
+          hintText: index != null ? blocRead.savedPaymentCards[index!].visaCardName : "Enter Name",
           textEditingController: blocRead.cardHolderName,
-          validation: blocWatch.cardHolderNameValidation,
-          isWithValidation: true,
+          validation: index != null ? TextFieldValidation.normal : blocWatch.cardHolderNameValidation,
+          isWithValidation: index != null ? false : true,
           validationText: "Enter valid name",
           onChange: (value) {
-            if (value.isEmpty ||
+            if ((value.isEmpty ||
                 blocRead.cardHolderNameValidation !=
-                    TextFieldValidation.normal) {
+                    TextFieldValidation.normal) && index == null) {
               context.read<ProfileCubit>().checkCardHolderNameValidation();
             }
           },
           onSubmit: (_) {
-            blocRead.checkCardHolderNameValidation();
+            if(index == null) {
+              blocRead.checkCardHolderNameValidation();
+            }
           },
         );
       },

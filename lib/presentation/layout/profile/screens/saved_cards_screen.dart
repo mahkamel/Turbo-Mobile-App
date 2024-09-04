@@ -7,6 +7,17 @@ import '../../../../core/widgets/custom_header.dart';
 
 class SavedCardsScreen extends StatelessWidget {
   const SavedCardsScreen({super.key});
+  bool isExpiredCard(int expiryMonth, int expiryYear) {
+    int year = DateTime.now().year % 100;
+    int month = DateTime.now().month;
+    if (expiryYear < year) {
+      return true;
+    } else if (expiryYear == year && expiryMonth < month) {
+      return true;
+    } else {
+    return false;
+  }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,56 +28,11 @@ class SavedCardsScreen extends StatelessWidget {
         width: AppConstants.screenWidth(context),
         child: SafeArea(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const DefaultHeader(
                 header: "Payment Methods",
                 textAlignment: AlignmentDirectional.center,
                 alignment: MainAxisAlignment.spaceBetween,
-                // isShowPrefixIcon: true,
-                // suffixIcon: BlocBuilder<ProfileCubit, ProfileState>(
-                //   buildWhen: (previous, current) =>
-                //       current is GetAllSavedCardsSuccessState ||
-                //       current is GetAllSavedCardsLoadingState ||
-                //       current is GetAllSavedCardsErrorState ||
-                //       current is ChangeEditSavedCardsValueState ||
-                //       current is ChangeSelectCardToBeDeletedState ||
-                //       current is DeleteSavedCardsSuccessState ||
-                //       current is DeleteSavedCardsErrorState ||
-                //       current is DeleteSavedCardsLoadingState,
-                //   builder: (context, state) {
-                //     return context
-                //                 .watch<ProfileCubit>()
-                //                 .savedPaymentCards
-                //                 .isNotEmpty ||
-                //             state is DeleteSavedCardsLoadingState
-                //         ? InkWell(
-                //             splashColor: Colors.transparent,
-                //             focusColor: Colors.transparent,
-                //             highlightColor: Colors.transparent,
-                //             hoverColor: Colors.transparent,
-                //             onTap: () {
-                //               blocRead.changeIsEditingSavedCardsValue();
-                //             },
-                //             child: Padding(
-                //               padding: const EdgeInsets.only(right: 20.0),
-                //               child: Text(
-                //                 context
-                //                         .watch<ProfileCubit>()
-                //                         .isEditingSavedCards
-                //                     ? "Done"
-                //                     : "Edit",
-                //                 style: AppFonts.inter14TextBlack500.copyWith(
-                //                   fontSize: 16,
-                //                   color: AppColors.primaryBlue,
-                //                 ),
-                //               ),
-                //             ),
-                //           )
-                //         : const SizedBox.shrink();
-                //   },
-                // ),
               ),
               const SizedBox(
                 height: 16,
@@ -99,8 +65,15 @@ class SavedCardsScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 18),
                         itemBuilder: (context, index) =>
                             SavedPaymentCardItem(
-                              //todo
-                              cardType: 'visa',
+                              isExpired: isExpiredCard(
+                                int.parse(blocRead.savedPaymentCards[index].visaCardExpiryMonth),
+                                int.parse(blocRead.savedPaymentCards[index].visaCardExpiryYear)
+                              ),
+                              index: index,
+                              cardType: blocRead
+                              .savedPaymentCards[index].visaCardType,
+                              isDefault: blocRead
+                              .savedPaymentCards[index].isCardDefault,
                               cardId: blocRead.savedPaymentCards[index].id,
                               cardNumbers: blocRead
                               .savedPaymentCards[index].visaCardNumber,
