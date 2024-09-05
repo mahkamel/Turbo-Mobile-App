@@ -132,7 +132,7 @@ class _DateSelectionState extends State<DateSelection> {
                                   ? formatDate(selectedDateTime!)
                                   : "Select Date",
                           style: widget.selectedDateTime != null ||
-                              selectedDateTime != null
+                                  selectedDateTime != null
                               ? AppFonts.ibm15LightBlack400
                               : AppFonts.ibm15Divider400,
                         ),
