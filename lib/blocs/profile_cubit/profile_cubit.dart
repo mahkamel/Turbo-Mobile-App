@@ -300,11 +300,25 @@ class ProfileCubit extends Cubit<ProfileState> {
           profileAddress.text = '';
         });
       } else {
-        emit(const ProfileState.editProfileEmpty());
+        if(profileImage != null) {
+          res = await _authRepository.editCustomer(image: profileImage, customerName: _authRepository.customer.customerName);
+          res.fold((errMsg) {
+          emit(ProfileState.editProfileError(errMsg));
+        }, (success) {
+          emit(ProfileState.editProfileSuccess(success));
+        });
+        } else {
+          emit(const ProfileState.editProfileEmpty());
+        }
       }
     } catch (e) {
       emit(ProfileState.editProfileError(e.toString()));
     }
+  }
+
+  void updateProfileImage(File image) {
+    profileImage = image;
+    emit(ProfileState.imagePicked(image.path)); // Emit a state for image change
   }
 
   void deleteProfile() async {

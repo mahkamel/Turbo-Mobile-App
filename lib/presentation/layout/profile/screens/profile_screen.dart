@@ -11,6 +11,7 @@ import '../../../../blocs/profile_cubit/profile_cubit.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/shadow_container_with_button.dart';
+import '../widgets/profile_image.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -31,15 +32,16 @@ class ProfileScreen extends StatelessWidget {
                 current is EditProfileSuccessState,
             builder: (context, state) {
               var authWatch = context.watch<AuthRepository>();
-
+              String? imagePath = context.read<AuthRepository>().customer.customerImageProfilePath;
               return Column(
                 children: [
                   if (authWatch.customer.token.isNotEmpty)
                     Stack(children: [
                       Column(
                         children: [
-                          const SizedBox(
-                            height: 128,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 44, bottom: 25),
+                            child: ProfileImage(imageUrl: imagePath != null ? getCompleteFileUrl(imagePath) : "",),
                           ),
                           Text(
                             authWatch.customer.customerName,
@@ -146,7 +148,7 @@ class ProfileScreen extends StatelessWidget {
                       if (state is LogoutLoadingState)
                         Container(
                           width: AppConstants.screenWidth(context),
-                          height: AppConstants.screenHeight(context) - 96,
+                          height: AppConstants.screenHeight(context) - 66,
                           decoration: BoxDecoration(
                               color: AppColors.black.withOpacity(0.15)),
                           child:

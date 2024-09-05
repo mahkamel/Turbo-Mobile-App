@@ -10,7 +10,8 @@ import 'package:turbo/presentation/layout/profile/widgets/edit_account_widgets/e
 import 'package:turbo/presentation/layout/profile/widgets/edit_account_widgets/name.dart';
 import 'package:turbo/presentation/layout/profile/widgets/edit_account_widgets/national_id.dart';
 import 'package:turbo/presentation/layout/profile/widgets/edit_account_widgets/phone_number.dart';
-
+import 'package:turbo/presentation/layout/profile/widgets/edit_account_widgets/profile_image_with_badge.dart';
+import '../../../../core/helpers/functions.dart';
 import '../../../../core/widgets/default_buttons.dart';
 
 class EditAccountScreen extends StatelessWidget {
@@ -24,6 +25,7 @@ class EditAccountScreen extends StatelessWidget {
     blocRead.profilePhoneNumber.text = authRead.customer.customerTelephone;
     blocRead.profileNationalIdNumber.text =
         authRead.customer.customerNationalId;
+    String? imagePath = context.read<AuthRepository>().customer.customerImageProfilePath;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -36,9 +38,7 @@ class EditAccountScreen extends StatelessWidget {
                 header: "Edit Profile",
                 onBackPressed: () => Navigator.of(context).pop(),
               ),
-              const SizedBox(
-                height: 100,
-              ),
+              ProfileImageWithBadge(imagePath: imagePath != null ? getCompleteFileUrl(imagePath) : ""),
               const Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 8),
