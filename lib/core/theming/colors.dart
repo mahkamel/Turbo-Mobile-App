@@ -24,6 +24,7 @@ class AppColors {
   static const Color grey600 = Color(0xFF666666);
   static const Color grey400 = Color(0xFF969696);
   static const Color grey500 = Color(0xFFF5F5F7);
+  static const Color offWhite = Color(0xFFFAFAFA);
   static const Color carCardGrey = Color(0xFFF5F6FA);
   static const Color typeGreyHeader = Color(0xFF696969);
   static const Color locationBlue = Color(0xFF131A34);
@@ -52,5 +53,8 @@ class AppColors {
   static const Color darkRed = Color(0xFF8B2828);
   static const Color green = Color(0xFF3D853D);
   static const Color darkGreen = Color(0xFF047F04);
+
+  static const Color pendingYellow = Color(0xFFe6cf23);
+  static const Color pendingYellowText = Color(0xFFAB9C2A);
 
 }

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
 import 'package:turbo/presentation/layout/orders/request_status/widgets/edit_request.dart';
+import 'package:turbo/presentation/layout/orders/request_status/widgets/edit_request_dialog.dart';
+import 'package:turbo/presentation/layout/orders/request_status/widgets/request_status/booking_approved.dart';
+import 'package:turbo/presentation/layout/orders/request_status/widgets/request_status/request_cancelled.dart';
+import 'package:turbo/presentation/layout/orders/request_status/widgets/request_status/request_pending.dart';
+import 'package:turbo/presentation/layout/orders/request_status/widgets/request_status/request_refund.dart';
 
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/theming/colors.dart';
-import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/snackbar.dart';
-import '../orders_screen.dart';
 
 class RequestStatusScreen extends StatelessWidget {
   const RequestStatusScreen({
@@ -31,57 +33,7 @@ class RequestStatusScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            DefaultHeader(
-              header: "#$requestCode",
-              textAlignment: AlignmentDirectional.center,
-              alignment: MainAxisAlignment.spaceBetween,
-              suffixIcon: BlocBuilder<OrderCubit, OrderState>(
-                buildWhen: (previous, current) =>
-                    current is GetRequestStatusSuccessState ||
-                    current is GetRequestStatusErrorState ||
-                    current is GetRequestStatusLoadingState,
-                builder: (context, state) {
-                  return (context.watch<OrderCubit>().requestStatus != null &&
-                          (context
-                                      .watch<OrderCubit>()
-                                      .requestStatus!
-                                      .requestStatus ==
-                                  2 ||
-                              context
-                                      .watch<OrderCubit>()
-                                      .requestStatus!
-                                      .requestStatus ==
-                                  4 ||
-                              context
-                                      .watch<OrderCubit>()
-                                      .requestStatus!
-                                      .requestStatus ==
-                                  0))
-                      ? IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                          ),
-                          color: AppColors.primaryBlue,
-                          onPressed: () {
-                            showAdaptiveDialog(
-                              context: context,
-                              builder: (dialogContext) => BlocProvider.value(
-                                value: context.read<OrderCubit>(),
-                                child: EditRequestStatusDialog(
-                                  requestId: requestId,
-                                  requestStatus: 5,
-                                  reason: "cancel",
-                                  orderCubit: orderCubit,
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      : const SizedBox();
-                },
-              ),
-            ),
+            _buildRequestStatusHeader(),
             const SizedBox(
               height: 16,
             ),
@@ -112,50 +64,11 @@ class RequestStatusScreen extends StatelessWidget {
                   );
                 } else if (blocWatch.requestStatus != null) {
                   if (blocWatch.requestStatus!.requestStatus == 0) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset("assets/images/pending_request.jpg"),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text(
-                            "We are reviewing your documents and will notify you once the review is complete.",
-                            style: AppFonts.ibm16LightBlack600.copyWith(
-                              fontSize: 17,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    );
+                    return const RequestPending();
                   } else if (blocWatch.requestStatus!.requestStatus == 1) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Lottie.asset("assets/lottie/luxury_car_loading.json"),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text(
-                            "Congratulations! Your car rental request is approved!.",
-                            style: AppFonts.ibm16LightBlack600.copyWith(
-                              fontSize: 17,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    );
+                    return const BookingApprovedStatus();
                   } else if (blocWatch.requestStatus!.requestStatus == 3) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text(
-                        "Congratulations! Your refund is created successfully, please follow up with your bank within 21 days",
-                        style: AppFonts.ibm16LightBlack600.copyWith(
-                          fontSize: 17,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    );
+                    return const RequestRefunded();
                   } else if (blocWatch.requestStatus!.requestStatus == 2 ||
                       blocWatch.requestStatus!.requestStatus == 4) {
                     return RepositoryProvider<AuthRepository>.value(
@@ -163,22 +76,7 @@ class RequestStatusScreen extends StatelessWidget {
                       child: const EditRequest(),
                     );
                   } else if (blocWatch.requestStatus!.requestStatus == 5) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset("assets/images/pending_request.jpg"),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text(
-                            "We are reviewing your cancellation request and will notify you once the review is complete.",
-                            style: AppFonts.inter16Black600.copyWith(
-                              fontSize: 17,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    );
+                    return const RequestCancelled();
                   } else {
                     return const SizedBox();
                   }
@@ -189,6 +87,78 @@ class RequestStatusScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  DefaultHeader _buildRequestStatusHeader() {
+    return DefaultHeader(
+      header: "#$requestCode",
+      textAlignment: AlignmentDirectional.center,
+      alignment: MainAxisAlignment.spaceBetween,
+      suffixIcon: BlocBuilder<OrderCubit, OrderState>(
+        buildWhen: (previous, current) =>
+            current is GetRequestStatusSuccessState ||
+            current is GetRequestStatusErrorState ||
+            current is GetRequestStatusLoadingState,
+        builder: (context, state) {
+          return (context.watch<OrderCubit>().requestStatus != null &&
+                  (context.watch<OrderCubit>().requestStatus!.requestStatus ==
+                          2 ||
+                      context
+                              .watch<OrderCubit>()
+                              .requestStatus!
+                              .requestStatus ==
+                          4 ||
+                      context
+                              .watch<OrderCubit>()
+                              .requestStatus!
+                              .requestStatus ==
+                          0))
+              ? IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Container(
+                    height: 46,
+                    width: 46,
+                    margin: const EdgeInsetsDirectional.only(end: 10),
+                    decoration: BoxDecoration(
+                        color: AppColors.red,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 6,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 2),
+                              color: AppColors.black.withOpacity(0.15)),
+                          BoxShadow(
+                              blurRadius: 2,
+                              spreadRadius: 0,
+                              offset: const Offset(0, 1),
+                              color: AppColors.black.withOpacity(0.30))
+                        ],),
+                    child: const Icon(
+                      Icons.close_rounded,
+                      color: AppColors.white,
+                    ),
+                  ),
+                  color: AppColors.primaryBlue,
+                  onPressed: () {
+                    showAdaptiveDialog(
+                      context: context,
+                      builder: (dialogContext) => BlocProvider.value(
+                        value: context.read<OrderCubit>(),
+                        child: EditRequestStatusDialog(
+                          requestId: requestId,
+                          requestStatus: 5,
+                          reason: "cancel",
+                          orderCubit: orderCubit,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : const SizedBox();
+        },
       ),
     );
   }
