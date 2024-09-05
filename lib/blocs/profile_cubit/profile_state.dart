@@ -85,4 +85,6 @@ class ProfileState with _$ProfileState {
   EditPaymentCardErrorState;
   const factory ProfileState.editPaymentCardEmpty() =
   EditPaymentCardEmptyState;
+
+  const factory ProfileState.imagePicked(String imagePath) = ProfileImagePickedState;
 }
