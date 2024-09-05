@@ -1,7 +1,28 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+
+import '../../../../core/routing/routes.dart';
+import '../../../../core/theming/colors.dart';
+import '../../../../core/widgets/shadow_container_with_button.dart';
+import '../../../../main_paths.dart';
+
+Widget loginContainer(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: ShadowContainerWithPrefixTextButton(
+      margin: const EdgeInsets.only(top: 8),
+      onTap: () {
+        Navigator.of(context).pushNamed(Routes.loginScreen);
+      },
+      title: "Login to your account",
+      buttonText: "",
+      prefixIcon: const Icon(
+        Icons.arrow_forward_ios_rounded,
+        size: 16,
+        color: AppColors.primaryBlue,
+      ),
+    ),
+  );
+}
 
 class ProfileImage extends StatelessWidget {
  const ProfileImage({
@@ -19,14 +40,14 @@ class ProfileImage extends StatelessWidget {
               File(imageUrl), 
               height: 92,
               width: 92,
-              fit: BoxFit.contain, 
+              fit: BoxFit.cover, 
             ) : 
       CachedNetworkImage(
         placeholder: (context, url) => AspectRatio(
           aspectRatio: 1,
           child: Image.asset(
             'assets/images/profileImage.png',
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             height: 92,
             width: 92,
           ),
@@ -35,12 +56,12 @@ class ProfileImage extends StatelessWidget {
           aspectRatio: 1,
           child: Image.asset(
             'assets/images/profileImage.png',
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             height: 92,
             width: 92,
           ),
         ),
-        fit: BoxFit.contain,
+        fit: BoxFit.cover,
         imageUrl: imageUrl,
         height: 92,
         width: 92,

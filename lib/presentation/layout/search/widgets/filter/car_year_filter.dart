@@ -26,52 +26,58 @@ class SelectedCarYearsFilter extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.only(
             top: searchCubitWatch.selectedCarYears.isNotEmpty
-                ? 4.0
+                ? 10.0
                 : 0.0,
           ),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: List.generate(
-              searchCubitWatch.selectedCarYears.length,
-                  (index) => InkWell(
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  if (priceRangeKey.currentState != null) {
-                    if (priceRangeKey.currentState!.isOpen) {
-                      priceRangeKey.currentState!.closeBottomSheet();
+          child: Container(
+            padding: searchCubitWatch.selectedCarYears.isNotEmpty ? const EdgeInsets.all(12) : null,
+            decoration: BoxDecoration(
+              border: searchCubitWatch.selectedCarYears.isNotEmpty ? Border.all(color: AppColors.subTextGrey) : null,
+              borderRadius: BorderRadius.circular(20)
+            ),
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 8,
+              children: List.generate(
+                searchCubitWatch.selectedCarYears.length,
+                    (index) => InkWell(
+                  highlightColor: Colors.transparent,
+                  onTap: () {
+                    if (priceRangeKey.currentState != null) {
+                      if (priceRangeKey.currentState!.isOpen) {
+                        priceRangeKey.currentState!.closeBottomSheet();
+                      }
                     }
-                  }
-                  searchCubitRead.unSelectCarYear(
-                    searchCubitWatch.selectedCarYears
-                        .elementAt(index),
-                  );
-                },
-                child: SizedBox(
-                  height: 45,
-                  width: 60,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: 55,
-                          height: 40,
-                          // padding:const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadius.circular(8),
-                              border: Border.all(
-                                  color: AppColors.greyBorder)),
-                          child: Center(
-                            child: Text(searchCubitWatch
-                                .selectedCarYears
-                                .elementAt(index)),
+                    searchCubitRead.unSelectCarYear(
+                      searchCubitWatch.selectedCarYears
+                          .elementAt(index),
+                    );
+                  },
+                  child: SizedBox(
+                    height: 42,
+                    width: 74,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: 79,
+                            height: 37,
+                            padding:const EdgeInsets.only(left: 10, top: 5, right: 10, bottom: 5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                    color: AppColors.darkGreen)),
+                            child: Center(
+                              child: Text(searchCubitWatch
+                                  .selectedCarYears
+                                  .elementAt(index), style: AppFonts.ibm18White600.copyWith(color: AppColors.darkGreen),),
+                            ),
                           ),
                         ),
-                      ),
-                      const DeleteIcon(),
-                    ],
+                        const DeleteIcon(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -97,7 +103,7 @@ class CarYearFilterHeader extends StatelessWidget {
       children: [
         Text(
           "Car Year",
-          style: AppFonts.ibm18HeaderBlue600,
+          style: AppFonts.ibm18HeaderBlue600.copyWith(color: AppColors.lightBlack),
         ),
         DefaultButton(
           height: 30,
