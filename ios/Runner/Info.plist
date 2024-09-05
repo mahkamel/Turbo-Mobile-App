@@ -28,8 +28,6 @@
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
 		<string>Main</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>"This app needs your location to find nearby rental cars and show you directions to pick-up locations."</string>
 		<key>UISupportedInterfaceOrientations</key>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
@@ -37,6 +35,8 @@
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
 		<key>UISupportedInterfaceOrientations~ipad</key>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>"This app needs to access to your photo library to select images."</string>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
 			<string>UIInterfaceOrientationPortraitUpsideDown</string>
