@@ -1,6 +1,7 @@
 import 'car_media_model.dart';
 import 'get_cars_by_brands.dart';
 
+//requestStatus        ==>>>>>   0 => pending , 4 => customerAction , 1=>  approved , 2=> reject , 3=> refund , 5=> canceled , 6=> delete
 class RequestModel {
   late bool requestDriver;
   late int requestStatus;

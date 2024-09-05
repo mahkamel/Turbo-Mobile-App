@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:turbo/models/car_media_model.dart';
 
 class GetCarsByBrandsResponse {
@@ -41,7 +39,6 @@ class Car {
   String carId;
   String carYear;
   int carDailyPrice;
-  Color? color;
   Model model;
   Brand brand;
   MediaDetails media;
@@ -50,7 +47,6 @@ class Car {
     required this.carId,
     required this.carYear,
     required this.carDailyPrice,
-    this.color,
     required this.model,
     required this.brand,
     required this.media,
@@ -60,9 +56,6 @@ class Car {
         carId: json['_id'] ?? "",
         carYear: json['carYear'] ?? "",
         carDailyPrice: json['carDailyPrice'] ?? 0,
-        color: json['color'] == null
-            ? null
-            : CarColor.fromJson(json['color']).colorHexaDecimalBasedValue,
         model: Model.fromJson(json['model']),
         brand: Brand.fromJson(json['brand']),
         media: MediaDetails.fromJson(json["media"]),
@@ -94,28 +87,4 @@ class Brand {
         brandName: json['brandName'] ?? "",
         brandPath: json['path'] ?? "",
       );
-}
-
-class CarColor {
-  Color? colorHexaDecimalBasedValue;
-
-  CarColor({this.colorHexaDecimalBasedValue});
-
-  factory CarColor.fromJson(Map<String, dynamic> json) => CarColor(
-        colorHexaDecimalBasedValue: json['Color_HexaDecimalBasedValue'] != null
-            ? hexToColor(json['Color_HexaDecimalBasedValue'])
-            : const Color(0xffffffff),
-      );
-}
-
-Color hexToColor(String hex) {
-  assert(hex.length == 7 || hex.length == 9,
-      'Color hex string must be 7 or 9 characters long including "#".');
-
-  final int value = int.parse(hex.substring(1), radix: 16);
-  if (hex.length == 9) {
-    return Color(value);
-  } else {
-    return Color(value | 0xFF000000);
-  }
 }

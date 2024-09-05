@@ -9,7 +9,7 @@ class DefaultHeader extends StatelessWidget {
     super.key,
     required this.header,
     this.onBackPressed,
-    this.height = 47,
+    this.height = 46,
     this.alignment = MainAxisAlignment.start,
     this.textAlignment,
     this.isShowPrefixIcon = true,
@@ -32,7 +32,7 @@ class DefaultHeader extends StatelessWidget {
       height: height,
       width: AppConstants.screenWidth(context),
       margin: EdgeInsets.only(
-        top: AppConstants.heightBasedOnFigmaDevice(context, 26),
+        top: AppConstants.heightBasedOnFigmaDevice(context, 16),
       ),
       color: Colors.transparent,
       child: Stack(
@@ -69,13 +69,23 @@ class DefaultHeader extends StatelessWidget {
                           Navigator.pop(context);
                         },
                     child: Container(
-                      width: 47,
-                      height: 47,
-                      decoration: const BoxDecoration(
-                         shape: BoxShape.circle,
-                         color: AppColors.white,
-
-                      ),
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 6,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 2),
+                                color: AppColors.black.withOpacity(0.15)),
+                            BoxShadow(
+                                blurRadius: 2,
+                                spreadRadius: 0,
+                                offset: const Offset(0, 1),
+                                color: AppColors.black.withOpacity(0.30))
+                          ]),
                       child: const Icon(
                         Icons.arrow_back_ios_rounded,
                         color: AppColors.secondary,

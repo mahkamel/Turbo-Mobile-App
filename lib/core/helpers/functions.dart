@@ -183,3 +183,12 @@ String formatDateTime(DateTime dateTime, {String? locale}) {
 
   return formatter.format(dateTime);
 }
+
+String formatDate(DateTime dateTime, {String? locale}) {
+  final DateFormat formatter = DateFormat(
+    'E, MMM d, yyyy',
+    locale,
+  );
+
+  return formatter.format(dateTime);
+}

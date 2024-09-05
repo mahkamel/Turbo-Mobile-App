@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'car_brand_model.dart';
 import 'car_media_model.dart';
 
@@ -128,14 +130,28 @@ class CarDetailsData {
       );
 }
 
-
 class CarColor {
-  final String color;
+  final Color color;
   final String carId;
 
   const CarColor({required this.color, required this.carId});
 
-  factory CarColor.fromJson(Map<String, dynamic> json) {
-    return CarColor(color: json['color'] as String, carId: json['carId'] as String);
+  factory CarColor.fromJson(Map<String, dynamic> json) => CarColor(
+        color: json['color'] != null
+            ? hexToColor(json['color'])
+            : const Color(0xffffffff),
+        carId: json['carId'],
+      );
+}
+
+Color hexToColor(String hex) {
+  assert(hex.length == 7 || hex.length == 9,
+      'Color hex string must be 7 or 9 characters long including "#".');
+
+  final int value = int.parse(hex.substring(1), radix: 16);
+  if (hex.length == 9) {
+    return Color(value);
+  } else {
+    return Color(value | 0xFF000000);
   }
 }

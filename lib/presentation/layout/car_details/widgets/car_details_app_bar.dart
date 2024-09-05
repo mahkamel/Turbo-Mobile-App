@@ -41,7 +41,10 @@ class CarDetailsAppBar extends StatelessWidget {
                 width: AppConstants.screenWidth(context),
                 child: blocWatch.carDetailsData.id.isNotEmpty
                     ? Swiper(
-                        control: const SwiperControl(),
+                        control: const SwiperControl(
+                          padding:
+                              EdgeInsetsDirectional.only(start: 12, end: 4),
+                        ),
                         itemCount: blocRead.carDetailsData.carMedia.length,
                         itemBuilder: (context, index) => AspectRatio(
                           aspectRatio: 1,
