@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../../blocs/search/search_cubit.dart';
 import '../../../../../core/helpers/dropdown_keys.dart';
 import '../../../../../core/services/networking/repositories/car_repository.dart';
-import '../../../../../core/theming/colors.dart';
-import '../../../../../core/theming/fonts.dart';
+import '../icon_with_subtext.dart';
 
 class CarCategoriesFilter extends StatelessWidget {
   const CarCategoriesFilter({super.key});
@@ -14,8 +12,8 @@ class CarCategoriesFilter extends StatelessWidget {
     var searchCubitRead = context.read<SearchCubit>();
     return Padding(
       padding: const EdgeInsets.only(
-        top: 12.0,
-        bottom: 24.0,
+        top: 20.0,
+        bottom: 20.0,
       ),
       child: BlocBuilder<SearchCubit, SearchState>(
         buildWhen: (previous, current) =>
@@ -27,8 +25,8 @@ class CarCategoriesFilter extends StatelessWidget {
         builder: (context, state) {
           return state is GetCarsCategoriesLoadingState ? const Center(child: CircularProgressIndicator(),):
           Wrap(
-            runSpacing: 12,
-            spacing: 8,
+            runSpacing: 14,
+            spacing: 10,
             children: List.generate(
               context.watch<CarRepository>().carCategories.length,
               (index) => GestureDetector(
@@ -40,38 +38,16 @@ class CarCategoriesFilter extends StatelessWidget {
                   }
                   searchCubitRead.carCategoriesSelection(index);
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: context
+                child: 
+                IconWithSubtext(
+                  isSelected: context
                               .watch<CarRepository>()
                               .carCategories[index]
-                              .isSelected
-                          ? AppColors.black
-                          : AppColors.white,
-                      border: Border.all(color: AppColors.black)),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  child: Text(
-                    context.watch<CarRepository>().carCategories[index].categoryName,
-                    style: AppFonts.inter14HeaderBlack400.copyWith(
-                      fontWeight: context
-                              .watch<CarRepository>()
-                              .carCategories[index]
-                              .isSelected
-                          ? FontWeight.w500
-                          : FontWeight.w400,
-                      color: context
-                              .watch<CarRepository>()
-                              .carCategories[index]
-                              .isSelected
-                          ? AppColors.white
-                          : AppColors.headerBlack,
-                    ),
-                  ),
-                ),
+                              .isSelected,
+                  iconPath: 'assets/images/icons/classA.svg',
+                  subtext: context.watch<CarRepository>().carCategories[index].categoryName,
+                  
+                )
               ),
             ),
           );

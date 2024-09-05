@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_multi_slider/flutter_multi_slider.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/layout/search/widgets/filter/filter_by_list.dart';
-
 import '../../../../blocs/search/search_cubit.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/helpers/dropdown_keys.dart';
@@ -11,6 +10,7 @@ import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/default_buttons.dart';
 import '../../../../core/widgets/widget_with_header.dart';
+import '../../car_details/widgets/car_info.dart';
 import 'filter/car_brand_filter.dart';
 import 'filter/car_types_filter.dart';
 import 'filter/car_year_filter.dart';
@@ -34,33 +34,18 @@ class FilterCars extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Car Categories",
-            style: AppFonts.ibm18HeaderBlue600,
-          ),
+          const HeaderWithIcon(title: "Car Categories", svgIconPath: 'assets/images/icons/car.svg',),
           const CarCategoriesFilter(),
           Text(
             "Car Types",
-            style: AppFonts.ibm18HeaderBlue600,
+            style: AppFonts.ibm18HeaderBlue600.copyWith(color: AppColors.lightBlack),
           ),
           const CarTypesFilter(),
-          const CarBrandFilterHeader(),
-          const SelectedCarBrandFilter(),
-          const SizedBox(
-            height: 24,
-          ),
+          const HeaderWithIcon(title: "Car Brands", svgIconPath: 'assets/images/icons/car.svg',),
+          const CarBrandsFilter(),
           const CarYearFilterHeader(),
           const SelectedCarYearsFilter(),
           const DailyPriceDropdown(),
-          // Text(
-          //   "Additional Services",
-          //   style: AppFonts.inter18HeaderBlack700,
-          // ),
-          // const SizedBox(
-          //   height: 4,
-          // ),
-          // const UnlimitedKMCheckbox(),
-          const Spacer(),
           const FilterButtonsRow(),
           const SizedBox(
             height: 20,
@@ -160,13 +145,14 @@ class DailyPriceDropdown extends StatelessWidget {
         var blocRead = context.read<SearchCubit>();
         var blocWatch = context.watch<SearchCubit>();
         return WidgetWithHeader(
-          padding: const EdgeInsetsDirectional.only(top: 24),
-          header: "Daily Price",
-          headerStyle: AppFonts.ibm18HeaderBlue600,
+          padding: const EdgeInsetsDirectional.only(top: 20),
+          header: "Price",
+          headerStyle: AppFonts.ibm18HeaderBlue600.copyWith(color: AppColors.lightBlack),
           widget: Column(
             children: [
               MultiSlider(
                 height: 36,
+                color: AppColors.green,
                 divisions: 10,
                 horizontalPadding: 8,
                 indicator: (value) {
@@ -211,3 +197,7 @@ class DailyPriceDropdown extends StatelessWidget {
     );
   }
 }
+
+// String mapTypeToIcon() {
+
+// }
