@@ -330,7 +330,7 @@ class SelectCityBottomSheet extends StatelessWidget {
                                                               .selectedBranchIndex ==
                                                           branchIndex
                                                   ? AppFonts
-                                                      .ibm16PrimaryHeader400
+                                                      .ibm16PrimaryBlue400
                                                   : AppFonts.ibm16Grey400),
                                           if (context
                                                       .watch<AuthRepository>()

@@ -120,11 +120,12 @@ class RequiredFilesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final blocRead = context.read<SignupCubit>();
+    final blocWatch = context.watch<SignupCubit>();
     if (context.watch<AuthRepository>().customer.attachments.isEmpty) {
       return blocRead.isSaudiOrSaudiResident()
           ? const SizedBox()
           : WidgetWithHeader(
-              header: "Files",
+              header: "",
               isRequiredField: blocRead.isSaudiOrSaudiResident() ? false : true,
               headerStyle: AppFonts.inter16Black500.copyWith(
                 color: AppColors.primaryBlue,
@@ -137,6 +138,7 @@ class RequiredFilesSection extends StatelessWidget {
                     isFromMyApplication: false,
                     padding: EdgeInsetsDirectional.zero,
                     header: "National ID",
+                    fileStatus: blocWatch.nationalIdInitStatus,
                     onFileSelected: (p0, isSingle) async {
                       blocRead.nationalIdFile =
                           await convertPlatformFileList(p0);
@@ -155,6 +157,7 @@ class RequiredFilesSection extends StatelessWidget {
                     isFromMyApplication: false,
                     padding: EdgeInsetsDirectional.zero,
                     header: "Passport",
+                    fileStatus: blocWatch.passportInitStatus,
                     onFileSelected: (p0, isSingle) async {
                       blocRead.passportFiles =
                           await convertPlatformFileList(p0);
@@ -232,6 +235,8 @@ class _ExistingUserAttachmentsState extends State<ExistingUserAttachments> {
                       header: "National ID",
                       prefixImgPath: "assets/images/icons/national_id.png",
                       isFromPending: true,
+                      fileStatus: blocWatch.nationalIdAttachments?.fileStatus ??
+                          blocWatch.nationalIdInitStatus,
                       onFileSelected: (p0, isSingle) async {
                         blocRead.nationalIdFile =
                             await convertPlatformFileList(p0);
@@ -336,6 +341,8 @@ class _ExistingUserAttachmentsState extends State<ExistingUserAttachments> {
                           ? AppConstants.screenWidth(context) - 80
                           : AppConstants.screenWidth(context) - 32,
                       key: const Key("NewRequestPassport"),
+                      fileStatus: blocWatch.passportAttachments?.fileStatus ??
+                          blocWatch.passportInitStatus,
                       padding: const EdgeInsetsDirectional.only(bottom: 4),
                       paths: blocRead.passportAttachments?.filePath ?? "",
                       header: "Passport",
@@ -452,7 +459,7 @@ class RentalPrice extends StatelessWidget {
           padding: const EdgeInsetsDirectional.only(
             start: 20.0,
             end: 20.0,
-            top: 8.0,
+            top: 32.0,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,16 +468,12 @@ class RentalPrice extends StatelessWidget {
                 children: [
                   Text(
                     "Rental price: ",
-                    style: AppFonts.ibm16TypeGreyHeader600,
+                    style: AppFonts.ibm16Divider600,
                   ),
                   const Spacer(),
                   Text(
-                    "${(blocWatch.calculatedPrice - blocWatch.calculatedDriverFees).toStringAsFixed(2)} ",
-                    style: AppFonts.inter16Black500,
-                  ),
-                  Text(
-                    "SAR",
-                    style: AppFonts.inter16Black500,
+                    "${(blocWatch.calculatedPrice - blocWatch.calculatedDriverFees).toStringAsFixed(2)} SAR",
+                    style: AppFonts.ibm16Secondary600,
                   ),
                 ],
               ),
@@ -481,16 +484,12 @@ class RentalPrice extends StatelessWidget {
                     children: [
                       Text(
                         "Driver fees: ",
-                        style: AppFonts.ibm16TypeGreyHeader600,
+                        style: AppFonts.ibm16Divider600,
                       ),
                       const Spacer(),
                       Text(
-                        "${(blocWatch.calculatedDriverFees).toStringAsFixed(2)} ",
-                        style: AppFonts.inter16Black500,
-                      ),
-                      Text(
-                        "SAR",
-                        style: AppFonts.inter16Black500,
+                        "${(blocWatch.calculatedDriverFees).toStringAsFixed(2)} SAR",
+                        style: AppFonts.ibm16Secondary600,
                       ),
                     ],
                   ),
@@ -499,16 +498,12 @@ class RentalPrice extends StatelessWidget {
                 children: [
                   Text(
                     "Vat (${AppConstants.vat}%): ",
-                    style: AppFonts.ibm16TypeGreyHeader600,
+                    style: AppFonts.ibm16Divider600,
                   ),
                   const Spacer(),
                   Text(
-                    "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} ",
-                    style: AppFonts.inter16Black500,
-                  ),
-                  Text(
-                    "SAR",
-                    style: AppFonts.inter16Black500,
+                    "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} SAR",
+                    style: AppFonts.ibm16Secondary600,
                   ),
                 ],
               ),
@@ -520,21 +515,12 @@ class RentalPrice extends StatelessWidget {
                 children: [
                   Text(
                     "Total: ",
-                    style: AppFonts.ibm16TypeGreyHeader600.copyWith(
-                      color: AppColors.primaryBlue,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: AppFonts.ibm16PrimaryBlue600,
                   ),
                   const Spacer(),
                   Text(
-                    "${((blocWatch.calculatedPrice * (AppConstants.vat / 100)) + blocWatch.calculatedPrice).toStringAsFixed(2)} ",
-                    style: AppFonts.inter16Black500.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    "SAR",
-                    style: AppFonts.inter16Black500,
+                    "${((blocWatch.calculatedPrice * (AppConstants.vat / 100)) + blocWatch.calculatedPrice).toStringAsFixed(2)} SAR",
+                    style: AppFonts.ibm16Secondary600,
                   ),
                 ],
               ),
@@ -618,8 +604,6 @@ class PrivateDriverRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final blocRead = context.read<SignupCubit>();
-
     return AppConstants.driverFees == -1 || AppConstants.driverFees == 0
         ? const SizedBox(
             height: 16,
@@ -629,24 +613,44 @@ class PrivateDriverRow extends StatelessWidget {
               start: 20.0,
               end: 10.0,
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Private Driver?",
-                  style: AppFonts.inter16Black500
-                      .copyWith(color: AppColors.primaryBlue),
+                  style: AppFonts.ibm16LightBlack600,
                 ),
-                const Spacer(),
+                const SizedBox(
+                  height: 6,
+                ),
                 BlocBuilder<SignupCubit, SignupState>(
                   buildWhen: (previous, current) =>
                       current is ChangeIsWithPrivateDriverValueState,
                   builder: (context, state) {
-                    return Switch.adaptive(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      value: context.watch<SignupCubit>().isWithPrivateDriver,
-                      onChanged: (value) {
-                        blocRead.changeIsWithPrivateDriverValue(value);
-                      },
+                    var blocRead = context.read<SignupCubit>();
+                    var isWithPrivate =
+                        context.watch<SignupCubit>().isWithPrivateDriver;
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomRadioButton(
+                          isSelected: isWithPrivate,
+                          type: "Yes",
+                          onTap: () {
+                            blocRead.changeIsWithPrivateDriverValue(true);
+                          },
+                        ),
+                        const SizedBox(
+                          width: 50,
+                        ),
+                        CustomRadioButton(
+                          isSelected: !isWithPrivate,
+                          type: "No",
+                          onTap: () {
+                            blocRead.changeIsWithPrivateDriverValue(false);
+                          },
+                        ),
+                      ],
                     );
                   },
                 ),

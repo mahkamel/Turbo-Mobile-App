@@ -66,13 +66,7 @@ class DefaultButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         border: border,
-        // boxShadow: const [
-        //   BoxShadow(
-        //     offset: Offset(0, 4),
-        //     blurRadius: 10,
-        //     color: AppColors.grey,
-        //   ),
-        // ],
+
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: InkWell(
@@ -82,21 +76,70 @@ class DefaultButton extends StatelessWidget {
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: defaultLoading(
-                      color: color == Colors.transparent || color == Colors.white
-                          ? AppColors.primaryBlue
-                          : Colors.white),
+                      color:
+                          color == Colors.transparent || color == Colors.white
+                              ? AppColors.primaryBlue
+                              : Colors.white),
                 )
               : textWidget ??
                   Text(
                     text,
-                    style: textStyle ?? AppFonts.ibm16White700.copyWith(
-                      color: textColor,
-                      fontWeight: fontWeight,
-                      fontSize: fontSize,
-                    ),
+                    style: textStyle ??
+                        AppFonts.ibm16White700.copyWith(
+                          color: textColor,
+                          fontWeight: fontWeight,
+                          fontSize: fontSize,
+                        ),
                     textAlign: TextAlign.center,
                   ),
         ),
+      ),
+    );
+  }
+}
+
+class CustomRadioButton extends StatelessWidget {
+  const CustomRadioButton({
+    super.key,
+    required this.isSelected,
+    required this.onTap,
+    required this.type,
+  });
+
+  final bool isSelected;
+  final void Function() onTap;
+  final String type;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            margin: const EdgeInsetsDirectional.only(end: 4),
+            padding: const EdgeInsets.all(4),
+            decoration: const BoxDecoration(
+              color: AppColors.greyBorder,
+              shape: BoxShape.circle,
+            ),
+            child: isSelected
+                ? Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.green,
+                      shape: BoxShape.circle,
+                    ),
+                  )
+                : null,
+          ),
+          Text(
+            type,
+            style: AppFonts.ibm12LightBlack600,
+          ),
+        ],
       ),
     );
   }

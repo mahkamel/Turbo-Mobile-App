@@ -56,12 +56,12 @@ class _EditRequestState extends State<EditRequest> {
           children: [
             const ErrMsg(),
             const IsolatedEditLocation(),
+            const EditPrivateDriver(),
             const SizedBox(
               height: 16,
             ),
             const EditPickupDate(),
             const EditDeliveryDate(),
-            const EditPrivateDriver(),
             const EditedPrice(),
             const SaveEditsButton(),
             const EditDivider(),
@@ -102,7 +102,7 @@ class FilesSection extends StatelessWidget {
         ? WidgetWithHeader(
             key: const Key("FilesWidget"),
             padding: EdgeInsetsDirectional.zero,
-            header: "Files",
+            header: "",
             isRequiredField:
                 context.read<OrderCubit>().requestStatus?.requestStatus == 4
                     ? true
@@ -249,13 +249,17 @@ class SubmitButton extends StatelessWidget {
                                     2 &&
                                 blocWatch.nationalIdAttachments?.fileStatus !=
                                     4) ||
-                            (blocWatch.nationalID != null && getIt<AuthRepository>().customer.customerType == 0)) &&
+                            (blocWatch.nationalID != null &&
+                                getIt<AuthRepository>().customer.customerType ==
+                                    0)) &&
                         ((blocWatch.passportAttachments != null &&
                                 blocWatch.passportAttachments?.fileStatus !=
                                     2 &&
                                 blocWatch.passportAttachments?.fileStatus !=
                                     4) ||
-                            (blocWatch.passportFiles != null && getIt<AuthRepository>().customer.customerType == 0)))) ||
+                            (blocWatch.passportFiles != null &&
+                                getIt<AuthRepository>().customer.customerType ==
+                                    0)))) ||
                     getIt<AuthRepository>().customer.customerType == 0)) {
               blocRead.onSubmitButtonClicked(blocRead.requestStatus?.id ?? "");
             }
@@ -366,6 +370,9 @@ class _EditedFilesState extends State<EditedFiles> {
                         setState(() {});
                         widget.blocRead.pickNationalIdFile();
                       },
+                      fileStatus:
+                          widget.blocWatch.nationalIdAttachments?.fileStatus ??
+                              widget.blocRead.nationalIdInitStatus,
                       isWarningToReplace:
                           widget.blocWatch.nationalIdAttachments?.fileStatus ==
                                   2 ||
@@ -475,6 +482,9 @@ class _EditedFilesState extends State<EditedFiles> {
                           widget.blocWatch.passportAttachments?.fileStatus == 4
                               ? AppConstants.screenWidth(context) - 80
                               : AppConstants.screenWidth(context) - 32,
+                      fileStatus:
+                          widget.blocWatch.passportAttachments?.fileStatus ??
+                              widget.blocRead.passportInitStatus,
                       key: const Key("EditPassport"),
                       padding: const EdgeInsetsDirectional.only(bottom: 4),
                       paths:
@@ -617,7 +627,7 @@ class EditedPrice extends StatelessWidget {
           padding: const EdgeInsetsDirectional.only(
             start: 8.0,
             end: 8.0,
-            top: 8.0,
+            top: 24.0,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -626,18 +636,12 @@ class EditedPrice extends StatelessWidget {
                 children: [
                   Text(
                     "Rental price: ",
-                    style: AppFonts.ibm16TypeGreyHeader600,
+                    style: AppFonts.ibm16Divider600,
                   ),
                   const Spacer(),
                   Text(
-                    "${(blocWatch.calculatedPrice - blocWatch.calculatedDriverFees).toStringAsFixed(2)} ",
-                    style: AppFonts.inter18Black500,
-                  ),
-                  Text(
-                    "SAR",
-                    style: AppFonts.inter16Black500.copyWith(
-                      fontSize: 16,
-                    ),
+                    "${(blocWatch.calculatedPrice - blocWatch.calculatedDriverFees).toStringAsFixed(2)} SAR",
+                    style: AppFonts.ibm16Secondary600,
                   ),
                 ],
               ),
@@ -646,18 +650,12 @@ class EditedPrice extends StatelessWidget {
                   children: [
                     Text(
                       "Driver Fees: ",
-                      style: AppFonts.ibm16TypeGreyHeader600,
+                      style: AppFonts.ibm16Divider600,
                     ),
                     const Spacer(),
                     Text(
-                      "${blocWatch.calculatedDriverFees.toStringAsFixed(2)} ",
-                      style: AppFonts.inter18Black500,
-                    ),
-                    Text(
-                      "SAR",
-                      style: AppFonts.inter16Black500.copyWith(
-                        fontSize: 16,
-                      ),
+                      "${blocWatch.calculatedDriverFees.toStringAsFixed(2)} SAR",
+                      style: AppFonts.ibm16Secondary600,
                     ),
                   ],
                 ),
@@ -665,46 +663,29 @@ class EditedPrice extends StatelessWidget {
                 children: [
                   Text(
                     "Vat (${AppConstants.vat}%): ",
-                    style: AppFonts.ibm16TypeGreyHeader600,
+                    style: AppFonts.ibm16Divider600,
                   ),
                   const Spacer(),
                   Text(
-                    "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} ",
-                    style: AppFonts.inter18Black500,
-                  ),
-                  Text(
-                    "SAR",
-                    style: AppFonts.inter16Black500.copyWith(
-                      fontSize: 16,
-                    ),
+                    "${(blocWatch.calculatedPrice * (AppConstants.vat / 100)).toStringAsFixed(2)} SAR",
+                    style: AppFonts.ibm16Secondary600,
                   ),
                 ],
               ),
               const Divider(
                 height: 16,
-                color: AppColors.greyBorder,
+                color: AppColors.newDivider,
               ),
               Row(
                 children: [
                   Text(
                     "Total: ",
-                    style: AppFonts.ibm16TypeGreyHeader600.copyWith(
-                      color: AppColors.primaryBlue,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: AppFonts.ibm16PrimaryBlue600,
                   ),
                   const Spacer(),
                   Text(
-                    "${((blocWatch.calculatedPrice * (AppConstants.vat / 100)) + blocWatch.calculatedPrice).toStringAsFixed(2)} ",
-                    style: AppFonts.inter18Black500.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    "SAR",
-                    style: AppFonts.inter16Black500.copyWith(
-                      fontSize: 16,
-                    ),
+                    "${((blocWatch.calculatedPrice * (AppConstants.vat / 100)) + blocWatch.calculatedPrice).toStringAsFixed(2)} SAR",
+                    style: AppFonts.ibm16Secondary600,
                   ),
                 ],
               ),
@@ -783,29 +764,51 @@ class EditPrivateDriver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var blocRead = context.read<OrderCubit>();
     return AppConstants.driverFees == -1 || AppConstants.driverFees == 0
         ? const SizedBox(
             height: 16,
           )
-        : Row(
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Private Driver?",
-                style: AppFonts.inter16Black500
-                    .copyWith(color: AppColors.primaryBlue),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 16.0,
+                  bottom: 6.0,
+                ),
+                child: Text(
+                  "Private Driver?",
+                  style: AppFonts.ibm16LightBlack600,
+                ),
               ),
-              const Spacer(),
               BlocBuilder<OrderCubit, OrderState>(
                 buildWhen: (previous, current) =>
                     current is ChangeIsWithPrivateEditValueState,
                 builder: (context, state) {
-                  return Switch.adaptive(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    value: context.watch<OrderCubit>().isWithPrivateDriver,
-                    onChanged: (value) {
-                      blocRead.changeIsWithPrivateDriverValue(value);
-                    },
+                  var blocRead = context.read<OrderCubit>();
+                  var isWithPrivate =
+                      context.watch<OrderCubit>().isWithPrivateDriver;
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomRadioButton(
+                        isSelected: isWithPrivate,
+                        type: "Yes",
+                        onTap: () {
+                          blocRead.changeIsWithPrivateDriverValue(true);
+                        },
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      CustomRadioButton(
+                        isSelected: !isWithPrivate,
+                        type: "No",
+                        onTap: () {
+                          blocRead.changeIsWithPrivateDriverValue(false);
+                        },
+                      ),
+                    ],
                   );
                 },
               ),

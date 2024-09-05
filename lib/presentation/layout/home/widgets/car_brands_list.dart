@@ -32,9 +32,7 @@ class BrandsList extends StatelessWidget {
                   ? const SizedBox()
                   : ListView.separated(
                       padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 16,
-                        vertical: 8
-                      ),
+                          horizontal: 16, vertical: 8),
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) => InkWell(
                         highlightColor: Colors.transparent,
@@ -49,14 +47,11 @@ class BrandsList extends StatelessWidget {
                             blocRead.getCarsBasedOnBrand();
                           }
                         },
-                        child: 
-                            BrandLogoCircle(
-                              logoPath: blocRead.carBrands[index].path,
-                              isWithBlackBorder:
-                                  blocWatch.selectedBrandIndex == index,
-                              brandName: blocRead.carBrands[index].brandName
-                            ),
-                          
+                        child: BrandLogoCircle(
+                            logoPath: blocRead.carBrands[index].path,
+                            isWithBlackBorder:
+                                blocWatch.selectedBrandIndex == index,
+                            brandName: blocRead.carBrands[index].brandName),
                       ),
                       separatorBuilder: (context, index) => const SizedBox(
                         width: 16,
@@ -142,24 +137,21 @@ class BrandLogoCircle extends StatelessWidget {
       constraints: BoxConstraints(maxHeight: size),
       // padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isWithBlackBorder
-              ? AppColors.headerBlack
-              : AppColors.headerBlack.withOpacity(0.1),
-        ),
-        boxShadow:  [
-          BoxShadow(
-            blurRadius: 4,
-            spreadRadius: 2,
-            offset: const Offset(0, 2),
-            color:
-                AppColors.black.withOpacity(0.15)
-          )
-        ]
-      ),
+          color: AppColors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isWithBlackBorder
+                ? AppColors.headerBlack
+                : AppColors.headerBlack.withOpacity(0.1),
+          ),
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 4,
+                spreadRadius: 2,
+                offset: const Offset(0, 2),
+                color: AppColors.black.withOpacity(0.15))
+          ]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -169,11 +161,10 @@ class BrandLogoCircle extends StatelessWidget {
             imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
             placeholder: (context, url) => const SizedBox(),
           ),
-          const SizedBox(height: 4,),
-          Text(
-            brandName,
-            style: AppFonts.ibm10LightBlack700
+          const SizedBox(
+            height: 4,
           ),
+          Text(brandName, style: AppFonts.ibm10LightBlack700),
         ],
       ),
     );

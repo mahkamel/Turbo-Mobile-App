@@ -102,7 +102,7 @@ class PriceCard extends StatelessWidget {
         children: [
           Text(
             "${period == "day" ? "Daily" : period == "week" ? "Weekly" : "Monthly"} ",
-            style: AppFonts.ibm16PrimaryHeader400
+            style: AppFonts.ibm16PrimaryBlue400
                 .copyWith(fontWeight: FontWeight.w700),
           ),
           Padding(

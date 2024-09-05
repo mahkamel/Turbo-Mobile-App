@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../helpers/constants.dart';
-import '../theming/colors.dart';
 import '../theming/fonts.dart';
 
 class WidgetWithHeader extends StatelessWidget {
@@ -34,32 +33,17 @@ class WidgetWithHeader extends StatelessWidget {
                 ? Text.rich(
                     TextSpan(
                         text: header,
-                        style: headerStyle ??
-                            AppFonts.inter16Black500.copyWith(
-                              color: isWithBlackHeader
-                                  ? AppColors.black
-                                  : AppColors.primaryBlue,
-                            ),
+                        style: headerStyle ?? AppFonts.ibm16LightBlack600,
                         children: [
                           TextSpan(
                             text: "*",
-                            style: headerStyle ??
-                                AppFonts.inter16Black500.copyWith(
-                                  color: isWithBlackHeader
-                                      ? AppColors.black
-                                      : AppColors.primaryBlue,
-                                ),
+                            style: headerStyle ?? AppFonts.ibm16LightBlack600,
                           )
                         ]),
                   )
                 : Text(
                     header,
-                    style: headerStyle ??
-                        AppFonts.inter16Black500.copyWith(
-                          color: isWithBlackHeader
-                              ? AppColors.black
-                              : AppColors.primaryBlue,
-                        ),
+                    style: headerStyle ?? AppFonts.ibm16LightBlack600,
                   ),
             const SizedBox(
               height: 8,

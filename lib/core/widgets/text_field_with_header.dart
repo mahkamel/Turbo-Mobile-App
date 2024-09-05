@@ -8,33 +8,32 @@ import '../theming/fonts.dart';
 import 'custom_text_fields.dart';
 
 class AuthTextFieldWithHeader extends StatefulWidget {
-  const AuthTextFieldWithHeader({
-    super.key,
-    required this.header,
-    required this.hintText,
-    required this.textEditingController,
-    required this.validation,
-    required this.onChange,
-    required this.onSubmit,
-    this.validationText = '',
-    this.isPassword = false,
-    this.isWithValidation = false,
-    this.textInputType,
-    this.textInputAction,
-    this.prefixIcon,
-    this.onTap,
-    this.width,
-    this.inputFormatters,
-    this.isEnabled = true,
-    this.isMultiLine = false,
-    this.horizontalPadding = 18,
-    this.onTapOutside,
-    this.suffixIcon,
-    this.contentPadding,
-    this.isRequiredFiled = false,
-    this.widgetPadding,
-    this.hintStyle
-  });
+  const AuthTextFieldWithHeader(
+      {super.key,
+      required this.header,
+      required this.hintText,
+      required this.textEditingController,
+      required this.validation,
+      required this.onChange,
+      required this.onSubmit,
+      this.validationText = '',
+      this.isPassword = false,
+      this.isWithValidation = false,
+      this.textInputType,
+      this.textInputAction,
+      this.prefixIcon,
+      this.onTap,
+      this.width,
+      this.inputFormatters,
+      this.isEnabled = true,
+      this.isMultiLine = false,
+      this.horizontalPadding = 18,
+      this.onTapOutside,
+      this.suffixIcon,
+      this.contentPadding,
+      this.isRequiredFiled = false,
+      this.widgetPadding,
+      this.hintStyle});
 
   final bool isEnabled;
   final String header;
@@ -81,23 +80,17 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
                 ? Text.rich(
                     TextSpan(
                         text: widget.header,
-                        style: AppFonts.inter16Black500.copyWith(
-                          color: AppColors.black,
-                        ),
+                        style: AppFonts.ibm16LightBlack600,
                         children: [
                           TextSpan(
                             text: "*",
-                            style: AppFonts.inter16Black500.copyWith(
-                              color: AppColors.black,
-                            ),
+                            style: AppFonts.ibm16LightBlack600,
                           ),
                         ]),
                   )
                 : Text(
                     widget.header,
-                    style: AppFonts.ibm20Black600.copyWith(
-                      color: AppColors.black,
-                    ),
+                    style: AppFonts.ibm16LightBlack600,
                   ),
             const SizedBox(
               height: 8,
@@ -150,7 +143,10 @@ class _AuthTextFieldWithHeaderState extends State<AuthTextFieldWithHeader> {
                 validateText: widget.validationText,
                 validatePadding: 4,
                 hint: widget.hintText,
-                hintStyle: widget.isEnabled ? AppFonts.ibm15subTextGrey400 : AppFonts.ibm15subTextGrey400.copyWith(color: AppColors.grey600),
+                hintStyle: widget.isEnabled
+                    ? AppFonts.ibm15subTextGrey400
+                    : AppFonts.ibm15subTextGrey400
+                        .copyWith(color: AppColors.grey600),
               ),
           ],
         ),

@@ -94,9 +94,9 @@ class SignupScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                if (UserTokenService.currentUserToken.isEmpty &&
-                    blocWatch.requestedCarId.isNotEmpty)
-                  const SignupStepper(),
+                // if (UserTokenService.currentUserToken.isEmpty &&
+                //     blocWatch.requestedCarId.isNotEmpty)
+                //   const SignupStepper(),
                 if ((blocWatch.requestedCarId.isNotEmpty &&
                         blocWatch.currentStep == 0) ||
                     ((UserTokenService.currentUserToken.isEmpty &&

@@ -9,7 +9,6 @@ import 'package:turbo/core/widgets/widget_with_header.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
-import '../../../../core/widgets/container_with_shadow.dart';
 import '../../../../flavors.dart';
 
 class SelectFile extends StatefulWidget {
@@ -32,6 +31,7 @@ class SelectFile extends StatefulWidget {
   final String prefixImgPath;
   final double? width;
   final Widget? prefixIcon;
+  final int fileStatus;
 
   const SelectFile({
     super.key,
@@ -50,6 +50,7 @@ class SelectFile extends StatefulWidget {
     this.paths = "",
     this.isShowDeleteFile = false,
     this.files,
+    required this.fileStatus,
     this.prefixImgPath = "assets/images/icons/pdf_file.png",
   });
 
@@ -101,7 +102,6 @@ class _SelectFileState extends State<SelectFile> {
   Widget build(BuildContext context) {
     return WidgetWithHeader(
       width: widget.width,
-      isWithBlackHeader: true,
       key: Key(widget.header),
       padding: widget.padding ??
           const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
@@ -125,11 +125,17 @@ class _SelectFileState extends State<SelectFile> {
             pickFile();
           }
         },
-        child: DefaultContainerWithInnerShadow(
-          borderColor: widget.isWarningToReplace
-              ? AppColors.errorRed
-              : AppColors.greyBorder,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+                color: widget.isWarningToReplace
+                    ? AppColors.errorRed
+                    : AppColors.greyBorder),
+          ),
           height: 74,
+          width: AppConstants.screenWidth(context),
           child: (_file != null || widget.paths.isNotEmpty)
               ? Row(
                   children: [

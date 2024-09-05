@@ -66,7 +66,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 const SizedBox(height: 72,),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 70, right: 70, bottom: 60),
-                                  child: Text("There is no notification at this time. Please check again later!", style: AppFonts.ibm16PrimaryHeader400,),
+                                  child: Text("There is no notification at this time. Please check again later!", style: AppFonts.ibm16PrimaryBlue400,),
                                 ),
                                 Image.asset("assets/images/notification.png", width: 220)
                               ],
