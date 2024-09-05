@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/models/get_cars_by_brands.dart';
@@ -51,9 +52,12 @@ class RecommendedCarCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _carImage(),
-
             Padding(
-              padding: const EdgeInsets.only(right: 21.0, left: 18, top: 7,),
+              padding: const EdgeInsets.only(
+                right: 21.0,
+                left: 18,
+                top: 7,
+              ),
               child: Column(
                 children: [
                   Row(
@@ -63,49 +67,46 @@ class RecommendedCarCard extends StatelessWidget {
                         car.model.modelName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: AppFonts.ibm16PrimaryHeader400,
+                        style: AppFonts.ibm16PrimaryBlue400,
                       ),
-                      const SizedBox(width: 10,),
+                      const SizedBox(
+                        width: 10,
+                      ),
                       Text(
                         car.carYear,
                         style: AppFonts.ibm11Grey400,
                       ),
-                    
                     ],
                   ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildBrandAndYearRow(),
-                          Text.rich(
-                            TextSpan(
-                              text:
-                                  "SAR".getLocale(context: context),
-                              style: AppFonts.ibm11Grey400,
-                              children: [
-                                TextSpan(
-                                  text: " ${car.carDailyPrice}",
-                                  style: AppFonts.ibm24HeaderBlue600.copyWith(
-                                  color: AppColors.gold),
-                                ),
-                                TextSpan(
-                                  text: "/${"dayCapital".getLocale(context: context)}",
-                                  style: AppFonts.ibm11Grey400
-                                ),
-                              ],
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildBrandAndYearRow(),
+                        Text.rich(
+                          TextSpan(
+                            text: "SAR".getLocale(context: context),
+                            style: AppFonts.ibm11Grey400,
+                            children: [
+                              TextSpan(
+                                text: " ${car.carDailyPrice}",
+                                style: AppFonts.ibm24HeaderBlue600
+                                    .copyWith(color: AppColors.gold),
+                              ),
+                              TextSpan(
+                                  text:
+                                      "/${"dayCapital".getLocale(context: context)}",
+                                  style: AppFonts.ibm11Grey400),
+                            ],
                           ),
-                          
-                        ],
-                      ),
-                    )
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
-           
-            
           ],
         ),
       ),
@@ -113,21 +114,26 @@ class RecommendedCarCard extends StatelessWidget {
   }
 
   Widget _buildBrandAndYearRow() {
+    print("user: ${getCompleteFileUrl(
+      car.brand.brandPath,
+    )}");
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.network(
+        CachedNetworkImage(
           height: 27,
-          getCompleteFileUrl(
+          imageUrl: getCompleteFileUrl(
             car.brand.brandPath,
           ),
+          errorWidget: (context, error, stackTrace) => const SizedBox(),
           fit: BoxFit.contain,
         ),
         Padding(
           padding: const EdgeInsets.only(left: 5),
           child: Text(
             car.brand.brandName,
-            style: AppFonts.ibm12SubTextGrey600.copyWith(color: AppColors.lightBlack),
+            style: AppFonts.ibm12SubTextGrey600
+                .copyWith(color: AppColors.lightBlack),
           ),
         ),
       ],

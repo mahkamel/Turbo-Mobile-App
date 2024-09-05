@@ -69,15 +69,12 @@ class _DateSelectionState extends State<DateSelection> {
                 ),
           decoration: BoxDecoration(
             color: widget.isEnabled ? null : AppColors.greyBorder,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: widget.isEnabled
-                  ? AppColors.black.withOpacity(0.5)
-                  : AppColors.black.withOpacity(0.2),
+              color: AppColors.divider,
             ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               widget.isEnabled
                   ? IconButton(
@@ -97,32 +94,48 @@ class _DateSelectionState extends State<DateSelection> {
                       icon: Row(
                         children: [
                           const Icon(
-                            Icons.calendar_today_rounded,
+                            Icons.calendar_month_rounded,
+                            size: 24,
+                            color: AppColors.secondary,
                           ),
                           const SizedBox(
                             width: 8,
                           ),
-                          Text(widget.selectedDateTime != null
-                              ? formatDate(widget.selectedDateTime!)
-                              : selectedDateTime != null
-                                  ? formatDate(selectedDateTime!)
-                                  : "Select Date"),
+                          Text(
+                            widget.selectedDateTime != null
+                                ? formatDate(widget.selectedDateTime!)
+                                : selectedDateTime != null
+                                    ? formatDate(selectedDateTime!)
+                                    : "Select Date",
+                            style: widget.selectedDateTime != null ||
+                                    selectedDateTime != null
+                                ? AppFonts.ibm15LightBlack400
+                                : AppFonts.ibm15Divider400,
+                          ),
                         ],
                       ),
                     )
                   : Row(
                       children: [
                         const Icon(
-                          Icons.calendar_today_rounded,
+                          Icons.calendar_month_rounded,
+                          size: 24,
+                          color: AppColors.secondary,
                         ),
                         const SizedBox(
                           width: 8,
                         ),
-                        Text(widget.selectedDateTime != null
-                            ? formatDate(widget.selectedDateTime!)
-                            : selectedDateTime != null
-                                ? formatDate(selectedDateTime!)
-                                : "Select Date"),
+                        Text(
+                          widget.selectedDateTime != null
+                              ? formatDate(widget.selectedDateTime!)
+                              : selectedDateTime != null
+                                  ? formatDate(selectedDateTime!)
+                                  : "Select Date",
+                          style: widget.selectedDateTime != null ||
+                                  selectedDateTime != null
+                              ? AppFonts.ibm15LightBlack400
+                              : AppFonts.ibm15Divider400,
+                        ),
                       ],
                     ),
               if (widget.isWithTime)
@@ -135,33 +148,51 @@ class _DateSelectionState extends State<DateSelection> {
                         },
                         icon: Row(
                           children: [
-                            Container(
-                              height: 12,
-                              width: 2,
-                              color: AppColors.grey,
+                            if (widget.selectedDateTime != null)
+                              Container(
+                                height: 16,
+                                width: 2,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                color: AppColors.lightBlack,
+                              ),
+                            if (widget.selectedDateTime != null)
+                              const SizedBox(
+                                width: 8,
+                              ),
+                            Text(
+                              widget.selectedDateTime != null
+                                  ? formatTime(widget.selectedDateTime!)
+                                  : "",
+                              style: AppFonts.ibm15LightBlack400.copyWith(
+                                color: AppColors.primaryBlue,
+                              ),
                             ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(widget.selectedDateTime != null
-                                ? formatTime(widget.selectedDateTime!)
-                                : "00:00"),
                           ],
                         ),
                       )
                     : Row(
                         children: [
-                          Container(
-                            height: 12,
-                            width: 2,
-                            color: AppColors.grey,
+                          if (widget.selectedDateTime != null)
+                            Container(
+                              height: 16,
+                              width: 2,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              color: AppColors.lightBlack,
+                            ),
+                          if (widget.selectedDateTime != null)
+                            const SizedBox(
+                              width: 8,
+                            ),
+                          Text(
+                            widget.selectedDateTime != null
+                                ? formatTime(widget.selectedDateTime!)
+                                : "00:00",
+                            style: AppFonts.ibm15LightBlack400.copyWith(
+                              color: AppColors.primaryBlue,
+                            ),
                           ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Text(widget.selectedDateTime != null
-                              ? formatTime(widget.selectedDateTime!)
-                              : "00:00"),
                         ],
                       ),
             ],
@@ -341,6 +372,6 @@ String formatDate(DateTime dateTime) {
 }
 
 String formatTime(DateTime dateTime) {
-  final DateFormat timeFormatter = DateFormat('HH:mm');
+  final DateFormat timeFormatter = DateFormat('HH:mm a');
   return timeFormatter.format(dateTime);
 }

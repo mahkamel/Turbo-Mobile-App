@@ -42,6 +42,7 @@ class AppColors {
   static const Color greyBorder = Color(0xFFD9D9D9);
   static const Color buttonGreyBorder = Color(0xFFB0B0B0);
   static const Color divider = Color(0xFFADB4BE);
+  static const Color newDivider = Color(0xFFC6C6C6);
   static const Color carDetailsGrey = Color.fromRGBO(242, 242, 242, 1);
   static const Color borderGrey = Color(0xFFB0AAAA);
   static const Color bottomSheetDarkerGrey = Color(0xFF8A8A8A);

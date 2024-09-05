@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
@@ -79,24 +78,30 @@ class DeleteAccountScreen extends StatelessWidget {
                                   ..clearPaymentFormData(),
                                 child: BlocConsumer<ProfileCubit, ProfileState>(
                                   listenWhen: (previous, current) {
-                                      return current is DeleteProfileErrorState ||
-                                          current is DeleteProfileSuccessState ||
-                                          current is DeleteProfileLoadingState ||
-                                          current is LogoutErrorState ||
-                                          current is LogoutLoadingState ||
-                                          current is LogoutSuccessState;
-                                    },
-                                    listener: (context, state) {
-                                      if(state is DeleteProfileErrorState){
-                                        defaultErrorSnackBar(context: context, message: state.errMsg);
-                                      } else if(state is LogoutErrorState){
-                                        defaultErrorSnackBar(context: context, message: state.errMsg);
-                                      } else if(state is LogoutSuccessState){
-                                        if (Navigator.of(dialogContext).canPop()) {
-                                          Navigator.of(dialogContext).popUntil(ModalRoute.withName(Routes.layoutScreen));
-                                        }
-                                      }
-                                    },
+                                    return current is DeleteProfileErrorState ||
+                                        current is DeleteProfileSuccessState ||
+                                        current is DeleteProfileLoadingState ||
+                                        current is LogoutErrorState ||
+                                        current is LogoutLoadingState ||
+                                        current is LogoutSuccessState;
+                                  },
+                                  listener: (context, state) {
+                                    if (state is DeleteProfileErrorState) {
+                                      defaultErrorSnackBar(
+                                          context: context,
+                                          message: state.errMsg);
+                                    } else if (state is LogoutErrorState) {
+                                      defaultErrorSnackBar(
+                                          context: context,
+                                          message: state.errMsg);
+                                    } else if (state is LogoutSuccessState) {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                        Routes.layoutScreen,
+                                        (route) => false,
+                                      );
+                                    }
+                                  },
                                   builder: (context, state) {
                                     return DefaultDialog(
                                       secondButtonColor: AppColors.darkRed,
