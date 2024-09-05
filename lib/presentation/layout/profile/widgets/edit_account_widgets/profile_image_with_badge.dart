@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/main_paths.dart';
 import '../../../../../core/theming/colors.dart';
-import '../profile_image.dart';
+import '../profile_widgets.dart';
 
 class ProfileImageWithBadge extends StatelessWidget {
   final String imagePath;

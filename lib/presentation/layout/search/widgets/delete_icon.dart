@@ -15,7 +15,7 @@ class DeleteIcon extends StatelessWidget {
         height: 15,
         width: 15,
         decoration: const BoxDecoration(
-          color: AppColors.errorRed,
+          color: AppColors.red,
           shape: BoxShape.circle,
         ),
         child: const Center(

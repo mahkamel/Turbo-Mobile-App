@@ -9,21 +9,23 @@ import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../models/car_items.dart';
 
-class CarInfoHeader extends StatelessWidget {
-  const CarInfoHeader({
-    super.key,
+class HeaderWithIcon extends StatelessWidget {
+  final String svgIconPath;
+  final String title;
+  const HeaderWithIcon({
+    super.key, required this.svgIconPath, required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SvgPicture.asset('assets/images/icons/car.svg'),
+        SvgPicture.asset(svgIconPath),
         const SizedBox(
           width: 10,
         ),
         Text(
-          "carInfo".getLocale(context: context),
+          title,
           style: AppFonts.ibm18HeaderBlue600.copyWith(
             color: AppColors.lightBlack,
           ),

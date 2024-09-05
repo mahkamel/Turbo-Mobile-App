@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
 import 'package:turbo/core/widgets/custom_shimmer.dart';
 import 'package:turbo/flavors.dart';
-
+import 'package:badges/badges.dart' as badges;
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 
@@ -32,7 +32,9 @@ class BrandsList extends StatelessWidget {
                   ? const SizedBox()
                   : ListView.separated(
                       padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8
+                      ),
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) => InkWell(
                         highlightColor: Colors.transparent,
@@ -47,11 +49,14 @@ class BrandsList extends StatelessWidget {
                             blocRead.getCarsBasedOnBrand();
                           }
                         },
-                        child: BrandLogoCircle(
-                            logoPath: blocRead.carBrands[index].path,
-                            isWithBlackBorder:
-                                blocWatch.selectedBrandIndex == index,
-                            brandName: blocRead.carBrands[index].brandName),
+                        child: 
+                            BrandLogoCircle(
+                              logoPath: blocRead.carBrands[index].path,
+                              isSelected:
+                                  blocWatch.selectedBrandIndex == index,
+                              brandName: blocRead.carBrands[index].brandName
+                            ),
+                          
                       ),
                       separatorBuilder: (context, index) => const SizedBox(
                         width: 16,
@@ -121,51 +126,66 @@ class BrandLogoCircle extends StatelessWidget {
     required this.logoPath,
     required this.brandName,
     this.size = 72,
-    this.isWithBlackBorder = false,
+    this.isSelected = false,
+    this.isFromFilter = false,
   });
 
   final double size;
-  final bool isWithBlackBorder;
+  final bool isSelected;
   final String logoPath;
   final String brandName;
+  final bool isFromFilter;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      constraints: BoxConstraints(maxHeight: size),
-      // padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
+    return badges.Badge(
+        position: badges.BadgePosition.topEnd(end: -6, top: -2),
+        badgeStyle: const badges.BadgeStyle(
+          badgeColor: AppColors.green,
+        ),
+        badgeContent: const Icon(Icons.check, size: 10, color: AppColors.white,),
+        showBadge: isSelected && isFromFilter,
+      child: Container(
+        width: size,
+        height: size,
+        constraints: BoxConstraints(maxHeight: size),
+        decoration: BoxDecoration(
           color: AppColors.white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isWithBlackBorder
-                ? AppColors.headerBlack
+            color: isSelected ?
+            isFromFilter ?
+            AppColors.green :
+                AppColors.headerBlack
                 : AppColors.headerBlack.withOpacity(0.1),
           ),
-          boxShadow: [
+          boxShadow:  [
             BoxShadow(
-                blurRadius: 4,
-                spreadRadius: 2,
-                offset: const Offset(0, 2),
-                color: AppColors.black.withOpacity(0.15))
-          ]),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CachedNetworkImage(
-            width: 35,
-            height: 35,
-            imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
-            placeholder: (context, url) => const SizedBox(),
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          Text(brandName, style: AppFonts.ibm10LightBlack700),
-        ],
+              blurRadius: 4,
+              spreadRadius: 2,
+              offset: const Offset(0, 2),
+              color:
+                  AppColors.black.withOpacity(0.15)
+            )
+          ]
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CachedNetworkImage(
+              width: 35,
+              height: 35,
+              imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
+              placeholder: (context, url) => const SizedBox(),
+            ),
+            const SizedBox(height: 4,),
+            Text(
+              brandName,
+              style: AppFonts.ibm10LightBlack700
+            ),
+          ],
+        ),
       ),
     );
   }

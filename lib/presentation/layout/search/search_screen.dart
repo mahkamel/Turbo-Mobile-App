@@ -4,7 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/presentation/layout/search/widgets/filter.dart';
-
+import 'package:turbo/presentation/layout/search/widgets/filter/filter_header.dart';
 import '../../../core/theming/colors.dart';
 import '../../../core/theming/fonts.dart';
 import '../home/widgets/cars_by_types_listview.dart';
@@ -25,20 +25,7 @@ class SearchScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 28,
-                  bottom: 8,
-                  left: 16,
-                  right: 16,
-                ),
-                child: Center(
-                  child: Text(
-                    "Filter",
-                    style: AppFonts.ibm24HeaderBlue600,
-                  ),
-                ),
-              ),
+              const FilterHeader(),
               if (searchCubitWatch.isGettingFilterResults)
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
@@ -52,42 +39,44 @@ class SearchScreen extends StatelessWidget {
                 ),
               if (!searchCubitWatch.isGettingFilterResults)
                 Expanded(
-                  child: searchCubitWatch.isFilteredRes
-                      ? searchCubitWatch.filteredCars.isEmpty
-                          ? SizedBox(
-                              width: AppConstants.screenWidth(context),
-                              child: Padding(
-                                padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                      SizedBox(height: AppConstants.screenWidth(context) * .15,),
-                                   Lottie.asset(
-                                      "assets/lottie/no_result.json",
-                                       height: AppConstants.screenWidth(context) * .6,
-                                      width: (AppConstants.screenWidth(context) * .8),
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    Text(
-                                      "No results found! Try another search properties.",
-                                      style:
-                                          AppFonts.ibm24HeaderBlue600.copyWith(
-                                        fontSize: 18,
+                  child: SingleChildScrollView(
+                    child: searchCubitWatch.isFilteredRes
+                        ? searchCubitWatch.filteredCars.isEmpty
+                            ? SizedBox(
+                                width: AppConstants.screenWidth(context),
+                                child: Padding(
+                                  padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                        SizedBox(height: AppConstants.screenWidth(context) * .15,),
+                                     Lottie.asset(
+                                        "assets/lottie/no_result.json",
+                                         height: AppConstants.screenWidth(context) * .6,
+                                        width: (AppConstants.screenWidth(context) * .8),
                                       ),
-                                      textAlign: TextAlign.center,
-                                    )
-                                  ],
+                                      const SizedBox(height: 20,),
+                                      Text(
+                                        "No results found! Try another search properties.",
+                                        style:
+                                            AppFonts.ibm24HeaderBlue600.copyWith(
+                                          fontSize: 18,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )
-                          : CarsByTypesListview(
-                              carsByBrand: searchCubitWatch.filteredCars,
-                              isFromFilter: true,
-                            )
-                      : const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: FilterCars(),
-                        ),
+                              )
+                            : CarsByTypesListview(
+                                carsByBrand: searchCubitWatch.filteredCars,
+                                isFromFilter: true,
+                              )
+                        : const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: FilterCars(),
+                          ),
+                  ),
                 ),
             ],
           ),

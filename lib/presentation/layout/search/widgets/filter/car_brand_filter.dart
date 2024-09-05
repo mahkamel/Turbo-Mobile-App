@@ -1,123 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:turbo/core/helpers/extentions.dart';
-
 import '../../../../../blocs/search/search_cubit.dart';
 import '../../../../../core/helpers/dropdown_keys.dart';
-import '../../../../../core/theming/colors.dart';
-import '../../../../../core/theming/fonts.dart';
-import '../../../../../core/widgets/default_buttons.dart';
+import '../../../../../core/services/networking/repositories/car_repository.dart';
 import '../../../home/widgets/car_brands_list.dart';
-import '../car_brands_bottom_sheet.dart';
-import '../delete_icon.dart';
 
-class SelectedCarBrandFilter extends StatelessWidget {
-  const SelectedCarBrandFilter({
-    super.key,
-  });
-
+class CarBrandsFilter extends StatelessWidget {
+  const CarBrandsFilter({super.key});
 
   @override
   Widget build(BuildContext context) {
     var searchCubitRead = context.read<SearchCubit>();
-    return BlocBuilder<SearchCubit, SearchState>(
-      buildWhen: (previous, current) =>
-      current is BrandsSelectionState ||
-          current is FilterResetState,
-      builder: (context, state) {
-        var searchCubitWatch = context.watch<SearchCubit>();
-        return Padding(
-          padding: EdgeInsets.only(
-            top: searchCubitWatch.selectedBrands.isNotEmpty
-                ? 4.0
-                : 0.0,
-          ),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: List.generate(
-              searchCubitWatch.selectedBrands.length,
-                  (index) => InkWell(
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  if (priceRangeKey.currentState != null) {
-                    if (priceRangeKey.currentState!.isOpen) {
-                      priceRangeKey.currentState!.closeBottomSheet();
-                    }
-                  }
-                  searchCubitRead.unSelectTheCarBrand(
-                    searchCubitRead.selectedBrands[index],
-                  );
-                },
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: BrandLogoCircle(
-                          brandName: "todo",
-                          logoPath: searchCubitWatch
-                              .selectedBrands[index].path,
-                          size: 50,
-                        ),
-                      ),
-                      const DeleteIcon(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
+    return InkWell(
+      highlightColor: Colors.transparent,
+      onTap: () {
+        if (priceRangeKey.currentState != null) {
+          if (priceRangeKey.currentState!.isOpen) {
+            priceRangeKey.currentState!.closeBottomSheet();
+          }
+        }
       },
-    );
-  }
-}
-
-class CarBrandFilterHeader extends StatelessWidget {
-  const CarBrandFilterHeader({
-    super.key,
-  });
-
-
-  @override
-  Widget build(BuildContext context) {
-    var searchCubitRead = context.read<SearchCubit>();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          "carBrand".getLocale(context: context),
-          style: AppFonts.ibm18HeaderBlue600,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 4.0,
+          bottom: 22.0,
         ),
-        DefaultButton(
-          height: 30,
-          width: 72,
-          text: "browse".getLocale(context: context),
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-          function: () {
-            if (priceRangeKey.currentState != null) {
-              if (priceRangeKey.currentState!.isOpen) {
-                priceRangeKey.currentState!.closeBottomSheet();
-              }
-            }
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (bsContext) => BlocProvider.value(
-                value: searchCubitRead..getCarsBrands(),
-                child: const CarBrandsBottomSheet(),
+        child: BlocBuilder<SearchCubit, SearchState>(
+          buildWhen: (previous, current) =>
+              current is GetSearchCarsBrandsErrorState ||
+              current is GetSearchCarsBrandsLoadingState ||
+              current is GetSearchCarsBrandsSuccessState ||
+              current is BrandsSelectionState ||
+              current is BrandsSearchState,
+          builder: (context, state) {
+            var searchCubitWatch = context.watch<SearchCubit>();
+            print("aaaaaaaaaaaa ${context
+                              .read<CarRepository>()
+                              .carBrands}");
+            return state is GetSearchCarsBrandsLoadingState ? const Center(child: CircularProgressIndicator(),):
+            SizedBox(
+              height: 82,
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => InkWell(
+                  highlightColor: Colors.transparent,
+                  onTap: () {
+                    if (priceRangeKey.currentState != null) {
+                        if (priceRangeKey.currentState!.isOpen) {
+                          priceRangeKey.currentState!.closeBottomSheet();
+                        }
+                      }
+                      searchCubitRead.onSelectAndDisSelectBrands(context
+                              .read<CarRepository>()
+                              .carBrands[index]);
+                  },
+                  child: 
+                   BrandLogoCircle(
+                      size:65,
+                      isFromFilter: true,
+                      logoPath: context
+                              .read<CarRepository>()
+                              .carBrands[index]
+                              .path,
+                      brandName: context
+                              .read<CarRepository>()
+                              .carBrands[index]
+                              .brandName,
+                      isSelected: context
+                                .watch<CarRepository>()
+                                .carBrands[index].isSelected,
+                    ),
+                    
+                    
+                ),
+                separatorBuilder: (context, index) => const SizedBox(
+                  width: 10,
+                ),
+                itemCount: searchCubitWatch
+                      .brandSearchController.text.isNotEmpty
+                  ? searchCubitWatch.searchedBrands.length
+                  : context.watch<CarRepository>().carBrands.length,
               ),
             );
           },
-          textColor: AppColors.primaryBlue,
-          border: Border.all(color: AppColors.primaryBlue),
-          color: AppColors.white,
         ),
-      ],
+      ),
     );
   }
 }

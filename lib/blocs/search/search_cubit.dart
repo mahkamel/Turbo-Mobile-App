@@ -44,6 +44,7 @@ class SearchCubit extends Cubit<SearchState> {
     }
     getCarsTypes();
     getCarsCategories();
+    getCarsBrands();
   }
 
   void unSelectAllBrands() {
