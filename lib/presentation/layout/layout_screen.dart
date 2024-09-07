@@ -26,8 +26,7 @@ class LayoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> screens = [
       BlocProvider<HomeCubit>(
-        create: (context) => getIt<HomeCubit>()
-          ..onInit(),
+        create: (context) => getIt<HomeCubit>()..onInit(),
         child: const HomeScreen(),
       ),
       BlocProvider<SearchCubit>(
@@ -60,84 +59,98 @@ class LayoutScreen extends StatelessWidget {
       bottomNavigationBar: BlocBuilder<LayoutCubit, LayoutState>(
         buildWhen: (previous, current) => current is ChangeNavBarIndexState,
         builder: (context, state) {
-          return SizedBox(
-            height: Platform.isIOS ? 87 : 72,
-            child: BottomNavigationBar(
-              backgroundColor: AppColors.navBarBlack,
-              selectedItemColor: AppColors.white,
-              unselectedItemColor: AppColors.navBarUnSelected,
-              selectedLabelStyle: AppFonts.ibm14LightBlack400.copyWith(
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              ),
-              unselectedLabelStyle: AppFonts.ibm14LightBlack400,
-              currentIndex: context.watch<LayoutCubit>().navBarIndex,
-              elevation: 0,
-              type: BottomNavigationBarType.fixed,
-              onTap: (index) {
-                context.read<LayoutCubit>().changeNavBarIndex(index);
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/home_nav_icon.svg",
-                    colorFilter: ColorFilter.mode(
-                      context.watch<LayoutCubit>().navBarIndex == 0
-                          ? AppColors.white
-                          : AppColors.subTextGrey,
-                      BlendMode.srcIn,
-                    ),
-                    height: 20,
-                    width: 20,
-                  ),
-                  label: 'home'.getLocale(context: context),
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/order_nav_icon.svg",
-                    colorFilter: ColorFilter.mode(
-                      context.watch<LayoutCubit>().navBarIndex == 1
-                          ? AppColors.white
-                          : AppColors.subTextGrey,
-                      BlendMode.srcIn,
-                    ),
-                    height: 20,
-                    width: 20,
-                  ),
-                  label: 'search'.getLocale(context: context),
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/search_nav_icon.svg",
-                    colorFilter: ColorFilter.mode(
-                      context.watch<LayoutCubit>().navBarIndex == 2
-                          ? AppColors.white
-                          : AppColors.subTextGrey,
-                      BlendMode.srcIn,
-                    ),
-                    height: 24,
-                    width: 24,
-                  ),
-                  label: "Orders",
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/images/icons/nav_bar_icons/profile_nav_icon.svg",
-                    colorFilter: ColorFilter.mode(
-                      context.watch<LayoutCubit>().navBarIndex == 3
-                          ? AppColors.white
-                          : AppColors.subTextGrey,
-                      BlendMode.srcIn,
-                    ),
-                    height: 20,
-                    width: 20,
-                  ),
-                  label: 'profile'.getLocale(context: context),
-                ),
-              ],
-            ),
-          );
+          return const BottomNavBar();
         },
+      ),
+    );
+  }
+}
+
+class BottomNavBar extends StatelessWidget {
+  const BottomNavBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Platform.isIOS ? 87 : 72,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        boxShadow: [
+          BoxShadow(
+              blurRadius: 6,
+              spreadRadius: 2,
+              offset: const Offset(0, 2),
+              color: AppColors.black.withOpacity(0.15)),
+          BoxShadow(
+              blurRadius: 2,
+              spreadRadius: 0,
+              offset: const Offset(0, 1),
+              color: AppColors.black.withOpacity(0.30))
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: AppColors.white,
+          selectedItemColor: AppColors.primaryBlue,
+          unselectedItemColor: AppColors.divider,
+          selectedLabelStyle: AppFonts.ibm12Primary400.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+          unselectedLabelStyle: AppFonts.ibm12Primary400.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.divider,
+          ),
+          currentIndex: context.watch<LayoutCubit>().navBarIndex,
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+            context.read<LayoutCubit>().changeNavBarIndex(index);
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                context.watch<LayoutCubit>().navBarIndex == 0
+                    ? "assets/images/icons/nav_bar_icons/selected_explore.svg"
+                    : "assets/images/icons/nav_bar_icons/unSelected_explore.svg",
+              ),
+              label: "Explore",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                context.watch<LayoutCubit>().navBarIndex == 1
+                    ? "assets/images/icons/nav_bar_icons/selected_search.svg"
+                    : "assets/images/icons/nav_bar_icons/unSelected_Search.svg",
+              ),
+              label: 'search'.getLocale(context: context),
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                context.watch<LayoutCubit>().navBarIndex == 2
+                    ? "assets/images/icons/nav_bar_icons/selected_orders.svg"
+                    : "assets/images/icons/nav_bar_icons/unSelected_orders.svg",
+              ),
+              label: "Orders",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                context.watch<LayoutCubit>().navBarIndex == 3
+                    ? "assets/images/icons/nav_bar_icons/selected_profile.svg"
+                    : "assets/images/icons/nav_bar_icons/unSelected_profile.svg",
+              ),
+              label: 'profile'.getLocale(context: context),
+            ),
+          ],
+        ),
       ),
     );
   }

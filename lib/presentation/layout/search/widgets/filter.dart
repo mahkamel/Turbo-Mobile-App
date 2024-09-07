@@ -34,14 +34,21 @@ class FilterCars extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const HeaderWithIcon(title: "Car Categories", svgIconPath: 'assets/images/icons/car.svg',),
+          const HeaderWithIcon(
+            title: "Car Categories",
+            svgIconPath: 'assets/images/icons/car.svg',
+          ),
           const CarCategoriesFilter(),
           Text(
             "Car Types",
-            style: AppFonts.ibm18HeaderBlue600.copyWith(color: AppColors.lightBlack),
+            style: AppFonts.ibm18HeaderBlue600
+                .copyWith(color: AppColors.lightBlack),
           ),
           const CarTypesFilter(),
-          const HeaderWithIcon(title: "Car Brands", svgIconPath: 'assets/images/icons/car.svg',),
+          const HeaderWithIcon(
+            title: "Car Brands",
+            svgIconPath: 'assets/images/icons/car.svg',
+          ),
           const CarBrandsFilter(),
           const CarYearFilterHeader(),
           const SelectedCarYearsFilter(),
@@ -147,40 +154,38 @@ class DailyPriceDropdown extends StatelessWidget {
         return WidgetWithHeader(
           padding: const EdgeInsetsDirectional.only(top: 20),
           header: "Price",
-          headerStyle: AppFonts.ibm18HeaderBlue600.copyWith(color: AppColors.lightBlack),
+          headerStyle:
+              AppFonts.ibm18HeaderBlue600.copyWith(color: AppColors.lightBlack),
           widget: Column(
             children: [
-              MultiSlider(
-                height: 36,
-                color: AppColors.green,
-                divisions: 10,
-                horizontalPadding: 8,
-                indicator: (value) {
-                  return const IndicatorOptions(draw: false);
-                },
-                selectedIndicator: (value) {
-                  return IndicatorOptions(
-                    formatter: (value) {
-                      if (value == 2500) {
-                        return "+2500";
-                      } else {
-                        return value.toStringAsFixed(0);
-                      }
-                    },
-                  );
-                },
-                values: [
+              RangeSlider(
+                // height: 36,
+                // color: AppColors.green,
+                values: RangeValues(
                   blocWatch.minDailyPrice,
                   blocWatch.maxDailyPrice,
-                ],
+                ),
+
+                activeColor: AppColors.green,
+                labels: RangeLabels(
+                  blocWatch.minDailyPrice.toStringAsFixed(2),
+                  blocWatch.maxDailyPrice == 2500
+                      ? "+2500"
+                      : blocWatch.maxDailyPrice.toStringAsFixed(2),
+                ),
+                divisions: 10,
+                inactiveColor: AppColors.unSelectedRange,
                 min: 1,
                 max: 2500,
                 onChanged: (value) {
-                  blocRead.changePriceRangeIndex(min: value[0], max: value[1]);
+                  blocRead.changePriceRangeIndex(
+                    min: value.start,
+                    max: value.end,
+                  );
                 },
               ),
               const Padding(
-                padding: EdgeInsetsDirectional.only(start: 4.0 , end: 0),
+                padding: EdgeInsetsDirectional.only(start: 4.0, end: 0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,3 +206,46 @@ class DailyPriceDropdown extends StatelessWidget {
 // String mapTypeToIcon() {
 
 // }
+
+class CustomIndicatorPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = Colors.green // Set your desired color
+      ..style = PaintingStyle.fill;
+
+    Path path = Path();
+
+    // Start from the top left
+    path.moveTo(0, size.height * 0.5);
+
+    // Draw lines to form the desired shape (similar to SVG path)
+    path.lineTo(size.width * 0.25, size.height * 0.5);
+    path.lineTo(size.width * 0.5, 0); // Pointy part in the middle
+    path.lineTo(size.width * 0.75, size.height * 0.5);
+    path.lineTo(size.width, size.height * 0.5);
+
+    // Complete the rectangle
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class CustomIndicatorOptions extends IndicatorOptions {
+  final CustomPainter? customPainter;
+
+  CustomIndicatorOptions({
+    super.draw,
+    double size = 40.0,
+    String Function(double value)? formatter,
+    this.customPainter,
+  }) : super();
+}
