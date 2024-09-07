@@ -1,8 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
@@ -10,7 +7,6 @@ import 'package:turbo/main_paths.dart';
 
 import '../../core/helpers/app_regex.dart';
 import '../../core/helpers/enums.dart';
-import '../../core/helpers/functions.dart';
 import '../../models/saved_card.dart';
 
 part 'profile_state.dart';

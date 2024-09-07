@@ -3,14 +3,10 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:turbo/core/helpers/constants.dart';
-import 'package:turbo/core/services/local/cache_helper.dart';
 import 'package:turbo/core/services/local/storage_service.dart';
 import 'package:turbo/core/services/networking/api_services/auth_service.dart';
 import 'package:turbo/main_paths.dart';
 import 'package:turbo/models/attachment.dart';
-import 'package:turbo/models/customer_model.dart';
 
 import '../../../../models/notifications_model.dart';
 import '../../local/token_service.dart';

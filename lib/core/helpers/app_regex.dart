@@ -73,13 +73,11 @@ class AppRegex {
   }
 
   static String? detectCardType(String cardNumber) {
-    print("card numbber $cardNumber");
     if (cardNumber.startsWith('4')) {
       return 'visa';
     } else if (RegExp(r'^5[1-5]').hasMatch(cardNumber)) {
       return 'mastercard';
     } else if (RegExp(r'^3[47][0-9]{13}$').hasMatch(cardNumber)) {
-      print("amex");
       return 'amex';
     }
     return 'other';

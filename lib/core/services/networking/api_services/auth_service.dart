@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:turbo/core/services/networking/api_services/car_service.dart';
 import 'package:turbo/main_paths.dart';
 
-import '../dio_helper.dart';
 
 class AuthServices {
   Future<Response> customerLogin({
@@ -236,7 +235,6 @@ class AuthServices {
           formData:formData, 
           body: {}
         );
-        print("hhhhhhhhhhhhhhh $response");
         return response;
       } else {
         response = await DioHelper.postData(

@@ -22,7 +22,7 @@ class ProfileImageWithBadge extends StatelessWidget {
         blocRead.updateProfileImage(File(image.path));
       }
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+
     }
   }
 

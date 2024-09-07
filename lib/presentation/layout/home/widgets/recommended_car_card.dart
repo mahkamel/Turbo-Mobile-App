@@ -114,9 +114,6 @@ class RecommendedCarCard extends StatelessWidget {
   }
 
   Widget _buildBrandAndYearRow() {
-    print("user: ${getCompleteFileUrl(
-      car.brand.brandPath,
-    )}");
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
