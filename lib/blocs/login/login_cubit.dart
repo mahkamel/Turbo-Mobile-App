@@ -280,7 +280,11 @@ class LoginCubit extends Cubit<LoginState> {
           password: passwordController.text,
         );
         res.fold((errMsg) {
-          emit(LoginState.loginError(errMsg));
+          if(errMsg == 'reset') {
+            emit(LoginState.resetDialog());
+          } else {
+            emit(LoginState.loginError(errMsg));
+          }
         }, (customer) async {
           _authRepository.customer = customer;
           UserTokenService.saveUserToken(customer.token);
@@ -299,6 +303,20 @@ class LoginCubit extends Cubit<LoginState> {
       } catch (e) {
         emit(LoginState.loginError(e.toString()));
       }
+    }
+  }
+
+  void resetCustomer() async{
+    emit(const LoginState.resetCustomerLoading());
+    try {
+      final result = await _authRepository.resetCustomer(emailController.text);
+      result.fold((errMsg) {
+        emit(LoginState.resetCustomerError(errMsg));
+      }, (msg) {
+        emit(LoginState.resetCustomerSuccess(msg));
+      });
+    } catch (e) {
+      emit(LoginState.resetCustomerError(e.toString()));
     }
   }
 

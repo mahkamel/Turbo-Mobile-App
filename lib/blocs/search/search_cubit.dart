@@ -270,6 +270,9 @@ class SearchCubit extends Cubit<SearchState> {
     unSelectAllBrands();
     selectedBrands.clear();
     selectedCarYears = {};
+    for(var cat in _carRepository.carCategories){
+      cat.isSelected = false;
+    }
 
     isWithUnlimitedKM = false;
     changePriceRangeIndex(min: 1, max: 2500);

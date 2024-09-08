@@ -23,6 +23,13 @@ class LoginState with _$LoginState {
   const factory LoginState.loginLoading() = LoginLoadingState;
   const factory LoginState.loginSuccess() = LoginSuccessState;
   const factory LoginState.loginError(final String errMsg) = LoginErrorState;
+  
+  const factory LoginState.resetDialog() = ResetDialogState;
+
+
+  const factory LoginState.resetCustomerLoading() = ResetCustomerLoadingState;
+  const factory LoginState.resetCustomerSuccess(final String msg) = ResetCustomerSuccessState;
+  const factory LoginState.resetCustomerError(final String errMsg) = ResetCustomerErrorState;
 
   const factory LoginState.forgetPasswordLoading() = ForgetPasswordLoadingState;
   const factory LoginState.forgetPasswordSuccessfully({
