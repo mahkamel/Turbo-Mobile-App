@@ -4,6 +4,7 @@ import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/routing/routes.dart';
 import 'package:turbo/main_paths.dart';
 
+import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 
 class ForgetPasswordButton extends StatelessWidget {
@@ -16,11 +17,11 @@ class ForgetPasswordButton extends StatelessWidget {
     return SizedBox(
       width: AppConstants.screenWidth(context),
       child: Align(
-        alignment: AlignmentDirectional.centerEnd,
+        alignment: AlignmentDirectional.centerStart,
         child: Padding(
           padding: const EdgeInsetsDirectional.only(
             start: 20.0,
-            top: 12,
+            top: 5,
           ),
           child: SizedBox(
             height: 38,
@@ -38,7 +39,7 @@ class ForgetPasswordButton extends StatelessWidget {
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
                   "forgetPassword".getLocale(context: context),
-                  style: AppFonts.inter16Black500,
+                  style: AppFonts.ibm14Primary600.copyWith(color: AppColors.grey400),
                 ),
               ),
             ),
