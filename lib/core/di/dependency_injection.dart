@@ -104,6 +104,7 @@ Future<void> setupGetIt() async {
     () => ProfileCubit(
       getIt<PaymentRepository>(),
       getIt<AuthRepository>(),
+      getIt<CarRepository>(),
     ),
   );
   getIt.registerFactory<OrderCubit>(

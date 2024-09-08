@@ -10,8 +10,7 @@ import '../profile_widgets.dart';
 
 class ProfileImageWithBadge extends StatelessWidget {
   final String imagePath;
-  const ProfileImageWithBadge(
-      {super.key, required this.imagePath});
+  const ProfileImageWithBadge({super.key, required this.imagePath});
 
   Future _pickImageFromGallery(ProfileCubit blocRead) async {
     try {
@@ -21,9 +20,7 @@ class ProfileImageWithBadge extends StatelessWidget {
       } else {
         blocRead.updateProfileImage(File(image.path));
       }
-    } on PlatformException catch (e) {
-
-    }
+    } on PlatformException catch (e) {}
   }
 
   @override
@@ -34,7 +31,7 @@ class ProfileImageWithBadge extends StatelessWidget {
         String? imagePath = this.imagePath;
         bool isFromStorageImage = false;
         if (state is ProfileImagePickedState) {
-          imagePath = state.imagePath; 
+          imagePath = state.imagePath;
           isFromStorageImage = true;
         }
         return Padding(
@@ -53,9 +50,8 @@ class ProfileImageWithBadge extends StatelessWidget {
                   borderSide: BorderSide.none,
                 ),
                 child: ProfileImage(
-                  imageUrl: imagePath,
-                  isFromStorageImage: isFromStorageImage
-                )),
+                    imageUrl: imagePath,
+                    isFromStorageImage: isFromStorageImage)),
           ),
         );
       },

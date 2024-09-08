@@ -8,6 +8,7 @@ class PaymentRepository {
   final PaymentService _paymentService;
   List<SavedCard> savedPaymentCards = [];
   PaymentRepository(this._paymentService);
+  SavedCard? defaultCard;
 
   Future<Either<String, String>> carRequestPayment({
     required String requestId,
@@ -63,6 +64,13 @@ class PaymentRepository {
             savedPaymentCards = (response.data['data'] as List)
                 .map((e) => SavedCard.fromJson(e))
                 .toList();
+            if (savedPaymentCards.any(
+              (element) => element.isCardDefault,
+            )) {
+              defaultCard = savedPaymentCards.singleWhere(
+                (element) => element.isCardDefault,
+              );
+            }
           } else {
             savedPaymentCards = [];
           }
@@ -74,6 +82,7 @@ class PaymentRepository {
         return Left(response.data['message']);
       }
     } catch (e) {
+      print("waseawe $e");
       return Left(e.toString());
     }
   }
@@ -98,22 +107,20 @@ class PaymentRepository {
     }
   }
 
-  Future<Either<String, bool>> addNewCard({
-    required String visaCardName,
-    required String visaCardNumber,
-    required String visaCardExpiryMonth,
-    required String visaCardExpiryYear,
-    required String visaCardType
-  }) async {
+  Future<Either<String, bool>> addNewCard(
+      {required String visaCardName,
+      required String visaCardNumber,
+      required String visaCardExpiryMonth,
+      required String visaCardExpiryYear,
+      required String visaCardType}) async {
     try {
       final response = await _paymentService.addNewPaymentMethod(
-        userToken: UserTokenService.currentUserToken,
-        visaCardName: visaCardName,
-        visaCardNumber: visaCardNumber,
-        visaCardExpiryMonth: visaCardExpiryMonth,
-        visaCardExpiryYear: visaCardExpiryYear,
-        visaCardType: visaCardType
-      );
+          userToken: UserTokenService.currentUserToken,
+          visaCardName: visaCardName,
+          visaCardNumber: visaCardNumber,
+          visaCardExpiryMonth: visaCardExpiryMonth,
+          visaCardExpiryYear: visaCardExpiryYear,
+          visaCardType: visaCardType);
       if (response.statusCode == 200) {
         if (response.data['status']) {
           return const Right(true);
@@ -131,12 +138,12 @@ class PaymentRepository {
   Future<Either<String, String>> setDefaultCard(String cardId) async {
     try {
       final response = await _paymentService.setDefaultCard(cardId: cardId);
-      if(response.data['status'] == false) {
+      if (response.data['status'] == false) {
         return Left(response.data['message']);
       } else {
         return Right(response.data['message']);
       }
-    } catch(e) {
+    } catch (e) {
       return Left(e.toString());
     }
   }
@@ -146,20 +153,19 @@ class PaymentRepository {
     String? cardHolderName,
     String? cardExpiryMonth,
     String? cardExpiryYear,
-  ) async{
+  ) async {
     try {
       final response = await _paymentService.editPaymentMethod(
-        cardId: cardId,
-        cardHolderName: cardHolderName,
-        cardExpiryMonth: cardExpiryMonth,
-        cardExpiryYear: cardExpiryYear
-      );
-      if(response.data['statuse'] == false) {
+          cardId: cardId,
+          cardHolderName: cardHolderName,
+          cardExpiryMonth: cardExpiryMonth,
+          cardExpiryYear: cardExpiryYear);
+      if (response.data['statuse'] == false) {
         return Left(response.data['message']);
       } else {
         return Right(response.data['message']);
       }
-    } catch(e) {
+    } catch (e) {
       return Left(e.toString());
     }
   }

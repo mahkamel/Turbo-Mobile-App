@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/home/home_cubit.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/widgets/custom_shimmer.dart';
 import 'package:turbo/flavors.dart';
 import 'package:badges/badges.dart' as badges;
@@ -17,6 +18,7 @@ class BrandsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 90,
+      width: AppConstants.screenWidth(context),
       child: BlocBuilder<HomeCubit, HomeState>(
         buildWhen: (previous, current) =>
             current is GetCarsBrandsLoadingState ||
@@ -30,38 +32,36 @@ class BrandsList extends StatelessWidget {
               ? const BrandsShimmer()
               : blocWatch.carBrands.isEmpty
                   ? const SizedBox()
-                  : ListView.separated(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 16,
-                        vertical: 8
-                      ),
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => InkWell(
-                        highlightColor: Colors.transparent,
-                        onTap: () {
-                          if (blocWatch.selectedBrandIndex != (index)) {
-                            blocRead.changeSelectedBrandIndex(index);
-                            blocRead.getCarsBasedOnBrand(
-                              brandId: blocRead.carBrands[index].id,
-                            );
-                          } else {
-                            blocRead.changeSelectedBrandIndex(-1);
-                            blocRead.getCarsBasedOnBrand();
-                          }
-                        },
-                        child: 
-                            BrandLogoCircle(
+                  : SizedBox(
+                      height: 90,
+                      width: AppConstants.screenWidth(context),
+                      child: ListView.separated(
+                        padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 16, vertical: 8),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => InkWell(
+                          highlightColor: Colors.transparent,
+                          onTap: () {
+                            if (blocWatch.selectedBrandIndex != (index)) {
+                              blocRead.changeSelectedBrandIndex(index);
+                              blocRead.getCarsBasedOnBrand(
+                                brandId: blocRead.carBrands[index].id,
+                              );
+                            } else {
+                              blocRead.changeSelectedBrandIndex(-1);
+                              blocRead.getCarsBasedOnBrand();
+                            }
+                          },
+                          child: BrandLogoCircle(
                               logoPath: blocRead.carBrands[index].path,
-                              isSelected:
-                                  blocWatch.selectedBrandIndex == index,
-                              brandName: blocRead.carBrands[index].brandName
-                            ),
-                          
+                              isSelected: blocWatch.selectedBrandIndex == index,
+                              brandName: blocRead.carBrands[index].brandName),
+                        ),
+                        separatorBuilder: (context, index) => const SizedBox(
+                          width: 16,
+                        ),
+                        itemCount: blocWatch.carBrands.length,
                       ),
-                      separatorBuilder: (context, index) => const SizedBox(
-                        width: 16,
-                      ),
-                      itemCount: blocWatch.carBrands.length,
                     );
         },
       ),
@@ -77,6 +77,7 @@ class BrandsShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       itemCount: 6,
@@ -139,37 +140,38 @@ class BrandLogoCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return badges.Badge(
-        position: badges.BadgePosition.topEnd(end: -6, top: -2),
-        badgeStyle: const badges.BadgeStyle(
-          badgeColor: AppColors.green,
-        ),
-        badgeContent: const Icon(Icons.check, size: 10, color: AppColors.white,),
-        showBadge: isSelected && isFromFilter,
+      position: badges.BadgePosition.topEnd(end: -6, top: -2),
+      badgeStyle: const badges.BadgeStyle(
+        badgeColor: AppColors.green,
+      ),
+      badgeContent: const Icon(
+        Icons.check,
+        size: 10,
+        color: AppColors.white,
+      ),
+      showBadge: isSelected && isFromFilter,
       child: Container(
         width: size,
         height: size,
         constraints: BoxConstraints(maxHeight: size),
         decoration: BoxDecoration(
-          color: AppColors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ?
-            isFromFilter ?
-            AppColors.green :
-                AppColors.headerBlack
-                : AppColors.headerBlack.withOpacity(0.1),
-          ),
-          boxShadow:  [
-            BoxShadow(
-              blurRadius: 4,
-              spreadRadius: 2,
-              offset: const Offset(0, 2),
-              color:
-                  AppColors.black.withOpacity(0.15)
-            )
-          ]
-        ),
+            color: AppColors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected
+                  ? isFromFilter
+                      ? AppColors.green
+                      : AppColors.headerBlack
+                  : AppColors.headerBlack.withOpacity(0.1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 4,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 2),
+                  color: AppColors.black.withOpacity(0.15))
+            ]),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -179,11 +181,10 @@ class BrandLogoCircle extends StatelessWidget {
               imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
               placeholder: (context, url) => const SizedBox(),
             ),
-            const SizedBox(height: 4,),
-            Text(
-              brandName,
-              style: AppFonts.ibm10LightBlack700
+            const SizedBox(
+              height: 4,
             ),
+            Text(brandName, style: AppFonts.ibm10LightBlack700),
           ],
         ),
       ),

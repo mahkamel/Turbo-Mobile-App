@@ -20,7 +20,7 @@ class PaymentCubit extends Cubit<PaymentState> {
     this._authRepository,
   ) : super(const PaymentState.initial());
 
-  int cardTypeToggle = 0;
+  int selectedCardToggleIndex = 0;
 
   TextEditingController cardHolderName = TextEditingController();
   TextEditingController cardNumber = TextEditingController();
@@ -43,6 +43,7 @@ class PaymentCubit extends Cubit<PaymentState> {
   bool isFirstTimeToUnCheckInvoice = true;
 
   String? selectedSavedCardId;
+  SavedCard? selectedCard;
 
   void clearPaymentFormData() {
     cardHolderName.clear();
@@ -56,12 +57,18 @@ class PaymentCubit extends Cubit<PaymentState> {
     cardCVVValidation = TextFieldValidation.normal;
   }
 
-  void changeCardTypeToggleValue(int index) {
-    cardTypeToggle = index;
-    emit(PaymentState.changeCardTypeToggle(index));
-    if (cardNumber.text.isNotEmpty) {
-      checkCardNumberValidation();
+  void init() {
+    if (_paymentRepository.defaultCard != null) {
+      onSavedCardSelected(_paymentRepository.defaultCard!);
     }
+  }
+
+  void changeCardTypeToggleValue(int index) {
+    if (selectedCardToggleIndex != index) {
+      clearPaymentFormData();
+    }
+    selectedCardToggleIndex = index;
+    emit(PaymentState.changeCardTypeToggle(index));
   }
 
   void checkCardHolderNameValidation() {
@@ -76,16 +83,14 @@ class PaymentCubit extends Cubit<PaymentState> {
   void checkCardNumberValidation() {
     if (cardNumber.text.isNotEmpty && cardNumber.text.contains("*")) {
       cardNumberValidation = TextFieldValidation.valid;
-    } else if (cardNumber.text.isNotEmpty &&
-        AppRegex.isValidCardNumberBasedOnType(
-          cardNumber.text,
-          cardTypeToggle == 0
-              ? "visa"
-              : cardTypeToggle == 1
-                  ? "mastercard"
-                  : "amex",
-        )) {
-      cardNumberValidation = TextFieldValidation.valid;
+    } else if (cardNumber.text.isNotEmpty) {
+      if (cardNumber.text.isNotEmpty &&
+          !cardNumber.text.contains("*") &&
+          AppRegex.isValidCardNumber(cardNumber.text)) {
+        cardNumberValidation = TextFieldValidation.valid;
+      } else {
+        cardNumberValidation = TextFieldValidation.notValid;
+      }
     } else {
       cardNumberValidation = TextFieldValidation.notValid;
     }
@@ -120,16 +125,8 @@ class PaymentCubit extends Cubit<PaymentState> {
   }
 
   void onSavedCardSelected(SavedCard card) {
+    selectedCard = card;
     selectedSavedCardId = card.id;
-    cardHolderName.text = card.visaCardName;
-    cardNumber.text = "**** **** **** ${card.visaCardNumber}";
-    cardExpiryDate.text =
-        "${card.visaCardExpiryMonth}/${card.visaCardExpiryYear}";
-    cardCVV.clear();
-    cardCVVValidation = TextFieldValidation.normal;
-    checkCardHolderNameValidation();
-    checkCardNumberValidation();
-    checkExpiryDateValidation();
     emit(PaymentState.selectedSavedCard(card.id));
   }
 

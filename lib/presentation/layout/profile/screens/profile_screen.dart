@@ -12,6 +12,7 @@ import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/default_dialog.dart';
 import '../../../../core/widgets/snackbar.dart';
 import '../widgets/profile_widgets.dart';
+import 'orders_history_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -30,7 +31,10 @@ class ProfileScreen extends StatelessWidget {
                 current is EditProfileSuccessState,
             builder: (context, state) {
               var authWatch = context.watch<AuthRepository>();
-              String? imagePath = context.read<AuthRepository>().customer.customerImageProfilePath;
+              String? imagePath = context
+                  .read<AuthRepository>()
+                  .customer
+                  .customerImageProfilePath;
               return Column(
                 children: [
                   if (authWatch.customer.token.isNotEmpty)
@@ -38,7 +42,11 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 44, bottom: 25),
-                          child: ProfileImage(imageUrl: imagePath != null ? getCompleteFileUrl(imagePath) : "",),
+                          child: ProfileImage(
+                            imageUrl: imagePath != null
+                                ? getCompleteFileUrl(imagePath)
+                                : "",
+                          ),
                         ),
                         Text(
                           authWatch.customer.customerName,
@@ -93,6 +101,24 @@ class ProfileScreen extends StatelessWidget {
                                   }),
                               CustomListTile(
                                   icon: const Icon(
+                                    Icons.history,
+                                    size: 30,
+                                    color: AppColors.gold,
+                                  ),
+                                  text: "Orders History",
+                                  isLogout: false,
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (_) =>
+                                          BlocProvider<ProfileCubit>.value(
+                                        value: context.read<ProfileCubit>()..getCustomerHistoryRequests(),
+                                        child: const OrdersHistoryScreen(),
+                                      ),
+                                    ));
+                                  }),
+                              CustomListTile(
+                                  icon: const Icon(
                                     Icons.lock,
                                     size: 30,
                                     color: AppColors.gold,
@@ -100,11 +126,14 @@ class ProfileScreen extends StatelessWidget {
                                   text: "Change Password",
                                   isLogout: false,
                                   onTap: () {
-                                   Navigator.of(context).push(
+                                    Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (context) => BlocProvider<LoginCubit>(
+                                        builder: (context) =>
+                                            BlocProvider<LoginCubit>(
                                           create: (_) => getIt<LoginCubit>(),
-                                          child: const CreateNewPassword(isFromProfile: true,),
+                                          child: const CreateNewPassword(
+                                            isFromProfile: true,
+                                          ),
                                         ),
                                       ),
                                     );
@@ -136,40 +165,51 @@ class ProfileScreen extends StatelessWidget {
                                   isLogout: true,
                                   onTap: () async {
                                     showAdaptiveDialog(
-                                        context: context,
-                                        builder: (dialogContext) => BlocProvider.value(
-                                          value: context.read<ProfileCubit>(),
-                                          child: BlocConsumer<ProfileCubit, ProfileState>(
-                                            listenWhen: (previous, current) {
-                                                return current is LogoutErrorState ||
+                                      context: context,
+                                      builder: (dialogContext) =>
+                                          BlocProvider.value(
+                                        value: context.read<ProfileCubit>(),
+                                        child: BlocConsumer<ProfileCubit,
+                                            ProfileState>(
+                                          listenWhen: (previous, current) {
+                                            return current
+                                                    is LogoutErrorState ||
                                                 current is LogoutSuccessState;
+                                          },
+                                          listener: (context, state) {
+                                            if (state is LogoutErrorState) {
+                                              defaultErrorSnackBar(
+                                                  context: context,
+                                                  message: state.errMsg);
+                                            } else if (state
+                                                is LogoutSuccessState) {
+                                              if (Navigator.of(dialogContext)
+                                                  .canPop()) {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                              }
+                                            }
+                                          },
+                                          builder: (context, state) {
+                                            return DefaultDialog(
+                                              secondButtonColor:
+                                                  AppColors.darkRed,
+                                              onSecondButtonTapped: () {
+                                                context
+                                                    .read<ProfileCubit>()
+                                                    .logout();
                                               },
-                                              listener: (context, state) {
-                                                if(state is LogoutErrorState){
-                                                  defaultErrorSnackBar(context: context, message: state.errMsg);
-                                                } else if(state is LogoutSuccessState){
-                                                  if (Navigator.of(dialogContext).canPop()) {
-                                                    Navigator.of(dialogContext).pop();
-                                                  }
-                                                }
-                                              },
-                                            builder: (context, state) {
-                                              return DefaultDialog(
-                                                secondButtonColor: AppColors.darkRed,
-                                                onSecondButtonTapped: () {
-                                                  context.read<ProfileCubit>().logout();
-                                                },
-                                                loading: state is LogoutLoadingState,
-                                                secondButtonText: "Yes, Logout",
-                                                title:
-                                                    "Already Leaving?",
-                                                subTitle:
-                                                    "Are you sure you want to logout?",
-                                              );
-                                            },
-                                          ),
+                                              loading:
+                                                  state is LogoutLoadingState,
+                                              secondButtonText: "Yes, Logout",
+                                              title: "Already Leaving?",
+                                              subTitle:
+                                                  "Are you sure you want to logout?",
+                                            );
+                                          },
                                         ),
-                                      );
+                                      ),
+                                    );
                                   }),
                             ],
                           ),

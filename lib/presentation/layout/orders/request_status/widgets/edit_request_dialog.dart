@@ -39,47 +39,25 @@ class EditRequestStatusDialog extends StatelessWidget {
           ],
         ),
         padding: const EdgeInsets.symmetric(
-          horizontal: 16,
+          horizontal: 34,
           vertical: 12,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              "Confirmation Required",
-              style: AppFonts.inter18Black500,
-              textAlign: TextAlign.center,
-            ),
             Padding(
               padding: const EdgeInsets.only(
                 top: 12.0,
-                bottom: 20,
+                bottom: 34,
               ),
               child: Text(
-                "Are you sure you want to $reason this request? This action cannot be undone.",
-                style: AppFonts.ibm11Grey400,
+                "Are you sure you want to $reason your order?",
+                style: AppFonts.ibm24HeaderBlue600,
                 textAlign: TextAlign.center,
               ),
             ),
             Row(
               children: [
-                Expanded(
-                  child: DefaultButton(
-                    color: AppColors.white,
-                    border: Border.all(color: AppColors.primaryGreen),
-                    textColor: AppColors.primaryGreen,
-                    function: () {
-                      Navigator.pop(context);
-                    },
-                    text: "Cancel",
-                  ),
-                ),
-                const SizedBox(
-                  width: 32,
-                ),
                 Expanded(
                   child: BlocBuilder<OrderCubit, OrderState>(
                     buildWhen: (previous, current) =>
@@ -89,7 +67,9 @@ class EditRequestStatusDialog extends StatelessWidget {
                     builder: (blocContext, state) {
                       return DefaultButton(
                         loading: state is SubmitEditStatusLoadingState,
-                        color: AppColors.errorRed,
+                        border: Border.all(color: AppColors.darkRed),
+                        textColor: AppColors.darkRed,
+                        color: AppColors.white,
                         function: () async {
                           if (state is! SubmitEditsLoadingState) {
                             blocContext
@@ -112,6 +92,19 @@ class EditRequestStatusDialog extends StatelessWidget {
                         text: "Confirm",
                       );
                     },
+                  ),
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                Expanded(
+                  child: DefaultButton(
+                    color: AppColors.primaryBlue,
+                    textColor: AppColors.white,
+                    function: () {
+                      Navigator.pop(context);
+                    },
+                    text: "Cancel",
                   ),
                 ),
               ],

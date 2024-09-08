@@ -54,30 +54,51 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: HomeHeader(),
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.only(
-            top: 40.0,
-            bottom: 8.0,
-            start: 16,
-          ),
-          child: Text(
-            "brands".getLocale(context: context),
-            style: AppFonts.ibm18HeaderBlue600,
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              if (context.read<HomeCubit>().selectedBrandIndex == -1) {
+                context.read<HomeCubit>().getCarsBasedOnBrand();
+              } else {
+                context.read<HomeCubit>().getCarsBasedOnBrand(
+                    brandId: context
+                        .read<HomeCubit>()
+                        .carBrands[context.read<HomeCubit>().selectedBrandIndex]
+                        .id);
+              }
+            },
+            child: ListView(
+              shrinkWrap: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    top: 40.0,
+                    bottom: 8.0,
+                    start: 16,
+                  ),
+                  child: Text(
+                    "brands".getLocale(context: context),
+                    style: AppFonts.ibm18HeaderBlue600,
+                  ),
+                ),
+                const BrandsList(),
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    top: 26,
+                    bottom: 14,
+                    start: 16,
+                  ),
+                  child: Text(
+                    "recommendedCars".getLocale(context: context),
+                    style: AppFonts.ibm18HeaderBlue600,
+                  ),
+                ),
+                const CarsByBrandsList(),
+              ],
+            ),
           ),
         ),
-        const BrandsList(),
-        Padding(
-          padding: const EdgeInsetsDirectional.only(
-            top: 26,
-            bottom: 14,
-            start: 16,
-          ),
-          child: Text(
-            "recommendedCars".getLocale(context: context),
-            style: AppFonts.ibm18HeaderBlue600,
-          ),
-        ),
-        const CarsByBrandsList(),
       ],
     );
   }

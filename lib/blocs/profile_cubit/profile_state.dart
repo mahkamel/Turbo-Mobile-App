@@ -46,45 +46,45 @@ class ProfileState with _$ProfileState {
     required TextFieldValidation validation,
   }) = CheckProfileNameValidationState;
 
+  const factory ProfileState.logoutLoading() = LogoutLoadingState;
+  const factory ProfileState.logoutSuccess() = LogoutSuccessState;
+  const factory ProfileState.logoutError(String errMsg) = LogoutErrorState;
 
-  const factory ProfileState.logoutLoading() =
-  LogoutLoadingState;
-  const factory ProfileState.logoutSuccess() =
-  LogoutSuccessState;
-  const factory ProfileState.logoutError(String errMsg) =
-  LogoutErrorState;
-
-  const factory ProfileState.editProfileLoading() =
-  EditProfileLoadingState;
+  const factory ProfileState.editProfileLoading() = EditProfileLoadingState;
   const factory ProfileState.editProfileSuccess(String success) =
-  EditProfileSuccessState;
+      EditProfileSuccessState;
   const factory ProfileState.editProfileError(String errMsg) =
-  EditProfileErrorState;
-  const factory ProfileState.editProfileEmpty() =
-  EditProfileEmptyState;
+      EditProfileErrorState;
+  const factory ProfileState.editProfileEmpty() = EditProfileEmptyState;
 
-  const factory ProfileState.deleteProfileLoading() =
-  DeleteProfileLoadingState;
+  const factory ProfileState.deleteProfileLoading() = DeleteProfileLoadingState;
   const factory ProfileState.deleteProfileSuccess(String success) =
-  DeleteProfileSuccessState;
+      DeleteProfileSuccessState;
   const factory ProfileState.deleteProfileError(String errMsg) =
-  DeleteProfileErrorState;
+      DeleteProfileErrorState;
 
   const factory ProfileState.setDefaultCardLoading(String id) =
-  SetDefaultCardLoadingState;
+      SetDefaultCardLoadingState;
   const factory ProfileState.setDefaultCardSuccess(String success) =
-  SetDefaultCardSuccessState;
+      SetDefaultCardSuccessState;
   const factory ProfileState.setDefaultCardError(String errMsg) =
-  SetDefaultCardErrorState;
+      SetDefaultCardErrorState;
+
+  const factory ProfileState.getAllRequestsHistoryLoading() =
+      GetAllRequestsHistoryLoadingState;
+  const factory ProfileState.getAllRequestsHistorySuccess() =
+      GetAllRequestsHistorySuccessState;
+  const factory ProfileState.getAllRequestsHistoryError(String errMsg) =
+      GetAllRequestsHistoryErrorState;
 
   const factory ProfileState.editPaymentCardLoading() =
-  EditPaymentCardLoadingState;
+      EditPaymentCardLoadingState;
   const factory ProfileState.editPaymentCardSuccess(String success) =
-  EditPaymentCardSuccessState;
+      EditPaymentCardSuccessState;
   const factory ProfileState.editPaymentCardError(String errMsg) =
-  EditPaymentCardErrorState;
-  const factory ProfileState.editPaymentCardEmpty() =
-  EditPaymentCardEmptyState;
+      EditPaymentCardErrorState;
+  const factory ProfileState.editPaymentCardEmpty() = EditPaymentCardEmptyState;
 
-  const factory ProfileState.imagePicked(String imagePath) = ProfileImagePickedState;
+  const factory ProfileState.imagePicked(String imagePath) =
+      ProfileImagePickedState;
 }

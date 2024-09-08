@@ -61,6 +61,11 @@ class OrderCubit extends Cubit<OrderState> {
         },
         (userRequests) {
           allRequests = userRequests;
+          DateTime today = DateTime.now();
+          DateTime startOfToday = DateTime(today.year, today.month, today.day);
+
+          allRequests.removeWhere(
+              (element) => element.requestTo.isBefore(startOfToday));
           emit(const OrderState.getAllRequestsSuccess());
         },
       );
