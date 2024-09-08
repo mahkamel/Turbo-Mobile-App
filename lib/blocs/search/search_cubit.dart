@@ -17,6 +17,8 @@ class SearchCubit extends Cubit<SearchState> {
       : super(const SearchState.initial());
 
   TextEditingController brandSearchController = TextEditingController();
+  TextEditingController minPriceController = TextEditingController();
+  TextEditingController maxPriceController = TextEditingController();
 
   List<CarBrand> searchedBrands = [];
   List<CarBrand> selectedBrands = [];
@@ -167,12 +169,48 @@ class SearchCubit extends Cubit<SearchState> {
     );
   }
 
+  void validateMinPrice() {
+    if(minPriceController.text.isEmpty) {
+      minPriceController.text = '1';
+      changePriceRangeIndex(min: 1, max: maxDailyPrice);
+    }
+    double value = double.parse(minPriceController.text);
+    if(value < 1) {
+      minPriceController.text = '1';
+      changePriceRangeIndex(min: 1, max: maxDailyPrice);
+    }
+    else if(value > maxDailyPrice) {
+      minPriceController.text = maxDailyPrice.toString();
+      changePriceRangeIndex(min: maxDailyPrice, max: maxDailyPrice);
+    } 
+    else {
+      changePriceRangeIndex(min: value, max: maxDailyPrice);
+    }
+  }
+
+  void validateMaxPrice() {
+    if(maxPriceController.text.isEmpty) {
+      maxPriceController.text = '2500';
+      changePriceRangeIndex(min: minDailyPrice, max: 2500);
+    }
+    double value = double.parse(maxPriceController.text);
+    double minPrice = double.parse(minPriceController.text);
+    if(value < minPrice) {
+      maxPriceController.text = minPriceController.text;
+      changePriceRangeIndex(min: minPrice, max: minPrice);
+    } else {
+      changePriceRangeIndex(min: minDailyPrice, max: value);
+    }
+  }
+
   void changePriceRangeIndex({
     required double min,
     required double max,
   }) {
     minDailyPrice = min;
     maxDailyPrice = max;
+    minPriceController.text = '$min';
+    maxPriceController.text = '$max';
     emit(SearchState.changeSelectedPriceRangeIndex(
         minDailyPrice, maxDailyPrice));
   }

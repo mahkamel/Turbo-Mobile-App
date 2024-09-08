@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../helpers/enums.dart';
+import '../helpers/functions.dart';
 import '../theming/colors.dart';
 import '../theming/fonts.dart';
 
@@ -584,7 +585,9 @@ Widget codeTextField({
   final int maxNumbers = 1,
   final String hint = '',
   final Function(PointerDownEvent)? onTapOutside,
-  final isFromForgetPassword = false,
+  final isText = false,
+  final isMoney = false,
+  final Function(String value)? onSubmit,
   required BuildContext context,
 }) {
   return Container(
@@ -596,7 +599,7 @@ Widget codeTextField({
     ),
     child: TextFormField(
       focusNode: node,
-      autofocus: true,
+      autofocus: isMoney ? false : true,
       showCursor: true,
       // maxLength: 1,
       onTapOutside: onTapOutside ??
@@ -604,15 +607,20 @@ Widget codeTextField({
             FocusManager.instance.primaryFocus?.unfocus();
           },
       textAlign: TextAlign.center,
-      inputFormatters: !isFromForgetPassword ? [
-        FilteringTextInputFormatter.digitsOnly,
+      inputFormatters: !isText ? isMoney ? [
+          DecimalTextInputFormatter(decimalRange: 2),
+
+
+      ] : [
+       FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(maxNumbers)
       ] : null,
       textInputAction: TextInputAction.next,
       onChanged: onChange,
+      onFieldSubmitted: onSubmit,
       style: AppFonts.ibm14LightBlack400,
       controller: controller,
-      keyboardType: isFromForgetPassword ? TextInputType.text  : TextInputType.number,
+      keyboardType: isText ? isMoney ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text  : TextInputType.number,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: AppFonts.ibm14LightBlack400,

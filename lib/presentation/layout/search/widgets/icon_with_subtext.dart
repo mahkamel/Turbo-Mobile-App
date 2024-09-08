@@ -6,9 +6,10 @@ import 'package:turbo/core/theming/fonts.dart';
 
 class IconWithSubtext extends StatelessWidget {
   final bool isSelected;
-  final String iconPath;
+  final String? iconPath;
+  final String innerText;
   final String subtext;
-  const IconWithSubtext({super.key, this.isSelected = false, required this.iconPath, required this.subtext});
+  const IconWithSubtext({super.key, this.isSelected = false, this.iconPath, required this.subtext, this.innerText = ""});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +23,8 @@ class IconWithSubtext extends StatelessWidget {
           badgeContent: const Icon(Icons.check, size: 10, color: AppColors.white,),
           showBadge: isSelected,
           child: Container(
-            width: 65,
             height: 60,
+            constraints: const BoxConstraints(maxWidth: 75),
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -44,7 +45,12 @@ class IconWithSubtext extends StatelessWidget {
                 )
               ]
             ),
-            child: SvgPicture.asset(iconPath,),
+            child: Center(child: iconPath != null ? SvgPicture.asset(iconPath!,) : Text(
+              innerText,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+          )),
           ),
         ),
         const SizedBox(height: 10,),

@@ -122,21 +122,32 @@ class CarYearFilterHeader extends StatelessWidget {
               builder: (BuildContext context) {
                 DateTime selectedDate = DateTime.now();
                 return AlertDialog(
-                  title: const Text("Manufacturing year"),
+                  title: Text("Manufacturing year", style: AppFonts.ibm24HeaderBlue600.copyWith(color: AppColors.lightBlack),),
                   content: SizedBox(
-                    width: 300,
+                    width: 350,
                     height: 300,
-                    child: YearPicker(
-                      firstDate:
-                      DateTime(DateTime.now().year - 100, 1),
-                      lastDate: DateTime.now(),
-                      selectedDate: selectedDate,
-                      onChanged: (DateTime dateTime) {
-                        searchCubitRead.carYearsSelection(
-                          dateTime.year.toString(),
-                        );
-                        Navigator.pop(context);
-                      },
+                    child: DatePickerTheme(
+                      data: DatePickerThemeData(
+                          todayBackgroundColor: WidgetStateColor.resolveWith((states) {
+                            return AppColors.green; 
+                          }),
+                          yearForegroundColor: WidgetStateColor.resolveWith((states) {
+                            return AppColors.black; 
+                          }),
+                      ),
+                      child: YearPicker(
+                        
+                        firstDate:
+                        DateTime(DateTime.now().year - 100, 1),
+                        lastDate: DateTime.now(),
+                        selectedDate: selectedDate,
+                        onChanged: (DateTime dateTime) {
+                          searchCubitRead.carYearsSelection(
+                            dateTime.year.toString(),
+                          );
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
                   ),
                 );

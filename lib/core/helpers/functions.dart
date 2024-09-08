@@ -1,13 +1,13 @@
 // Functions
 
 import 'package:flutter/services.dart'
-    show TextEditingValue, TextInputFormatter, TextSelection;
+    show TextEditingValue, TextInputFormatter, TextRange, TextSelection;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/flavors.dart';
 import 'package:turbo/models/customer_model.dart';
-
+import 'dart:math' as math;
 import '../../models/attachment.dart';
 import '../services/local/storage_service.dart';
 
@@ -191,4 +191,41 @@ String formatDate(DateTime dateTime, {String? locale}) {
   );
 
   return formatter.format(dateTime);
+}
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+  DecimalTextInputFormatter({required this.decimalRange})
+      : assert(decimalRange > 0);
+
+  final int decimalRange;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue, // unused.
+    TextEditingValue newValue,
+  ) {
+    TextSelection newSelection = newValue.selection;
+    String truncated = newValue.text;
+
+    String value = newValue.text;
+
+    if (value.contains(".") &&
+        value.substring(value.indexOf(".") + 1).length > decimalRange) {
+      truncated = oldValue.text;
+      newSelection = oldValue.selection;
+    } else if (value == ".") {
+      truncated = "0.";
+
+      newSelection = newValue.selection.copyWith(
+        baseOffset: math.min(truncated.length, truncated.length + 1),
+        extentOffset: math.min(truncated.length, truncated.length + 1),
+      );
+    }
+
+    return TextEditingValue(
+      text: truncated,
+      selection: newSelection,
+      composing: TextRange.empty,
+    );
+  }
 }

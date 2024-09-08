@@ -12,14 +12,18 @@ class CarCategory {
       required this.id,
       required this.categoryName,
       required this.categoryDescription,
-      required this.categorySysDate});
+      required this.categorySysDate,
+      });
 
+  
   factory CarCategory.fromJson(Map<String, dynamic> json) {
     return CarCategory(
         categoryIsActive: json['categoryIsActive'] ?? false,
         id: json['_id'],
         categoryName: json['categoryName'],
         categoryDescription: json['categoryDescription'] ?? "",
-        categorySysDate: json['categorySysDate'] ?? "");
+        categorySysDate: json['categorySysDate'] ?? "",
+        );
   }
+
 }

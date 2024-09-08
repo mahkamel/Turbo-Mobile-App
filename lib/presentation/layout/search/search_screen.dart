@@ -21,26 +21,26 @@ class SearchScreen extends StatelessWidget {
         height: AppConstants.screenHeight(context),
         width: AppConstants.screenWidth(context),
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const FilterHeader(),
-              if (searchCubitWatch.isGettingFilterResults)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Center(
-                    child: Lottie.asset(
-                      "assets/lottie/luxury_car_loading.json",
-                      height: AppConstants.screenWidth(context) * .6,
-                      width: (AppConstants.screenWidth(context) * .6),
+          child: Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const FilterHeader(),
+                  if (searchCubitWatch.isGettingFilterResults)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Center(
+                        child: Lottie.asset(
+                          "assets/lottie/luxury_car_loading.json",
+                          height: AppConstants.screenWidth(context) * .6,
+                          width: (AppConstants.screenWidth(context) * .6),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              if (!searchCubitWatch.isGettingFilterResults)
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: searchCubitWatch.isFilteredRes
+                  if (!searchCubitWatch.isGettingFilterResults)
+                    searchCubitWatch.isFilteredRes
                         ? searchCubitWatch.filteredCars.isEmpty
                             ? SizedBox(
                                 width: AppConstants.screenWidth(context),
@@ -72,13 +72,10 @@ class SearchScreen extends StatelessWidget {
                                 carsByBrand: searchCubitWatch.filteredCars,
                                 isFromFilter: true,
                               )
-                        : const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20.0),
-                            child: FilterCars(),
-                          ),
-                  ),
-                ),
-            ],
+                        : const FilterCars(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
