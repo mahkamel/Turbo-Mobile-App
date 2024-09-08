@@ -82,7 +82,6 @@ class PaymentRepository {
         return Left(response.data['message']);
       }
     } catch (e) {
-      print("waseawe $e");
       return Left(e.toString());
     }
   }
