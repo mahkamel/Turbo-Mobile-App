@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../helpers/app_regex.dart';
 import '../dio_helper.dart';
 
 class PaymentService {
@@ -17,6 +18,7 @@ class PaymentService {
     required String billingVisaLastNo,
     required bool isToSave,
   }) async {
+    print("isRo Aace ${isToSave}");
     Map<String, dynamic> paymentBody = {};
     if (visaId != null) {
       final savedVisaId = <String, dynamic>{
@@ -33,6 +35,7 @@ class PaymentService {
           "visaCardNumber": visaCardNumber,
           "visaCardExpiryMonth": visaCardExpiryMonth,
           "visaCardExpiryYear": visaCardExpiryYear,
+          "visaCardType": AppRegex.detectCardType(visaCardNumber),
         }
       };
       paymentBody.addEntries(visa.entries);
@@ -54,7 +57,7 @@ class PaymentService {
         "billingCustomerName": billingCustomerName,
         "billingPostalCode": billingPostalCode,
         "billingAddress": billingAddress,
-        "billingVisaLastNo": billingVisaLastNo
+        "billingVisaLastNo": billingVisaLastNo,
       },
     };
     paymentBody.addEntries(payment.entries);
@@ -100,14 +103,13 @@ class PaymentService {
     }
   }
 
-  Future<Response> addNewPaymentMethod({
-    required String userToken,
-    required String visaCardName,
-    required String visaCardNumber,
-    required String visaCardExpiryMonth,
-    required String visaCardExpiryYear,
-    required String visaCardType
-  }) async {
+  Future<Response> addNewPaymentMethod(
+      {required String userToken,
+      required String visaCardName,
+      required String visaCardNumber,
+      required String visaCardExpiryMonth,
+      required String visaCardExpiryYear,
+      required String visaCardType}) async {
     try {
       Response response = await DioHelper.postData(
           endpoint: 'visacard/addPaymentMethod',
@@ -153,21 +155,18 @@ class PaymentService {
   }) async {
     try {
       Response response = await DioHelper.postData(
-        endpoint: "visacard/editPaymentMethod",
-        body: {
-          "visaCard": {
-            "id":cardId,
-            if(cardHolderName != null) 
-              "visaCardName": cardHolderName,
-            if(cardExpiryMonth != null)
-              "visaCardExpiryMonth": cardExpiryMonth,
-            if(cardExpiryYear != null)
-              "visaCardExpiryYear": cardExpiryYear,
-          }
-        }
-      );
+          endpoint: "visacard/editPaymentMethod",
+          body: {
+            "visaCard": {
+              "id": cardId,
+              if (cardHolderName != null) "visaCardName": cardHolderName,
+              if (cardExpiryMonth != null)
+                "visaCardExpiryMonth": cardExpiryMonth,
+              if (cardExpiryYear != null) "visaCardExpiryYear": cardExpiryYear,
+            }
+          });
       return response;
-    } catch(e) {
+    } catch (e) {
       throw e.toString();
     }
   }

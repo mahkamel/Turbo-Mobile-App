@@ -53,7 +53,7 @@ class ExistingCardsBottomSheet extends StatelessWidget {
                     child: Text(
                       "Choose payment method",
                       overflow: TextOverflow.ellipsis,
-                      style: AppFonts.inter18BottomSheetGrey400,
+                      style: AppFonts.ibm24HeaderBlue600,
                     ),
                   ),
                 ),
@@ -63,7 +63,7 @@ class ExistingCardsBottomSheet extends StatelessWidget {
                   },
                   icon: const Icon(
                     Icons.close,
-                    color: AppColors.bottomSheetCloseGrey,
+                    color: AppColors.errorRed,
                   ),
                 ),
               ],
@@ -71,7 +71,7 @@ class ExistingCardsBottomSheet extends StatelessWidget {
           ),
           Text(
             "EXISTING CARDS",
-            style: AppFonts.inter14BottomSheetDarkerGrey100,
+            style: AppFonts.ibm18Divider600,
           ),
           Expanded(
             child: ListView.builder(
@@ -85,15 +85,15 @@ class ExistingCardsBottomSheet extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 child: Container(
-                  height: 50,
+                  height: 40,
                   margin: EdgeInsets.only(
                     top: index == 0 ? 10 : 20,
                     right: 34,
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   decoration: BoxDecoration(
-                    color: AppColors.savedCardsBgColor,
-                    borderRadius: BorderRadius.circular(6),
+                    color: AppColors.methodGrey,
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,7 +122,6 @@ class ExistingCardsBottomSheet extends StatelessWidget {
           ),
           Row(
             children: [
-
               Expanded(
                 child: DefaultButton(
                   function: () {
@@ -133,14 +132,12 @@ class ExistingCardsBottomSheet extends StatelessWidget {
                           child: const AddNewCardScreen()),
                     ));
                   },
-                  borderRadius: 0,
+                  borderRadius: 20,
+                  height: 48,
                   marginRight: 20,
                   marginBottom: 34,
                   marginTop: 12.0,
                   color: AppColors.primaryBlue,
-                  // border: Border.all(
-                  //   color: AppColors.buttonGreyBorder,
-                  // ),
                   textColor: AppColors.white,
                   text: "Add New Card",
                 ),

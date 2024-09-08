@@ -64,9 +64,7 @@ class DefaultSuccessScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
                     message,
-                    style: AppFonts.ibm16LightBlack600.copyWith(
-                      fontSize: 17,
-                    ),
+                    style: AppFonts.ibm15Grey400_600,
                     textAlign: TextAlign.center,
                   ),
                 ),

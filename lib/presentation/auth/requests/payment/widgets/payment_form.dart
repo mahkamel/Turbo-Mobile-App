@@ -6,12 +6,8 @@ import 'package:turbo/blocs/payment/payment_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/theming/fonts.dart';
 import 'package:turbo/presentation/auth/requests/payment/widgets/payment_form_widgets.dart';
-import 'package:turbo/presentation/status_screens/default_error_screen.dart';
-import 'package:turbo/presentation/status_screens/default_success_screen.dart';
 
 import '../../../../../../core/widgets/default_buttons.dart';
-import '../../../../../core/helpers/enums.dart';
-import '../../../../../core/routing/routes.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/widgets/custom_text_fields.dart';
 import '../../../../layout/profile/widgets/saved_cards_widgets.dart';
@@ -30,8 +26,6 @@ class PaymentForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var blocRead = context.read<PaymentCubit>();
-
     return ListView(
       shrinkWrap: true,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -85,57 +79,6 @@ class PaymentForm extends StatelessWidget {
           ),
         ],
         if (context.watch<PaymentCubit>().selectedCard == null) const NewCard(),
-        BlocConsumer<PaymentCubit, PaymentState>(
-          listenWhen: (previous, current) =>
-              current is SubmitPaymentFormErrorState ||
-              current is SubmitPaymentFormSuccessState,
-          listener: (context, state) {
-            if (state is SubmitPaymentFormSuccessState) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => DefaultSuccessScreen(
-                    route: Routes.layoutScreen,
-                    lottiePath: "assets/lottie/car_pending.json",
-                    message:
-                        "We are reviewing your documents and will notify you once the review is complete.",
-                    title:
-                        "Your request #$carRequestCode has been submitted successfully!",
-                    onOkPressed: () {},
-                  ),
-                ),
-                (route) => false,
-              );
-            } else if (state is SubmitPaymentFormErrorState) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        DefaultErrorScreen(errMsg: state.errMsg),
-                  ));
-            }
-          },
-          buildWhen: (previous, current) =>
-              current is SubmitPaymentFormLoadingState ||
-              current is SubmitPaymentFormErrorState ||
-              current is SubmitPaymentFormSuccessState,
-          builder: (context, state) {
-            return DefaultButton(
-              loading: state is SubmitPaymentFormLoadingState,
-              function: () {
-                blocRead.payCarRequest(
-                  carRequestId: carRequestId,
-                  amount: value,
-                );
-              },
-              text: "Pay Now",
-              marginRight: 20,
-              marginLeft: 20,
-              marginTop: 30,
-              marginBottom: 16,
-              // borderRadius: 0,
-            );
-          },
-        ),
       ],
     );
   }
@@ -158,7 +101,7 @@ class NewCardRadio extends StatelessWidget {
       },
       type: "",
       typeAsWidget: AnimatedContainer(
-        height: selectedToggleIndex == 1 ? 460 : 30,
+        height: selectedToggleIndex == 1 ? 480 : 30,
         width: AppConstants.screenWidth(context) - 40,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -267,10 +210,10 @@ class DefaultCardRadioButton extends StatelessWidget {
                 ),
                 const Spacer(),
                 DefaultButton(
-                  width: 60,
+                  width: 64,
                   height: 26,
                   color: AppColors.grey500,
-                  fontSize: 12,
+                  fontSize: 13,
                   marginRight: 16,
                   border: Border.all(color: AppColors.primaryBlue),
                   textColor: AppColors.primaryBlue,
@@ -307,11 +250,7 @@ class DefaultCardRadioButton extends StatelessWidget {
                 validationState:
                     context.watch<PaymentCubit>().cardCVVValidation,
                 onChange: (value) {
-                  if (value.isEmpty ||
-                      context.read<PaymentCubit>().cardCVVValidation !=
-                          TextFieldValidation.normal) {
-                    context.read<PaymentCubit>().checkCVVValidation();
-                  }
+                  context.read<PaymentCubit>().checkCVVValidation();
                 },
                 onSubmit: (_) {
                   context.read<PaymentCubit>().checkCVVValidation();
