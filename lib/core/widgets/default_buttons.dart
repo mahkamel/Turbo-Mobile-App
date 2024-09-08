@@ -66,7 +66,6 @@ class DefaultButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         border: border,
-
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: InkWell(
@@ -104,23 +103,28 @@ class CustomRadioButton extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
     required this.type,
+    this.typeAsWidget,
+    this.margin,
   });
 
   final bool isSelected;
   final void Function() onTap;
   final String type;
+  final Widget? typeAsWidget;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             width: 20,
             height: 20,
-            margin: const EdgeInsetsDirectional.only(end: 4),
+            margin: margin ?? const EdgeInsetsDirectional.only(end: 4),
             padding: const EdgeInsets.all(4),
             decoration: const BoxDecoration(
               color: AppColors.greyBorder,
@@ -135,10 +139,11 @@ class CustomRadioButton extends StatelessWidget {
                   )
                 : null,
           ),
-          Text(
-            type,
-            style: AppFonts.ibm12LightBlack600,
-          ),
+          typeAsWidget ??
+              Text(
+                type,
+                style: AppFonts.ibm12LightBlack600,
+              ),
         ],
       ),
     );

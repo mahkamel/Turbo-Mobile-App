@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/theming/fonts.dart';
 import 'package:turbo/presentation/layout/home/widgets/recommended_car_card.dart';
 
@@ -17,6 +18,8 @@ class CarsByTypesListview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 16),
       itemCount: carsByBrand.length,
       separatorBuilder: (context, index) => const SizedBox(
@@ -26,6 +29,7 @@ class CarsByTypesListview extends StatelessWidget {
         String carType = carsByBrand[typeIndex].carType;
         List<Car> cars = carsByBrand[typeIndex].cars;
         return Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -39,6 +43,7 @@ class CarsByTypesListview extends StatelessWidget {
             ),
             SizedBox(
               height: 225,
+              width: AppConstants.screenWidth(context),
               child: ListView.separated(
                 itemCount: cars.length,
                 padding: const EdgeInsetsDirectional.only(

@@ -92,7 +92,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                "To view your current and past rentals, please login to your account",
+                "To view your current rentals, please login to your account",
                 style: AppFonts.ibm16LightBlack600,
                 textAlign: TextAlign.center,
               ),
@@ -120,7 +120,9 @@ class RequestList extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         var request = context.read<OrderCubit>().allRequests[index];
-        return RequestCard(request: request);
+        return RequestCard(
+          request: request,
+        );
       },
       separatorBuilder: (context, index) => const SizedBox(
         height: 16,
@@ -129,5 +131,3 @@ class RequestList extends StatelessWidget {
     );
   }
 }
-
-

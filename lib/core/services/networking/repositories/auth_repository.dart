@@ -104,24 +104,28 @@ class AuthRepository {
         customerDriverLicenseNumberExpiryDate:
             customerDriverLicenseNumberExpiryDate,
       );
-      if (response.statusCode == 200 && response.data['status']) {
-        customer = CustomerModel(
-          customerAddress: customerAddress,
-          customerTelephone: customerTelephone,
-          customerNationalId: customerNationalId,
-          customerName: customerName,
-          customerId: response.data['id'],
-          customerEmail: customerEmail,
-          attachments: <Attachment>[],
-          customerType: customerType,
-          token: response.data['token'],
-        );
-        UserTokenService.saveUserToken(response.data['token']);
-        StorageService.saveData(
-          "customerData",
-          json.encode(customer.toJson()),
-        );
-        return const Right(true);
+      if (response.statusCode == 200) {
+        if (response.data['status']) {
+          customer = CustomerModel(
+            customerAddress: customerAddress,
+            customerTelephone: customerTelephone,
+            customerNationalId: customerNationalId,
+            customerName: customerName,
+            customerId: response.data['id'],
+            customerEmail: customerEmail,
+            attachments: <Attachment>[],
+            customerType: customerType,
+            token: response.data['token'],
+          );
+          UserTokenService.saveUserToken(response.data['token']);
+          StorageService.saveData(
+            "customerData",
+            json.encode(customer.toJson()),
+          );
+          return const Right(true);
+        } else {
+          return const Left("reset");
+        }
       } else {
         return Left(response.data['message']);
       }
@@ -315,31 +319,29 @@ class AuthRepository {
   }) async {
     try {
       final response = await _authServices.forgetPassword(email);
-      if(response.data['status'] == false) {
+      if (response.data['status'] == false) {
         return Left(response.data['message']);
       } else {
         return const Right("otp");
       }
-    }catch (e) {
+    } catch (e) {
       return Left(e.toString());
     }
   }
 
-  Future<Either<String, Map<String,String>>> checkOTP({
+  Future<Either<String, Map<String, String>>> checkOTP({
     required String email,
     required String otp,
   }) async {
     try {
       final response = await _authServices.checkOTP(email, otp);
-      if(response.data['status'] == false) {
+      if (response.data['status'] == false) {
         return Left(response.data['message']);
       } else {
-        return Right({
-          "msg": response.data['message'],
-          "id": response.data['data']
-        });
+        return Right(
+            {"msg": response.data['message'], "id": response.data['data']});
       }
-    }catch (e) {
+    } catch (e) {
       return Left(e.toString());
     }
   }
@@ -350,23 +352,22 @@ class AuthRepository {
   }) async {
     try {
       final response = await _authServices.changePassword(id, newPassword);
-      if(response.data['status'] == false) {
+      if (response.data['status'] == false) {
         return Left(response.data['message']);
       } else {
         return Right(response.data['message']);
       }
-    }catch (e) {
+    } catch (e) {
       return Left(e.toString());
     }
   }
-  Future<Either<String, String>> editCustomer({
-    String? customerName,
-    String? customerAddress,
-    File? image
-  }) async {
+
+  Future<Either<String, String>> editCustomer(
+      {String? customerName, String? customerAddress, File? image}) async {
     try {
-      final response  = await _authServices.editCustomer(customerName, customerAddress, image);
-      if(response.data['status'] == false) {
+      final response = await _authServices.editCustomer(
+          customerName, customerAddress, image);
+      if (response.data['status'] == false) {
         return Left(response.data['message']);
       } else {
         final Map<String, dynamic> data = response.data['data'];
@@ -379,22 +380,21 @@ class AuthRepository {
         );
         return Right(response.data['message']);
       }
-    } catch(e) {
+    } catch (e) {
       return Left(e.toString());
     }
   }
-  
+
   Future<Either<String, String>> deleteCustomer() async {
     try {
       final response = await _authServices.deleteCustomer();
-      if(response.data['status'] == false) {
+      if (response.data['status'] == false) {
         return Left(response.data['message']);
       } else {
         return Right(response.data['message']);
       }
-    } catch(e) {
+    } catch (e) {
       return Left(e.toString());
     }
   }
 }
-

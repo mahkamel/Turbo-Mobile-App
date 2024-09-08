@@ -2,11 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/services/networking/repositories/auth_repository.dart';
+import 'package:turbo/core/services/networking/repositories/car_repository.dart';
 import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
 import 'package:turbo/main_paths.dart';
 
 import '../../core/helpers/app_regex.dart';
 import '../../core/helpers/enums.dart';
+import '../../models/request_model.dart';
 import '../../models/saved_card.dart';
 
 part 'profile_state.dart';
@@ -15,12 +17,18 @@ part 'profile_cubit.freezed.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   final PaymentRepository _paymentRepository;
   final AuthRepository _authRepository;
-  ProfileCubit(this._paymentRepository, this._authRepository)
-      : super(const ProfileState.initial());
+  final CarRepository _carRepository;
+  ProfileCubit(
+    this._paymentRepository,
+    this._authRepository,
+    this._carRepository,
+  ) : super(const ProfileState.initial());
 
   bool isEditingSavedCards = false;
 
   List<String> savedCardsIdsToBeDeleted = [];
+
+  List<RequestModel> requestsHistory = [];
 
   TextEditingController cardHolderName = TextEditingController();
   TextEditingController cardNumber = TextEditingController();
@@ -167,19 +175,20 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void setDefaultCard(String cardId, int? index) async {
+  void setDefaultCard(String cardId, int index) async {
     emit(ProfileState.setDefaultCardLoading(cardId));
     try {
       final res = await _paymentRepository.setDefaultCard(cardId);
       res.fold((errMsg) {
         emit(ProfileState.setDefaultCardError(errMsg));
       }, (msg) async {
-        savedPaymentCards[index!].isCardDefault = true;
+        savedPaymentCards[index].isCardDefault = true;
         for (int i = 0; i < savedPaymentCards.length; i++) {
           if (i != index) {
             savedPaymentCards[i].isCardDefault = false;
           }
         }
+        _paymentRepository.defaultCard = savedPaymentCards[index];
         emit(ProfileState.setDefaultCardSuccess(msg));
       });
     } catch (e) {
@@ -296,13 +305,15 @@ class ProfileCubit extends Cubit<ProfileState> {
           profileAddress.text = '';
         });
       } else {
-        if(profileImage != null) {
-          res = await _authRepository.editCustomer(image: profileImage, customerName: _authRepository.customer.customerName);
+        if (profileImage != null) {
+          res = await _authRepository.editCustomer(
+              image: profileImage,
+              customerName: _authRepository.customer.customerName);
           res.fold((errMsg) {
-          emit(ProfileState.editProfileError(errMsg));
-        }, (success) {
-          emit(ProfileState.editProfileSuccess(success));
-        });
+            emit(ProfileState.editProfileError(errMsg));
+          }, (success) {
+            emit(ProfileState.editProfileSuccess(success));
+          });
         } else {
           emit(const ProfileState.editProfileEmpty());
         }
@@ -328,6 +339,30 @@ class ProfileCubit extends Cubit<ProfileState> {
       });
     } catch (e) {
       emit(ProfileState.deleteProfileError(e.toString()));
+    }
+  }
+
+  void getCustomerHistoryRequests() async {
+    requestsHistory = [];
+    emit(const ProfileState.getAllRequestsHistoryLoading());
+    try {
+      final res = await _carRepository.getAllRequests();
+      res.fold(
+        (errMsg) {
+          emit(ProfileState.getAllRequestsHistoryError(errMsg));
+        },
+        (userRequests) {
+          requestsHistory = userRequests;
+
+          requestsHistory.removeWhere((element) =>
+              element.requestTo.isAfter(DateTime.now()) ||
+              element.requestStatus == 0 ||
+              element.requestStatus == 4);
+          emit(const ProfileState.getAllRequestsHistorySuccess());
+        },
+      );
+    } catch (e) {
+      emit(ProfileState.getAllRequestsHistoryError(e.toString()));
     }
   }
 }

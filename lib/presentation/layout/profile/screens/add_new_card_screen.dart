@@ -44,10 +44,11 @@ class AddNewCardScreen extends StatelessWidget {
                       Column(
                         children: [
                           const CardsRow(),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 16, right: 16, bottom: 15),
-                            child: Divider(),
+                         const Divider(
+                            endIndent: 16,
+                            indent: 16,
                           ),
+                          const SizedBox(height: 15,),
                           CardHolderName(index: index,),
                           CardNumber(index: index),
                           ExpiryDate(index: index),

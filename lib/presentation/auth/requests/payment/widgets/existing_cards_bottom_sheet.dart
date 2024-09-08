@@ -122,24 +122,7 @@ class ExistingCardsBottomSheet extends StatelessWidget {
           ),
           Row(
             children: [
-              blocRead.selectedSavedCardId != null ? Expanded(
-                child: DefaultButton(
-                  function: () {
-                   blocRead.onRemoveSelectedCard();
-                   Navigator.of(bottomSheetContext).pop();
-                  },
-                  borderRadius: 0,
-                  marginRight: 20,
-                  marginBottom: 34,
-                  marginTop: 12.0,
-                  color: AppColors.white,
-                  border: Border.all(
-                    color: AppColors.buttonGreyBorder,
-                  ),
-                  textColor: AppColors.primaryBlue,
-                  text: "Clear Selected Card",
-                ),
-              ) : const SizedBox(),
+
               Expanded(
                 child: DefaultButton(
                   function: () {

@@ -16,9 +16,11 @@ class RequestCard extends StatelessWidget {
   const RequestCard({
     super.key,
     required this.request,
+    this.isFromHistory = false,
   });
 
   final RequestModel request;
+  final bool isFromHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class RequestCard extends StatelessWidget {
             requestPaidStatus: request.requestPaidStatus,
             requestStatus: request.requestStatus,
             requestCode: request.requestCode,
+            isFromHistory: isFromHistory,
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -169,9 +172,9 @@ class RequestCard extends StatelessWidget {
                         height: 8,
                       ),
                       RequestDate(
-                        isFrom: true,
+                        isFrom: false,
                         isWithPrivateDriver: request.requestDriver,
-                        dateTime: request.requestFrom,
+                        dateTime: request.requestTo,
                       ),
                     ],
                   ),
@@ -179,36 +182,41 @@ class RequestCard extends StatelessWidget {
               ),
             ),
           ),
-          DefaultButton(
-            marginBottom: 8,
-            marginTop: 16,
-            marginLeft: 16,
-            marginRight: 16,
-            function: () {
-              if (request.requestPaidStatus == "paid") {
-                Navigator.of(context).pushNamed(
-                  Routes.requestStatusScreen,
-                  arguments: RequestStatusScreenArguments(
-                    requestId: request.id,
-                    requestCode: request.requestCode,
-                    orderCubit: context.read<OrderCubit>(),
-                  ),
-                );
-              } else {
-                Navigator.of(context).pushNamed(
-                  Routes.paymentScreen,
-                  arguments: PaymentScreenArguments(
-                    paymentAmount: request.requestPrice,
-                    carRequestId: request.id,
-                    carRequestCode: request.requestCode,
-                  ),
-                );
-              }
-            },
-            text: "View details",
-            height: 36,
-            textStyle: AppFonts.ibm15OffWhite400,
-          ),
+          if (isFromHistory)
+            const SizedBox(
+              height: 12,
+            ),
+          if (!isFromHistory)
+            DefaultButton(
+              marginBottom: 12,
+              marginTop: 16,
+              marginLeft: 16,
+              marginRight: 16,
+              function: () {
+                if (request.requestPaidStatus == "paid") {
+                  Navigator.of(context).pushNamed(
+                    Routes.requestStatusScreen,
+                    arguments: RequestStatusScreenArguments(
+                      requestId: request.id,
+                      requestCode: request.requestCode,
+                      orderCubit: context.read<OrderCubit>(),
+                    ),
+                  );
+                } else {
+                  Navigator.of(context).pushNamed(
+                    Routes.paymentScreen,
+                    arguments: PaymentScreenArguments(
+                      paymentAmount: request.requestPrice,
+                      carRequestId: request.id,
+                      carRequestCode: request.requestCode,
+                    ),
+                  );
+                }
+              },
+              text: "View details",
+              height: 36,
+              textStyle: AppFonts.ibm15OffWhite400,
+            ),
         ],
       ),
     );
@@ -277,11 +285,13 @@ class OrderNumberAndStatus extends StatelessWidget {
     required this.requestCode,
     required this.requestPaidStatus,
     required this.requestStatus,
+    this.isFromHistory = false,
   });
 
   final String requestCode;
   final String requestPaidStatus;
   final int requestStatus;
+  final bool isFromHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -299,6 +309,7 @@ class OrderNumberAndStatus extends StatelessWidget {
           StatusBadge(
             requestPaidStatus: requestPaidStatus,
             requestStatus: requestStatus,
+            isFromHistory: isFromHistory,
           ),
         ],
       ),
@@ -307,14 +318,15 @@ class OrderNumberAndStatus extends StatelessWidget {
 }
 
 class StatusBadge extends StatelessWidget {
-  const StatusBadge({
-    super.key,
-    required this.requestPaidStatus,
-    required this.requestStatus,
-  });
+  const StatusBadge(
+      {super.key,
+      required this.requestPaidStatus,
+      required this.requestStatus,
+      this.isFromHistory = false});
 
   final String requestPaidStatus;
   final int requestStatus;
+  final bool isFromHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -329,11 +341,13 @@ class StatusBadge extends StatelessWidget {
             ? AppColors.darkOrange.withOpacity(0.3)
             : requestStatus == 0 || requestStatus == 4
                 ? AppColors.pendingYellow.withOpacity(0.3)
-                : requestStatus == 1 || requestStatus == 3
+                : requestStatus == 1
                     ? AppColors.green.withOpacity(0.3)
-                    : requestStatus == 5
-                        ? AppColors.grey400
-                        : AppColors.red.withOpacity(0.3),
+                    : requestStatus == 3
+                        ? AppColors.darkOrange
+                        : requestStatus == 5
+                            ? AppColors.grey400
+                            : AppColors.red.withOpacity(0.3),
       ),
       child: Text(
         requestPaidStatus == "pending"
@@ -341,7 +355,9 @@ class StatusBadge extends StatelessWidget {
             : requestStatus == 0
                 ? "Pending"
                 : requestStatus == 1
-                    ? "Approved"
+                    ? isFromHistory
+                        ? "Completed"
+                        : "Approved"
                     : requestStatus == 3
                         ? "Refund"
                         : requestStatus == 4
@@ -354,11 +370,13 @@ class StatusBadge extends StatelessWidget {
               ? AppColors.darkOrange
               : requestStatus == 0 || requestStatus == 4
                   ? AppColors.pendingYellowText
-                  : requestStatus == 1 || requestStatus == 3
+                  : requestStatus == 1
                       ? AppColors.green
-                      : requestStatus == 5
+                      : requestStatus == 3
                           ? AppColors.white
-                          : AppColors.red,
+                          : requestStatus == 5
+                              ? AppColors.white
+                              : AppColors.red,
           fontWeight: FontWeight.w400,
           fontSize: 10,
         ),
@@ -388,7 +406,7 @@ class EmptyRequests extends StatelessWidget {
           height: 350,
         ),
         Text(
-          "You don't have any past rentals yet,\nExplore our wide selection of cars to find the perfect one for your next trip.",
+          "You don't have any rentals yet,\nExplore our wide selection of cars to find the perfect one for your next trip.",
           style: AppFonts.ibm16LightBlack600,
           textAlign: TextAlign.center,
         )

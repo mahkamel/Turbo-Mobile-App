@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:turbo/core/services/networking/repositories/payment_repository.dart';
-import 'package:turbo/presentation/auth/requests/payment/widgets/payment_card_type.dart';
 
 import '../../../../../blocs/payment/payment_cubit.dart';
-import '../../../../../core/di/dependency_injection.dart';
-import '../../../../../core/helpers/constants.dart';
 import '../../../../../core/helpers/enums.dart';
 import '../../../../../core/helpers/functions.dart';
 import '../../../../../core/theming/colors.dart';
@@ -14,60 +10,19 @@ import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/widgets/text_field_with_header.dart';
 import 'existing_cards_bottom_sheet.dart';
 
-class CardTypeToggle extends StatelessWidget {
-  const CardTypeToggle({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      width: AppConstants.widthBasedOnFigmaDevice(context, 391),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: BlocBuilder<PaymentCubit, PaymentState>(
-          buildWhen: (previous, current) =>
-              current is ChangeCardTypeToggleState,
-          builder: (context, state) {
-            return Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              runSpacing: 8,
-              spacing: 4,
-              children: [
-                PaymentCardTypeRow(
-                  isSelected: context.watch<PaymentCubit>().cardTypeToggle == 0,
-                  index: 0,
-                  type: "Visa",
-                ),
-                PaymentCardTypeRow(
-                  isSelected: context.watch<PaymentCubit>().cardTypeToggle == 1,
-                  index: 1,
-                  type: "Mastercard",
-                ),
-                PaymentCardTypeRow(
-                  isSelected: context.watch<PaymentCubit>().cardTypeToggle == 2,
-                  index: 2,
-                  type: "AmEx",
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
 class SaveCardInfo extends StatelessWidget {
   const SaveCardInfo({
     super.key,
+    this.isFromRadio = false,
   });
+
+  final bool isFromRadio;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
+        if(!isFromRadio)
         const SizedBox(
           width: 6,
         ),
@@ -99,15 +54,12 @@ class SaveCardInfo extends StatelessWidget {
 class CVV extends StatelessWidget {
   const CVV({
     super.key,
-    required this.blocRead,
-    required this.blocWatch,
   });
-
-  final PaymentCubit blocRead;
-  final PaymentCubit blocWatch;
 
   @override
   Widget build(BuildContext context) {
+    var blocRead = context.read<PaymentCubit>();
+    var blocWatch = context.watch<PaymentCubit>();
     return Padding(
       padding: EdgeInsets.only(
           bottom: (context.watch<PaymentCubit>().cardExpiryDateValidation ==
@@ -122,7 +74,7 @@ class CVV extends StatelessWidget {
         isRequiredFiled: true,
         header: "CVV",
         hintText: "CVV",
-        validationText: "Please Enter Valid CVV." ,
+        validationText: "Please Enter Valid CVV.",
         isWithValidation: true,
         inputFormatters: [
           LengthLimitingTextInputFormatter(3),
@@ -135,10 +87,7 @@ class CVV extends StatelessWidget {
         textEditingController: blocRead.cardCVV,
         validation: blocWatch.cardCVVValidation,
         onChange: (value) {
-          if (value.isEmpty ||
-              blocRead.cardCVVValidation != TextFieldValidation.normal) {
-            context.read<PaymentCubit>().checkCVVValidation();
-          }
+          context.read<PaymentCubit>().checkCVVValidation();
         },
         onSubmit: (_) {
           blocRead.checkCVVValidation();
@@ -175,7 +124,7 @@ class ExpiryDate extends StatelessWidget {
         header: "Expiry Date",
         hintText: "MM/YY",
         validationText: "Please Enter Valid Date.",
-        isEnabled: blocRead.selectedSavedCardId != null ? false : true,
+        // isEnabled: blocRead.selectedSavedCardId != null ? false : true,
         isWithValidation: true,
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
@@ -207,19 +156,21 @@ class CardNumber extends StatelessWidget {
     super.key,
     required this.blocRead,
     required this.blocWatch,
+    this.isFromRadio = false,
   });
-
+  final bool isFromRadio;
   final PaymentCubit blocRead;
   final PaymentCubit blocWatch;
 
   @override
   Widget build(BuildContext context) {
     return AuthTextFieldWithHeader(
+      horizontalPadding: isFromRadio ? 0 : 18,
       header: "Card Number",
       hintText: "Enter Card Number",
       isRequiredFiled: true,
       validationText: "Please Enter valid Number.",
-      isEnabled: blocRead.selectedSavedCardId != null ? false : true,
+      // isEnabled: blocRead.selectedSavedCardId != null ? false : true,
       isWithValidation: true,
       inputFormatters: [
         LengthLimitingTextInputFormatter(19),
@@ -255,23 +206,6 @@ class CardNumber extends StatelessWidget {
           );
         }
       },
-      suffixIcon: getIt<PaymentRepository>().savedPaymentCards.isNotEmpty
-          ? IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (bottomSheetContext) => ExistingCardsBottomSheet(
-                    blocRead: blocRead,
-                    bottomSheetContext: bottomSheetContext,
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: AppColors.primaryBlue,
-              ),
-            )
-          : null,
     );
   }
 }
@@ -281,7 +215,9 @@ class CardHolderName extends StatelessWidget {
     super.key,
     required this.blocRead,
     required this.blocWatch,
+    this.isFromRadio = false,
   });
+  final bool isFromRadio;
 
   final PaymentCubit blocRead;
   final PaymentCubit blocWatch;
@@ -289,15 +225,15 @@ class CardHolderName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthTextFieldWithHeader(
+      horizontalPadding: isFromRadio ? 0 : 16,
       header: "Cardholder Name",
       hintText: "Enter Name",
-      isEnabled: blocRead.selectedSavedCardId != null ? false : true,
+      // isEnabled: blocRead.selectedSavedCardId != null ? false : true,
       isRequiredFiled: true,
       textEditingController: blocRead.cardHolderName,
       validation: blocWatch.cardHolderNameValidation,
       isWithValidation: true,
       validationText: "Please Enter valid name.",
-      
       onChange: (value) {
         if (value.isEmpty ||
             blocRead.cardHolderNameValidation != TextFieldValidation.normal) {
@@ -321,33 +257,29 @@ class TotalAmount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(
-        start: 16.0,
-        bottom: 16.0,
-      ),
-      child: Text.rich(
-        TextSpan(
-          text: "Total: ",
-          style: AppFonts.ibm16TypeGreyHeader600,
-          children: [
-            TextSpan(
-              text: "${value.toStringAsFixed(2)} ",
-              style: AppFonts.inter18Black500,
-            ),
-            TextSpan(
-              text: "SAR",
-              style: AppFonts.inter18Black500.copyWith(
-                fontSize: 16,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text.rich(
+          TextSpan(
+            text: "Payment Amount",
+            style: AppFonts.ibm16LightBlack600,
+            children: [
+              TextSpan(
+                text: " (Including Vat)",
+                style: AppFonts.ibm16subTextGrey600,
               ),
-            ),
-            TextSpan(
-              text: " (Including VAT)",
-              style: AppFonts.ibm11Grey400,
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+        const SizedBox(
+          height: 2,
+        ),
+        Text(
+          "$value SAR",
+          style: AppFonts.ibm18HeaderBlue600,
+        ),
+      ],
     );
   }
 }
@@ -355,12 +287,14 @@ class TotalAmount extends StatelessWidget {
 class ExpiryDateAndCvvRow extends StatelessWidget {
   const ExpiryDateAndCvvRow({
     super.key,
+    this.isFromRadio = false,
   });
-
+  final bool isFromRadio;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0).copyWith(
+      padding:
+          EdgeInsets.symmetric(horizontal: isFromRadio ? 0 : 18.0).copyWith(
         bottom: 16,
       ),
       child: Row(
@@ -391,9 +325,7 @@ class ExpiryDateAndCvvRow extends StatelessWidget {
                   current is CheckExpiryDateState ||
                   current is SelectedSavedCardState,
               builder: (context, state) {
-                var blocRead = context.read<PaymentCubit>();
-                var blocWatch = context.watch<PaymentCubit>();
-                return CVV(blocRead: blocRead, blocWatch: blocWatch);
+                return const CVV();
               },
             ),
           ),

@@ -25,7 +25,7 @@ Widget loginContainer(BuildContext context) {
 }
 
 class ProfileImage extends StatelessWidget {
- const ProfileImage({
+  const ProfileImage({
     super.key,
     required this.imageUrl,
     this.isFromStorageImage = false,
@@ -36,37 +36,37 @@ class ProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipOval(
-      child: isFromStorageImage ?  Image.file(
-              File(imageUrl), 
-              height: 92,
-              width: 92,
-              fit: BoxFit.cover, 
-            ) : 
-      CachedNetworkImage(
-        placeholder: (context, url) => AspectRatio(
-          aspectRatio: 1,
-          child: Image.asset(
-            'assets/images/profileImage.png',
-            fit: BoxFit.cover,
-            height: 92,
-            width: 92,
-          ),
-        ),
-        errorWidget: (context, url, error) => AspectRatio(
-          aspectRatio: 1,
-          child: Image.asset(
-            'assets/images/profileImage.png',
-            fit: BoxFit.cover,
-            height: 92,
-            width: 92,
-          ),
-        ),
-        fit: BoxFit.cover,
-        imageUrl: imageUrl,
-        height: 92,
-        width: 92,
-
-      ),
+      child: isFromStorageImage
+          ? Image.file(
+              File(imageUrl),
+              height: 108,
+              width: 108,
+              fit: BoxFit.cover,
+            )
+          : CachedNetworkImage(
+              placeholder: (context, url) => AspectRatio(
+                aspectRatio: 1,
+                child: Image.asset(
+                  'assets/images/profileImage.png',
+                  fit: BoxFit.cover,
+                  height: 108,
+                  width: 108,
+                ),
+              ),
+              errorWidget: (context, url, error) => AspectRatio(
+                aspectRatio: 1,
+                child: Image.asset(
+                  'assets/images/profileImage.png',
+                  fit: BoxFit.cover,
+                  height: 108,
+                  width: 108,
+                ),
+              ),
+              fit: BoxFit.cover,
+              imageUrl: imageUrl,
+              height: 108,
+              width: 108,
+            ),
     );
   }
 }

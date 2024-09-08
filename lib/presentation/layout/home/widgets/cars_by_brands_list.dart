@@ -38,74 +38,35 @@ class CarsByBrandsList extends StatelessWidget {
                     AppConstants.isFirstTimeGettingCarRec
                 ? const CarsByBrandShimmer()
                 : blocWatch.carsByBrand.isEmpty
-                    ? Expanded(
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            if (context.read<HomeCubit>().selectedBrandIndex ==
-                                -1) {
-                              context.read<HomeCubit>().getCarsBasedOnBrand();
-                            } else {
-                              context.read<HomeCubit>().getCarsBasedOnBrand(
-                                  brandId: context
-                                      .read<HomeCubit>()
-                                      .carBrands[context
-                                          .read<HomeCubit>()
-                                          .selectedBrandIndex]
-                                      .id);
-                            }
-                          },
-                          child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.only(
-                                start: 16.0,
-                                end: 16.0,
-                                // top: 48,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                   Lottie.asset(
-                                    "assets/lottie/no_result.json",
-                                    height: AppConstants.screenWidth(context) * .6,
-                                    width: (AppConstants.screenWidth(context) * .8),
-                                  ),
-                                  const SizedBox(height: 20,),
-                                  Text(
-                                    "noCarsBasedOnBrand"
-                                        .getLocale(context: context),
-                                    textAlign: TextAlign.center,
-                                    style: AppFonts.ibm24HeaderBlue600.copyWith(
-                                      fontSize: 18
-                                    )
-                                  ),
-                                ],
-                              ),
-                            ),
+                    ? Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 16.0,
+                        end: 16.0,
+                        // top: 48,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                           Lottie.asset(
+                            "assets/lottie/no_result.json",
+                            height: AppConstants.screenWidth(context) * .6,
+                            width: (AppConstants.screenWidth(context) * .8),
                           ),
-                        ),
-                      )
-                    : Expanded(
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            if (context.read<HomeCubit>().selectedBrandIndex ==
-                                -1) {
-                              context.read<HomeCubit>().getCarsBasedOnBrand();
-                            } else {
-                              context.read<HomeCubit>().getCarsBasedOnBrand(
-                                  brandId: context
-                                      .read<HomeCubit>()
-                                      .carBrands[context
-                                          .read<HomeCubit>()
-                                          .selectedBrandIndex]
-                                      .id);
-                            }
-                          },
-                          child: CarsByTypesListview(
-                            carsByBrand: blocWatch.carsByBrand,
+                          const SizedBox(height: 20,),
+                          Text(
+                            "noCarsBasedOnBrand"
+                                .getLocale(context: context),
+                            textAlign: TextAlign.center,
+                            style: AppFonts.ibm24HeaderBlue600.copyWith(
+                              fontSize: 18
+                            )
                           ),
-                        ),
-                      );
+                        ],
+                      ),
+                    )
+                    : CarsByTypesListview(
+                      carsByBrand: blocWatch.carsByBrand,
+                    );
       },
     );
   }

@@ -109,6 +109,21 @@ class AppFonts {
           fontWeight: FontWeight.w600,
           color: AppColors.lightBlack,
         );
+
+  static TextStyle ibm16subTextGrey600 = navigatorKey.currentContext != null &&
+          AppConstants.screenWidth(navigatorKey.currentContext!) < 600
+      ? TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 16.0.sp(navigatorKey.currentContext!),
+          fontWeight: FontWeight.w600,
+          color: AppColors.subTextGrey,
+        )
+      : const TextStyle(
+          fontFamily: 'IBM',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.subTextGrey,
+        );
   static TextStyle ibm15subTextGrey400 = navigatorKey.currentContext != null &&
           AppConstants.screenWidth(navigatorKey.currentContext!) < 600
       ? TextStyle(
