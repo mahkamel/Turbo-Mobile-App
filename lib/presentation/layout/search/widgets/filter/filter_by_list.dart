@@ -44,7 +44,7 @@ class CarCategoriesFilter extends StatelessWidget {
                               .watch<CarRepository>()
                               .carCategories[index]
                               .isSelected,
-                  iconPath: 'assets/images/icons/classA.svg',
+                  innerText: context.watch<CarRepository>().carCategories[index].categoryName,
                   subtext: context.watch<CarRepository>().carCategories[index].categoryName,
                   
                 )

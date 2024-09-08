@@ -10,6 +10,19 @@ class CarTypesFilter extends StatelessWidget {
     super.key,
   });
 
+  String getCarTypeImagePath(String typeName) {
+    switch(typeName) {
+      case "Sidan":
+        return 'assets/images/icons/sedan.svg';
+      case "SUV":
+        return "assets/images/icons/suv.svg";
+      case "4*4":
+        return 'assets/images/icons/fourByFour.svg';
+      default:
+        return 'assets/images/icons/sedan.svg';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var searchCubitRead = context.read<SearchCubit>();
@@ -56,7 +69,9 @@ class CarTypesFilter extends StatelessWidget {
                                 .carTypes[index]
                                 .isSelected,
                     subtext: context.watch<CarRepository>().carTypes[index].typeName,
-                    iconPath: 'assets/images/icons/classA.svg',
+                    iconPath: getCarTypeImagePath(context
+                                .watch<CarRepository>()
+                                .carTypes[index].typeName),
                   )
                 ),
               ),
