@@ -269,5 +269,21 @@ class AuthServices {
       throw e.toString();
     }
   }
+  Future<Response> resetCustomer(String customerEmail) async {
+    try {
+      Response response = await DioHelper.postData(
+        endpoint: 'customer/resetCustomer',
+        body: {
+          "customer":{
+            "customerEmail":customerEmail
+          }
+        },
+      );
+      return response;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }
+
 

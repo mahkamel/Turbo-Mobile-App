@@ -47,8 +47,12 @@ class AuthRepository {
           UserTokenService.saveUserToken(customer.token);
           return Right(customer);
         } else {
-          return const Left(
-              "Invalid login credentials. Please double-check your email and password.");
+          if(response.data.containsKey('data')) {
+            return const Left("reset");
+          } else {
+            return const Left(
+                "Invalid login credentials. Please double-check your email and password.");
+          } 
         }
       } else {
         return Left(response.data['message']);
@@ -397,4 +401,18 @@ class AuthRepository {
       return Left(e.toString());
     }
   }
+
+  Future<Either<String, String>> resetCustomer(String customerEmail) async {
+    try {
+      final response = await _authServices.resetCustomer(customerEmail);
+      if(response.data['status'] == false) {
+        return Left(response.data['message']);
+      } else {
+        return Right(response.data['message']);
+      }
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
 }
+

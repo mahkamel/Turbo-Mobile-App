@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 
 class AuthRichText extends StatelessWidget {
@@ -24,16 +22,16 @@ class AuthRichText extends StatelessWidget {
         highlightColor: Colors.transparent,
         onTap: onTap,
         child: Align(
-          alignment: AlignmentDirectional.center,
+          alignment: AlignmentDirectional.centerStart,
           child: Text.rich(
             TextSpan(
               text: text,
-              style: AppFonts.inter16Black500,
+              style: AppFonts.ibm16Grey400,
               children: [
                 TextSpan(
                   text: " $buttonText",
-                  style: AppFonts.inter16Black500
-                      .copyWith(color: AppColors.primaryBlue),
+                  style: AppFonts.ibm16PrimaryBlue600
+                      .copyWith(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
