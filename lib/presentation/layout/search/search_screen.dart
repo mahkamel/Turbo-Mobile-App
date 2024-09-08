@@ -21,60 +21,59 @@ class SearchScreen extends StatelessWidget {
         height: AppConstants.screenHeight(context),
         width: AppConstants.screenWidth(context),
         child: SafeArea(
-          child: Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const FilterHeader(),
-                  if (searchCubitWatch.isGettingFilterResults)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: Center(
-                        child: Lottie.asset(
-                          "assets/lottie/luxury_car_loading.json",
-                          height: AppConstants.screenWidth(context) * .6,
-                          width: (AppConstants.screenWidth(context) * .6),
-                        ),
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const FilterHeader(),
+                if (searchCubitWatch.isGettingFilterResults)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Center(
+                      child: Lottie.asset(
+                        "assets/lottie/luxury_car_loading.json",
+                        height: AppConstants.screenWidth(context) * .6,
+                        width: (AppConstants.screenWidth(context) * .6),
                       ),
                     ),
-                  if (!searchCubitWatch.isGettingFilterResults)
-                    searchCubitWatch.isFilteredRes
-                        ? searchCubitWatch.filteredCars.isEmpty
-                            ? SizedBox(
-                                width: AppConstants.screenWidth(context),
-                                child: Padding(
-                                  padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                        SizedBox(height: AppConstants.screenWidth(context) * .15,),
-                                     Lottie.asset(
-                                        "assets/lottie/no_result.json",
-                                         height: AppConstants.screenWidth(context) * .6,
-                                        width: (AppConstants.screenWidth(context) * .8),
+                  ),
+                if (!searchCubitWatch.isGettingFilterResults)
+                  searchCubitWatch.isFilteredRes
+                      ? searchCubitWatch.filteredCars.isEmpty
+                          ? SizedBox(
+                              width: AppConstants.screenWidth(context),
+                              child: Padding(
+                                padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                      SizedBox(height: AppConstants.screenWidth(context) * .15,),
+                                   Lottie.asset(
+                                      "assets/lottie/no_result.json",
+                                       height: AppConstants.screenWidth(context) * .6,
+                                      width: (AppConstants.screenWidth(context) * .8),
+                                    ),
+                                    const SizedBox(height: 20,),
+                                    Text(
+                                      "No results found! Try another search properties.",
+                                      style:
+                                          AppFonts.ibm24HeaderBlue600.copyWith(
+                                        fontSize: 18,
                                       ),
-                                      const SizedBox(height: 20,),
-                                      Text(
-                                        "No results found! Try another search properties.",
-                                        style:
-                                            AppFonts.ibm24HeaderBlue600.copyWith(
-                                          fontSize: 18,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      )
-                                    ],
-                                  ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
                                 ),
-                              )
-                            : CarsByTypesListview(
-                                carsByBrand: searchCubitWatch.filteredCars,
-                                isFromFilter: true,
-                              )
-                        : const FilterCars(),
-                ],
-              ),
+                              ),
+                            )
+                          : CarsByTypesListview(
+                              carsByBrand: searchCubitWatch.filteredCars,
+                              isFromFilter: true,
+                            )
+                      : const FilterCars(),
+              ],
             ),
           ),
         ),
