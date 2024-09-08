@@ -8,7 +8,6 @@ import '../../../../../core/helpers/functions.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/widgets/text_field_with_header.dart';
-import 'existing_cards_bottom_sheet.dart';
 
 class SaveCardInfo extends StatelessWidget {
   const SaveCardInfo({
@@ -22,10 +21,10 @@ class SaveCardInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if(!isFromRadio)
-        const SizedBox(
-          width: 6,
-        ),
+        if (!isFromRadio)
+          const SizedBox(
+            width: 6,
+          ),
         Checkbox(
           materialTapTargetSize: MaterialTapTargetSize.padded,
           side: const BorderSide(
@@ -44,7 +43,7 @@ class SaveCardInfo extends StatelessWidget {
         ),
         Text(
           "Save credit card information",
-          style: AppFonts.inter14Black400,
+          style: AppFonts.ibm14Primary600,
         ),
       ],
     );
@@ -87,6 +86,12 @@ class CVV extends StatelessWidget {
         textEditingController: blocRead.cardCVV,
         validation: blocWatch.cardCVVValidation,
         onChange: (value) {
+          if (value.isEmpty ||
+              blocRead.cardCVVValidation != TextFieldValidation.normal) {
+            context.read<PaymentCubit>().checkCVVValidation();
+          }
+        },
+        onTapOutside: () {
           context.read<PaymentCubit>().checkCVVValidation();
         },
         onSubmit: (_) {
@@ -195,17 +200,7 @@ class CardNumber extends StatelessWidget {
       onSubmit: (_) {
         blocRead.checkCardNumberValidation();
       },
-      onTap: () {
-        if (blocRead.selectedSavedCardId != null) {
-          showModalBottomSheet(
-            context: context,
-            builder: (bottomSheetContext) => ExistingCardsBottomSheet(
-              blocRead: blocRead,
-              bottomSheetContext: bottomSheetContext,
-            ),
-          );
-        }
-      },
+      onTap: () {},
     );
   }
 }

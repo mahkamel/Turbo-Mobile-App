@@ -48,6 +48,7 @@ class AppColors {
   static const Color borderGrey = Color(0xFFB0AAAA);
   static const Color bottomSheetDarkerGrey = Color(0xFF8A8A8A);
   static const Color savedCardsBgColor = Color(0xFFF8F8FA);
+  static const Color methodGrey = Color(0xFFE8E8E8);
 
   static const Color shimmer = Color(0xffD9D9D9);
   static const Color labelBrown = Color(0xff543334);

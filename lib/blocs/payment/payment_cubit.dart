@@ -128,6 +128,7 @@ class PaymentCubit extends Cubit<PaymentState> {
     selectedCard = card;
     selectedSavedCardId = card.id;
     emit(PaymentState.selectedSavedCard(card.id));
+    clearPaymentFormData();
   }
 
   void onRemoveSelectedCard() {
@@ -153,12 +154,13 @@ class PaymentCubit extends Cubit<PaymentState> {
     checkCardNumberValidation();
     checkExpiryDateValidation();
     checkCVVValidation();
-    if (cardHolderName.text.isNotEmpty &&
-        cardHolderNameValidation == TextFieldValidation.valid &&
-        cardNumber.text.isNotEmpty &&
-        cardNumberValidation == TextFieldValidation.valid &&
-        cardExpiryDate.text.isNotEmpty &&
-        cardExpiryDateValidation == TextFieldValidation.valid &&
+    if (((cardHolderName.text.isNotEmpty &&
+                cardHolderNameValidation == TextFieldValidation.valid &&
+                cardNumber.text.isNotEmpty &&
+                cardNumberValidation == TextFieldValidation.valid &&
+                cardExpiryDate.text.isNotEmpty &&
+                cardExpiryDateValidation == TextFieldValidation.valid) ||
+            selectedCard != null) &&
         cardCVV.text.isNotEmpty &&
         cardCVVValidation == TextFieldValidation.valid) {
       emit(const PaymentState.submitPaymentFormLoading());
@@ -166,16 +168,29 @@ class PaymentCubit extends Cubit<PaymentState> {
         final res = await _paymentRepository.carRequestPayment(
           requestId: carRequestId,
           paymentAmount: amount,
-          visaCardName: cardHolderName.text,
-          visaCardNumber: cardNumber.text,
-          billingVisaLastNo: getLastFourFromCardNumber(cardNumber.text),
-          visaCardExpiryMonth: cardExpiryDate.text.split('/')[0],
-          visaCardExpiryYear: cardExpiryDate.text.split('/')[1],
+          visaCardName: (selectedCard != null && selectedCardToggleIndex == 0)
+              ? selectedCard!.visaCardName
+              : cardHolderName.text,
+          visaCardNumber: (selectedCard != null && selectedCardToggleIndex == 0)
+              ? selectedCard!.visaCardNumber
+              : cardNumber.text,
+          billingVisaLastNo:
+              (selectedCard != null && selectedCardToggleIndex == 0)
+                  ? selectedCard!.visaCardNumber
+                  : getLastFourFromCardNumber(cardNumber.text),
+          visaCardExpiryMonth:
+              (selectedCard != null && selectedCardToggleIndex == 0)
+                  ? selectedCard!.visaCardExpiryMonth
+                  : cardExpiryDate.text.split('/')[0],
+          visaCardExpiryYear:
+              (selectedCard != null && selectedCardToggleIndex == 0)
+                  ? selectedCard!.visaCardExpiryYear
+                  : cardExpiryDate.text.split('/')[1],
           isToSave: isSaveCardInfo,
           billingCustomerName: _authRepository.customer.customerName,
           billingAddress: _authRepository.customer.customerAddress,
           billingPostalCode: billingPostalCodeCtrl.text,
-          savedCardId: selectedSavedCardId,
+          savedCardId:(selectedCard != null && selectedCardToggleIndex == 0)? selectedSavedCardId : null,
         );
         res.fold(
           (errMsg) => emit(PaymentState.submitPaymentFormError(errMsg)),
