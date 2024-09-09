@@ -59,6 +59,9 @@ class SignupCubit extends Cubit<SignupState> {
   TextEditingController customerNameController = TextEditingController();
   TextFieldValidation customerNameValidation = TextFieldValidation.normal;
 
+  TextEditingController customerNationalityController = TextEditingController();
+  TextFieldValidation customerNationalityValidation = TextFieldValidation.normal;
+
   TextEditingController customerEmailController = TextEditingController();
   TextFieldValidation customerEmailValidation = TextFieldValidation.normal;
 
@@ -226,7 +229,7 @@ class SignupCubit extends Cubit<SignupState> {
         customerAddress: customerAddressController.text,
         customerTelephone: phoneNumber,
         customerPassword: passwordController.text,
-        customerCountry: country,
+        customerCountry: customerNationalityController.text,
         customerCountryCode: countryIsoCode,
         customerType: saCitizenSelectedIndex,
         customerNationalId: nationalIdController.text,
@@ -297,6 +300,26 @@ class SignupCubit extends Cubit<SignupState> {
         SignupState.checkName(
           name: customerNameController.text,
           validation: customerNameValidation,
+        ),
+      );
+    }
+  }
+
+  void checkUserNationalityValidation() {
+    if (customerNationalityController.text.isNotEmpty) {
+      customerNationalityValidation = TextFieldValidation.valid;
+      emit(
+        SignupState.checkNationality(
+          nationality: customerNationalityController.text,
+          validation: customerNationalityValidation,
+        ),
+      );
+    } else {
+      customerNationalityValidation = TextFieldValidation.notValid;
+      emit(
+        SignupState.checkNationality(
+          nationality: customerNationalityController.text,
+          validation: customerNationalityValidation,
         ),
       );
     }
@@ -494,6 +517,7 @@ class SignupCubit extends Cubit<SignupState> {
     if (isFieldNotEmpty(customerNameController) &&
         isFieldNotEmpty(customerEmailController) &&
         isFieldNotEmpty(customerAddressController) &&
+        isFieldNotEmpty(customerNationalityController) &&
         isFieldNotEmpty(passwordController) &&
         isFieldNotEmpty(confirmPasswordController) &&
         phoneNumber.isNotEmpty &&
@@ -516,7 +540,11 @@ class SignupCubit extends Cubit<SignupState> {
         );
         res.fold(
           (errMsg) {
-            emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg));
+            if(errMsg == 'reset') {
+              emit(const SignupState.resetDialog());
+            } else {
+              emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg));
+            }
           },
           (r) {
             sendOTP();
