@@ -14,6 +14,7 @@ import 'package:turbo/presentation/auth/login_screen/widgets/login_password.dart
 import '../../../core/helpers/enums.dart';
 import '../../../core/routing/routes.dart';
 import '../../../core/theming/colors.dart';
+import '../../../core/theming/fonts.dart';
 import '../../../core/widgets/default_dialog.dart';
 import '../../../core/widgets/text_field_with_header.dart';
 import '../../../models/car_details_model.dart';
@@ -164,6 +165,8 @@ class LoginScreen extends StatelessWidget {
                   child: AuthRichText(
                     text: "dontHaveAccount".getLocale(context: context),
                     buttonText: "signUp".getLocale(context: context),
+                    buttonStyle: AppFonts.ibm16PrimaryBlue600
+                      .copyWith(fontWeight: FontWeight.w700),
                     onTap: () {
                       if (requestedCarId != null) {
                         Navigator.of(context).pushReplacementNamed(

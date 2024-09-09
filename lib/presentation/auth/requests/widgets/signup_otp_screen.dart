@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/signup/signup_cubit.dart';
-
+import 'package:turbo/presentation/auth/requests/widgets/otp_timer.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/fonts.dart';
@@ -69,28 +68,52 @@ class _SignupOtpScreenState extends State<SignupOtpScreen> {
       width: AppConstants.screenWidth(context),
       height: AppConstants.screenHeight(context),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.only(
               top: 32.0,
-              bottom: 39.0,
+              bottom: 15.0,
             ),
             child: Text(
-              "Please enter the code from the sms we sent you",
-              style: AppFonts.inter14Black400,
+              "Enter the 6-digit code sent to ${context.read<SignupCubit>().phoneNumber}",
+              style: AppFonts.ibm16LightBlack400,
               textAlign: TextAlign.center,
             ),
           ),
-          RepaintBoundary(
-            key: const Key("OTPTimer"),
-            child: Text(
-              formattedTime,
-              style: AppFonts.inter16Black500,
-            ),
+           BlocBuilder<SignupCubit, SignupState>(
+            buildWhen: (previous, current) {
+              return current is SendOTPLoadingState ||
+                  current is TimerFinishedState ||
+                  (current is TimerState && current.remainingTime == "1:59") ||
+                  current is OTPSentSuccessState ||
+                  current is OTPSentErrorState;
+            },
+            builder: (context, state) {
+              return state is SendOTPLoadingState
+                  ? const CircularProgressIndicator()
+                  : secondsRemaining == 0
+                      ? AuthRichText(
+                        text: "Didn’t get a code?",
+                        buttonText: "Send again",
+                        buttonStyle: AppFonts.ibm16Gold600.copyWith(fontWeight: FontWeight.w700),
+                        alignmentDirectional: AlignmentDirectional.center,
+                        onTap: () async {
+                          await context.read<SignupCubit>().sendOTP().then(
+                            (value) {
+                              if (value) {
+                                startTimer();
+                              }
+                            },
+                          );
+                        },
+                      )
+                      : const SizedBox();
+            },
           ),
-
           const SizedBox(
-            height: 24,
+            height: 50,
           ),
           Wrap(
             spacing: 8,
@@ -121,40 +144,8 @@ class _SignupOtpScreenState extends State<SignupOtpScreen> {
               }),
             ],
           ),
-          BlocBuilder<SignupCubit, SignupState>(
-            buildWhen: (previous, current) {
-              return current is SendOTPLoadingState ||
-                  current is TimerFinishedState ||
-                  (current is TimerState && current.remainingTime == "1:59") ||
-                  current is OTPSentSuccessState ||
-                  current is OTPSentErrorState;
-            },
-            builder: (context, state) {
-              return state is SendOTPLoadingState
-                  ? const Padding(
-                      padding: EdgeInsets.only(top: 16.0),
-                      child: CircularProgressIndicator(),
-                    )
-                  : secondsRemaining == 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: AuthRichText(
-                            text: "I didn’t receive the code! ",
-                            buttonText: "Resend",
-                            onTap: () async {
-                              await context.read<SignupCubit>().sendOTP().then(
-                                (value) {
-                                  if (value) {
-                                    startTimer();
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        )
-                      : const SizedBox();
-            },
-          ),
+          const SizedBox(height: 30,),
+          OTPTimer(formattedTime: formattedTime,),
           const Spacer(),
           BlocConsumer<SignupCubit, SignupState>(
             listenWhen: (previous, current) =>
