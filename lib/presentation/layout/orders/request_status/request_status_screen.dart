@@ -96,70 +96,85 @@ class RequestStatusScreen extends StatelessWidget {
       header: "#$requestCode",
       textAlignment: AlignmentDirectional.center,
       alignment: MainAxisAlignment.spaceBetween,
-      suffixIcon: BlocBuilder<OrderCubit, OrderState>(
-        buildWhen: (previous, current) =>
-            current is GetRequestStatusSuccessState ||
-            current is GetRequestStatusErrorState ||
-            current is GetRequestStatusLoadingState,
-        builder: (context, state) {
-          return (context.watch<OrderCubit>().requestStatus != null &&
-                  (context.watch<OrderCubit>().requestStatus!.requestStatus ==
-                          2 ||
-                      context
-                              .watch<OrderCubit>()
-                              .requestStatus!
-                              .requestStatus ==
-                          4 ||
-                      context
-                              .watch<OrderCubit>()
-                              .requestStatus!
-                              .requestStatus ==
-                          0))
-              ? IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: Container(
-                    height: 46,
-                    width: 46,
-                    margin: const EdgeInsetsDirectional.only(end: 10),
-                    decoration: BoxDecoration(
-                        color: AppColors.red,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 6,
-                              spreadRadius: 2,
-                              offset: const Offset(0, 2),
-                              color: AppColors.black.withOpacity(0.15)),
-                          BoxShadow(
-                              blurRadius: 2,
-                              spreadRadius: 0,
-                              offset: const Offset(0, 1),
-                              color: AppColors.black.withOpacity(0.30))
-                        ],),
-                    child: const Icon(
-                      Icons.close_rounded,
-                      color: AppColors.white,
-                    ),
-                  ),
-                  color: AppColors.primaryBlue,
-                  onPressed: () {
-                    showAdaptiveDialog(
-                      context: context,
-                      builder: (dialogContext) => BlocProvider.value(
-                        value: context.read<OrderCubit>(),
-                        child: EditRequestStatusDialog(
-                          requestId: requestId,
-                          requestStatus: 5,
-                          reason: "cancel",
-                          orderCubit: orderCubit,
-                        ),
-                      ),
-                    );
-                  },
-                )
-              : const SizedBox();
-        },
+      suffixIcon: CancelOrderButton(
+        requestId: requestId,
       ),
+    );
+  }
+}
+
+class CancelOrderButton extends StatelessWidget {
+  const CancelOrderButton({
+    super.key,
+    required this.requestId,
+    this.reason = "cancel",
+    this.reasonCode = 5,
+  });
+
+  final String requestId;
+  final String reason;
+  final int reasonCode;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrderCubit, OrderState>(
+      buildWhen: (previous, current) =>
+          current is GetRequestStatusSuccessState ||
+          current is GetRequestStatusErrorState ||
+          current is GetRequestStatusLoadingState,
+      builder: (context, state) {
+        return (context.watch<OrderCubit>().requestStatus != null &&
+                (context.watch<OrderCubit>().requestStatus!.requestStatus ==
+                        2 ||
+                    context.watch<OrderCubit>().requestStatus!.requestStatus ==
+                        4 ||
+                    context.watch<OrderCubit>().requestStatus!.requestStatus ==
+                        0))
+            ? IconButton(
+                padding: EdgeInsets.zero,
+                icon: Container(
+                  height: 46,
+                  width: 46,
+                  margin: const EdgeInsetsDirectional.only(end: 10),
+                  decoration: BoxDecoration(
+                    color: AppColors.red,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 6,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 2),
+                          color: AppColors.black.withOpacity(0.15)),
+                      BoxShadow(
+                          blurRadius: 2,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 1),
+                          color: AppColors.black.withOpacity(0.30))
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.close_rounded,
+                    color: AppColors.white,
+                  ),
+                ),
+                color: AppColors.primaryBlue,
+                onPressed: () {
+                  showAdaptiveDialog(
+                    context: context,
+                    builder: (dialogContext) => BlocProvider.value(
+                      value: context.read<OrderCubit>(),
+                      child: EditRequestStatusDialog(
+                        requestId: requestId,
+                        requestStatus: reasonCode,
+                        reason: reason,
+                        orderCubit: context.read<OrderCubit>(),
+                      ),
+                    ),
+                  );
+                },
+              )
+            : const SizedBox();
+      },
     );
   }
 }

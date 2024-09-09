@@ -13,12 +13,14 @@ class EditRequestStatusDialog extends StatelessWidget {
     required this.requestId,
     required this.requestStatus,
     this.orderCubit,
+    this.isFromPayment = false,
   });
 
   final String reason;
   final String requestId;
   final int requestStatus;
   final OrderCubit? orderCubit;
+  final bool isFromPayment;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +82,11 @@ class EditRequestStatusDialog extends StatelessWidget {
                                 )
                                 .then((_) {
                               Navigator.pop(context);
+                              if (isFromPayment) {
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
+                              }
                               if (reason == "cancel") {
                                 if (orderCubit != null) {
                                   orderCubit!.getAllCustomerRequests();

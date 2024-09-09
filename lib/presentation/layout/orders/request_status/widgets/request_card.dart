@@ -210,6 +210,7 @@ class RequestCard extends StatelessWidget {
                       paymentAmount: request.requestPrice,
                       carRequestId: request.id,
                       carRequestCode: request.requestCode,
+                      orderCubit: context.read<OrderCubit>(),
                     ),
                   );
                 }

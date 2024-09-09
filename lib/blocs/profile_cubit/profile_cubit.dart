@@ -270,9 +270,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   void logout() async {
     emit(const ProfileState.logoutLoading());
     try {
+      _paymentRepository.savedPaymentCards.clear();
       await _authRepository.disableNotificationToken(AppConstants.fcmToken);
       await _authRepository.clearCustomerData();
-      _paymentRepository.savedPaymentCards.clear();
 
       emit(const ProfileState.logoutSuccess());
     } catch (e) {

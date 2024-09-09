@@ -332,6 +332,21 @@ class NewCard extends StatelessWidget {
                   : const SizedBox.shrink();
             },
           ),
+          DefaultButton(
+            marginBottom: 16,
+            marginLeft: context.watch<PaymentCubit>().selectedCard == null ? 16 : 0,
+            width: 102,
+            height: 42,
+            function: () {
+              context.read<PaymentCubit>().clearPaymentFormData();
+            },
+            borderRadius: 20,
+            color: AppColors.white,
+            textColor: AppColors.gold,
+            fontWeight: FontWeight.w600,
+            border: Border.all(color: AppColors.gold),
+            text: "Reset All",
+          )
         ],
       ),
     );

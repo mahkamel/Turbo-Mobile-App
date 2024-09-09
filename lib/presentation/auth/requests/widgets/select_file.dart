@@ -32,6 +32,8 @@ class SelectFile extends StatefulWidget {
   final double? width;
   final Widget? prefixIcon;
   final int fileStatus;
+  final bool isUploading;
+  final bool isNullAttachment;
 
   const SelectFile({
     super.key,
@@ -52,6 +54,8 @@ class SelectFile extends StatefulWidget {
     this.files,
     required this.fileStatus,
     this.prefixImgPath = "assets/images/icons/pdf_file.png",
+    this.isUploading = false,
+    this.isNullAttachment = false,
   });
 
   @override
@@ -130,9 +134,11 @@ class _SelectFileState extends State<SelectFile> {
             color: AppColors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-                color: widget.isWarningToReplace
+                color: widget.isWarningToReplace || widget.fileStatus == 2
                     ? AppColors.errorRed
-                    : AppColors.greyBorder),
+                    : widget.fileStatus == 1
+                        ? AppColors.green
+                        : AppColors.greyBorder),
           ),
           height: 74,
           width: AppConstants.screenWidth(context),
@@ -142,19 +148,13 @@ class _SelectFileState extends State<SelectFile> {
                     const SizedBox(
                       width: 16,
                     ),
-                    Image.asset(
-                      widget.prefixImgPath,
-                      height: widget.prefixImgPath.contains("national_id")
-                          ? 52
-                          : 48,
-                      width: widget.prefixImgPath.contains("national_id")
-                          ? 52
-                          : 48,
-                    ),
-                    SizedBox(
-                      width: widget.prefixImgPath.contains("national_id")
-                          ? 23
-                          : 27,
+                    SvgPicture.asset(widget.fileStatus == 1
+                        ? "assets/images/icons/approved_file.svg"
+                        : widget.isWarningToReplace || widget.fileStatus == 2
+                            ? "assets/images/icons/error_file.svg"
+                            : "assets/images/icons/uploading_file.svg"),
+                    const SizedBox(
+                      width: 20,
                     ),
                     Expanded(
                       child: Text(
@@ -175,7 +175,10 @@ class _SelectFileState extends State<SelectFile> {
                               ? 8
                               : 0),
                       onPressed: () async {
-                        if (!(widget.isFromMyApplication ||
+                        if (widget.isUploading) {}
+                        else if (widget.fileStatus == 4) {
+                          widget.onPrefixClicked();
+                        } else if (!(widget.isFromMyApplication ||
                                 (widget.isFromPending &&
                                     widget.paths.isNotEmpty)) ||
                             (widget.isShowDeleteFile)) {
@@ -208,40 +211,44 @@ class _SelectFileState extends State<SelectFile> {
                           widget.onPrefixClicked();
                         }
                       },
-                      icon: widget.prefixIcon != null
-                          ? widget.prefixIcon!
-                          : (widget.isFromMyApplication ||
-                                          widget.isFromPending) &&
-                                      widget.isWarningToReplace ||
-                                  widget.isShowReplaceWithoutBorder
-                              ? Text(
-                                  "Replace",
-                                  style: AppFonts.inter14TextBlack500,
+                      icon: widget.isUploading
+                          ? const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : widget.fileStatus == 4
+                              ? const Icon(
+                                  Icons.upload,
+                                  color: AppColors.primaryBlue,
                                 )
-                              : (widget.isFromMyApplication ||
-                                      (widget.isFromPending &&
-                                              widget.paths.isNotEmpty) &&
-                                          !widget.isShowDeleteFile)
-                                  ? Text(
-                                      "View",
-                                      style: AppFonts.inter14TextBlack500,
-                                    )
-                                  : Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: AppColors.removeGrey,
-                                          width: 2,
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.clear,
-                                        color: AppColors.removeGrey,
-                                        size: 14,
-                                      ),
-                                    ),
+                              : widget.prefixIcon != null
+                                  ? widget.prefixIcon!
+                                  : (widget.isFromMyApplication ||
+                                                  widget.isFromPending) &&
+                                              widget.isWarningToReplace ||
+                                          widget.isShowReplaceWithoutBorder
+                                      ? Icon(
+                                          Icons.replay_rounded,
+                                          color:
+                                              widget.isShowReplaceWithoutBorder
+                                                  ? AppColors.removeGrey
+                                                  : AppColors.errorRed,
+                                        )
+                                      : (widget.isFromMyApplication ||
+                                              (widget.isFromPending &&
+                                                      widget
+                                                          .paths.isNotEmpty) &&
+                                                  !widget.isShowDeleteFile)
+                                          ? const Icon(
+                                              Icons.open_in_new_rounded,
+                                              color: AppColors.green,
+                                            )
+                                          : const Icon(
+                                              Icons.delete_rounded,
+                                              color: AppColors.errorRed,
+                                            ),
                     ),
                   ],
                 )

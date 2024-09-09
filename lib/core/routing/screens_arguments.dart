@@ -45,11 +45,13 @@ class PaymentScreenArguments {
   final num paymentAmount;
   final String carRequestId;
   final String carRequestCode;
+  final OrderCubit? orderCubit;
 
   PaymentScreenArguments({
     required this.paymentAmount,
     required this.carRequestId,
     required this.carRequestCode,
+     this.orderCubit,
   });
 }
 

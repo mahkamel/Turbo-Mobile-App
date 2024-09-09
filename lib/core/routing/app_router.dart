@@ -42,25 +42,22 @@ class AppRouter {
         ),
     Routes.forgetPasswordScreen: (context, arguments) {
       return BlocProvider.value(
-          value: (arguments as LoginCubit),
-          child: const ForgetPasswordScreen(),
-        );
+        value: (arguments as LoginCubit),
+        child: const ForgetPasswordScreen(),
+      );
     },
-
     Routes.otpForgetPasswordScreen: (context, arguments) {
       return BlocProvider.value(
         value: (arguments as LoginCubit),
         child: const OtpForgetPassword(),
       );
     },
-
     Routes.createNewPasswordScreen: (context, arguments) {
       return BlocProvider.value(
         value: (arguments as LoginCubit),
         child: const CreateNewPassword(),
       );
     },
-
     Routes.editAccountScreen: (context, arguments) {
       return BlocProvider.value(
         value: (arguments as ProfileCubit),
@@ -73,7 +70,6 @@ class AppRouter {
         child: const DeleteAccountScreen(),
       );
     },
-    
     Routes.signupScreen: (context, arguments) => arguments != null
         ? BlocProvider<SignupCubit>(
             create: (context) => getIt<SignupCubit>()
@@ -109,6 +105,7 @@ class AppRouter {
             paymentAmount: (arguments as PaymentScreenArguments).paymentAmount,
             carRequestId: arguments.carRequestId,
             carRequestCode: arguments.carRequestCode,
+            orderCubit: arguments.orderCubit,
           ),
         ),
     Routes.requestStatusScreen: (context, arguments) =>

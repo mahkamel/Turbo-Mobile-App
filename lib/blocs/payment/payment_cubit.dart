@@ -60,6 +60,8 @@ class PaymentCubit extends Cubit<PaymentState> {
   void init() {
     if (_paymentRepository.defaultCard != null) {
       onSavedCardSelected(_paymentRepository.defaultCard!);
+    } else if (_paymentRepository.savedPaymentCards.isNotEmpty) {
+      onSavedCardSelected(_paymentRepository.savedPaymentCards.first);
     }
   }
 
@@ -190,11 +192,18 @@ class PaymentCubit extends Cubit<PaymentState> {
           billingCustomerName: _authRepository.customer.customerName,
           billingAddress: _authRepository.customer.customerAddress,
           billingPostalCode: billingPostalCodeCtrl.text,
-          savedCardId:(selectedCard != null && selectedCardToggleIndex == 0)? selectedSavedCardId : null,
+          savedCardId: (selectedCard != null && selectedCardToggleIndex == 0)
+              ? selectedSavedCardId
+              : null,
         );
         res.fold(
           (errMsg) => emit(PaymentState.submitPaymentFormError(errMsg)),
-          (message) => emit(PaymentState.submitPaymentFormSuccess(message)),
+          (message) {
+            if (isSaveCardInfo) {
+              _paymentRepository.getSavedPaymentMethods();
+            }
+            emit(PaymentState.submitPaymentFormSuccess(message));
+          },
         );
       } catch (e) {
         emit(PaymentState.submitPaymentFormError(e.toString()));
