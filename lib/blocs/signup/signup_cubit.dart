@@ -169,7 +169,6 @@ class SignupCubit extends Cubit<SignupState> {
     bool isOtpSent = false;
     emit(const SignupState.sendOTPLoading());
     await authRepository.sendOTP(phoneNumber).then((value) {
-      print("valuee ${value}");
       value.fold((errMsg) {
         otpVerificationId = '';
         emit(

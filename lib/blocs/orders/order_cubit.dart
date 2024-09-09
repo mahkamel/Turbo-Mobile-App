@@ -299,7 +299,6 @@ class OrderCubit extends Cubit<OrderState> {
             type: "nationalId",
             attachments: _authRepository.customer.attachments,
           );
-          print("ssadsdasd ${nationalIdAttachments?.fileStatus}");
           nationalIdOldPaths = nationalIdAttachments?.filePath ?? "";
           nationalIdInitStatus = nationalIdAttachments?.fileStatus ?? -1;
           passportAttachments = findAttachmentFile(

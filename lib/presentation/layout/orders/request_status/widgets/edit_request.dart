@@ -355,8 +355,6 @@ class _EditedFilesState extends State<EditedFiles> {
               (current is SaveEditedFileErrorState &&
                   current.fileId == widget.blocRead.nationalIdAttachments?.id),
           builder: (context, state) {
-            print(
-                "stateees ${widget.blocRead.nationalIdInitStatus} -- ${widget.blocRead.nationalIdAttachments?.fileStatus}");
             return RepaintBoundary(
               key: const Key("EditNationalIdRepaint"),
               child: SizedBox(
