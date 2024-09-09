@@ -144,7 +144,7 @@ class PaymentScreen extends StatelessWidget {
                     text: "Pay Now",
                     marginRight: 20,
                     marginLeft: 20,
-                    marginTop: 30,
+                    marginTop: 16,
                     marginBottom: 16,
                     // borderRadius: 0,
                   );

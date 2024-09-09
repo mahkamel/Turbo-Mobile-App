@@ -112,7 +112,9 @@ class _SelectFileState extends State<SelectFile> {
       header: widget.header,
       widget: InkWell(
         onTap: () {
-          if ((widget.isFromMyApplication ||
+          if (!(_file != null || widget.paths.isNotEmpty)) {
+            pickFile();
+          } else if ((widget.isFromMyApplication ||
               (widget.isFromPending && widget.paths.isNotEmpty))) {
             widget.onPrefixClicked();
             if (widget.paths.isNotEmpty && !widget.isWarningToReplace) {
@@ -131,17 +133,23 @@ class _SelectFileState extends State<SelectFile> {
         },
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: (_file != null || widget.paths.isNotEmpty)
+                ? AppColors.white
+                : AppColors.locationBlue,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                color: widget.isWarningToReplace || widget.fileStatus == 2
-                    ? AppColors.errorRed
-                    : widget.fileStatus == 1
-                        ? AppColors.green
-                        : AppColors.greyBorder),
+            border: (_file != null || widget.paths.isNotEmpty)
+                ? Border.all(
+                    color: widget.isWarningToReplace || widget.fileStatus == 2
+                        ? AppColors.errorRed
+                        : widget.fileStatus == 1
+                            ? AppColors.green
+                            : AppColors.greyBorder)
+                : null,
           ),
-          height: 74,
-          width: AppConstants.screenWidth(context),
+          height: (_file != null || widget.paths.isNotEmpty) ? 74 : 40,
+          width: (_file != null || widget.paths.isNotEmpty)
+              ? AppConstants.screenWidth(context)
+              : 180,
           child: (_file != null || widget.paths.isNotEmpty)
               ? Row(
                   children: [
@@ -175,8 +183,8 @@ class _SelectFileState extends State<SelectFile> {
                               ? 8
                               : 0),
                       onPressed: () async {
-                        if (widget.isUploading) {}
-                        else if (widget.fileStatus == 4) {
+                        if (widget.isUploading) {
+                        } else if (widget.fileStatus == 4) {
                           widget.onPrefixClicked();
                         } else if (!(widget.isFromMyApplication ||
                                 (widget.isFromPending &&
@@ -252,25 +260,27 @@ class _SelectFileState extends State<SelectFile> {
                     ),
                   ],
                 )
-              : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const SizedBox(
-                        height: 8,
+              : Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Icon(
+                      Icons.cloud_upload_rounded,
+                      color: AppColors.white,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      "Upload Document ",
+                      style: AppFonts.ibm14LightBlack400.copyWith(
+                        color: AppColors.white,
+                        fontSize: 13,
                       ),
-                      SvgPicture.asset(
-                        "assets/images/icons/picture_icon.svg",
-                      ),
-                      Text(
-                        "Select File",
-                        style: AppFonts.inter15Black400,
-                      ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
         ),
       ),

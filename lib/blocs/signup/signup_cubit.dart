@@ -169,6 +169,7 @@ class SignupCubit extends Cubit<SignupState> {
     bool isOtpSent = false;
     emit(const SignupState.sendOTPLoading());
     await authRepository.sendOTP(phoneNumber).then((value) {
+      print("valuee ${value}");
       value.fold((errMsg) {
         otpVerificationId = '';
         emit(
@@ -217,41 +218,46 @@ class SignupCubit extends Cubit<SignupState> {
       verificationId: otpVerificationId,
       smsCode: smsCode,
     )
-        .then((_) async {
+        .then((verifyRes) async {
       isPhoneVerified = true;
-
-      final res = await authRepository.signupInfoStep(
-        customerName: customerNameController.text,
-        customerEmail: customerEmailController.text,
-        customerAddress: customerAddressController.text,
-        customerTelephone: phoneNumber,
-        customerPassword: passwordController.text,
-        customerCountry: country,
-        customerCountryCode: countryIsoCode,
-        customerType: saCitizenSelectedIndex,
-        customerNationalId: nationalIdController.text,
-        customerNationalIDExpiryDate: nationalIdExpiryDate!.toIso8601String(),
-        customerDriverLicenseNumber: drivingLicenceController.text.isNotEmpty
-            ? drivingLicenceController.text
-            : null,
-        customerDriverLicenseNumberExpiryDate:
-            drivingLicenceExpiryDate?.toIso8601String(),
-      );
-      res.fold(
-        (errMsg) => emit(
-          SignupState.otpVerifyFailed(
-            errMsg: errMsg,
-          ),
-        ),
-        (_) {
-          emit(
-            SignupState.otpVerifySuccess(
-              smsCode: smsCode,
-              verificationID: otpVerificationId,
+      verifyRes.fold((errMsg) {
+        emit(SignupState.otpVerifyFailed(
+          errMsg: errMsg,
+        ));
+      }, (_) async {
+        final res = await authRepository.signupInfoStep(
+          customerName: customerNameController.text,
+          customerEmail: customerEmailController.text,
+          customerAddress: customerAddressController.text,
+          customerTelephone: phoneNumber,
+          customerPassword: passwordController.text,
+          customerCountry: country,
+          customerCountryCode: countryIsoCode,
+          customerType: saCitizenSelectedIndex,
+          customerNationalId: nationalIdController.text,
+          customerNationalIDExpiryDate: nationalIdExpiryDate!.toIso8601String(),
+          customerDriverLicenseNumber: drivingLicenceController.text.isNotEmpty
+              ? drivingLicenceController.text
+              : null,
+          customerDriverLicenseNumberExpiryDate:
+              drivingLicenceExpiryDate?.toIso8601String(),
+        );
+        res.fold(
+          (errMsg) => emit(
+            SignupState.otpVerifyFailed(
+              errMsg: errMsg,
             ),
-          );
-        },
-      );
+          ),
+          (_) {
+            emit(
+              SignupState.otpVerifySuccess(
+                smsCode: smsCode,
+                verificationID: otpVerificationId,
+              ),
+            );
+          },
+        );
+      });
     }).catchError((err) {
       emit(
         SignupState.otpVerifyFailed(
@@ -743,10 +749,11 @@ class SignupCubit extends Cubit<SignupState> {
             : saCitizenSelectedIndex == 0);
   }
 
-  void resetCustomer() async{
+  void resetCustomer() async {
     emit(const SignupState.resetCustomerLoading());
     try {
-      final result = await authRepository.resetCustomer(customerEmailController.text);
+      final result =
+          await authRepository.resetCustomer(customerEmailController.text);
       result.fold((errMsg) {
         emit(SignupState.resetCustomerError(errMsg));
       }, (msg) {

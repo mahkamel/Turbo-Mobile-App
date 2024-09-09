@@ -126,7 +126,8 @@ class _SignupOtpScreenState extends State<SignupOtpScreen> {
               return current is SendOTPLoadingState ||
                   current is TimerFinishedState ||
                   (current is TimerState && current.remainingTime == "1:59") ||
-                  current is OTPSentSuccessState || current is OTPSentErrorState;
+                  current is OTPSentSuccessState ||
+                  current is OTPSentErrorState;
             },
             builder: (context, state) {
               return state is SendOTPLoadingState
