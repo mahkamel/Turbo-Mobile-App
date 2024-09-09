@@ -57,7 +57,7 @@ class DefaultDialog extends StatelessWidget {
                 : Padding(
                     padding: const EdgeInsets.only(
                         bottom: 30, top: 16, left: 10, right: 10),
-                    child: Text(subTitle!, style: AppFonts.ibm16Grey400),
+                    child: Text(subTitle!, style: AppFonts.ibm16Grey400, textAlign: TextAlign.center,),
                   ),
             Row(
               children: [
@@ -75,7 +75,7 @@ class DefaultDialog extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  width: 32,
+                  width: 16,
                 ),
                 Expanded(
                   child: DefaultButton(

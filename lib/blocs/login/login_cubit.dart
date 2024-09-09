@@ -281,7 +281,7 @@ class LoginCubit extends Cubit<LoginState> {
         );
         res.fold((errMsg) {
           if(errMsg == 'reset') {
-            emit(LoginState.resetDialog());
+            emit(const LoginState.resetDialog());
           } else {
             emit(LoginState.loginError(errMsg));
           }
