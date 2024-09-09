@@ -15,6 +15,7 @@ class CarBrandCircle extends StatelessWidget {
           width: 35,
           height: 35,
           imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
+          errorWidget: (context, url, error) => Image.asset('assets/images/image.png', width: 35, height: 35,),
           placeholder: (context, url) => const SizedBox(),
         ),
       ],
