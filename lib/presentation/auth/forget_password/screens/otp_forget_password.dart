@@ -12,6 +12,8 @@ import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/auth/login_screen/widgets/auth_rich_text.dart';
 
+import '../../requests/widgets/otp_timer.dart';
+
 class OtpForgetPassword extends StatefulWidget {
   const OtpForgetPassword({super.key});
 
@@ -104,12 +106,48 @@ class _OtpForgetPasswordState extends State<OtpForgetPassword> {
                   ],
                 ),
               ),
-              RepaintBoundary(
-                key: const Key("OTPTimer"),
-                child: Text(
-                  formattedTime,
-                  style: AppFonts.inter16Black500,
-                ),
+              BlocBuilder<LoginCubit, LoginState>(
+                buildWhen: (previous, current) {
+                  return current is CheckOtpSuccessState ||
+                    current is CheckOtpErrorState ||
+                    current is CheckOtpLoadingState ||
+                    current is ForgetPasswordErrorState ||
+                    current is ForgetPasswordSuccessState ||
+                    current is ForgetPasswordLoadingState;
+                },
+                builder: (context, state) {
+                  return state is CheckOtpLoadingState
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: CircularProgressIndicator(),
+                        )
+                      : secondsRemaining == 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: AuthRichText(
+                        alignmentDirectional: AlignmentDirectional.center,
+
+                                buttonStyle: AppFonts.ibm16PrimaryBlue600
+                      .copyWith(fontWeight: FontWeight.w700),
+                                text: "Didn’t get a code?",
+                                buttonText: "Send again ",
+                                
+                                onTap: () async {
+                                  await context
+                                      .read<LoginCubit>()
+                                      .forgetPassword()
+                                      .then(
+                                    (value) {
+                                      if (value) {
+                                        startTimer();
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          : const SizedBox();
+                },
               ),
               const SizedBox(
                 height: 24,
@@ -148,44 +186,9 @@ class _OtpForgetPasswordState extends State<OtpForgetPassword> {
                   }),
                 ],
               ),
-              BlocBuilder<LoginCubit, LoginState>(
-                buildWhen: (previous, current) {
-                  return current is CheckOtpSuccessState ||
-                    current is CheckOtpErrorState ||
-                    current is CheckOtpLoadingState ||
-                    current is ForgetPasswordErrorState ||
-                    current is ForgetPasswordSuccessState ||
-                    current is ForgetPasswordLoadingState;
-                },
-                builder: (context, state) {
-                  return state is CheckOtpLoadingState
-                      ? const Padding(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: CircularProgressIndicator(),
-                        )
-                      : secondsRemaining == 0
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: AuthRichText(
-                                text: "You didn’t receive the code! ",
-                                buttonText: "Resend",
-                                onTap: () async {
-                                  await context
-                                      .read<LoginCubit>()
-                                      .forgetPassword()
-                                      .then(
-                                    (value) {
-                                      if (value) {
-                                        startTimer();
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
-                            )
-                          : const SizedBox();
-                },
-              ),
+              const SizedBox(height: 30,),
+              OTPTimer(formattedTime: formattedTime,),
+              
             
               const Spacer(),
               BlocConsumer<LoginCubit, LoginState>(

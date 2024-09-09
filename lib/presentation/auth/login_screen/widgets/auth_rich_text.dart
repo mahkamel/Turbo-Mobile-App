@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import '../../../../core/theming/fonts.dart';
 
 class AuthRichText extends StatelessWidget {
@@ -7,22 +8,27 @@ class AuthRichText extends StatelessWidget {
     required this.text,
     required this.buttonText,
     required this.onTap,
+    required this.buttonStyle,
+    this.alignmentDirectional = AlignmentDirectional.centerStart,
   });
 
   final String text;
   final String buttonText;
   final void Function() onTap;
+  final TextStyle buttonStyle;
+  final AlignmentDirectional  alignmentDirectional;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40,
+      width: AppConstants.screenWidth(context),
       child: InkWell(
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: onTap,
         child: Align(
-          alignment: AlignmentDirectional.centerStart,
+          alignment: alignmentDirectional,
           child: Text.rich(
             TextSpan(
               text: text,
@@ -30,8 +36,7 @@ class AuthRichText extends StatelessWidget {
               children: [
                 TextSpan(
                   text: " $buttonText",
-                  style: AppFonts.ibm16PrimaryBlue600
-                      .copyWith(fontWeight: FontWeight.w700),
+                  style: buttonStyle,
                 ),
               ],
             ),
