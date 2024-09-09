@@ -69,6 +69,7 @@ class BookNowButton extends StatelessWidget {
                                         blocRead.carDetailsData.carWeaklyPrice,
                                     monthlyPrice:
                                         blocRead.carDetailsData.carMothlyPrice,
+                                    carColor: blocRead.carDetailsData.carColor,
                                   ),
                                 ),
                               );

@@ -34,12 +34,72 @@ class SignupConfirmBooking extends StatelessWidget {
           PickupDateSelection(),
           DeliveryDateSelection(),
           PrivateDriverRow(),
+          CarColorSelection(),
           RentalPrice(),
           SizedBox(
             height: 16,
           ),
           RequiredFilesSection(),
           ConfirmBookingButton()
+        ],
+      ),
+    );
+  }
+}
+
+class CarColorSelection extends StatelessWidget {
+  const CarColorSelection({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0, left: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Car Colors",
+            style: AppFonts.ibm16LightBlack600,
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Wrap(
+            spacing: 5,
+            children: [
+              ...List.generate(
+                  context.read<SignupCubit>().carColors.length,
+                  (index) => InkWell(
+                        onTap: () {
+                          context.read<SignupCubit>().changeCarColor(index);
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: context
+                                            .watch<SignupCubit>()
+                                            .selectedColorIndex ==
+                                        index
+                                    ? AppColors.secondary
+                                    : context
+                                        .read<SignupCubit>()
+                                        .carColors[index]
+                                        .color,
+                                width: 4),
+                            color: context
+                                .read<SignupCubit>()
+                                .carColors[index]
+                                .color,
+                          ),
+                        ),
+                      ))
+            ],
+          ),
         ],
       ),
     );

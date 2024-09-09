@@ -171,6 +171,10 @@ class SignupState with _$SignupState {
     required int state,
   }) = ChangePassportStatusState;
 
+  const factory SignupState.changeCarColor({
+    required String id,
+  }) = ChangeCarColorState;
+
   const factory SignupState.resetCustomerLoading() = ResetCustomerLoadingState;
   const factory SignupState.resetCustomerSuccess(final String msg) = ResetCustomerSuccessState;
   const factory SignupState.resetCustomerError(final String errMsg) = ResetCustomerErrorState;

@@ -16,6 +16,7 @@ import '../../../core/routing/routes.dart';
 import '../../../core/theming/colors.dart';
 import '../../../core/widgets/default_dialog.dart';
 import '../../../core/widgets/text_field_with_header.dart';
+import '../../../models/car_details_model.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({
@@ -24,11 +25,13 @@ class LoginScreen extends StatelessWidget {
     this.dailyPrice,
     this.weeklyPrice,
     this.monthlyPrice,
+    this.carColor = const [],
   });
   final String? requestedCarId;
   final num? dailyPrice;
   final num? weeklyPrice;
   final num? monthlyPrice;
+  final List<CarColor> carColor;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +97,7 @@ class LoginScreen extends StatelessWidget {
                             dailyPrice: dailyPrice!,
                             weeklyPrice: weeklyPrice!,
                             monthlyPrice: monthlyPrice!,
+                            carColor: carColor,
                           ),
                         );
                       } else {
@@ -169,6 +173,7 @@ class LoginScreen extends StatelessWidget {
                             dailyPrice: dailyPrice!,
                             weeklyPrice: weeklyPrice!,
                             monthlyPrice: monthlyPrice!,
+                            carColor: carColor,
                           ),
                         );
                       } else {
