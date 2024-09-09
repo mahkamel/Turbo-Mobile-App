@@ -1,6 +1,8 @@
 import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/models/get_cars_by_brands.dart';
 
+import '../../models/car_details_model.dart';
+
 class CardDetailsScreenArguments {
   final Car car;
 
@@ -28,12 +30,14 @@ class SignupScreenArguments {
   final num dailyPrice;
   final num weeklyPrice;
   final num monthlyPrice;
+  final List<CarColor> carColor;
 
   SignupScreenArguments({
     required this.carId,
     required this.dailyPrice,
     required this.weeklyPrice,
     required this.monthlyPrice,
+    required this.carColor,
   });
 }
 
@@ -48,7 +52,6 @@ class PaymentScreenArguments {
     required this.carRequestCode,
   });
 }
-
 
 class RequestStatusScreenArguments {
   final String requestId;

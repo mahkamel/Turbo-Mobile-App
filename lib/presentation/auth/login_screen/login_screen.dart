@@ -14,6 +14,7 @@ import 'package:turbo/presentation/auth/login_screen/widgets/login_password.dart
 import '../../../core/helpers/enums.dart';
 import '../../../core/routing/routes.dart';
 import '../../../core/widgets/text_field_with_header.dart';
+import '../../../models/car_details_model.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({
@@ -22,11 +23,13 @@ class LoginScreen extends StatelessWidget {
     this.dailyPrice,
     this.weeklyPrice,
     this.monthlyPrice,
+    this.carColor = const [],
   });
   final String? requestedCarId;
   final num? dailyPrice;
   final num? weeklyPrice;
   final num? monthlyPrice;
+  final List<CarColor> carColor;
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +84,7 @@ class LoginScreen extends StatelessWidget {
                             dailyPrice: dailyPrice!,
                             weeklyPrice: weeklyPrice!,
                             monthlyPrice: monthlyPrice!,
+                            carColor: carColor,
                           ),
                         );
                       } else {
@@ -97,7 +101,7 @@ class LoginScreen extends StatelessWidget {
                       loading: state is LoginLoadingState,
                       function: () {
                         blocRead.onLoginButtonClicked();
-                        if(state is ResetDialogState) {
+                        if (state is ResetDialogState) {
                           // showAdaptiveDialog(
                           //     context: context,
                           //     builder: (dialogContext) => BlocProvider.value(
@@ -173,6 +177,7 @@ class LoginScreen extends StatelessWidget {
                             dailyPrice: dailyPrice!,
                             weeklyPrice: weeklyPrice!,
                             monthlyPrice: monthlyPrice!,
+                            carColor: carColor,
                           ),
                         );
                       } else {

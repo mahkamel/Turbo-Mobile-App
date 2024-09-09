@@ -170,4 +170,8 @@ class SignupState with _$SignupState {
   const factory SignupState.changePassportStatus({
     required int state,
   }) = ChangePassportStatusState;
+
+  const factory SignupState.changeCarColor({
+    required String id,
+  }) = ChangeCarColorState;
 }

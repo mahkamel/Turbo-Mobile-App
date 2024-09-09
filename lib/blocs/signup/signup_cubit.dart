@@ -14,6 +14,7 @@ import '../../core/services/local/storage_service.dart';
 import '../../core/services/local/token_service.dart';
 import '../../main_paths.dart';
 import '../../models/attachment.dart';
+import '../../models/car_details_model.dart';
 
 part 'signup_state.dart';
 part 'signup_cubit.freezed.dart';
@@ -115,12 +116,16 @@ class SignupCubit extends Cubit<SignupState> {
     FocusNode(),
   ];
 
+  List<CarColor> carColors = [];
+  int selectedColorIndex = 0;
+
   void onInit(SignupScreenArguments arguments) {
     requestedCarId = arguments.carId;
     dailyPrice = arguments.dailyPrice.toDouble();
     weeklyPrice = arguments.weeklyPrice.toDouble();
     monthlyPrice = arguments.monthlyPrice.toDouble();
     citySelectedIndex = authRepository.selectedCityIndex;
+    carColors = arguments.carColor;
     if (UserTokenService.currentUserToken.isNotEmpty) {
       currentStep = 2;
       nationalIdAttachments = findAttachmentFile(
@@ -137,6 +142,12 @@ class SignupCubit extends Cubit<SignupState> {
       passportInitStatus = passportAttachments?.fileStatus ?? -1;
     }
     clearCodeControllers();
+  }
+
+  void changeCarColor(int index) {
+    selectedColorIndex = index;
+    requestedCarId = carColors[index].carId;
+    emit(SignupState.changeCarColor(id: carColors[index].carId));
   }
 
   bool _areAllControllersFilled(List<TextEditingController> controllers) {
