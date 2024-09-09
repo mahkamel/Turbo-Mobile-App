@@ -17,6 +17,11 @@ class SignupState with _$SignupState {
     required TextFieldValidation validation,
   }) = CheckNameValidationState;
 
+  const factory SignupState.checkNationality({
+    required String nationality,
+    required TextFieldValidation validation,
+  }) = CheckNationalityValidationState;
+
   const factory SignupState.checkNationalIdValidation({
     required String nationalId,
     required TextFieldValidation validation,

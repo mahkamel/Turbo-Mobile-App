@@ -259,6 +259,9 @@ class AuthRepository {
         if (response.data['status'] == false) {
           return const Right(true);
         } else {
+          if(response.data['data'] == false) {
+            return const Left("reset");
+          }
           return const Left(
             "User with this information already exists. Please login to access your account.",
           );

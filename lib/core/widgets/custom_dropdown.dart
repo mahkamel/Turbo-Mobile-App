@@ -129,7 +129,7 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
               ),
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
+                borderRadius: BorderRadius.circular(20),
                 border: widget.border ??
                     Border.all(
                       color: AppColors.greyBorder,
@@ -156,7 +156,7 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
                     ),
                 child: Text(
                   widget.text,
-                  style: AppFonts.inter15Black400,
+                  style: AppFonts.ibm15LightBlack400,
                 ),
               ),
             Padding(
@@ -170,7 +170,7 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
                   if (widget.index > widget.items.length || widget.index == -1)
                     Text(
                       widget.text,
-                      style: AppFonts.inter15Black400,
+                      style: AppFonts.ibm15LightBlack400,
                     )
                   else
                     SizedBox(
@@ -182,8 +182,8 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>>
                                 : widget.text,
                         maxLines: 1,
                         style: widget.index != 6
-                            ? AppFonts.inter15Black400
-                            : AppFonts.inter15buttonGreyBorder400,
+                            ? AppFonts.ibm15LightBlack400
+                            : AppFonts.ibm15Grey400_600,
                       ),
                     ),
                 ],

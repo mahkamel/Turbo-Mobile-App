@@ -35,15 +35,11 @@ class ChoosePhoneNumber extends StatelessWidget {
             Text.rich(
               TextSpan(
                   text: "Phone Number",
-                  style: AppFonts.inter16Black500.copyWith(
-                    color: AppColors.primaryBlue,
-                  ),
+                  style: AppFonts.ibm15LightBlack600,
                   children: [
                     TextSpan(
                       text: "*",
-                      style: AppFonts.inter16Black500.copyWith(
-                        color: AppColors.primaryBlue,
-                      ),
+                      style: AppFonts.ibm15LightBlack600
                     ),
                   ]),
             ),
@@ -81,15 +77,15 @@ class ChoosePhoneNumber extends StatelessWidget {
                     ),
                     labelStyle: AppFonts.ibm14LightBlack400,
                     hintText: "Enter your phone number",
-                    hintStyle: AppFonts.ibm14LightBlack400,
+                    hintStyle: AppFonts.ibm15subTextGrey400,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(7),
-                      borderSide: const BorderSide(
-                        color: AppColors.black,
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                        color: AppColors.black.withOpacity(0.5),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius: BorderRadius.circular(20),
                       borderSide: const BorderSide(
                         color: AppColors.black,
                       ),
