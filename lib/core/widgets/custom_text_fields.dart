@@ -619,7 +619,7 @@ Widget codeTextField({
       textInputAction: TextInputAction.next,
       onChanged: onChange,
       onFieldSubmitted: onSubmit,
-      style: AppFonts.ibm14LightBlack400,
+      style: AppFonts.ibm16LightBlack600.copyWith(fontWeight: FontWeight.w700),
       controller: controller,
       keyboardType: isText
           ? isMoney
