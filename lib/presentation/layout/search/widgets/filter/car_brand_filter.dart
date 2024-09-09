@@ -29,6 +29,7 @@ class CarBrandsFilter extends StatelessWidget {
             current is BrandsSearchState,
         builder: (context, state) {
           var searchCubitWatch = context.watch<SearchCubit>();
+          print("${context.watch<CarRepository>().carBrands.length}");
           return state is GetSearchCarsBrandsLoadingState ? const Center(child: CircularProgressIndicator(),):
           SizedBox(
             height: 122,

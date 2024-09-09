@@ -36,12 +36,13 @@ class CarRepository {
     try {
       final response = await _carServices.getCarBrands(branchId);
       if (response.statusCode == 200 && response.data['status']) {
-        List<CarBrand> carBrands = (response.data['data'] as List).isNotEmpty
+        List<CarBrand> activeCarBrands = (response.data['data'] as List).isNotEmpty
             ? (response.data['data'] as List)
                 .map((brand) => CarBrand.fromJson(brand))
                 .toList()
             : <CarBrand>[];
-        return Right(carBrands);
+        carBrands = activeCarBrands;
+        return Right(activeCarBrands);
       } else {
         return Left(response.data['message']);
       }
