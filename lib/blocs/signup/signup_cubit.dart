@@ -42,7 +42,6 @@ class SignupCubit extends Cubit<SignupState> {
   double dailyPrice = 0;
   double weeklyPrice = 0;
   double monthlyPrice = 0;
-  bool isPhoneVerified = false;
 
   List<File>? nationalIdFile = [];
   List<File>? passportFiles = [];
@@ -56,11 +55,17 @@ class SignupCubit extends Cubit<SignupState> {
   int passportInitStatus = 0;
   String otpVerificationId = '';
 
+  TextFieldValidation nationalIdExpiryDateValidation =
+      TextFieldValidation.normal;
+  TextFieldValidation drivingLicenceExpiryDateValidation =
+      TextFieldValidation.normal;
+
   TextEditingController customerNameController = TextEditingController();
   TextFieldValidation customerNameValidation = TextFieldValidation.normal;
 
   TextEditingController customerNationalityController = TextEditingController();
-  TextFieldValidation customerNationalityValidation = TextFieldValidation.normal;
+  TextFieldValidation customerNationalityValidation =
+      TextFieldValidation.normal;
 
   TextEditingController customerEmailController = TextEditingController();
   TextFieldValidation customerEmailValidation = TextFieldValidation.normal;
@@ -221,7 +226,6 @@ class SignupCubit extends Cubit<SignupState> {
       smsCode: smsCode,
     )
         .then((verifyRes) async {
-      isPhoneVerified = true;
       verifyRes.fold((errMsg) {
         emit(SignupState.otpVerifyFailed(
           errMsg: errMsg,
@@ -353,11 +357,13 @@ class SignupCubit extends Cubit<SignupState> {
   void changeNationalIdExpiryDate(DateTime date) {
     nationalIdExpiryDate = date;
     emit(SignupState.changeNationalIdExpiry(date: date.toIso8601String()));
+    checkNationalIdExpiryValidation();
   }
 
   void changeDrivingLicenceExpiryDate(DateTime date) {
     drivingLicenceExpiryDate = date;
     emit(SignupState.changeDrivingLicenceExpiry(date: date.toIso8601String()));
+    checkDrivingExpiryValidation();
   }
 
   void checkDrivingLicenceValidation() {
@@ -508,6 +514,29 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
+  void checkNationalIdExpiryValidation() {
+    if (nationalIdExpiryDate != null) {
+      nationalIdExpiryDateValidation = TextFieldValidation.valid;
+    } else {
+      nationalIdExpiryDateValidation = TextFieldValidation.notValid;
+    }
+    emit(SignupState.checkNationalIdExpiryDateValidation(
+        date: nationalIdExpiryDate.toString() ?? "",
+        validation: nationalIdExpiryDateValidation));
+  }
+
+  void checkDrivingExpiryValidation() {
+    if (drivingLicenceExpiryDate != null) {
+      drivingLicenceExpiryDateValidation = TextFieldValidation.valid;
+    } else {
+      drivingLicenceExpiryDateValidation = TextFieldValidation.notValid;
+    }
+    emit(SignupState.checkDrivingLicenceExpiryDateValidation(
+      date: drivingLicenceExpiryDate.toString(),
+      validation: drivingLicenceExpiryDateValidation,
+    ));
+  }
+
   void submitCustomerInfo() async {
     checkUserNameValidation();
     checkEmailValidationState();
@@ -518,6 +547,8 @@ class SignupCubit extends Cubit<SignupState> {
     if (isSaudiOrSaudiResident()) {
       checkDrivingLicenceValidation();
     }
+    checkNationalIdExpiryValidation();
+    checkDrivingExpiryValidation();
 
     if (isFieldNotEmpty(customerNameController) &&
         isFieldNotEmpty(customerEmailController) &&
@@ -545,7 +576,7 @@ class SignupCubit extends Cubit<SignupState> {
         );
         res.fold(
           (errMsg) {
-            if(errMsg == 'reset') {
+            if (errMsg == 'reset') {
               emit(const SignupState.resetDialog());
             } else {
               emit(SignupState.submitCustomerInfoFailed(errMsg: errMsg));
@@ -776,10 +807,11 @@ class SignupCubit extends Cubit<SignupState> {
             : saCitizenSelectedIndex == 0);
   }
 
-  void resetCustomer() async{
+  void resetCustomer() async {
     emit(const SignupState.resetCustomerLoading());
     try {
-      final result = await authRepository.resetCustomer(customerEmailController.text);
+      final result =
+          await authRepository.resetCustomer(customerEmailController.text);
       result.fold((errMsg) {
         emit(SignupState.resetCustomerError(errMsg));
       }, (msg) {

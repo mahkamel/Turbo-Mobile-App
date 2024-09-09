@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/core/helpers/dropdown_keys.dart';
+import 'package:turbo/core/helpers/extentions.dart';
 import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/auth/requests/widgets/date_selection.dart';
@@ -10,6 +11,7 @@ import 'package:turbo/presentation/auth/requests/widgets/select_phone_number.dar
 import '../../../../blocs/signup/signup_cubit.dart';
 import '../../../../core/helpers/enums.dart';
 import '../../../../core/routing/routes.dart';
+import '../../../../core/routing/screens_arguments.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/custom_dropdown.dart';
@@ -116,45 +118,53 @@ class SignupSubmitButton extends StatelessWidget {
         } else if (state is OTPSentErrorState) {
           defaultErrorSnackBar(context: context, message: state.errMsg);
         } else if (state is ResetDialogState) {
-            showAdaptiveDialog(
-              context: context,
-              builder: (dialogContext) => BlocProvider.value(
-                value: context.read<SignupCubit>(),
-                child: BlocConsumer<SignupCubit, SignupState>(
-                  listenWhen: (previous, current) {
-                    return current is ResetCustomerErrorState ||
-                        current is ResetCustomerSuccessState;
-                  },
-                  listener: (context, state) {
-                    if (state is ResetCustomerErrorState) {
-                      defaultErrorSnackBar(
-                          context: context, message: state.errMsg);
-                    } else if (state is ResetCustomerSuccessState) {
-                      Navigator.of(dialogContext).pushNamedAndRemoveUntil(
-                                        Routes.loginScreen,
-                                        (route) => false,
-                                      );
-                      defaultSuccessSnackBar(
-                          context: context, message: state.msg);
+          showAdaptiveDialog(
+            context: context,
+            builder: (dialogContext) => BlocProvider.value(
+              value: context.read<SignupCubit>(),
+              child: BlocConsumer<SignupCubit, SignupState>(
+                listenWhen: (previous, current) {
+                  return current is ResetCustomerErrorState ||
+                      current is ResetCustomerSuccessState;
+                },
+                listener: (context, state) {
+                  if (state is ResetCustomerErrorState) {
+                    defaultErrorSnackBar(
+                        context: context, message: state.errMsg);
+                  } else if (state is ResetCustomerSuccessState) {
+                    if (Navigator.of(dialogContext).canPop()) {
+                      Navigator.of(dialogContext).pop();
                     }
-                  },
-                  builder: (context, state) {
-                    return DefaultDialog(
-                      secondButtonColor: AppColors.darkRed,
-                      onSecondButtonTapped: () {
-                        context.read<SignupCubit>().resetCustomer();
-                      },
-                      loading: state is ResetCustomerLoadingState,
-                      title: "Restore Your Account",
-                      secondButtonText: "Restore",
-                      subTitle:
-                          "Regain access to your account with a quick restoration process.",
+                    context.pushReplacementNamed(
+                      Routes.loginScreen,
+                      arguments: LoginScreenArguments(
+                        carId: blocRead.requestedCarId,
+                        dailyPrice: blocRead.dailyPrice,
+                        weeklyPrice: blocRead.weeklyPrice,
+                        monthlyPrice: blocRead.monthlyPrice,
+                      ),
                     );
-                  },
-                ),
+                    defaultSuccessSnackBar(
+                        context: context, message: state.msg);
+                  }
+                },
+                builder: (context, state) {
+                  return DefaultDialog(
+                    secondButtonColor: AppColors.darkRed,
+                    onSecondButtonTapped: () {
+                      context.read<SignupCubit>().resetCustomer();
+                    },
+                    loading: state is ResetCustomerLoadingState,
+                    title: "Restore Your Account",
+                    secondButtonText: "Restore",
+                    subTitle:
+                        "Regain access to your account with a quick restoration process.",
+                  );
+                },
               ),
-            );
-          }
+            ),
+          );
+        }
       },
       buildWhen: (previous, current) =>
           current is SendOTPLoadingState ||
@@ -260,7 +270,8 @@ class SignupPasswordField extends StatelessWidget {
               }
             }
           },
-          widgetPadding: const EdgeInsetsDirectional.only(top: 16, start: 18, end: 18),
+          widgetPadding:
+              const EdgeInsetsDirectional.only(top: 16, start: 18, end: 18),
           header: "Password",
           isRequiredFiled: true,
           hintText: blocRead.customerNameController.text.isEmpty
@@ -565,33 +576,52 @@ class SignupNationalIdExpiryDateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignupCubit, SignupState>(
-      buildWhen: (previous, current) => current is ChangeNationalIdExpiryState,
+      buildWhen: (previous, current) =>
+          current is ChangeNationalIdExpiryState ||
+          current is CheckNationalIdExpiryDateValidationState,
       builder: (context, state) {
         var blocRead = context.read<SignupCubit>();
         var blocWatch = context.watch<SignupCubit>();
 
-        return DateSelection(
-          validationState: blocWatch.nationalIdExpiryDate != null ? false : true,
-          padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-          onPressed: () {
-            if (clientTypeKey.currentState != null) {
-              if (clientTypeKey.currentState!.isOpen) {
-                clientTypeKey.currentState!.closeBottomSheet();
-              }
-            }
-          },
-          header: "National Id Expiry",
-          key: const Key("NationalIdExpiry"),
-          isRequired: true,
-          minDate: DateTime.now(),
-          isWithTime: false,
-          initialDate: blocWatch.nationalIdExpiryDate,
-          selectedDateTime: blocWatch.nationalIdExpiryDate,
-          onDateSelected: (selectedDate) {
-            if (selectedDate != null) {
-              blocRead.changeNationalIdExpiryDate(selectedDate);
-            }
-          },
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DateSelection(
+              validationState: blocWatch.nationalIdExpiryDateValidation,
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+              onPressed: () {
+                if (clientTypeKey.currentState != null) {
+                  if (clientTypeKey.currentState!.isOpen) {
+                    clientTypeKey.currentState!.closeBottomSheet();
+                  }
+                }
+              },
+              header: "National Id Expiry",
+              key: const Key("NationalIdExpiry"),
+              isRequired: true,
+              minDate: DateTime.now(),
+              isWithTime: false,
+              initialDate: blocWatch.nationalIdExpiryDate,
+              selectedDateTime: blocWatch.nationalIdExpiryDate,
+              onDateSelected: (selectedDate) {
+                if (selectedDate != null) {
+                  blocRead.changeNationalIdExpiryDate(selectedDate);
+                }
+              },
+            ),
+            if (blocWatch.nationalIdExpiryDateValidation ==
+                TextFieldValidation.notValid)
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20.0,
+                  top: 6,
+                ),
+                child: Text(
+                  "This date cannot be empty",
+                  style: AppFonts.ibm14ErrorRed400,
+                ),
+              ),
+          ],
         );
       },
     );
@@ -665,37 +695,54 @@ class SignupDrivingLicenceExpiryDateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignupCubit, SignupState>(
-      // buildWhen: (previous, current) =>
-      //     current is ChangeDrivingLicenceExpiryState,
+      buildWhen: (previous, current) =>
+          current is ChangeDrivingLicenceExpiryState,
       builder: (context, state) {
         var blocRead = context.read<SignupCubit>();
         var blocWatch = context.watch<SignupCubit>();
 
-        return DateSelection(
-          validationState: blocWatch.drivingLicenceExpiryDate != null ? false : true,
-          padding:
-              const EdgeInsetsDirectional.symmetric(horizontal: 20).copyWith(
-            top: blocWatch.isSaudiOrSaudiResident() ? 16 : 0,
-          ),
-          header: "Driving Licence Expiry",
-          onPressed: () {
-            if (clientTypeKey.currentState != null) {
-              if (clientTypeKey.currentState!.isOpen) {
-                clientTypeKey.currentState!.closeBottomSheet();
-              }
-            }
-          },
-          key: const Key("DrivingLicenceExpiry"),
-          isRequired: true,
-          minDate: DateTime.now(),
-          isWithTime: false,
-          initialDate: blocWatch.drivingLicenceExpiryDate,
-          selectedDateTime: blocWatch.drivingLicenceExpiryDate,
-          onDateSelected: (selectedDate) {
-            if (selectedDate != null) {
-              blocRead.changeDrivingLicenceExpiryDate(selectedDate);
-            }
-          },
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DateSelection(
+              validationState: blocWatch.drivingLicenceExpiryDateValidation,
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: 20)
+                  .copyWith(
+                top: blocWatch.isSaudiOrSaudiResident() ? 16 : 0,
+              ),
+              header: "Driving Licence Expiry",
+              onPressed: () {
+                if (clientTypeKey.currentState != null) {
+                  if (clientTypeKey.currentState!.isOpen) {
+                    clientTypeKey.currentState!.closeBottomSheet();
+                  }
+                }
+              },
+              key: const Key("DrivingLicenceExpiry"),
+              isRequired: true,
+              minDate: DateTime.now(),
+              isWithTime: false,
+              initialDate: blocWatch.drivingLicenceExpiryDate,
+              selectedDateTime: blocWatch.drivingLicenceExpiryDate,
+              onDateSelected: (selectedDate) {
+                if (selectedDate != null) {
+                  blocRead.changeDrivingLicenceExpiryDate(selectedDate);
+                }
+              },
+            ),
+            if (blocWatch.drivingLicenceExpiryDateValidation ==
+                TextFieldValidation.notValid)
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20.0,
+                  top: 6,
+                ),
+                child: Text(
+                  "This date cannot be empty",
+                  style: AppFonts.ibm14ErrorRed400,
+                ),
+              ),
+          ],
         );
       },
     );

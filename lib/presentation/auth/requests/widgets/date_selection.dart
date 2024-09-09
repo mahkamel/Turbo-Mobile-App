@@ -14,7 +14,7 @@ class DateSelection extends StatefulWidget {
     required this.header,
     required this.onDateSelected,
     this.selectedDateTime,
-    this.validationState = false,
+    this.validationState = TextFieldValidation.normal,
     this.minDate,
     this.padding,
     this.onPressed,
@@ -35,7 +35,7 @@ class DateSelection extends StatefulWidget {
   final bool isRequired;
   final bool isWithTime;
   final bool isEnabled;
-  final bool validationState;
+  final TextFieldValidation validationState;
   final EdgeInsetsDirectional? padding;
 
   @override
@@ -74,7 +74,9 @@ class _DateSelectionState extends State<DateSelection> {
             color: widget.isEnabled ? null : AppColors.greyBorder,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: widget.validationState ? AppColors.errorRed : AppColors.black.withOpacity(0.5),
+              color: widget.validationState == TextFieldValidation.notValid
+                  ? AppColors.errorRed
+                  : AppColors.black.withOpacity(0.5),
             ),
           ),
           child: Row(

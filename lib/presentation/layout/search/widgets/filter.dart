@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_multi_slider/flutter_multi_slider.dart';
+import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/layout/search/widgets/filter/car_brand_header.dart';
 import 'package:turbo/presentation/layout/search/widgets/filter/filter_by_list.dart';
 import '../../../../blocs/search/search_cubit.dart';
 import '../../../../core/helpers/dropdown_keys.dart';
+import '../../../../core/helpers/enums.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/custom_text_fields.dart';
@@ -115,8 +117,7 @@ class FilterResultsBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     var searchCubitRead = context.read<SearchCubit>();
     return BlocListener<SearchCubit, SearchState>(
-      listenWhen: (previous, current) =>
-          current is GetFilteredCarsErrorState,
+      listenWhen: (previous, current) => current is GetFilteredCarsErrorState,
       listener: (context, state) {
         if (state is GetFilteredCarsErrorState) {
           defaultErrorSnackBar(
@@ -219,38 +220,55 @@ class PriceBox extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20, top: 10),
       child: Row(
         children: [
-          codeTextField(
-              width: 145,
-              maxNumbers: 8,
-              isMoney: true,
-              context: context,
+          CustomTextField(
+              width: (AppConstants.screenWidth(context) - 66) / 2,
+              validationState: TextFieldValidation.normal,
+              textInputAction: TextInputAction.done,
+              textInputType: const TextInputType.numberWithOptions(
+                signed: false,
+                decimal: true,
+              ),
+              icon: const Padding(
+                padding: EdgeInsets.only(top: 14.0),
+                child: Text("SAR"),
+              ),
               onChange: (value) {},
               onTapOutside: (value) {
                 blocRead.validateMinPrice();
               },
-              controller: blocRead.minPriceController,
-              node: FocusNode(),
+              textEditingController: blocRead.minPriceController,
+              radius: 3,
               onSubmit: (value) {
                 blocRead.validateMinPrice();
               }),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 12),
+          const SizedBox(
             height: 2,
-            width: 13,
-            decoration: const BoxDecoration(
-                shape: BoxShape.rectangle, color: AppColors.grey),
+            width: 26,
+            child: Divider(
+              indent: 6,
+              endIndent: 6,
+              color: AppColors.grey,
+              thickness: 2,
+            ),
           ),
-          codeTextField(
-              width: 145,
-              context: context,
-              maxNumbers: 8,
+          CustomTextField(
+              width: (AppConstants.screenWidth(context) - 66) / 2,
+              radius: 3,
+              validationState: TextFieldValidation.normal,
+              textInputAction: TextInputAction.done,
+              textInputType: const TextInputType.numberWithOptions(
+                signed: false,
+                decimal: true,
+              ),
+              icon: const Padding(
+                padding: EdgeInsets.only(top: 14.0),
+                child: Text("SAR"),
+              ),
               onChange: (value) {},
-              isMoney: true,
               onTapOutside: (value) {
                 blocRead.validateMaxPrice();
               },
-              controller: blocRead.maxPriceController,
-              node: FocusNode(),
+              textEditingController: blocRead.maxPriceController,
               onSubmit: (value) {
                 blocRead.validateMaxPrice();
               }),

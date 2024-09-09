@@ -181,8 +181,11 @@ class SignupState with _$SignupState {
   }) = ChangeCarColorState;
 
   const factory SignupState.resetCustomerLoading() = ResetCustomerLoadingState;
-  const factory SignupState.resetCustomerSuccess(final String msg) = ResetCustomerSuccessState;
-  const factory SignupState.resetCustomerError(final String errMsg) = ResetCustomerErrorState;
+  const factory SignupState.resetCustomerSuccess(final String msg) =
+      ResetCustomerSuccessState;
+  const factory SignupState.resetCustomerError(final String errMsg) =
+      ResetCustomerErrorState;
 
   const factory SignupState.resetDialog() = ResetDialogState;
+
 }
