@@ -141,7 +141,10 @@ class _OtpForgetPasswordState extends State<OtpForgetPassword> {
                         controller:
                             context.read<LoginCubit>().codeControllers[index],
                         node: context.read<LoginCubit>().codeFocusNode[index],
-                        isText: true);
+                        isText: true,
+                        width: 47,
+                        height: 47,
+                      );
                   }),
                 ],
               ),

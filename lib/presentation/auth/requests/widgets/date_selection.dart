@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/helpers/constants.dart';
+import '../../../../core/helpers/enums.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/widget_with_header.dart';
@@ -13,6 +14,7 @@ class DateSelection extends StatefulWidget {
     required this.header,
     required this.onDateSelected,
     this.selectedDateTime,
+    this.validationState = false,
     this.minDate,
     this.padding,
     this.onPressed,
@@ -33,6 +35,7 @@ class DateSelection extends StatefulWidget {
   final bool isRequired;
   final bool isWithTime;
   final bool isEnabled;
+  final bool validationState;
   final EdgeInsetsDirectional? padding;
 
   @override
@@ -71,7 +74,7 @@ class _DateSelectionState extends State<DateSelection> {
             color: widget.isEnabled ? null : AppColors.greyBorder,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: AppColors.divider,
+              color: widget.validationState ? AppColors.errorRed : AppColors.black.withOpacity(0.5),
             ),
           ),
           child: Row(
@@ -110,7 +113,7 @@ class _DateSelectionState extends State<DateSelection> {
                             style: widget.selectedDateTime != null ||
                                     selectedDateTime != null
                                 ? AppFonts.ibm15LightBlack400
-                                : AppFonts.ibm15Divider400,
+                                : AppFonts.ibm15subTextGrey400,
                           ),
                         ],
                       ),
@@ -134,7 +137,7 @@ class _DateSelectionState extends State<DateSelection> {
                           style: widget.selectedDateTime != null ||
                                   selectedDateTime != null
                               ? AppFonts.ibm15LightBlack400
-                              : AppFonts.ibm15Divider400,
+                              : AppFonts.ibm15subTextGrey400,
                         ),
                       ],
                     ),
@@ -289,7 +292,7 @@ class _DateSelectionState extends State<DateSelection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${widget.header} Date and Time",
+              "${widget.header} Date",
               style: AppFonts.inter18Black500,
             ),
             Expanded(

@@ -4,13 +4,16 @@ import 'package:turbo/core/helpers/dropdown_keys.dart';
 import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/auth/requests/widgets/date_selection.dart';
+import 'package:turbo/presentation/auth/requests/widgets/nationality_field.dart';
 import 'package:turbo/presentation/auth/requests/widgets/select_phone_number.dart';
 
 import '../../../../blocs/signup/signup_cubit.dart';
 import '../../../../core/helpers/enums.dart';
+import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/custom_dropdown.dart';
+import '../../../../core/widgets/default_dialog.dart';
 import '../../../../core/widgets/text_field_with_header.dart';
 import '../../../../core/widgets/widget_with_header.dart';
 
@@ -43,12 +46,13 @@ class InfoStepForm extends StatelessWidget {
               ),
               SignupAddressField(),
               ChoosePhoneNumber(),
+              Nationality(),
               SignupCitizenStatusDropdown(),
               SignupNationalIdField(),
               SignupNationalIdExpiryDateField(),
               SignupDrivingLicenceField(),
               SignupDrivingLicenceExpiryDateField(),
-              PasswordSectionHeader(),
+              // PasswordSectionHeader(),
               SignupPasswordField(),
               SizedBox(
                 height: 12,
@@ -100,7 +104,8 @@ class SignupSubmitButton extends StatelessWidget {
       listenWhen: (previous, current) =>
           current is OTPSentSuccessState ||
           current is OTPSentErrorState ||
-          current is SubmitCustomerInfoErrorState,
+          current is SubmitCustomerInfoErrorState ||
+          current is ResetDialogState,
       listener: (context, state) {
         var blocRead = context.read<SignupCubit>();
 
@@ -110,14 +115,54 @@ class SignupSubmitButton extends StatelessWidget {
           defaultErrorSnackBar(context: context, message: state.errMsg);
         } else if (state is OTPSentErrorState) {
           defaultErrorSnackBar(context: context, message: state.errMsg);
-        }
+        } else if (state is ResetDialogState) {
+            showAdaptiveDialog(
+              context: context,
+              builder: (dialogContext) => BlocProvider.value(
+                value: context.read<SignupCubit>(),
+                child: BlocConsumer<SignupCubit, SignupState>(
+                  listenWhen: (previous, current) {
+                    return current is ResetCustomerErrorState ||
+                        current is ResetCustomerSuccessState;
+                  },
+                  listener: (context, state) {
+                    if (state is ResetCustomerErrorState) {
+                      defaultErrorSnackBar(
+                          context: context, message: state.errMsg);
+                    } else if (state is ResetCustomerSuccessState) {
+                      Navigator.of(dialogContext).pushNamedAndRemoveUntil(
+                                        Routes.loginScreen,
+                                        (route) => false,
+                                      );
+                      defaultSuccessSnackBar(
+                          context: context, message: state.msg);
+                    }
+                  },
+                  builder: (context, state) {
+                    return DefaultDialog(
+                      secondButtonColor: AppColors.darkRed,
+                      onSecondButtonTapped: () {
+                        context.read<SignupCubit>().resetCustomer();
+                      },
+                      loading: state is ResetCustomerLoadingState,
+                      title: "Restore Your Account",
+                      secondButtonText: "Restore",
+                      subTitle:
+                          "Regain access to your account with a quick restoration process.",
+                    );
+                  },
+                ),
+              ),
+            );
+          }
       },
       buildWhen: (previous, current) =>
           current is SendOTPLoadingState ||
           current is OTPSentSuccessState ||
           current is OTPSentErrorState ||
           current is SubmitCustomerInfoErrorState ||
-          current is SubmitCustomerInfoLoadingState,
+          current is SubmitCustomerInfoLoadingState ||
+          current is ResetDialogState,
       builder: (context, state) {
         var blocRead = context.read<SignupCubit>();
 
@@ -215,6 +260,7 @@ class SignupPasswordField extends StatelessWidget {
               }
             }
           },
+          widgetPadding: const EdgeInsetsDirectional.only(top: 16, start: 18, end: 18),
           header: "Password",
           isRequiredFiled: true,
           hintText: blocRead.customerNameController.text.isEmpty
@@ -267,6 +313,7 @@ class SignupCitizenStatusDropdown extends StatelessWidget {
             header: "Are You a Saudi Arabian Citizen?",
             widget: CustomDropdown<int>(
               onTap: () {},
+              radius: 20,
               border: Border.all(
                 color: AppColors.black.withOpacity(0.5),
               ),
@@ -333,7 +380,7 @@ class SignupAddressField extends StatelessWidget {
           },
           header: "Address",
           hintText: blocRead.customerAddressController.text.isEmpty
-              ? "Please Enter Address"
+              ? "Enter Your Address"
               : "Please Enter Valid Address",
           isRequiredFiled: true,
           isWithValidation: true,
@@ -375,7 +422,7 @@ class SignupEmailField extends StatelessWidget {
         return AuthTextFieldWithHeader(
           header: "Email",
           isRequiredFiled: true,
-          hintText: "Please Enter Email",
+          hintText: "Enter Your Email",
           isWithValidation: true,
           textInputType: TextInputType.emailAddress,
           validationText: blocRead.customerEmailController.text.isEmpty
@@ -431,7 +478,7 @@ class SignupNameField extends StatelessWidget {
           },
           isRequiredFiled: true,
           header: "Name",
-          hintText: "Enter Name",
+          hintText: "Enter Your Name",
           isWithValidation: true,
           textInputType: TextInputType.name,
           validationText: blocRead.customerNameController.text.isEmpty
@@ -524,6 +571,7 @@ class SignupNationalIdExpiryDateField extends StatelessWidget {
         var blocWatch = context.watch<SignupCubit>();
 
         return DateSelection(
+          validationState: blocWatch.nationalIdExpiryDate != null ? false : true,
           padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
           onPressed: () {
             if (clientTypeKey.currentState != null) {
@@ -532,7 +580,7 @@ class SignupNationalIdExpiryDateField extends StatelessWidget {
               }
             }
           },
-          header: "National Id Expiry Date",
+          header: "National Id Expiry",
           key: const Key("NationalIdExpiry"),
           isRequired: true,
           minDate: DateTime.now(),
@@ -617,18 +665,19 @@ class SignupDrivingLicenceExpiryDateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignupCubit, SignupState>(
-      buildWhen: (previous, current) =>
-          current is ChangeDrivingLicenceExpiryState,
+      // buildWhen: (previous, current) =>
+      //     current is ChangeDrivingLicenceExpiryState,
       builder: (context, state) {
         var blocRead = context.read<SignupCubit>();
         var blocWatch = context.watch<SignupCubit>();
 
         return DateSelection(
+          validationState: blocWatch.drivingLicenceExpiryDate != null ? false : true,
           padding:
               const EdgeInsetsDirectional.symmetric(horizontal: 20).copyWith(
             top: blocWatch.isSaudiOrSaudiResident() ? 16 : 0,
           ),
-          header: "Driving Licence Expiry Date",
+          header: "Driving Licence Expiry",
           onPressed: () {
             if (clientTypeKey.currentState != null) {
               if (clientTypeKey.currentState!.isOpen) {

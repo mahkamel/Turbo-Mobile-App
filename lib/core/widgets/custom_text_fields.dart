@@ -427,7 +427,7 @@ class CustomTextField extends StatelessWidget {
     this.enableInteractiveSelection = true,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
-     this.label,
+    this.label,
     this.paddingTop = 4,
   });
 
@@ -594,9 +594,8 @@ Widget codeTextField({
     clipBehavior: Clip.antiAlias,
     height: height,
     width: width,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(4),
-    ),
+    decoration: const BoxDecoration(shape: BoxShape.circle),
+    // padding: EdgeInsets.all(8),
     child: TextFormField(
       focusNode: node,
       autofocus: isMoney ? false : true,
@@ -607,20 +606,26 @@ Widget codeTextField({
             FocusManager.instance.primaryFocus?.unfocus();
           },
       textAlign: TextAlign.center,
-      inputFormatters: !isText ? isMoney ? [
-          DecimalTextInputFormatter(decimalRange: 2),
-
-
-      ] : [
-       FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(maxNumbers)
-      ] : null,
+      inputFormatters: !isText
+          ? isMoney
+              ? [
+                  DecimalTextInputFormatter(decimalRange: 2),
+                ]
+              : [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(maxNumbers)
+                ]
+          : null,
       textInputAction: TextInputAction.next,
       onChanged: onChange,
       onFieldSubmitted: onSubmit,
       style: AppFonts.ibm14LightBlack400,
       controller: controller,
-      keyboardType: isText ? isMoney ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text  : TextInputType.number,
+      keyboardType: isText
+          ? isMoney
+              ? const TextInputType.numberWithOptions(decimal: true)
+              : TextInputType.text
+          : TextInputType.number,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: AppFonts.ibm14LightBlack400,
@@ -630,13 +635,17 @@ Widget codeTextField({
           borderSide: const BorderSide(
             color: AppColors.codeFieldBorder,
           ),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: isMoney == false
+              ? BorderRadius.circular(60)
+              : BorderRadius.circular(4),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: AppColors.black,
           ),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: isMoney == false
+              ? BorderRadius.circular(60)
+              : BorderRadius.circular(4),
         ),
         enabled: true,
         filled: false,
@@ -644,7 +653,9 @@ Widget codeTextField({
           borderSide: const BorderSide(
             color: AppColors.codeFieldBorder,
           ),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: isMoney == false
+              ? BorderRadius.circular(60)
+              : BorderRadius.circular(4),
         ),
       ),
     ),
