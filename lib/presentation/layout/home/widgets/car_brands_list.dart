@@ -180,6 +180,7 @@ class BrandLogoCircle extends StatelessWidget {
               height: 35,
               imageUrl: "${FlavorConfig.instance.filesBaseUrl}$logoPath",
               placeholder: (context, url) => const SizedBox(),
+              errorWidget: (context, url, error) => Image.asset('assets/images/image.png', width: 35, height: 35,),
             ),
             const SizedBox(
               height: 4,

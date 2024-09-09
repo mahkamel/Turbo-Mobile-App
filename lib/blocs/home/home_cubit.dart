@@ -62,7 +62,6 @@ class HomeCubit extends Cubit<HomeState> {
     isFirstGettingCarBrand = true;
     emit(const HomeState.getCarsBrandsLoading());
     try {
-      if (_carRepository.carBrands.isEmpty) {
         final res =
             await _carRepository.getCarBrands(_authRepository.selectedBranchId);
         res.fold(
@@ -76,11 +75,6 @@ class HomeCubit extends Cubit<HomeState> {
             emit(const HomeState.getCarsBrandsSuccess());
           },
         );
-      } else {
-        carBrands = _carRepository.carBrands;
-        isFirstGettingCarBrand = false;
-        emit(const HomeState.getCarsBrandsSuccess());
-      }
     } catch (e) {
       isFirstGettingCarBrand = false;
       emit(HomeState.getCarsBrandsError(e.toString()));
