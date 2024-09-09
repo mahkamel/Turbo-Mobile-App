@@ -731,6 +731,20 @@ class SignupCubit extends Cubit<SignupState> {
             ? false
             : saCitizenSelectedIndex == 0);
   }
+
+  void resetCustomer() async{
+    emit(const SignupState.resetCustomerLoading());
+    try {
+      final result = await authRepository.resetCustomer(customerEmailController.text);
+      result.fold((errMsg) {
+        emit(SignupState.resetCustomerError(errMsg));
+      }, (msg) {
+        emit(SignupState.resetCustomerSuccess(msg));
+      });
+    } catch (e) {
+      emit(SignupState.resetCustomerError(e.toString()));
+    }
+  }
 }
 
 bool isFieldValid(

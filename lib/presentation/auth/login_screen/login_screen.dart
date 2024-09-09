@@ -13,6 +13,8 @@ import 'package:turbo/presentation/auth/login_screen/widgets/login_password.dart
 
 import '../../../core/helpers/enums.dart';
 import '../../../core/routing/routes.dart';
+import '../../../core/theming/colors.dart';
+import '../../../core/widgets/default_dialog.dart';
 import '../../../core/widgets/text_field_with_header.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -65,6 +67,17 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const ForgetPasswordButton(),
                 BlocConsumer<LoginCubit, LoginState>(
+                  buildWhen: (previous, current) {
+                    return current is ResetDialogState ||
+                        current is LoginSuccessState ||
+                        current is LoginErrorState ||
+                        current is LoginLoadingState;
+                  },
+                  listenWhen: (previous, current) {
+                    return current is ResetDialogState ||
+                        current is LoginSuccessState ||
+                        current is LoginErrorState;
+                  },
                   listener: (context, state) {
                     if (state is LoginErrorState) {
                       defaultErrorSnackBar(
@@ -89,6 +102,42 @@ class LoginScreen extends StatelessWidget {
                           (route) => false,
                         );
                       }
+                    } else if (state is ResetDialogState) {
+                      showAdaptiveDialog(
+                        context: context,
+                        builder: (dialogContext) => BlocProvider.value(
+                          value: context.read<LoginCubit>(),
+                          child: BlocConsumer<LoginCubit, LoginState>(
+                            listenWhen: (previous, current) {
+                              return current is ResetCustomerErrorState ||
+                                  current is ResetCustomerSuccessState;
+                            },
+                            listener: (context, state) {
+                              if (state is ResetCustomerErrorState) {
+                                defaultErrorSnackBar(
+                                    context: context, message: state.errMsg);
+                              } else if (state is ResetCustomerSuccessState) {
+                                Navigator.of(dialogContext).pop();
+                                defaultSuccessSnackBar(
+                                    context: context, message: state.msg);
+                              }
+                            },
+                            builder: (context, state) {
+                              return DefaultDialog(
+                                secondButtonColor: AppColors.darkRed,
+                                onSecondButtonTapped: () {
+                                  context.read<LoginCubit>().resetCustomer();
+                                },
+                                loading: state is ResetCustomerLoadingState,
+                                title: "Restore Your Account",
+                                secondButtonText: "Restore",
+                                subTitle:
+                                    "Regain access to your account with a quick restoration process.",
+                              );
+                            },
+                          ),
+                        ),
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -97,59 +146,6 @@ class LoginScreen extends StatelessWidget {
                       loading: state is LoginLoadingState,
                       function: () {
                         blocRead.onLoginButtonClicked();
-                        if(state is ResetDialogState) {
-                          // showAdaptiveDialog(
-                          //     context: context,
-                          //     builder: (dialogContext) => BlocProvider.value(
-                          //       value: context.read<LoginCubit>()
-                          //       child: BlocConsumer<LoginCubit, LoginState>(
-                          //         listenWhen: (previous, current) {
-                          //           return current is DeleteProfileErrorState ||
-                          //               current is DeleteProfileSuccessState ||
-                          //               current is DeleteProfileLoadingState ||
-                          //               current is LogoutErrorState ||
-                          //               current is LogoutLoadingState ||
-                          //               current is LogoutSuccessState;
-                          //         },
-                          //         listener: (context, state) {
-                          //           if (state is DeleteProfileErrorState) {
-                          //             defaultErrorSnackBar(
-                          //                 context: context,
-                          //                 message: state.errMsg);
-                          //           } else if (state is LogoutErrorState) {
-                          //             defaultErrorSnackBar(
-                          //                 context: context,
-                          //                 message: state.errMsg);
-                          //           } else if (state is LogoutSuccessState) {
-                          //             Navigator.of(context)
-                          //                 .pushNamedAndRemoveUntil(
-                          //               Routes.layoutScreen,
-                          //               (route) => false,
-                          //             );
-                          //           }
-                          //         },
-                          //         builder: (context, state) {
-                          //           return DefaultDialog(
-                          //             secondButtonColor: AppColors.darkRed,
-                          //             onSecondButtonTapped: () {
-                          //               context
-                          //                   .read<ProfileCubit>()
-                          //                   .deleteProfile();
-                          //               context.read<ProfileCubit>().logout();
-                          //             },
-                          //             loading:
-                          //                 state is DeleteProfileLoadingState ||
-                          //                     state is LogoutLoadingState,
-                          //             title:
-                          //                 "Are you sure to delete your account?",
-                          //             subTitle:
-                          //                 "Deleting your account will remove your data. You can restore your account by signing up again with the same email.",
-                          //           );
-                          //         },
-                          //       ),
-                          //     ),
-                          //   );
-                        }
                       },
                       text: "login".getLocale(context: context),
                       marginTop: 24,
