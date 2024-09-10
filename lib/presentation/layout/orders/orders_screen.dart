@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
 import 'package:turbo/models/request_model.dart';
 import 'package:turbo/presentation/layout/orders/request_status/widgets/request_card.dart';
@@ -91,7 +92,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
               child: ListView(
             physics: AppConstants.screenHeight(context) < 600 ? const BouncingScrollPhysics():const NeverScrollableScrollPhysics(),
                 children: [
-                  SvgPicture.asset("assets/images/login.svg"),
+                  Lottie.asset("assets/lottie/login_required.json",
+                  width: 400,
+                    height: 400,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(

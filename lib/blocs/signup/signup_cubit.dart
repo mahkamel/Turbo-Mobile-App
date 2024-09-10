@@ -521,7 +521,7 @@ class SignupCubit extends Cubit<SignupState> {
       nationalIdExpiryDateValidation = TextFieldValidation.notValid;
     }
     emit(SignupState.checkNationalIdExpiryDateValidation(
-        date: nationalIdExpiryDate.toString() ?? "",
+        date: nationalIdExpiryDate.toString(),
         validation: nationalIdExpiryDateValidation));
   }
 
