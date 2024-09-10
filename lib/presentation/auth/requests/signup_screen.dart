@@ -47,6 +47,7 @@ class SignupScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
             child: SizedBox(
           width: AppConstants.screenWidth(context),

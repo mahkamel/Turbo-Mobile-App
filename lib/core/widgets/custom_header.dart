@@ -48,7 +48,8 @@ class DefaultHeader extends StatelessWidget {
                 header,
                 style: AppFonts.ibm24HeaderBlue600.copyWith(
                   fontWeight: FontWeight.w600,
-                  fontSize: 24,
+                  fontSize:  AppConstants.screenHeight(context) < 600
+                      ? 20:24,
                 ),
               ),
             ),
