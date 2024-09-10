@@ -31,6 +31,7 @@ class DefaultDialog extends StatelessWidget {
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
+        constraints: const BoxConstraints(maxWidth: 420),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(20),

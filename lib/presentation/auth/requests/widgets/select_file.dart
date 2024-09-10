@@ -313,7 +313,9 @@ class DisplayDocumentsDialog extends StatelessWidget {
                 onTap: () {},
                 child: Container(
                   padding: const EdgeInsets.all(12),
-                  width: AppConstants.screenWidth(context) - 40,
+                  width: AppConstants.screenWidth(context) * 0.9,
+                  // height: AppConstants.screenHeight(context) * 0.6,
+                  constraints: const BoxConstraints(maxWidth: 500),
                   decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -325,17 +327,20 @@ class DisplayDocumentsDialog extends StatelessWidget {
                           (paths[0].toLowerCase().endsWith(".jpg") ||
                               paths[0].toLowerCase().endsWith(".jpeg") ||
                               paths[0].toLowerCase().endsWith(".png")))
-                        Image.network(
-                          "${FlavorConfig.instance.filesBaseUrl}${paths[0]}",
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress != null) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              return child;
-                            }
-                          },
+                        Expanded(
+                          child: Image.network(
+                            "${FlavorConfig.instance.filesBaseUrl}${paths[0]}",
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress != null) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else {
+                                return child;
+                              }
+                            },
+                            // height: AppConstants.screenHeight(context) - 100,
+                          ),
                         ),
                       if (paths.length == 1 &&
                           paths[0].toLowerCase().endsWith(".pdf"))
