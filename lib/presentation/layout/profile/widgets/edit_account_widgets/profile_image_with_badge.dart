@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:turbo/blocs/profile_cubit/profile_cubit.dart';
 import 'package:turbo/main_paths.dart';
 import '../../../../../core/theming/colors.dart';
@@ -23,6 +24,18 @@ class ProfileImageWithBadge extends StatelessWidget {
     } on PlatformException catch (e) {}
   }
 
+  Future<void> requestGalleryPermission(BuildContext context) async {
+    const permission = Permission.photos;
+    if (await permission.isDenied) {
+      final result = await permission.request();
+      if (result.isGranted) {
+        _pickImageFromGallery(context.read<ProfileCubit>());
+      }
+    } else {
+      _pickImageFromGallery(context.read<ProfileCubit>());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
@@ -37,8 +50,8 @@ class ProfileImageWithBadge extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(top: 30, bottom: 6),
           child: InkWell(
-            onTap: () {
-              _pickImageFromGallery(context.read<ProfileCubit>());
+            onTap: () async {
+              await requestGalleryPermission(context);
             },
             child: badges.Badge(
                 position: badges.BadgePosition.bottomEnd(end: -10),
