@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
 import 'package:turbo/models/request_model.dart';
@@ -44,6 +43,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("sdsdasd ${AppConstants.screenWidth(context)}");
     return SizedBox(
       width: AppConstants.screenWidth(context),
       height: AppConstants.screenHeight(context),
@@ -82,18 +82,47 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           },
                           child: allRequests.isEmpty
                               ? const EmptyRequests()
-                              : const RequestList(),
+                              : AppConstants.screenWidth(context) > 760
+                                  ? Expanded(
+                                      child: SingleChildScrollView(
+                                        physics: const BouncingScrollPhysics(),
+                                        child: Wrap(
+                                          spacing: 16,
+                                          runSpacing: 16,
+                                          children: [
+                                            ...List.generate(
+                                              context
+                                                  .read<OrderCubit>()
+                                                  .allRequests
+                                                  .length,
+                                              (index) {
+                                                var request = context
+                                                    .read<OrderCubit>()
+                                                    .allRequests[index];
+                                                return RequestCard(
+                                                  request: request,
+                                                );
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : const RequestList(),
                         ),
                       );
               },
             ),
-          if (context.watch<AuthRepository>().customer.token.isEmpty )
+          if (context.watch<AuthRepository>().customer.token.isEmpty)
             Expanded(
               child: ListView(
-            physics: AppConstants.screenHeight(context) < 600 ? const BouncingScrollPhysics():const NeverScrollableScrollPhysics(),
+                physics: AppConstants.screenHeight(context) < 600
+                    ? const BouncingScrollPhysics()
+                    : const NeverScrollableScrollPhysics(),
                 children: [
-                  Lottie.asset("assets/lottie/login_required.json",
-                  width: 400,
+                  Lottie.asset(
+                    "assets/lottie/login_required.json",
+                    width: 400,
                     height: 400,
                   ),
                   Padding(
@@ -107,8 +136,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ],
               ),
             ),
-
-
         ],
       ),
     );

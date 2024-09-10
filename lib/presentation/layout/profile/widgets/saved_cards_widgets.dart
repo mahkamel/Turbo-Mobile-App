@@ -83,12 +83,15 @@ class SavedPaymentCardItem extends StatelessWidget {
   final bool isExpired;
   @override
   Widget build(BuildContext context) {
-    bool defaultCard = context.read<ProfileCubit>()
-                              .savedPaymentCards[index]
-                              .isCardDefault;
+    bool defaultCard =
+        context.read<ProfileCubit>().savedPaymentCards[index].isCardDefault;
     return Container(
       height: 105,
       width: AppConstants.screenWidth(context) - 32,
+      constraints: BoxConstraints(
+          maxWidth: AppConstants.screenWidth(context) > 760
+              ? (AppConstants.screenWidth(context) - 52) / 2
+              : 380),
       decoration: BoxDecoration(
           color: AppColors.grey500,
           borderRadius: BorderRadius.circular(20),
@@ -334,7 +337,6 @@ class DefaultCardButton extends StatelessWidget {
     } else if (isDefault == false &&
         isExpired == false &&
         isFromDelete == false) {
-
       return isLoading
           ? const SizedBox(
               height: 24,

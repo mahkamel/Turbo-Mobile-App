@@ -74,33 +74,60 @@ class OrdersHistoryScreen extends StatelessWidget {
                                     )
                                   ],
                                 )
-                              : ListView.separated(
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  padding: const EdgeInsets.only(
-                                    top: 8,
-                                    bottom: 20,
-                                    right: 16,
-                                    left: 16,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    var request = context
-                                        .read<ProfileCubit>()
-                                        .requestsHistory[index];
-                                    return RequestCard(
-                                      request: request,
-                                      isFromHistory: true,
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    height: 16,
-                                  ),
-                                  itemCount: context
-                                      .watch<ProfileCubit>()
-                                      .requestsHistory
-                                      .length,
-                                ),
+                              : AppConstants.screenWidth(context) > 760
+                                  ? Expanded(
+                                      child: SingleChildScrollView(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                        physics: const BouncingScrollPhysics(),
+                                        child: Wrap(
+                                          spacing: 16,
+                                          runSpacing: 16,
+                                          children: [
+                                            ...List.generate(
+                                              context
+                                                  .read<ProfileCubit>()
+                                                  .requestsHistory
+                                                  .length,
+                                              (index) {
+                                                var request = context
+                                                    .read<ProfileCubit>()
+                                                    .requestsHistory[index];
+                                                return RequestCard(
+                                                  request: request,
+                                                );
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : ListView.separated(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        bottom: 20,
+                                        right: 16,
+                                        left: 16,
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        var request = context
+                                            .read<ProfileCubit>()
+                                            .requestsHistory[index];
+                                        return RequestCard(
+                                          request: request,
+                                          isFromHistory: true,
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(
+                                        height: 16,
+                                      ),
+                                      itemCount: context
+                                          .watch<ProfileCubit>()
+                                          .requestsHistory
+                                          .length,
+                                    ),
                         ),
                       );
               },

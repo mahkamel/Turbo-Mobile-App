@@ -15,8 +15,8 @@ class SavedCardsScreen extends StatelessWidget {
     } else if (expiryYear == year && expiryMonth < month) {
       return true;
     } else {
-    return false;
-  }
+      return false;
+    }
   }
 
   @override
@@ -51,42 +51,85 @@ class SavedCardsScreen extends StatelessWidget {
                   Widget content;
                   if (state is GetAllSavedCardsLoadingState) {
                     content = const Expanded(
-                      child:  Center(
+                      child: Center(
                         child: CircularProgressIndicator(),
                       ),
                     );
                   } else if (state is GetAllSavedCardsErrorState) {
                     content = const SizedBox();
                   } else if (blocWatch.savedPaymentCards.isNotEmpty) {
-                    content = Expanded(
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
-                        itemBuilder: (context, index) =>
-                            SavedPaymentCardItem(
-                              isExpired: isExpiredCard(
-                                int.parse(blocRead.savedPaymentCards[index].visaCardExpiryMonth),
-                                int.parse(blocRead.savedPaymentCards[index].visaCardExpiryYear)
+                    content = AppConstants.screenWidth(context) > 760
+                        ? Expanded(
+                            child: SingleChildScrollView(
+                              // padding: const EdgeInsets.symmetric(horizontal: 20),
+                              physics: const BouncingScrollPhysics(),
+                              child: Wrap(
+                                spacing: 16,
+                                runSpacing: 16,
+                                children: [
+                                  ...List.generate(
+                                    blocRead.savedPaymentCards.length,
+                                    (index) {
+                                      return SavedPaymentCardItem(
+                                        isExpired: isExpiredCard(
+                                            int.parse(blocRead
+                                                .savedPaymentCards[index]
+                                                .visaCardExpiryMonth),
+                                            int.parse(blocRead
+                                                .savedPaymentCards[index]
+                                                .visaCardExpiryYear)),
+                                        index: index,
+                                        cardType: blocRead
+                                            .savedPaymentCards[index]
+                                            .visaCardType,
+                                        isDefault: blocRead
+                                            .savedPaymentCards[index]
+                                            .isCardDefault,
+                                        cardId: blocRead
+                                            .savedPaymentCards[index].id,
+                                        cardNumbers: blocRead
+                                            .savedPaymentCards[index]
+                                            .visaCardNumber,
+                                        expDate:
+                                            "${blocRead.savedPaymentCards[index].visaCardExpiryMonth}/${blocRead.savedPaymentCards[index].visaCardExpiryYear}",
+                                      );
+                                    },
+                                  )
+                                ],
                               ),
-                              index: index,
-                              cardType: blocRead
-                              .savedPaymentCards[index].visaCardType,
-                              isDefault: blocRead
-                              .savedPaymentCards[index].isCardDefault,
-                              cardId: blocRead.savedPaymentCards[index].id,
-                              cardNumbers: blocRead
-                              .savedPaymentCards[index].visaCardNumber,
-                              expDate:
-                              "${blocRead.savedPaymentCards[index].visaCardExpiryMonth}/${blocRead.savedPaymentCards[index].visaCardExpiryYear}",
                             ),
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(
-                          height: 16,
-                        ),
-                        itemCount: blocWatch.savedPaymentCards.length,
-                      ),
-                    );
+                          )
+                        : Expanded(
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 18),
+                              itemBuilder: (context, index) =>
+                                  SavedPaymentCardItem(
+                                isExpired: isExpiredCard(
+                                    int.parse(blocRead.savedPaymentCards[index]
+                                        .visaCardExpiryMonth),
+                                    int.parse(blocRead.savedPaymentCards[index]
+                                        .visaCardExpiryYear)),
+                                index: index,
+                                cardType: blocRead
+                                    .savedPaymentCards[index].visaCardType,
+                                isDefault: blocRead
+                                    .savedPaymentCards[index].isCardDefault,
+                                cardId: blocRead.savedPaymentCards[index].id,
+                                cardNumbers: blocRead
+                                    .savedPaymentCards[index].visaCardNumber,
+                                expDate:
+                                    "${blocRead.savedPaymentCards[index].visaCardExpiryMonth}/${blocRead.savedPaymentCards[index].visaCardExpiryYear}",
+                              ),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                height: 16,
+                              ),
+                              itemCount: blocWatch.savedPaymentCards.length,
+                            ),
+                          );
                   } else {
                     content = const EmptySavedCards();
                   }

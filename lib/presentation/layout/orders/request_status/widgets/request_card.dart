@@ -27,8 +27,8 @@ class RequestCard extends StatelessWidget {
     return Container(
       width: AppConstants.screenWidth(context) - 32,
       margin: const EdgeInsets.only(bottom: 4),
-      constraints: const BoxConstraints(
-        maxWidth: 300,
+      constraints:  BoxConstraints(
+        maxWidth: AppConstants.screenWidth(context) > 760 ?(AppConstants.screenWidth(context) - 50)/2 :400,
       ),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -87,7 +87,9 @@ class RequestCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SizedBox(
-              width: AppConstants.screenWidth(context) - 64,
+              width: AppConstants.screenWidth(context) > 760
+                  ? null
+                  : AppConstants.screenWidth(context) - 64,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,7 +128,9 @@ class RequestCard extends StatelessWidget {
                               // top: 4.0,
                             ),
                             child: SizedBox(
-                              width: AppConstants.screenWidth(context) - 264,
+                              width: AppConstants.screenWidth(context) > 760
+                                  ? null
+                                  : AppConstants.screenWidth(context) - 264,
                               child: Text(
                                 request.requestLocation,
                                 style: AppFonts.ibm12Primary400,
@@ -395,7 +399,9 @@ class EmptyRequests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      physics: AppConstants.screenHeight(context) < 600 ? const BouncingScrollPhysics():const AlwaysScrollableScrollPhysics(),
+      physics: AppConstants.screenHeight(context) < 600
+          ? const BouncingScrollPhysics()
+          : const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.only(
         top: 8,
         bottom: 20,
