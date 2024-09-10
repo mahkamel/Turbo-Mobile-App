@@ -395,7 +395,7 @@ class EmptyRequests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: AppConstants.screenHeight(context) < 600 ? const BouncingScrollPhysics():const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.only(
         top: 8,
         bottom: 20,

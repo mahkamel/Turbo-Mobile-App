@@ -200,17 +200,17 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   final int decimalRange;
 
   @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue, // unused.
-    TextEditingValue newValue,
-  ) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, // unused.
+      TextEditingValue newValue,) {
     TextSelection newSelection = newValue.selection;
     String truncated = newValue.text;
 
     String value = newValue.text;
 
     if (value.contains(".") &&
-        value.substring(value.indexOf(".") + 1).length > decimalRange) {
+        value
+            .substring(value.indexOf(".") + 1)
+            .length > decimalRange) {
       truncated = oldValue.text;
       newSelection = oldValue.selection;
     } else if (value == ".") {
@@ -227,5 +227,23 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       selection: newSelection,
       composing: TextRange.empty,
     );
+  }
+}
+
+class DecimalInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    final RegExp regExp = RegExp(r'^\d*\.?\d{0,}$');
+
+    if (regExp.hasMatch(newValue.text)) {
+      return newValue;
+    }
+
+    return oldValue;
   }
 }

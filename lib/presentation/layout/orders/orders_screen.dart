@@ -86,17 +86,25 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       );
               },
             ),
-          if (context.watch<AuthRepository>().customer.token.isEmpty)
-            SvgPicture.asset("assets/images/login.svg"),
-          if (context.watch<AuthRepository>().customer.token.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                "To view your current rentals, please login to your account",
-                style: AppFonts.ibm16LightBlack600,
-                textAlign: TextAlign.center,
+          if (context.watch<AuthRepository>().customer.token.isEmpty )
+            Expanded(
+              child: ListView(
+            physics: AppConstants.screenHeight(context) < 600 ? const BouncingScrollPhysics():const NeverScrollableScrollPhysics(),
+                children: [
+                  SvgPicture.asset("assets/images/login.svg"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      "To view your current rentals, please login to your account",
+                      style: AppFonts.ibm16LightBlack600,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
             ),
+
+
         ],
       ),
     );

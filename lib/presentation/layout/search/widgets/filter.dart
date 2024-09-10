@@ -8,6 +8,7 @@ import 'package:turbo/presentation/layout/search/widgets/filter/filter_by_list.d
 import '../../../../blocs/search/search_cubit.dart';
 import '../../../../core/helpers/dropdown_keys.dart';
 import '../../../../core/helpers/enums.dart';
+import '../../../../core/helpers/functions.dart';
 import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/custom_text_fields.dart';
@@ -228,6 +229,7 @@ class PriceBox extends StatelessWidget {
                 signed: false,
                 decimal: true,
               ),
+              hint: "Min Price",
               icon: const Padding(
                 padding: EdgeInsets.only(top: 14.0),
                 child: Text("SAR"),
@@ -236,6 +238,9 @@ class PriceBox extends StatelessWidget {
               onTapOutside: (value) {
                 blocRead.validateMinPrice();
               },
+              inputFormatters: [
+                DecimalInputFormatter(),
+              ],
               textEditingController: blocRead.minPriceController,
               radius: 3,
               onSubmit: (value) {
@@ -260,6 +265,10 @@ class PriceBox extends StatelessWidget {
                 signed: false,
                 decimal: true,
               ),
+              hint: "Max Price",
+              inputFormatters: [
+                DecimalInputFormatter(),
+              ],
               icon: const Padding(
                 padding: EdgeInsets.only(top: 14.0),
                 child: Text("SAR"),
