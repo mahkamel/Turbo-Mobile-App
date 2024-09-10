@@ -21,7 +21,7 @@ class ProfileImageWithBadge extends StatelessWidget {
       } else {
         blocRead.updateProfileImage(File(image.path));
       }
-    } on PlatformException catch (e) {}
+    } on PlatformException {}
   }
 
   Future<void> requestGalleryPermission(BuildContext context) async {
