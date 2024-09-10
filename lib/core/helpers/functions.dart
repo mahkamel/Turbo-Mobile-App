@@ -200,17 +200,17 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   final int decimalRange;
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, // unused.
-      TextEditingValue newValue,) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue, // unused.
+    TextEditingValue newValue,
+  ) {
     TextSelection newSelection = newValue.selection;
     String truncated = newValue.text;
 
     String value = newValue.text;
 
     if (value.contains(".") &&
-        value
-            .substring(value.indexOf(".") + 1)
-            .length > decimalRange) {
+        value.substring(value.indexOf(".") + 1).length > decimalRange) {
       truncated = oldValue.text;
       newSelection = oldValue.selection;
     } else if (value == ".") {
