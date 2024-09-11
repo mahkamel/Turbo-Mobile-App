@@ -44,7 +44,7 @@ class DefaultSuccessScreen extends StatelessWidget {
                             context,
                             AppConstants.screenHeight(context) < 600
                                 ? 30
-                                : 130),
+                                : 90),
                       ),
                       if (lottiePath != null) Lottie.asset(lottiePath!),
                       if (lottiePath == null)
@@ -94,15 +94,15 @@ class DefaultSuccessScreen extends StatelessWidget {
                       ),
                     ],
                   )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                : ListView(
+                    physics: const BouncingScrollPhysics(),
                     children: [
                       SizedBox(
                         height: AppConstants.heightBasedOnFigmaDevice(
                             context,
                             AppConstants.screenHeight(context) < 600
                                 ? 30
-                                : 130),
+                                : 90),
                       ),
                       if (lottiePath != null) Lottie.asset(lottiePath!),
                       if (lottiePath == null)
@@ -147,6 +147,7 @@ class DefaultSuccessScreen extends StatelessWidget {
                         border: Border.all(color: AppColors.buttonGreyBorder),
                         marginLeft: 20,
                         marginRight: 20,
+                        marginTop: 20,
                         marginBottom:
                             AppConstants.heightBasedOnFigmaDevice(context, 37),
                       ),
