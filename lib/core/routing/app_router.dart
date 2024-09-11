@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/car_details/car_details_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:turbo/presentation/auth/forget_password/screens/forget_password_
 import 'package:turbo/presentation/auth/forget_password/screens/otp_forget_password.dart';
 import 'package:turbo/presentation/auth/forget_password/screens/create_new_password_screen.dart';
 import 'package:turbo/presentation/auth/login_screen/login_screen.dart';
+import 'package:turbo/presentation/auth/requests/widgets/upload_files_screen.dart';
 import 'package:turbo/presentation/layout/car_details/car_details_screen.dart';
 import 'package:turbo/presentation/layout/profile/screens/delete_account_screen.dart';
 import 'package:turbo/presentation/layout/profile/screens/edit_account_screen.dart';
@@ -124,6 +126,13 @@ class AppRouter {
             ),
           ),
         ),
+
+    Routes.uploadFilesScreen: (context, arguments) =>
+      BlocProvider.value(
+        value: (arguments as OrderCubit),
+        child: const UplaodFilesScreen(),
+    ),
+    
   };
 
   Route? generateRoute(RouteSettings settings) {
