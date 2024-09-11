@@ -112,7 +112,7 @@ class _SelectFileState extends State<SelectFile> {
       header: widget.header,
       widget: InkWell(
         onTap: () {
-          if (widget.fileStatus == 1) {
+          if (widget.fileStatus == 1 || widget.fileStatus == 0) {
             showAdaptiveDialog(
               context: context,
               builder: (context) {

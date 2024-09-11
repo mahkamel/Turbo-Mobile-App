@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/car_details/car_details_cubit.dart';
@@ -129,7 +128,7 @@ class AppRouter {
 
     Routes.uploadFilesScreen: (context, arguments) =>
       BlocProvider.value(
-        value: (arguments as OrderCubit),
+        value: (arguments as SignupCubit),
         child: const UplaodFilesScreen(),
     ),
     

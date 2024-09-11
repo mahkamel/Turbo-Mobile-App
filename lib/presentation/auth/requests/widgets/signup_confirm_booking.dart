@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_confirm_widgets.dart';
-
 class SignupConfirmBooking extends StatelessWidget {
   const SignupConfirmBooking({
     super.key,
@@ -24,7 +23,6 @@ class SignupConfirmBooking extends StatelessWidget {
           SizedBox(
             height: 16,
           ),
-          RequiredFilesSection(),
           ConfirmBookingButton()
         ],
       ),
