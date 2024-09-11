@@ -271,6 +271,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(const ProfileState.logoutLoading());
     try {
       _paymentRepository.savedPaymentCards.clear();
+      _paymentRepository.defaultCard = null;
       await _authRepository.disableNotificationToken(AppConstants.fcmToken);
       await _authRepository.clearCustomerData();
 
@@ -364,5 +365,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     } catch (e) {
       emit(ProfileState.getAllRequestsHistoryError(e.toString()));
     }
+  }
+
+  void refreshCustomerData() async {
+    await _authRepository.refreshCustomerData();
   }
 }

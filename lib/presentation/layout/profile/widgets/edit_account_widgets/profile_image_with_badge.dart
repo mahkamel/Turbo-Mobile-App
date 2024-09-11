@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart' as badges;
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,14 +26,29 @@ class ProfileImageWithBadge extends StatelessWidget {
   }
 
   Future<void> requestGalleryPermission(BuildContext context) async {
-    const permission = Permission.photos;
-    if (await permission.isDenied) {
-      final result = await permission.request();
-      if (result.isGranted) {
-        _pickImageFromGallery(context.read<ProfileCubit>());
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      if (androidInfo.version.sdkInt <= 32) {
+        const permission = Permission.mediaLibrary;
+        if (await permission.isDenied) {
+          final result = await permission.request();
+          if (result.isGranted) {
+            _pickImageFromGallery(context.read<ProfileCubit>());
+          }
+        } else {
+          _pickImageFromGallery(context.read<ProfileCubit>());
+        }
+      } else {
+        const permission = Permission.photos;
+        if (await permission.isDenied) {
+          final result = await permission.request();
+          if (result.isGranted) {
+            _pickImageFromGallery(context.read<ProfileCubit>());
+          }
+        } else {
+          _pickImageFromGallery(context.read<ProfileCubit>());
+        }
       }
-    } else {
-      _pickImageFromGallery(context.read<ProfileCubit>());
     }
   }
 

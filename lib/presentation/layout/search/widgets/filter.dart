@@ -66,7 +66,7 @@ class FilterCars extends StatelessWidget {
               children: [
                 CarYearFilterHeader(),
                 SelectedCarYearsFilter(),
-                DailyPriceDropdown(),
+                DailyPriceSlider(),
                 ResetBtn(),
                 FilterResultsBtn(),
                 SizedBox(
@@ -148,8 +148,8 @@ class FilterResultsBtn extends StatelessWidget {
   }
 }
 
-class DailyPriceDropdown extends StatelessWidget {
-  const DailyPriceDropdown({
+class DailyPriceSlider extends StatelessWidget {
+  const DailyPriceSlider({
     super.key,
   });
 
@@ -183,10 +183,10 @@ class DailyPriceDropdown extends StatelessWidget {
                   ),
                   activeColor: AppColors.green,
                   labels: RangeLabels(
-                    '\$${blocWatch.minDailyPrice.toStringAsFixed(2)}',
+                    '${blocWatch.minDailyPrice.toStringAsFixed(2)} SAR',
                     blocWatch.maxDailyPrice == 2500
-                        ? "\$+2500"
-                        : '\$${blocWatch.maxDailyPrice.toStringAsFixed(2)}',
+                        ? "+2500 SAR"
+                        : '${blocWatch.maxDailyPrice.toStringAsFixed(2)} SAR',
                   ),
                   divisions: 10,
                   inactiveColor: AppColors.unSelectedRange,

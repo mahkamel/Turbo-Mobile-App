@@ -112,8 +112,27 @@ class _SelectFileState extends State<SelectFile> {
       header: widget.header,
       widget: InkWell(
         onTap: () {
-          if (!(_file != null || widget.paths.isNotEmpty)) {
+          if (widget.fileStatus == 1) {
+            showAdaptiveDialog(
+              context: context,
+              builder: (context) {
+                return DisplayDocumentsDialog(
+                  paths: [widget.paths],
+                );
+              },
+            );
+          } else if ((_file == null || widget.paths.isEmpty) &&
+              widget.fileStatus != 2) {
             pickFile();
+          } else if (widget.fileStatus == 2) {
+            showAdaptiveDialog(
+              context: context,
+              builder: (context) {
+                return DisplayDocumentsDialog(
+                  paths: [widget.paths],
+                );
+              },
+            );
           } else if ((widget.isFromMyApplication ||
               (widget.isFromPending && widget.paths.isNotEmpty))) {
             widget.onPrefixClicked();

@@ -66,8 +66,7 @@ class AuthRepository {
     try {
       final response = await _authServices.refreshCustomerData();
       if (response.statusCode == 200 && response.data['status']) {
-        customer.attachments =
-            CustomerModel.fromJson(response.data).attachments;
+        customer = CustomerModel.fromJson(response.data);
         return Right(customer);
       } else {
         return Left(response.data['message']);
@@ -259,7 +258,7 @@ class AuthRepository {
         if (response.data['status'] == false) {
           return const Right(true);
         } else {
-          if(response.data['data'] == false) {
+          if (response.data['data'] == false) {
             return const Left("reset");
           }
           return const Left(

@@ -39,7 +39,7 @@ class RecommendedCarCard extends StatelessWidget {
             : AppConstants.screenWidth(context) * 0.8,
         margin: const EdgeInsets.only(bottom: 4),
         constraints: const BoxConstraints(
-          maxWidth: 360,
+          maxWidth: 420,
         ),
         decoration: BoxDecoration(
           color: AppColors.white,

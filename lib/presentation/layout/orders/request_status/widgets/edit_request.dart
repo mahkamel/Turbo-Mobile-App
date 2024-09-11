@@ -358,7 +358,7 @@ class _EditedFilesState extends State<EditedFiles> {
             return RepaintBoundary(
               key: const Key("EditNationalIdRepaint"),
               child: SizedBox(
-                height: 110,
+                // height: 110,
                 width: AppConstants.screenWidth(context) - 32,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -483,7 +483,7 @@ class _EditedFilesState extends State<EditedFiles> {
             return RepaintBoundary(
               key: const Key("EditPassportRepaint"),
               child: SizedBox(
-                height: 110,
+                // height: 110,
                 width: AppConstants.screenWidth(context) - 32,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
