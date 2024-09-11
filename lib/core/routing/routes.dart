@@ -15,4 +15,5 @@ class Routes {
   static const String paymentMethodsScreen = '/paymentMethodsScreen';
   static const String changePasswordScreen = '/changePasswordScreen';
   static const String deleteAccountScreen = '/deleteAccountScreen';
+  static const String uploadFilesScreen = '/uploadFilesScreen';
 }

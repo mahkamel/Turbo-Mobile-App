@@ -92,12 +92,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                           children: [
                                             ...List.generate(
                                               context
-                                                  .read<OrderCubit>()
+                                                  .watch<OrderCubit>()
                                                   .allRequests
                                                   .length,
                                               (index) {
                                                 var request = context
-                                                    .read<OrderCubit>()
+                                                    .watch<OrderCubit>()
                                                     .allRequests[index];
                                                 return RequestCard(
                                                   request: request,

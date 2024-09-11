@@ -98,6 +98,7 @@ class RequestStatusScreen extends StatelessWidget {
       alignment: MainAxisAlignment.spaceBetween,
       suffixIcon: CancelOrderButton(
         requestId: requestId,
+        orderCubit: orderCubit,
       ),
     );
   }
@@ -109,11 +110,13 @@ class CancelOrderButton extends StatelessWidget {
     required this.requestId,
     this.reason = "cancel",
     this.reasonCode = 5,
+    this.orderCubit,
   });
 
   final String requestId;
   final String reason;
   final int reasonCode;
+  final OrderCubit? orderCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +170,7 @@ class CancelOrderButton extends StatelessWidget {
                         requestId: requestId,
                         requestStatus: reasonCode,
                         reason: reason,
-                        orderCubit: context.read<OrderCubit>(),
+                        orderCubit:orderCubit?? context.read<OrderCubit>(),
                       ),
                     ),
                   );
