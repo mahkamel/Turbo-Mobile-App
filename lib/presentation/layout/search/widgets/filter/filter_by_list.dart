@@ -36,6 +36,7 @@ class CarCategoriesFilter extends StatelessWidget {
                           searchCubitRead.carCategoriesSelection(index);
                         },
                         child: IconWithSubtext(
+                          maxWidth: 80,
                           isSelected: context
                               .watch<CarRepository>()
                               .carCategories[index]

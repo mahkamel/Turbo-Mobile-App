@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:turbo/blocs/search/search_cubit.dart';
 import 'package:turbo/core/helpers/constants.dart';
-import 'package:turbo/presentation/layout/search/widgets/filter.dart';
+import 'package:turbo/presentation/layout/search/filter.dart';
 import 'package:turbo/presentation/layout/search/widgets/filter/filter_header.dart';
 import '../../../core/theming/colors.dart';
 import '../../../core/theming/fonts.dart';

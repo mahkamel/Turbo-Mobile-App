@@ -9,7 +9,15 @@ class IconWithSubtext extends StatelessWidget {
   final String? iconPath;
   final String innerText;
   final String subtext;
-  const IconWithSubtext({super.key, this.isSelected = false, this.iconPath, required this.subtext, this.innerText = ""});
+  final double maxWidth;
+  const IconWithSubtext({
+    super.key,
+    this.isSelected = false,
+    this.iconPath,
+    required this.subtext,
+    this.innerText = "",
+    this.maxWidth = 75,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,46 +28,53 @@ class IconWithSubtext extends StatelessWidget {
           badgeStyle: const badges.BadgeStyle(
             badgeColor: AppColors.green,
           ),
-          badgeContent: const Icon(Icons.check, size: 10, color: AppColors.white,),
+          badgeContent: const Icon(
+            Icons.check,
+            size: 10,
+            color: AppColors.white,
+          ),
           showBadge: isSelected,
           child: Container(
             height: 60,
-            constraints: const BoxConstraints(maxWidth: 75),
-            padding: const EdgeInsets.all(14),
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: isSelected ? Border.all(color: AppColors.green) : null,
-              color: AppColors.white,
-              boxShadow: [
-                 BoxShadow(
-                  spreadRadius: 2,
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                  color: AppColors.black.withOpacity(0.15)
-                ),
-                 BoxShadow(
-                  spreadRadius: 0,
-                  blurRadius: 2,
-                  offset: const Offset(0, 1),
-                  color: AppColors.black.withOpacity(0.3)
-                )
-              ]
-            ),
-            child: Center(child: iconPath != null ? SvgPicture.asset(iconPath!,) : Text(
-              innerText,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-          )),
+                borderRadius: BorderRadius.circular(20),
+                border: isSelected ? Border.all(color: AppColors.green) : null,
+                color: AppColors.white,
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                      color: AppColors.black.withOpacity(0.15)),
+                  BoxShadow(
+                      spreadRadius: 0,
+                      blurRadius: 2,
+                      offset: const Offset(0, 1),
+                      color: AppColors.black.withOpacity(0.3))
+                ]),
+            child: Center(
+                child: iconPath != null
+                    ? SvgPicture.asset(
+                        iconPath!,
+                      )
+                    : Text(
+                        innerText,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                      )),
           ),
         ),
-        const SizedBox(height: 10,),
-        Text(
-          subtext,
-          style: isSelected ? AppFonts.ibm12SubTextGrey600.copyWith(color: AppColors.green) :
-          AppFonts.ibm12SubTextGrey600.copyWith(color: AppColors.lightBlack)
-        )
-        
+        const SizedBox(
+          height: 10,
+        ),
+        Text(subtext,
+            style: isSelected
+                ? AppFonts.ibm12SubTextGrey600.copyWith(color: AppColors.green)
+                : AppFonts.ibm12SubTextGrey600
+                    .copyWith(color: AppColors.lightBlack))
       ],
     );
   }

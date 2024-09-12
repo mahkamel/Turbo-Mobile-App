@@ -27,7 +27,11 @@ class CarBrandsFilter extends StatelessWidget {
                 height: 122,
                 child: ListView.separated(
                   padding: const EdgeInsets.only(
-                      top: 16, bottom: 30, left: 20, right: 20),
+                    top: 16,
+                    bottom: 30,
+                    left: 20,
+                    right: 20,
+                  ),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => InkWell(
                     highlightColor: Colors.transparent,

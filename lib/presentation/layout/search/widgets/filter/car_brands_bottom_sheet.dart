@@ -92,7 +92,7 @@ class CarBrandsBottomSheet extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         itemBuilder: (context, index) {
                           return SizedBox(
-                            height: 65,
+                            height: 42,
                             width: AppConstants.screenWidth(context),
                             child: Row(
                               children: [
@@ -105,7 +105,7 @@ class CarBrandsBottomSheet extends StatelessWidget {
                                           .read<CarRepository>()
                                           .carBrands[index]
                                           .path,
-                                  
+
                                   isSelected: context
                               .watch<CarRepository>()
                               .carBrands[index].isSelected,
