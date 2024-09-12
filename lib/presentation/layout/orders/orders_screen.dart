@@ -43,7 +43,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("sdsdasd ${AppConstants.screenWidth(context)}");
     return SizedBox(
       width: AppConstants.screenWidth(context),
       height: AppConstants.screenHeight(context),

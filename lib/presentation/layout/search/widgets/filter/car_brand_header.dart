@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/core/helpers/extentions.dart';
 
 import '../../../../../blocs/search/search_cubit.dart';
-import '../../../../../core/helpers/dropdown_keys.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/widgets/default_buttons.dart';
 import '../../../car_details/widgets/car_info.dart';
@@ -29,11 +28,6 @@ class CarBrandHeader extends StatelessWidget {
           fontSize: 12,
           fontWeight: FontWeight.w700,
           function: () {
-            if (priceRangeKey.currentState != null) {
-              if (priceRangeKey.currentState!.isOpen) {
-                priceRangeKey.currentState!.closeBottomSheet();
-              }
-            }
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,

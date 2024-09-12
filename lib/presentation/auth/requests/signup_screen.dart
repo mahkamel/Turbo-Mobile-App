@@ -7,6 +7,7 @@ import 'package:turbo/core/services/local/token_service.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_confirm_booking.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_form.dart';
 import 'package:turbo/presentation/auth/requests/widgets/signup_otp_screen.dart';
+import 'package:turbo/presentation/auth/requests/widgets/upload_files_screen.dart';
 
 import '../../../core/helpers/constants.dart';
 import '../../../core/helpers/dropdown_keys.dart';
@@ -42,6 +43,8 @@ class SignupScreen extends StatelessWidget {
         } else if (UserTokenService.currentUserToken.isEmpty &&
             blocRead.currentStep == 1) {
           blocRead.changeStepIndicator(0);
+        } else if (blocRead.currentStep == 3) {
+          blocRead.changeStepIndicator(2);
         } else if (!didPop) {
           Navigator.of(context).pop();
         }
@@ -62,14 +65,18 @@ class SignupScreen extends StatelessWidget {
               }
             },
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 DefaultHeader(
-                  header: UserTokenService.currentUserToken.isNotEmpty
-                      ? "Confirm Booking"
-                      : UserTokenService.currentUserToken.isEmpty &&
-                              blocRead.currentStep == 0
-                          ? "signUp".getLocale(context: context)
-                          : "mobileVerification".getLocale(context: context),
+                  header: blocWatch.currentStep == 3
+                      ? "Upload Files"
+                      : UserTokenService.currentUserToken.isNotEmpty
+                          ? "Confirm Booking"
+                          : UserTokenService.currentUserToken.isEmpty &&
+                                  blocRead.currentStep == 0
+                              ? "signUp".getLocale(context: context)
+                              : "mobileVerification"
+                                  .getLocale(context: context),
                   textAlignment: AlignmentDirectional.topCenter,
                   onBackPressed: () {
                     if (UserTokenService.currentUserToken.isEmpty &&
@@ -86,6 +93,8 @@ class SignupScreen extends StatelessWidget {
                     } else if (UserTokenService.currentUserToken.isEmpty &&
                         blocRead.currentStep == 1) {
                       blocRead.changeStepIndicator(0);
+                    } else if (blocRead.currentStep == 3) {
+                      blocRead.changeStepIndicator(2);
                     } else {
                       Navigator.of(context).pop();
                     }
@@ -94,9 +103,6 @@ class SignupScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                // if (UserTokenService.currentUserToken.isEmpty &&
-                //     blocWatch.requestedCarId.isNotEmpty)
-                //   const SignupStepper(),
                 if ((blocWatch.requestedCarId.isNotEmpty &&
                         blocWatch.currentStep == 0) ||
                     ((UserTokenService.currentUserToken.isEmpty &&
@@ -115,6 +121,8 @@ class SignupScreen extends StatelessWidget {
                   const Expanded(
                     child: SignupConfirmBooking(),
                   ),
+                if (blocWatch.currentStep == 3)
+                  const Expanded(child: UploadFilesStep()),
               ],
             ),
           ),

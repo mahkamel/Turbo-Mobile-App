@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/presentation/auth/requests/widgets/select_file.dart';
 
 import '../../../../blocs/signup/signup_cubit.dart';
@@ -14,7 +13,6 @@ import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/default_buttons.dart';
 import '../../../../core/widgets/snackbar.dart';
 import '../../../../core/widgets/text_field_with_header.dart';
-import '../../../../core/widgets/widget_with_header.dart';
 import 'date_selection.dart';
 
 class CarColorSelection extends StatelessWidget {
@@ -87,6 +85,7 @@ class ConfirmBookingButton extends StatelessWidget {
     var blocWatch = context.watch<SignupCubit>();
 
     return blocRead.isSaudiOrSaudiResident() &&
+            context.watch<AuthRepository>().customer.customerType == 0 &&
             context.watch<AuthRepository>().customer.attachments.isEmpty
         ? BlocConsumer<SignupCubit, SignupState>(
             listenWhen: (previous, current) =>
@@ -142,7 +141,6 @@ class ConfirmBookingButton extends StatelessWidget {
                   marginLeft: 16,
                   width: 97,
                   marginTop: 24,
-                  // marginBottom: 24,
                   color: blocWatch.locationValidation ==
                               TextFieldValidation.valid &&
                           blocWatch.deliveryDate != null &&
@@ -150,13 +148,26 @@ class ConfirmBookingButton extends StatelessWidget {
                       ? AppColors.primaryBlue
                       : AppColors.greyBorder,
                   text: "Next",
+                  textWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "Next",
+                        style: AppFonts.ibm16White700,
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        color: AppColors.white,
+                        size: 18,
+                      ),
+                    ],
+                  ),
                   function: () {
                     if (blocWatch.locationValidation ==
                             TextFieldValidation.valid &&
                         blocWatch.deliveryDate != null &&
                         blocWatch.pickedDate != null) {
-                      Navigator.of(context).pushNamed(Routes.uploadFilesScreen,
-                          arguments: context.read<SignupCubit>());
+                      blocRead.changeStepIndicator(3);
                     }
                   },
                 ),
@@ -224,7 +235,11 @@ class RequiredFilesSection extends StatelessWidget {
               ),
             );
     } else {
-      return const ExistingUserAttachments();
+      return const Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.0,
+          ),
+          child: ExistingUserAttachments());
     }
   }
 }
@@ -258,140 +273,127 @@ class _ExistingUserAttachmentsState extends State<ExistingUserAttachments> {
       builder: (context, state) {
         var blocWatch = context.watch<SignupCubit>();
         var blocRead = context.read<SignupCubit>();
-        return WidgetWithHeader(
-          padding: const EdgeInsetsDirectional.symmetric(horizontal: 16),
-          header: "",
-          isRequiredField: false,
-          headerStyle: AppFonts.inter16Black500.copyWith(
-            color: AppColors.primaryBlue,
-            fontSize: 18,
-          ),
-          widget: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 110,
-                width: AppConstants.screenWidth(context),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SelectFile(
-                      isShowReplaceWithoutBorder: true,
-                      isFromMyApplication: true,
-                      width: AppConstants.screenWidth(context) - 32,
-                      key: const Key("NewRequestNationalID"),
-                      padding: const EdgeInsetsDirectional.only(bottom: 4),
-                      paths: blocRead.nationalIdAttachments?.filePath ?? "",
-                      header: "National ID",
-                      prefixImgPath: "assets/images/icons/national_id.png",
-                      isFromPending: true,
-                      fileStatus: blocWatch.nationalIdAttachments?.fileStatus ??
-                          blocWatch.nationalIdInitStatus,
-                      onFileSelected: (p0, isSingle) async {
-                        blocRead.nationalIdFile =
-                            await convertPlatformFileList(p0);
-                        if (blocRead.nationalIdAttachments != null &&
-                            blocRead.nationalIdAttachments?.fileRejectComment !=
-                                null) {
-                          blocRead.nationalIdAttachments?.fileRejectComment =
-                              null;
-                          blocRead.nationalIdAttachments?.filePath = "";
-                          blocRead.nationalIdAttachments?.fileStatus = 4;
-                          setState(() {});
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 110,
+              width: AppConstants.screenWidth(context),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SelectFile(
+                    isShowReplaceWithoutBorder: true,
+                    isFromMyApplication: true,
+                    width: AppConstants.screenWidth(context) - 32,
+                    key: const Key("NewRequestNationalID"),
+                    padding: const EdgeInsetsDirectional.only(bottom: 4),
+                    paths: blocRead.nationalIdAttachments?.filePath ?? "",
+                    header: "National ID",
+                    prefixImgPath: "assets/images/icons/national_id.png",
+                    isFromPending: true,
+                    fileStatus: blocWatch.nationalIdAttachments?.fileStatus ??
+                        blocWatch.nationalIdInitStatus,
+                    onFileSelected: (p0, isSingle) async {
+                      blocRead.nationalIdFile =
+                          await convertPlatformFileList(p0);
+                      if (blocRead.nationalIdAttachments != null &&
+                          blocRead.nationalIdAttachments?.fileRejectComment !=
+                              null) {
+                        blocRead.nationalIdAttachments?.fileRejectComment =
+                            null;
+                        blocRead.nationalIdAttachments?.filePath = "";
+                        blocRead.nationalIdAttachments?.fileStatus = 4;
+                        setState(() {});
+                      }
+                    },
+                    isWarningToReplace:
+                        blocWatch.nationalIdAttachments?.fileStatus == 2,
+                    onPrefixClicked: () {
+                      if (blocWatch.nationalIdAttachments?.fileStatus == 4) {
+                        if (blocRead.nationalIdFile != null &&
+                            blocRead.nationalIdFile!.isNotEmpty &&
+                            blocRead.nationalIdAttachments?.fileStatus != 2) {
+                          blocRead.updateRequestFile(
+                            fileId: blocRead.nationalIdAttachments?.id ?? "",
+                            oldPathFiles: blocRead.nationalIdOldPaths,
+                            fileType: "nationalId",
+                            newFile: blocRead.nationalIdFile!.first,
+                          );
                         }
-                      },
-                      isWarningToReplace:
-                          blocWatch.nationalIdAttachments?.fileStatus == 2,
-                      onPrefixClicked: () {
-                        if (blocWatch.nationalIdAttachments?.fileStatus == 4) {
-                          if (blocRead.nationalIdFile != null &&
-                              blocRead.nationalIdFile!.isNotEmpty &&
-                              blocRead.nationalIdAttachments?.fileStatus != 2) {
-                            blocRead.updateRequestFile(
-                              fileId: blocRead.nationalIdAttachments?.id ?? "",
-                              oldPathFiles: blocRead.nationalIdOldPaths,
-                              fileType: "nationalId",
-                              newFile: blocRead.nationalIdFile!.first,
-                            );
-                          }
-                        } else if (blocRead.nationalIdAttachments == null ||
-                            (blocRead.nationalIdAttachments != null &&
-                                blocRead.nationalIdAttachments
-                                        ?.fileRejectComment ==
-                                    null)) {
-                          blocRead.nationalIdFile = null;
-                          setState(() {});
-                        }
-                      },
-                      isUploading: (state
-                              is SaveRequestEditedFileLoadingState &&
-                          state.fileId == blocRead.nationalIdAttachments?.id),
-                    ),
-                  ],
-                ),
+                      } else if (blocRead.nationalIdAttachments == null ||
+                          (blocRead.nationalIdAttachments != null &&
+                              blocRead.nationalIdAttachments
+                                      ?.fileRejectComment ==
+                                  null)) {
+                        blocRead.nationalIdFile = null;
+                        setState(() {});
+                      }
+                    },
+                    isUploading: (state is SaveRequestEditedFileLoadingState &&
+                        state.fileId == blocRead.nationalIdAttachments?.id),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 110,
-                width: AppConstants.screenWidth(context),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SelectFile(
-                      isShowReplaceWithoutBorder: true,
-                      isFromMyApplication: true,
-                      width: AppConstants.screenWidth(context) - 32,
-                      key: const Key("NewRequestPassport"),
-                      fileStatus: blocWatch.passportAttachments?.fileStatus ??
-                          blocWatch.passportInitStatus,
-                      padding: const EdgeInsetsDirectional.only(bottom: 4),
-                      paths: blocRead.passportAttachments?.filePath ?? "",
-                      header: "Passport",
-                      isFromPending: true,
-                      onFileSelected: (p0, isSingle) async {
-                        blocRead.passportFiles =
-                            await convertPlatformFileList(p0);
-                        if (blocRead.passportAttachments != null &&
-                            blocRead.passportAttachments?.fileRejectComment !=
-                                null) {
-                          blocRead.passportAttachments?.fileRejectComment =
-                              null;
-                          blocRead.passportAttachments?.filePath = "";
-                          blocRead.passportAttachments?.fileStatus = 4;
-                          setState(() {});
+            ),
+            SizedBox(
+              height: 110,
+              width: AppConstants.screenWidth(context),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SelectFile(
+                    isShowReplaceWithoutBorder: true,
+                    isFromMyApplication: true,
+                    width: AppConstants.screenWidth(context) - 32,
+                    key: const Key("NewRequestPassport"),
+                    fileStatus: blocWatch.passportAttachments?.fileStatus ??
+                        blocWatch.passportInitStatus,
+                    padding: const EdgeInsetsDirectional.only(bottom: 4),
+                    paths: blocRead.passportAttachments?.filePath ?? "",
+                    header: "Passport",
+                    isFromPending: true,
+                    onFileSelected: (p0, isSingle) async {
+                      blocRead.passportFiles =
+                          await convertPlatformFileList(p0);
+                      if (blocRead.passportAttachments != null &&
+                          blocRead.passportAttachments?.fileRejectComment !=
+                              null) {
+                        blocRead.passportAttachments?.fileRejectComment = null;
+                        blocRead.passportAttachments?.filePath = "";
+                        blocRead.passportAttachments?.fileStatus = 4;
+                        setState(() {});
+                      }
+                    },
+                    isWarningToReplace:
+                        blocWatch.passportAttachments?.fileStatus == 2,
+                    onPrefixClicked: () {
+                      if (blocRead.passportAttachments?.fileStatus == 4) {
+                        if (blocRead.passportFiles != null &&
+                            blocRead.passportFiles!.isNotEmpty &&
+                            blocRead.passportAttachments?.fileStatus != 2) {
+                          blocRead.updateRequestFile(
+                            fileId: blocRead.passportAttachments?.id ?? "",
+                            oldPathFiles: blocRead.passportOldPaths,
+                            fileType: "passport",
+                            newFile: blocRead.passportFiles!.first,
+                          );
                         }
-                      },
-                      isWarningToReplace:
-                          blocWatch.passportAttachments?.fileStatus == 2,
-                      onPrefixClicked: () {
-                        if (blocRead.passportAttachments?.fileStatus == 4) {
-                          if (blocRead.passportFiles != null &&
-                              blocRead.passportFiles!.isNotEmpty &&
-                              blocRead.passportAttachments?.fileStatus != 2) {
-                            blocRead.updateRequestFile(
-                              fileId: blocRead.passportAttachments?.id ?? "",
-                              oldPathFiles: blocRead.passportOldPaths,
-                              fileType: "passport",
-                              newFile: blocRead.passportFiles!.first,
-                            );
-                          }
-                        } else if (blocRead.passportAttachments == null ||
-                            (blocRead.passportAttachments != null &&
-                                blocRead.passportAttachments
-                                        ?.fileRejectComment ==
-                                    null)) {
-                          blocRead.passportFiles = null;
-                          setState(() {});
-                        }
-                      },
-                      isUploading:
-                          (state is SaveRequestEditedFileLoadingState &&
-                              state.fileId == blocRead.passportAttachments?.id),
-                    ),
-                  ],
-                ),
+                      } else if (blocRead.passportAttachments == null ||
+                          (blocRead.passportAttachments != null &&
+                              blocRead.passportAttachments?.fileRejectComment ==
+                                  null)) {
+                        blocRead.passportFiles = null;
+                        setState(() {});
+                      }
+                    },
+                    isUploading: (state is SaveRequestEditedFileLoadingState &&
+                        state.fileId == blocRead.passportAttachments?.id),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

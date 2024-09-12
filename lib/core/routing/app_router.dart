@@ -129,7 +129,7 @@ class AppRouter {
     Routes.uploadFilesScreen: (context, arguments) =>
       BlocProvider.value(
         value: (arguments as SignupCubit),
-        child: const UplaodFilesScreen(),
+        child: const UploadFilesStep(),
     ),
     
   };

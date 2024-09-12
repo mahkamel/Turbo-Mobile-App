@@ -58,7 +58,6 @@ class PaymentCubit extends Cubit<PaymentState> {
   }
 
   void init() {
-    print("shshshss ${_paymentRepository.savedPaymentCards.length}");
     if (_paymentRepository.defaultCard != null) {
       onSavedCardSelected(_paymentRepository.defaultCard!);
     } else if (_paymentRepository.savedPaymentCards.isNotEmpty) {

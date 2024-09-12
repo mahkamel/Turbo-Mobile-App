@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../blocs/search/search_cubit.dart';
-import '../../../../../core/helpers/dropdown_keys.dart';
 import '../../../../../core/services/networking/repositories/car_repository.dart';
 import '../icon_with_subtext.dart';
 
 class CarCategoriesFilter extends StatelessWidget {
   const CarCategoriesFilter({super.key});
-   @override
+  @override
   Widget build(BuildContext context) {
     var searchCubitRead = context.read<SearchCubit>();
     return Padding(
@@ -23,34 +22,35 @@ class CarCategoriesFilter extends StatelessWidget {
             current is CategoriesSelectionState ||
             current is FilterResetState,
         builder: (context, state) {
-          return state is GetCarsCategoriesLoadingState ? const Center(child: CircularProgressIndicator(),):
-          Wrap(
-            runSpacing: 14,
-            spacing: 10,
-            children: List.generate(
-              context.watch<CarRepository>().carCategories.length,
-              (index) => GestureDetector(
-                onTap: () {
-                  if (priceRangeKey.currentState != null) {
-                    if (priceRangeKey.currentState!.isOpen) {
-                      priceRangeKey.currentState!.closeBottomSheet();
-                    }
-                  }
-                  searchCubitRead.carCategoriesSelection(index);
-                },
-                child: 
-                IconWithSubtext(
-                  isSelected: context
+          return state is GetCarsCategoriesLoadingState
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Wrap(
+                  runSpacing: 14,
+                  spacing: 10,
+                  children: List.generate(
+                    context.watch<CarRepository>().carCategories.length,
+                    (index) => GestureDetector(
+                        onTap: () {
+                          searchCubitRead.carCategoriesSelection(index);
+                        },
+                        child: IconWithSubtext(
+                          isSelected: context
                               .watch<CarRepository>()
                               .carCategories[index]
                               .isSelected,
-                  innerText: context.watch<CarRepository>().carCategories[index].categoryName,
-                  subtext: context.watch<CarRepository>().carCategories[index].categoryName,
-                  
-                )
-              ),
-            ),
-          );
+                          innerText: context
+                              .watch<CarRepository>()
+                              .carCategories[index]
+                              .categoryName,
+                          subtext: context
+                              .watch<CarRepository>()
+                              .carCategories[index]
+                              .categoryName,
+                        )),
+                  ),
+                );
         },
       ),
     );

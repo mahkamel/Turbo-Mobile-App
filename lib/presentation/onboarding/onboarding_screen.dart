@@ -41,8 +41,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("heifhg ${AppConstants.screenHeight(context)}");
-    print("heifhg ${AppConstants.screenWidth(context)}");
     final List<OnboardingData> onboardingData = [
       OnboardingData(
         "Welcome to DS Rent, your ultimate car rental experience!",

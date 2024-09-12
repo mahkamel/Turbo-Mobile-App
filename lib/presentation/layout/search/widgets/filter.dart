@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_multi_slider/flutter_multi_slider.dart';
 import 'package:turbo/core/helpers/constants.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/layout/search/widgets/filter/car_brand_header.dart';
 import 'package:turbo/presentation/layout/search/widgets/filter/filter_by_list.dart';
 import '../../../../blocs/search/search_cubit.dart';
-import '../../../../core/helpers/dropdown_keys.dart';
 import '../../../../core/helpers/enums.dart';
 import '../../../../core/helpers/functions.dart';
 import '../../../../core/theming/colors.dart';
@@ -26,57 +24,47 @@ class FilterCars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      highlightColor: Colors.transparent,
-      onTap: () {
-        if (priceRangeKey.currentState != null) {
-          if (priceRangeKey.currentState!.isOpen) {
-            priceRangeKey.currentState!.closeBottomSheet();
-          }
-        }
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const HeaderWithIcon(
-                  title: "Car Categories",
-                  svgIconPath: 'assets/images/icons/car.svg',
-                ),
-                const CarCategoriesFilter(),
-                Text(
-                  "Car Types",
-                  style: AppFonts.ibm18HeaderBlue600
-                      .copyWith(color: AppColors.lightBlack),
-                ),
-                const CarTypesFilter(),
-                const CarBrandHeader(),
-              ],
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const HeaderWithIcon(
+                title: "Car Categories",
+                svgIconPath: 'assets/images/icons/car.svg',
+              ),
+              const CarCategoriesFilter(),
+              Text(
+                "Car Types",
+                style: AppFonts.ibm18HeaderBlue600
+                    .copyWith(color: AppColors.lightBlack),
+              ),
+              const CarTypesFilter(),
+              const CarBrandHeader(),
+            ],
           ),
-          const CarBrandsFilter(),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CarYearFilterHeader(),
-                SelectedCarYearsFilter(),
-                DailyPriceSlider(),
-                ResetBtn(),
-                FilterResultsBtn(),
-                SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
+        ),
+        const CarBrandsFilter(),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CarYearFilterHeader(),
+              SelectedCarYearsFilter(),
+              DailyPriceSlider(),
+              ResetBtn(),
+              FilterResultsBtn(),
+              SizedBox(
+                height: 20,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -92,11 +80,6 @@ class ResetBtn extends StatelessWidget {
       width: 102,
       height: 42,
       function: () {
-        if (priceRangeKey.currentState != null) {
-          if (priceRangeKey.currentState!.isOpen) {
-            priceRangeKey.currentState!.closeBottomSheet();
-          }
-        }
         searchCubitRead.resetSearch();
       },
       borderRadius: 20,
@@ -131,11 +114,6 @@ class FilterResultsBtn extends StatelessWidget {
         marginTop: 0,
         height: 48,
         function: () {
-          if (priceRangeKey.currentState != null) {
-            if (priceRangeKey.currentState!.isOpen) {
-              priceRangeKey.currentState!.closeBottomSheet();
-            }
-          }
           searchCubitRead.applyFilter();
         },
         borderRadius: 20,
@@ -285,47 +263,4 @@ class PriceBox extends StatelessWidget {
       ),
     );
   }
-}
-
-class CustomIndicatorPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Colors.green // Set your desired color
-      ..style = PaintingStyle.fill;
-
-    Path path = Path();
-
-    // Start from the top left
-    path.moveTo(0, size.height * 0.5);
-
-    // Draw lines to form the desired shape (similar to SVG path)
-    path.lineTo(size.width * 0.25, size.height * 0.5);
-    path.lineTo(size.width * 0.5, 0); // Pointy part in the middle
-    path.lineTo(size.width * 0.75, size.height * 0.5);
-    path.lineTo(size.width, size.height * 0.5);
-
-    // Complete the rectangle
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-    path.close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-}
-
-class CustomIndicatorOptions extends IndicatorOptions {
-  final CustomPainter? customPainter;
-
-  CustomIndicatorOptions({
-    super.draw,
-    double size = 40.0,
-    String Function(double value)? formatter,
-    this.customPainter,
-  }) : super();
 }

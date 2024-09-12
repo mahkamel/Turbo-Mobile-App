@@ -801,7 +801,7 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   bool isSaudiOrSaudiResident() {
-    return dialCode.startsWith("+966") ||
+    return customerNationalityController.text.toLowerCase().contains("saudi") ||
         (authRepository.customer.customerType == 1
             ? false
             : saCitizenSelectedIndex == 0);
