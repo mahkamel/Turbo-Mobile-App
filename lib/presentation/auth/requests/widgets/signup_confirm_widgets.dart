@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turbo/blocs/orders/order_cubit.dart';
 import 'package:turbo/presentation/auth/requests/widgets/select_file.dart';
 
 import '../../../../blocs/signup/signup_cubit.dart';
@@ -83,61 +84,85 @@ class ConfirmBookingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final blocRead = context.read<SignupCubit>();
+    var blocWatch = context.watch<SignupCubit>();
 
-    return BlocConsumer<SignupCubit, SignupState>(
-      listenWhen: (previous, current) =>
-          current is ConfirmBookingErrorState ||
-          current is ConfirmBookingSuccessState,
-      listener: (context, state) {
-        if (state is ConfirmBookingErrorState) {
-          defaultErrorSnackBar(context: context, message: state.errMsg);
-        } else if (state is ConfirmBookingSuccessState) {
-          Navigator.of(context).pushReplacementNamed(
-            Routes.paymentScreen,
-            arguments: PaymentScreenArguments(
-              paymentAmount: blocRead.calculatedPriceWithVat,
-              carRequestId: state.requestId,
-              carRequestCode: state.registerCode,
-            ),
+    return blocRead.isSaudiOrSaudiResident() &&
+            context.watch<AuthRepository>().customer.attachments.isEmpty
+        ? BlocConsumer<SignupCubit, SignupState>(
+            listenWhen: (previous, current) =>
+                current is ConfirmBookingErrorState ||
+                current is ConfirmBookingSuccessState,
+            listener: (context, state) {
+              if (state is ConfirmBookingErrorState) {
+                defaultErrorSnackBar(context: context, message: state.errMsg);
+              } else if (state is ConfirmBookingSuccessState) {
+                Navigator.of(context).pushReplacementNamed(
+                  Routes.paymentScreen,
+                  arguments: PaymentScreenArguments(
+                    paymentAmount: blocRead.calculatedPriceWithVat,
+                    carRequestId: state.requestId,
+                    carRequestCode: state.registerCode,
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return DefaultButton(
+                loading: state is ConfirmBookingLoadingState,
+                marginRight: 16,
+                marginLeft: 16,
+                marginTop: 24,
+                marginBottom: 24,
+                color:
+                    blocWatch.locationValidation == TextFieldValidation.valid &&
+                            blocWatch.deliveryDate != null &&
+                            blocWatch.pickedDate != null
+                        ? AppColors.primaryBlue
+                        : AppColors.greyBorder,
+                text: "Confirm Booking",
+                function: () {
+                  if (state is! ConfirmBookingLoadingState &&
+                      state is! SaveRequestEditedFileLoadingState &&
+                      blocWatch.locationValidation ==
+                          TextFieldValidation.valid &&
+                      blocWatch.deliveryDate != null &&
+                      blocWatch.pickedDate != null) {
+                    blocRead.confirmBookingClicked();
+                  }
+                },
+              );
+            },
+          )
+        : BlocBuilder<SignupCubit, SignupState>(
+            builder: (context, state) {
+              return Align(
+                alignment: Alignment.centerRight,
+                child: DefaultButton(
+                  marginRight: 16,
+                  marginLeft: 16,
+                  width: 97,
+                  marginTop: 24,
+                  // marginBottom: 24,
+                  color: blocWatch.locationValidation ==
+                              TextFieldValidation.valid &&
+                          blocWatch.deliveryDate != null &&
+                          blocWatch.pickedDate != null
+                      ? AppColors.primaryBlue
+                      : AppColors.greyBorder,
+                  text: "Next",
+                  function: () {
+                    if (blocWatch.locationValidation ==
+                            TextFieldValidation.valid &&
+                        blocWatch.deliveryDate != null &&
+                        blocWatch.pickedDate != null) {
+                      Navigator.of(context).pushNamed(Routes.uploadFilesScreen,
+                          arguments: context.read<SignupCubit>());
+                    }
+                  },
+                ),
+              );
+            },
           );
-        }
-      },
-      builder: (context, state) {
-        var blocWatch = context.watch<SignupCubit>();
-        return DefaultButton(
-          loading: state is ConfirmBookingLoadingState,
-          marginRight: 16,
-          marginLeft: 16,
-          marginTop: 24,
-          marginBottom: 24,
-          color: blocWatch.locationValidation == TextFieldValidation.valid &&
-                  blocWatch.deliveryDate != null &&
-                  blocWatch.pickedDate != null &&
-                  blocWatch.nationalIdInitStatus != 2 &&
-                  blocWatch.passportInitStatus != 2 &&
-                  ((blocWatch.nationalIdInitStatus != -1 &&
-                          blocWatch.passportInitStatus != -1) ||
-                      blocRead.isSaudiOrSaudiResident())
-              ? AppColors.primaryBlue
-              : AppColors.greyBorder,
-          text: "Confirm Booking",
-          function: () {
-            if (state is! ConfirmBookingLoadingState &&
-                state is! SaveRequestEditedFileLoadingState &&
-                blocWatch.locationValidation == TextFieldValidation.valid &&
-                blocWatch.deliveryDate != null &&
-                blocWatch.pickedDate != null &&
-                blocWatch.nationalIdInitStatus != 2 &&
-                blocWatch.passportInitStatus != 2 &&
-                ((blocWatch.nationalIdInitStatus != -1 &&
-                        blocWatch.passportInitStatus != -1) ||
-                    blocRead.isSaudiOrSaudiResident())) {
-              blocRead.confirmBookingClicked();
-            }
-          },
-        );
-      },
-    );
   }
 }
 
@@ -154,47 +179,50 @@ class RequiredFilesSection extends StatelessWidget {
       return blocRead.isSaudiOrSaudiResident()
           ? const SizedBox()
           : Padding(
-            padding: const EdgeInsets.only(left: 20.0 ,  right: 16.0,),
-            child: Column(
-                    children: [
-            SelectFile(
-              key: const Key("NationalIDConfirm"),
-              isFromMyApplication: false,
-              padding: EdgeInsetsDirectional.zero,
-              header: "National ID",
-              fileStatus: blocWatch.nationalIdInitStatus,
-              onFileSelected: (p0, isSingle) async {
-                blocRead.nationalIdFile =
-                await convertPlatformFileList(p0);
-                blocRead.changeNationalIdState(0);
-              },
-              onPrefixClicked: () {
-                blocRead.nationalIdFile = null;
-                blocRead.changeNationalIdState(-1);
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            SelectFile(
-              key: const Key("PassportConfirm"),
-              isFromMyApplication: false,
-              padding: EdgeInsetsDirectional.zero,
-              header: "Passport",
-              fileStatus: blocWatch.passportInitStatus,
-              onFileSelected: (p0, isSingle) async {
-                blocRead.passportFiles =
-                await convertPlatformFileList(p0);
-                blocRead.changePassportState(0);
-              },
-              onPrefixClicked: () {
-                blocRead.passportFiles = null;
-                blocRead.changePassportState(-1);
-              },
-            ),
-                    ],
+              padding: const EdgeInsets.only(
+                left: 20.0,
+                right: 16.0,
+              ),
+              child: Column(
+                children: [
+                  SelectFile(
+                    key: const Key("NationalIDConfirm"),
+                    isFromMyApplication: false,
+                    padding: EdgeInsetsDirectional.zero,
+                    header: "National ID",
+                    fileStatus: blocWatch.nationalIdInitStatus,
+                    onFileSelected: (p0, isSingle) async {
+                      blocRead.nationalIdFile =
+                          await convertPlatformFileList(p0);
+                      blocRead.changeNationalIdState(0);
+                    },
+                    onPrefixClicked: () {
+                      blocRead.nationalIdFile = null;
+                      blocRead.changeNationalIdState(-1);
+                    },
                   ),
-          );
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  SelectFile(
+                    key: const Key("PassportConfirm"),
+                    isFromMyApplication: false,
+                    padding: EdgeInsetsDirectional.zero,
+                    header: "Passport",
+                    fileStatus: blocWatch.passportInitStatus,
+                    onFileSelected: (p0, isSingle) async {
+                      blocRead.passportFiles =
+                          await convertPlatformFileList(p0);
+                      blocRead.changePassportState(0);
+                    },
+                    onPrefixClicked: () {
+                      blocRead.passportFiles = null;
+                      blocRead.changePassportState(-1);
+                    },
+                  ),
+                ],
+              ),
+            );
     } else {
       return const ExistingUserAttachments();
     }
@@ -232,8 +260,8 @@ class _ExistingUserAttachmentsState extends State<ExistingUserAttachments> {
         var blocRead = context.read<SignupCubit>();
         return WidgetWithHeader(
           padding: const EdgeInsetsDirectional.symmetric(horizontal: 16),
-          header: "Files",
-          isRequiredField: true,
+          header: "",
+          isRequiredField: false,
           headerStyle: AppFonts.inter16Black500.copyWith(
             color: AppColors.primaryBlue,
             fontSize: 18,
