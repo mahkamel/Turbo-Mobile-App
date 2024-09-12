@@ -9,14 +9,13 @@ import 'package:turbo/core/widgets/default_buttons.dart';
 import 'package:turbo/core/widgets/snackbar.dart';
 import 'package:turbo/presentation/auth/login_screen/widgets/auth_rich_text.dart';
 import 'package:turbo/presentation/auth/login_screen/widgets/forget_pass_button.dart';
+import 'package:turbo/presentation/auth/login_screen/widgets/login_email.dart';
 import 'package:turbo/presentation/auth/login_screen/widgets/login_password.dart';
 
-import '../../../core/helpers/enums.dart';
 import '../../../core/routing/routes.dart';
 import '../../../core/theming/colors.dart';
 import '../../../core/theming/fonts.dart';
 import '../../../core/widgets/default_dialog.dart';
-import '../../../core/widgets/text_field_with_header.dart';
 import '../../../models/car_details_model.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -196,31 +195,3 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LoginEmail extends StatelessWidget {
-  const LoginEmail({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AuthTextFieldWithHeader(
-      header: "Email",
-      hintText: "Enter your Email",
-      isWithValidation: true,
-      textInputType: TextInputType.emailAddress,
-      validationText: "Invalid Email Address.",
-      textEditingController: context.read<LoginCubit>().emailController,
-      validation: context.watch<LoginCubit>().emailValidation,
-      onChange: (value) {
-        if (value.isEmpty ||
-            context.read<LoginCubit>().emailValidation !=
-                TextFieldValidation.normal) {
-          context.read<LoginCubit>().checkEmailValidationState();
-        }
-      },
-      onSubmit: (value) {
-        context.read<LoginCubit>().checkEmailValidationState();
-      },
-    );
-  }
-}

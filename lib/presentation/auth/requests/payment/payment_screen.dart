@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turbo/blocs/orders/order_cubit.dart';
+import 'package:turbo/presentation/auth/requests/payment/widgets/delete_order_button.dart';
 import 'package:turbo/presentation/auth/requests/payment/widgets/payment_form.dart';
 
 import '../../../../../core/widgets/custom_header.dart';
 import '../../../../blocs/payment/payment_cubit.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/routing/routes.dart';
-import '../../../../core/theming/colors.dart';
 import '../../../../core/widgets/default_buttons.dart';
-import '../../../layout/orders/request_status/widgets/edit_request_dialog.dart';
 import '../../../status_screens/default_error_screen.dart';
 import '../../../status_screens/default_success_screen.dart';
 
@@ -42,51 +41,7 @@ class PaymentScreen extends StatelessWidget {
                 // isShowPrefixIcon: orderCubit != null,
                 alignment: MainAxisAlignment.spaceBetween,
                 suffixIcon: orderCubit != null
-                    ? IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: Container(
-                          height: 46,
-                          width: 46,
-                          margin: const EdgeInsetsDirectional.only(end: 10),
-                          decoration: BoxDecoration(
-                            color: AppColors.red,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 6,
-                                  spreadRadius: 2,
-                                  offset: const Offset(0, 2),
-                                  color: AppColors.black.withOpacity(0.15)),
-                              BoxShadow(
-                                  blurRadius: 2,
-                                  spreadRadius: 0,
-                                  offset: const Offset(0, 1),
-                                  color: AppColors.black.withOpacity(0.30))
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.close_rounded,
-                            color: AppColors.white,
-                          ),
-                        ),
-                        color: AppColors.primaryBlue,
-                        onPressed: () {
-                          showAdaptiveDialog(
-                            context: context,
-                            builder: (dialogContext) =>
-                                BlocProvider<OrderCubit>.value(
-                              value: orderCubit!,
-                              child: EditRequestStatusDialog(
-                                requestId: carRequestId,
-                                requestStatus: 6,
-                                reason: "delete",
-                                orderCubit: orderCubit!,
-                                isFromPayment: true,
-                              ),
-                            ),
-                          );
-                        },
-                      )
+                    ? DeleteOrderButton(orderCubit: orderCubit, carRequestId: carRequestId)
                     : null,
               ),
               SizedBox(
@@ -157,3 +112,4 @@ class PaymentScreen extends StatelessWidget {
     );
   }
 }
+

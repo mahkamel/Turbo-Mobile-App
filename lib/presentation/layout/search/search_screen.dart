@@ -42,32 +42,7 @@ class SearchScreen extends StatelessWidget {
                 if (!searchCubitWatch.isGettingFilterResults)
                   searchCubitWatch.isFilteredRes
                       ? searchCubitWatch.filteredCars.isEmpty
-                          ? SizedBox(
-                              width: AppConstants.screenWidth(context),
-                              child: Padding(
-                                padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                      SizedBox(height: AppConstants.screenWidth(context) * .15,),
-                                   Lottie.asset(
-                                      "assets/lottie/no_result.json",
-                                       height: AppConstants.screenWidth(context) * .6,
-                                      width: (AppConstants.screenWidth(context) * .8),
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    Text(
-                                      "No results found! Try another search properties.",
-                                      style:
-                                          AppFonts.ibm24HeaderBlue600.copyWith(
-                                        fontSize: 18,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
+                          ? const NoResultsFounded()
                           : CarsByTypesListview(
                               carsByBrand: searchCubitWatch.filteredCars,
                               isFromFilter: true,
@@ -90,6 +65,45 @@ class SearchScreen extends StatelessWidget {
               },
             )
           : null,
+    );
+  }
+}
+
+class NoResultsFounded extends StatelessWidget {
+  const NoResultsFounded({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: AppConstants.screenWidth(context),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: AppConstants.screenWidth(context) * .15,
+            ),
+            Lottie.asset(
+              "assets/lottie/no_result.json",
+              height: AppConstants.screenWidth(context) * .6,
+              width: (AppConstants.screenWidth(context) * .8),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              "No results found! Try another search properties.",
+              style: AppFonts.ibm24HeaderBlue600.copyWith(
+                fontSize: 18,
+              ),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
+      ),
     );
   }
 }

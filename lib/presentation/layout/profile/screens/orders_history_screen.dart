@@ -8,7 +8,7 @@ import '../../../../core/theming/colors.dart';
 import '../../../../core/theming/fonts.dart';
 import '../../../../core/widgets/custom_header.dart';
 import '../../../../models/request_model.dart';
-import '../../orders/request_status/widgets/request_card.dart';
+import '../../orders/widgets/request_card.dart';
 
 class OrdersHistoryScreen extends StatelessWidget {
   const OrdersHistoryScreen({super.key});

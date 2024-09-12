@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:turbo/core/widgets/custom_header.dart';
-import 'package:turbo/models/request_model.dart';
-import 'package:turbo/presentation/layout/orders/request_status/widgets/request_card.dart';
+import 'package:turbo/presentation/layout/orders/widgets/login_required_for_orders.dart';
+import 'package:turbo/presentation/layout/orders/widgets/requests_list.dart';
 
 import '../../../blocs/orders/order_cubit.dart';
 import '../../../core/helpers/constants.dart';
 import '../../../core/services/local/token_service.dart';
 import '../../../core/services/networking/repositories/auth_repository.dart';
-import '../../../core/theming/colors.dart';
-import '../../../core/theming/fonts.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -60,112 +57,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
             ),
           ),
           if (context.watch<AuthRepository>().customer.token.isNotEmpty)
-            BlocBuilder<OrderCubit, OrderState>(
-              buildWhen: (previous, current) =>
-                  current is GetAllRequestsLoadingState ||
-                  current is GetAllRequestsErrorState ||
-                  current is GetAllRequestsSuccessState,
-              builder: (context, state) {
-                List<RequestModel> allRequests =
-                    context.watch<OrderCubit>().allRequests;
-                return state is GetAllRequestsLoadingState
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primaryBlue,
-                        ),
-                      )
-                    : Expanded(
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            context.read<OrderCubit>().getAllCustomerRequests();
-                          },
-                          child: allRequests.isEmpty
-                              ? const EmptyRequests()
-                              : AppConstants.screenWidth(context) > 760
-                                  ? Expanded(
-                                      child: SingleChildScrollView(
-                                        physics: const BouncingScrollPhysics(),
-                                        child: Wrap(
-                                          spacing: 16,
-                                          runSpacing: 16,
-                                          children: [
-                                            ...List.generate(
-                                              context
-                                                  .watch<OrderCubit>()
-                                                  .allRequests
-                                                  .length,
-                                              (index) {
-                                                var request = context
-                                                    .watch<OrderCubit>()
-                                                    .allRequests[index];
-                                                return RequestCard(
-                                                  request: request,
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : const RequestList(),
-                        ),
-                      );
-              },
-            ),
+            const AllRequestsView(),
           if (context.watch<AuthRepository>().customer.token.isEmpty)
-            Expanded(
-              child: ListView(
-                physics: AppConstants.screenHeight(context) < 600
-                    ? const BouncingScrollPhysics()
-                    : const NeverScrollableScrollPhysics(),
-                children: [
-                  Lottie.asset(
-                    "assets/lottie/login_required.json",
-                    width: 400,
-                    height: 400,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      "To view your current rentals, please login to your account",
-                      style: AppFonts.ibm16LightBlack600,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const LoginRequiredForOrders(),
         ],
       ),
     );
   }
 }
 
-class RequestList extends StatelessWidget {
-  const RequestList({
-    super.key,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(
-        top: 8,
-        bottom: 20,
-        right: 16,
-        left: 16,
-      ),
-      itemBuilder: (context, index) {
-        var request = context.read<OrderCubit>().allRequests[index];
-        return RequestCard(
-          request: request,
-        );
-      },
-      separatorBuilder: (context, index) => const SizedBox(
-        height: 16,
-      ),
-      itemCount: context.watch<OrderCubit>().allRequests.length,
-    );
-  }
-}
+
