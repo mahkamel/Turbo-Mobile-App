@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
                         ? true
                         : false,
                 initialRoute:
-                    isFirstTime ? Routes.initLangScreen : Routes.layoutScreen,
+                  Routes.layoutScreen,
                 onGenerateRoute: appRouter.generateRoute,
               ),
             );
