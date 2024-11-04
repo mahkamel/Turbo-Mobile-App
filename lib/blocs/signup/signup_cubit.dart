@@ -98,12 +98,12 @@ class SignupCubit extends Cubit<SignupState> {
   TextFieldValidation locationValidation = TextFieldValidation.normal;
 
   List<TextEditingController> codeControllers = [
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
+    TextEditingController(text: '1'),
+    TextEditingController(text: '2'),
+    TextEditingController(text: '3'),
+    TextEditingController(text: '4'),
+    TextEditingController(text: '5'),
+    TextEditingController(text: '6'),
   ];
 
   List<FocusNode> codeFocusNode = [
@@ -136,7 +136,7 @@ class SignupCubit extends Cubit<SignupState> {
       passportOldPaths = passportAttachments?.filePath ?? "";
       passportInitStatus = passportAttachments?.fileStatus ?? -1;
     }
-    clearCodeControllers();
+    // clearCodeControllers();
   }
 
   bool _areAllControllersFilled(List<TextEditingController> controllers) {
@@ -148,11 +148,11 @@ class SignupCubit extends Cubit<SignupState> {
     return true;
   }
 
-  void clearCodeControllers() {
-    for (var controller in codeControllers) {
-      controller.clear();
-    }
-  }
+  // void clearCodeControllers() {
+  //   for (var controller in codeControllers) {
+  //     controller.clear();
+  //   }
+  // }
 
   Future<bool> sendOTP() async {
     bool isOtpSent = false;
@@ -167,7 +167,7 @@ class SignupCubit extends Cubit<SignupState> {
         );
       }, (value) {
         otpVerificationId = value;
-        clearCodeControllers();
+        // clearCodeControllers();
         isOtpSent = true;
         emit(
           SignupState.otpSentSuccessfully(

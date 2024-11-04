@@ -28,13 +28,15 @@ class HomeHeader extends StatelessWidget {
           current is GetNotificationsErrorState ||
           current is GetNotificationsSuccessState,
       builder: (context, state) {
+        print(
+            "ckckc ${context.watch<AuthRepository>().customer.token.isNotEmpty}");
         var blocWatch = context.watch<HomeCubit>();
         return state is GetCitiesLoadingState ||
                 state is GetNotificationsLoadingState
             ? const HeaderShimmerEffect()
             : SizedBox(
-          width: AppConstants.screenWidth(context) ,
-              child: Row(
+                width: AppConstants.screenWidth(context),
+                child: Row(
                   children: [
                     Container(
                       height: 40,
@@ -83,7 +85,13 @@ class HomeHeader extends StatelessWidget {
                                   .cities
                                   .isNotEmpty) {
                                 return SizedBox(
-                                  width: AppConstants.screenWidth(context) - 122,
+                                  width: context
+                                          .watch<AuthRepository>()
+                                          .customer
+                                          .token
+                                          .isNotEmpty
+                                      ? AppConstants.screenWidth(context) - 145
+                                      : AppConstants.screenWidth(context) - 122,
                                   child: Text(
                                     "${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName}, ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName} ",
                                     style: AppFonts.inter16LocationBlue600,
@@ -173,7 +181,7 @@ class HomeHeader extends StatelessWidget {
                     ),
                   ],
                 ),
-            );
+              );
       },
     );
   }
