@@ -25,6 +25,7 @@ class ProfileImageWithBadge extends StatelessWidget {
     } on PlatformException {}
   }
 
+  ///Todo:handle ios
   Future<void> requestGalleryPermission(BuildContext context) async {
     if (Platform.isAndroid) {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
@@ -49,6 +50,8 @@ class ProfileImageWithBadge extends StatelessWidget {
           _pickImageFromGallery(context.read<ProfileCubit>());
         }
       }
+    }else{
+      _pickImageFromGallery(context.read<ProfileCubit>());
     }
   }
 
