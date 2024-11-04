@@ -32,137 +32,148 @@ class HomeHeader extends StatelessWidget {
         return state is GetCitiesLoadingState ||
                 state is GetNotificationsLoadingState
             ? const HeaderShimmerEffect()
-            : Row(
-                children: [
-                  Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.black),
+            : SizedBox(
+          width: AppConstants.screenWidth(context) ,
+              child: Row(
+                  children: [
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.black),
+                      ),
+                      child: const Icon(Icons.location_on_outlined),
                     ),
-                    child: const Icon(Icons.location_on_outlined),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  InkWell(
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (bottomSheetContext) =>
-                            BlocProvider<HomeCubit>.value(
-                          value: context.read<HomeCubit>(),
-                          child: const SelectCityBottomSheet(),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "yourLocation".getLocale(context: context),
-                          style: AppFonts.inter12Grey400,
-                        ),
-                        const SizedBox(
-                          height: 2,
-                        ),
-                        BlocBuilder<HomeCubit, HomeState>(
-                          buildWhen: (previous, current) =>
-                              current is ChangeSelectedCityIndexState ||
-                              current is GetCitiesSuccessState ||
-                              current is ChangeSelectedBranchIndexState,
-                          builder: (context, state) {
-                            if (context
-                                .watch<CitiesDistrictsRepository>()
-                                .cities
-                                .isNotEmpty) {
-                              return Text(
-                                "${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName}, ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName} ",
-                                style: AppFonts.inter16LocationBlue600,
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
-                        ),
-                      ],
+                    const SizedBox(
+                      width: 8,
                     ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    style: const ButtonStyle(
-                      tapTargetSize:
-                          MaterialTapTargetSize.shrinkWrap, // the '2023' part
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (bottomSheetContext) =>
+                              BlocProvider<HomeCubit>.value(
+                            value: context.read<HomeCubit>(),
+                            child: const SelectCityBottomSheet(),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "yourLocation".getLocale(context: context),
+                            style: AppFonts.inter12Grey400,
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          BlocBuilder<HomeCubit, HomeState>(
+                            buildWhen: (previous, current) =>
+                                current is ChangeSelectedCityIndexState ||
+                                current is GetCitiesSuccessState ||
+                                current is ChangeSelectedBranchIndexState,
+                            builder: (context, state) {
+                              if (context
+                                  .watch<CitiesDistrictsRepository>()
+                                  .cities
+                                  .isNotEmpty) {
+                                return SizedBox(
+                                  width: AppConstants.screenWidth(context) - 122,
+                                  child: Text(
+                                    "${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName}, ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName} ",
+                                    style: AppFonts.inter16LocationBlue600,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                );
+                              } else {
+                                return const SizedBox();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (bottomSheetContext) =>
-                            BlocProvider<HomeCubit>.value(
-                          value: context.read<HomeCubit>(),
-                          child: const SelectCityBottomSheet(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                  ),
-                  BlocBuilder<HomeCubit, HomeState>(
-                    buildWhen: (previous, current) =>
-                        current is GetNotificationsSuccessState,
-                    builder: (context, state) {
-                      var numOfNotifications = blocWatch.notifications
-                          .where(
-                            (element) => element.isNotificationSeen == false,
-                          )
-                          .toList()
-                          .length;
-                      return context
-                              .watch<AuthRepository>()
-                              .customer
-                              .token
-                              .isNotEmpty
-                          ? InkWell(
-                              borderRadius: BorderRadius.circular(20),
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (navigateContext) =>
-                                      BlocProvider<HomeCubit>.value(
-                                    value: context.read<HomeCubit>()..getNotifications(isFromNotificationScreen: true),
-                                    child: const NotificationsScreen(),
-                                  ),
-                                ));
-                              },
-                              child: SizedBox(
-                                height: 30,
-                                width: 24,
-                                child: badges.Badge(
-                                  showBadge: numOfNotifications != 0,
-                                  badgeStyle: const badges.BadgeStyle(
-                                    badgeColor: AppColors.primaryRed,
-                                  ),
-                                  position:
-                                      badges.BadgePosition.topEnd(end: -8),
-                                  badgeContent: Text(
-                                    "$numOfNotifications",
-                                    style: const TextStyle(
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                  child: const Icon(
-                                      Icons.notifications_none_rounded),
-                                ),
-                              ),
+                    const Spacer(),
+                    IconButton(
+                      style: const ButtonStyle(
+                        tapTargetSize:
+                            MaterialTapTargetSize.shrinkWrap, // the '2023' part
+                      ),
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (bottomSheetContext) =>
+                              BlocProvider<HomeCubit>.value(
+                            value: context.read<HomeCubit>(),
+                            child: const SelectCityBottomSheet(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                    ),
+                    BlocBuilder<HomeCubit, HomeState>(
+                      buildWhen: (previous, current) =>
+                          current is GetNotificationsSuccessState,
+                      builder: (context, state) {
+                        var numOfNotifications = blocWatch.notifications
+                            .where(
+                              (element) => element.isNotificationSeen == false,
                             )
-                          : const SizedBox();
-                    },
-                  ),
-                ],
-              );
+                            .toList()
+                            .length;
+                        return context
+                                .watch<AuthRepository>()
+                                .customer
+                                .token
+                                .isNotEmpty
+                            ? InkWell(
+                                borderRadius: BorderRadius.circular(20),
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (navigateContext) =>
+                                        BlocProvider<HomeCubit>.value(
+                                      value: context.read<HomeCubit>()
+                                        ..getNotifications(
+                                            isFromNotificationScreen: true),
+                                      child: const NotificationsScreen(),
+                                    ),
+                                  ));
+                                },
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 24,
+                                  child: badges.Badge(
+                                    showBadge: numOfNotifications != 0,
+                                    badgeStyle: const badges.BadgeStyle(
+                                      badgeColor: AppColors.primaryRed,
+                                    ),
+                                    position:
+                                        badges.BadgePosition.topEnd(end: -8),
+                                    badgeContent: Text(
+                                      "$numOfNotifications",
+                                      style: const TextStyle(
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                        Icons.notifications_none_rounded),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox();
+                      },
+                    ),
+                  ],
+                ),
+            );
       },
     );
   }
@@ -199,8 +210,12 @@ class SelectCityBottomSheet extends StatelessWidget {
           ),
           Row(
             children: [
-              const Icon(Icons.location_city_rounded,),
-              const SizedBox(width: 4,),
+              const Icon(
+                Icons.location_city_rounded,
+              ),
+              const SizedBox(
+                width: 4,
+              ),
               Text(
                 "Choose City",
                 style: AppFonts.inter18HeaderBlack700,
@@ -246,8 +261,12 @@ class SelectCityBottomSheet extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      const Icon(Icons.location_on_outlined,),
-                                      const SizedBox(width: 4,),
+                                      const Icon(
+                                        Icons.location_on_outlined,
+                                      ),
+                                      const SizedBox(
+                                        width: 4,
+                                      ),
                                       Text(
                                         "Choose Branch",
                                         style: AppFonts.inter18HeaderBlack700,
@@ -259,7 +278,8 @@ class SelectCityBottomSheet extends StatelessWidget {
                                     color: AppColors.divider,
                                   ),
                                   ListView.builder(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
                                     shrinkWrap: true,
                                     itemBuilder: (context, branchIndex) =>
                                         Center(
