@@ -13,7 +13,9 @@ class HeaderWithIcon extends StatelessWidget {
   final String svgIconPath;
   final String title;
   const HeaderWithIcon({
-    super.key, required this.svgIconPath, required this.title,
+    super.key,
+    required this.svgIconPath,
+    required this.title,
   });
 
   @override
@@ -69,11 +71,12 @@ class CarInfoDetails extends StatelessWidget {
         info: blocRead.carDetailsData.carEngine,
         iconPath: "assets/images/icons/car_details_icons/engine.svg",
       ),
-      CarItem(
-        title: "seats".getLocale(context: context),
-        info: blocRead.carDetailsData.carPassengerNo.toString(),
-        iconPath: "assets/images/icons/car_details_icons/seats.svg",
-      ),
+      if (blocRead.carDetailsData.carPassengerNo != 0)
+        CarItem(
+          title: "seats".getLocale(context: context),
+          info: blocRead.carDetailsData.carPassengerNo.toString(),
+          iconPath: "assets/images/icons/car_details_icons/seats.svg",
+        ),
       CarItem(
         title: "${"limitedKm".getLocale(context: context)} (Daily)",
         info: "${blocRead.carDetailsData.carLimitedKiloMeters}".toString(),
@@ -155,7 +158,7 @@ class CarInfoItem extends StatelessWidget {
               Text(
                 info,
                 style:
-                AppFonts.ibm11Grey400.copyWith(color: AppColors.lightBlack),
+                    AppFonts.ibm11Grey400.copyWith(color: AppColors.lightBlack),
               ),
             ],
           ),

@@ -130,7 +130,7 @@ class DefaultSuccessScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const Spacer(),
+                      // const Spacer(),
                       DefaultButton(
                         function: route == null
                             ? onOkPressed

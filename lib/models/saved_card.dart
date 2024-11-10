@@ -25,7 +25,8 @@ class SavedCard {
     return SavedCard(
       visaCardIsActive: json['visaCardIsActive'],
       id: json['_id'],
-      visaCardType: json['visaCardType'],
+      visaCardType:
+          json.containsKey("visaCardType") ? json['visaCardType'] : "",
       visaCardName: json['visaCardName'],
       visaCardNumber: json['visaCardNumber'],
       visaCardExpiryMonth: json['visaCardExpiryMonth'],

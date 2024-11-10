@@ -166,9 +166,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             color: AppColors.secondary,
           ),
         ),
-        const SizedBox(
-          width: 20,
-        ),
       ],
     );
   }

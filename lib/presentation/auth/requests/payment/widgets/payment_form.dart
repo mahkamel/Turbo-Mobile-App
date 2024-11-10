@@ -197,10 +197,15 @@ class DefaultCardRadioButton extends StatelessWidget {
                                 height: 40,
                                 width: 62,
                               )
-                            : SvgPicture.asset(
-                                'assets/images/card.svg',
-                                height: 40,
-                                width: 62,
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ).copyWith(right: 12, left: 6.0),
+                                child: SvgPicture.asset(
+                                  'assets/images/default_card.svg',
+                                  height: 22,
+                                  width: 62,
+                                ),
                               ),
                 Text(
                   "**** ${context.read<PaymentCubit>().selectedCard!.visaCardNumber}",
@@ -334,7 +339,8 @@ class NewCard extends StatelessWidget {
           ),
           DefaultButton(
             marginBottom: 16,
-            marginLeft: context.watch<PaymentCubit>().selectedCard == null ? 16 : 0,
+            marginLeft:
+                context.watch<PaymentCubit>().selectedCard == null ? 16 : 0,
             width: 102,
             height: 42,
             function: () {
