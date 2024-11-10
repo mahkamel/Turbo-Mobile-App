@@ -107,12 +107,12 @@ class SignupCubit extends Cubit<SignupState> {
   TextFieldValidation locationValidation = TextFieldValidation.normal;
 
   List<TextEditingController> codeControllers = [
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
+    TextEditingController(text: '1'),
+    TextEditingController(text: '2'),
+    TextEditingController(text: '3'),
+    TextEditingController(text: '4'),
+    TextEditingController(text: '5'),
+    TextEditingController(text: '6'),
   ];
 
   List<FocusNode> codeFocusNode = [
@@ -168,9 +168,9 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   void clearCodeControllers() {
-    for (var controller in codeControllers) {
-      controller.clear();
-    }
+    // for (var controller in codeControllers) {
+    //   controller.clear();
+    // }
   }
 
   Future<bool> sendOTP() async {

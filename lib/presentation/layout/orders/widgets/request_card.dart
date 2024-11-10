@@ -27,8 +27,10 @@ class RequestCard extends StatelessWidget {
     return Container(
       width: AppConstants.screenWidth(context) - 32,
       margin: const EdgeInsets.only(bottom: 4),
-      constraints:  BoxConstraints(
-        maxWidth: AppConstants.screenWidth(context) > 760 ?(AppConstants.screenWidth(context) - 50)/2 :400,
+      constraints: BoxConstraints(
+        maxWidth: AppConstants.screenWidth(context) > 760
+            ? (AppConstants.screenWidth(context) - 50) / 2
+            : 400,
       ),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -53,8 +55,10 @@ class RequestCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CarImage(
-            carImgPath: request.requestCarId.last.carId.carMedia.first.mediaId
-                .mediaMediumImageUrl,
+            carImgPath: request.requestCarId.last.carId.carMedia.isNotEmpty
+                ? request.requestCarId.last.carId.carMedia.first.mediaId
+                    .mediaMediumImageUrl
+                : "",
           ),
           const SizedBox(
             height: 8,

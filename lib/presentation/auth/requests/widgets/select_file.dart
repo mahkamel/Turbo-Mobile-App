@@ -112,7 +112,11 @@ class _SelectFileState extends State<SelectFile> {
       header: widget.header,
       widget: InkWell(
         onTap: () {
-          if (widget.fileStatus == 1 || widget.fileStatus == 0) {
+          if (widget.files == null &&
+              widget.file == null &&
+              widget.paths.isEmpty) {
+            pickFile();
+          } else if (widget.fileStatus == 1 || widget.fileStatus == 0) {
             showAdaptiveDialog(
               context: context,
               builder: (context) {

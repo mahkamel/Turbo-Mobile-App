@@ -122,8 +122,9 @@ class CarYearFilterHeader extends StatelessWidget {
                     height: 300,
                     child: DatePickerTheme(
                       data: DatePickerThemeData(
-                        yearBackgroundColor:  WidgetStateColor.resolveWith((states) {
-                          if(states.contains(WidgetState.selected)){
+                        yearBackgroundColor:
+                            WidgetStateColor.resolveWith((states) {
+                          if (states.contains(WidgetState.selected)) {
                             return AppColors.green;
                           }
                           return Colors.transparent;
@@ -139,16 +140,16 @@ class CarYearFilterHeader extends StatelessWidget {
                         }),
                         yearForegroundColor:
                             WidgetStateColor.resolveWith((states) {
-                              if(states.contains(WidgetState.selected)){
-                                return AppColors.white;
-                              }
-                              return Colors.black;
+                          if (states.contains(WidgetState.selected)) {
+                            return AppColors.white;
+                          }
+                          return Colors.black;
                         }),
                       ),
                       child: YearPicker(
                         firstDate: DateTime(DateTime.now().year - 100, 1),
                         lastDate: DateTime.now(),
-                        selectedYears: List.from(
+                        selectYears: List.from(
                             context.watch<SearchCubit>().selectedCarYears),
                         selectedDate: selectedDate,
                         onChanged: (DateTime dateTime) {
