@@ -36,7 +36,12 @@ Future<void> main() async {
             await FirebaseMessaging.instance.getToken() ?? "";
       }
     } else {
-      AppConstants.fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+      try {
+        AppConstants.fcmToken =
+            await FirebaseMessaging.instance.getToken() ?? "";
+      } catch (e) {
+        print("ekdkasdasd$e");
+      }
     }
     log("tokeennn: ${AppConstants.fcmToken}");
     FirebaseMessaging.instance.setAutoInitEnabled(true);
