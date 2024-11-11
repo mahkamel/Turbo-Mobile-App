@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'main_paths.dart';
 
 @pragma('vm:entry-point')
@@ -40,14 +38,11 @@ Future<void> main() async {
         AppConstants.fcmToken =
             await FirebaseMessaging.instance.getToken() ?? "";
       } catch (e) {
-        print("ekdkasdasd$e");
       }
     }
-    log("tokeennn: ${AppConstants.fcmToken}");
     FirebaseMessaging.instance.setAutoInitEnabled(true);
   }
   final CustomerModel? cachedCustomer = await getCustomerData();
-  log("useeerTokeneee: ${cachedCustomer?.token}");
 
   Bloc.observer = MyBlocObserver();
   final bool isFirstTime =

@@ -99,6 +99,7 @@ class CarRepository {
         branchId: branchId,
         carBrandId: brandId,
       );
+
       if (response.statusCode == 200 && response.data['status']) {
         List<CarData> cars = [];
         if ((response.data['data'] as List).isNotEmpty) {

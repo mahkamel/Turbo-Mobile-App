@@ -65,9 +65,9 @@ class CarColorsList extends StatelessWidget {
                     height: 23,
                     width: 23,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colors[index].color,
-                    ),
+                        shape: BoxShape.circle,
+                        color: colors[index].color,
+                        border: Border.all(color: AppColors.black, width: 0.2)),
                   ))
         ],
       ),

@@ -96,27 +96,32 @@ class HomeCubit extends Cubit<HomeState> {
         (errMsg) {
           AppConstants.isFirstTimeGettingCarRec = false;
           isGettingCars = false;
+          carsByBrand = [];
           emit(HomeState.getCarsByBrandError(errMsg));
         },
         (cars) {
           carsByBrand = cars;
           AppConstants.isFirstTimeGettingCarRec = false;
           isGettingCars = false;
+
           emit(HomeState.getCarsByBrandSuccess(brandId));
         },
       );
     } catch (e) {
       AppConstants.isFirstTimeGettingCarRec = false;
       isGettingCars = false;
+      carsByBrand = [];
       emit(HomeState.getCarsByBrandError(e.toString()));
     }
   }
+
+  // 116291188
+  // 116357689
 
   void getCities() async {
     emit(const HomeState.getCitiesLoading());
     try {
       if (_citiesDistrictsRepository.cities.isNotEmpty) {
-        print("citiess is not ${_citiesDistrictsRepository.cities.isNotEmpty}");
         emit(const HomeState.getCitiesSuccess());
         getCarsBrandsByBranchId();
         if (selectedBrandIndex == -1) {
