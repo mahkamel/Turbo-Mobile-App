@@ -23,7 +23,7 @@ class SearchCubit extends Cubit<SearchState> {
   List<CarBrand> searchedBrands = [];
   List<CarBrand> selectedBrands = [];
 
-  Set<String> selectedCarYears = {};
+  Set<int> selectedCarYears = {};
 
   bool isWithUnlimitedKM = false;
 
@@ -61,12 +61,12 @@ class SearchCubit extends Cubit<SearchState> {
     }
   }
 
-  void carYearsSelection(String year) {
+  void carYearsSelection(int year) {
     selectedCarYears.add(year);
     emit(SearchState.yearSelectionState(year, true));
   }
 
-  void unSelectCarYear(String year) {
+  void unSelectCarYear(int year) {
     selectedCarYears.remove(year);
     emit(SearchState.yearSelectionState(year, false));
   }

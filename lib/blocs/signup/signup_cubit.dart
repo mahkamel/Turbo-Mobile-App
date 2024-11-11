@@ -35,13 +35,13 @@ class SignupCubit extends Cubit<SignupState> {
 
   int citySelectedIndex = 0;
 
-  double calculatedPrice = 0.0;
+  num calculatedPrice = 0.0;
   num calculatedDriverFees = 0.0;
-  double calculatedPriceWithVat = 0.0;
-  double pricePerDay = 0.0;
-  double dailyPrice = 0;
-  double weeklyPrice = 0;
-  double monthlyPrice = 0;
+  num calculatedPriceWithVat = 0.0;
+  num pricePerDay = 0.0;
+  num dailyPrice = 0;
+  num weeklyPrice = 0;
+  num monthlyPrice = 0;
 
   List<File>? nationalIdFile = [];
   List<File>? passportFiles = [];
@@ -134,6 +134,7 @@ class SignupCubit extends Cubit<SignupState> {
     monthlyPrice = arguments.monthlyPrice.toDouble();
     citySelectedIndex = authRepository.selectedCityIndex;
     carColors = arguments.carColor;
+    changeCarColor(selectedColorIndex);
     if (UserTokenService.currentUserToken.isNotEmpty) {
       currentStep = 2;
       nationalIdAttachments = findAttachmentFile(
@@ -155,7 +156,11 @@ class SignupCubit extends Cubit<SignupState> {
   void changeCarColor(int index) {
     selectedColorIndex = index;
     requestedCarId = carColors[index].carId;
+    dailyPrice = carColors[index].carDailyPrice;
+    weeklyPrice = carColors[index].carWeaklyPrice;
+    monthlyPrice = carColors[index].carMothlyPrice;
     emit(SignupState.changeCarColor(id: carColors[index].carId));
+    calculatePrice();
   }
 
   bool _areAllControllersFilled(List<TextEditingController> controllers) {
@@ -840,3 +845,7 @@ bool isFieldNotEmpty(TextEditingController controller) {
     return false;
   }
 }
+
+
+//66a634224324a028b7cc3007
+//https://turbo.advec.me:9112/api/homePage/getCarByBrandType?branch=66a634224324a028b7cc3007

@@ -27,7 +27,7 @@ class SearchState with _$SearchState {
       ChangeIsWithUnlimitedKMValueState;
 
   const factory SearchState.yearSelectionState(
-      final String year, bool isSelected) = YearSelectionState;
+      final int year, bool isSelected) = YearSelectionState;
 
   const factory SearchState.typesSelectionState(
       final String type, bool isSelected) = TypesSelectionState;

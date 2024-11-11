@@ -63,7 +63,8 @@ class SelectedCarYearsFilter extends StatelessWidget {
                             child: Center(
                               child: Text(
                                 searchCubitWatch.selectedCarYears
-                                    .elementAt(index),
+                                    .elementAt(index)
+                                    .toString(),
                                 style: AppFonts.ibm18White600
                                     .copyWith(color: AppColors.darkGreen),
                               ),
@@ -149,12 +150,12 @@ class CarYearFilterHeader extends StatelessWidget {
                       child: YearPicker(
                         firstDate: DateTime(DateTime.now().year - 100, 1),
                         lastDate: DateTime.now(),
-                        selectYears: List.from(
+                        selectYears: List<int>.from(
                             context.watch<SearchCubit>().selectedCarYears),
                         selectedDate: selectedDate,
                         onChanged: (DateTime dateTime) {
                           searchCubitRead.carYearsSelection(
-                            dateTime.year.toString(),
+                            dateTime.year,
                           );
                           Navigator.pop(dialogContext);
                         },

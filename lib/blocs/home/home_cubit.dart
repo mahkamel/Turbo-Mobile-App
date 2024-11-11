@@ -48,34 +48,35 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeState.changeSelectedBrandIndex(selectedBrandIndex));
   }
 
-
   void toggleBranchSelector(int index) {
-    if(tempSelectedCityIndex != index){
-    tempSelectedCityIndex = index;}else{
-      tempSelectedCityIndex= -1;
+    if (tempSelectedCityIndex != index) {
+      tempSelectedCityIndex = index;
+    } else {
+      tempSelectedCityIndex = -1;
     }
     emit(HomeState.toggleBranchState(tempSelectedCityIndex));
   }
-
 
   void getCarsBrandsByBranchId() async {
     isFirstGettingCarBrand = true;
     emit(const HomeState.getCarsBrandsLoading());
     try {
-        final res =
-            await _carRepository.getCarBrands(_authRepository.selectedBranchId);
-        res.fold(
-          (errMsg) {
-            isFirstGettingCarBrand = false;
-            emit(HomeState.getCarsBrandsError(errMsg));
-          },
-          (brands) {
-            carBrands = brands;
-            isFirstGettingCarBrand = false;
-            emit(const HomeState.getCarsBrandsSuccess());
-          },
-        );
+      final res =
+          await _carRepository.getCarBrands(_authRepository.selectedBranchId);
+      res.fold(
+        (errMsg) {
+          carBrands = [];
+          isFirstGettingCarBrand = false;
+          emit(HomeState.getCarsBrandsError(errMsg));
+        },
+        (brands) {
+          carBrands = brands;
+          isFirstGettingCarBrand = false;
+          emit(const HomeState.getCarsBrandsSuccess());
+        },
+      );
     } catch (e) {
+      carBrands = [];
       isFirstGettingCarBrand = false;
       emit(HomeState.getCarsBrandsError(e.toString()));
     }
@@ -115,6 +116,8 @@ class HomeCubit extends Cubit<HomeState> {
     emit(const HomeState.getCitiesLoading());
     try {
       if (_citiesDistrictsRepository.cities.isNotEmpty) {
+        print("citiess is not ${_citiesDistrictsRepository.cities.isNotEmpty}");
+        emit(const HomeState.getCitiesSuccess());
         getCarsBrandsByBranchId();
         if (selectedBrandIndex == -1) {
           getCarsBasedOnBrand();
@@ -123,12 +126,11 @@ class HomeCubit extends Cubit<HomeState> {
             brandId: carBrands[selectedBrandIndex].id,
           );
         }
-        emit(const HomeState.getCitiesSuccess());
       } else {
         final res = await _citiesDistrictsRepository.getCities();
         res.fold(
-          (errMsg) => emit(HomeState.getCitiesError(errMsg)),
-          (cities) async {
+              (errMsg) => emit(HomeState.getCitiesError(errMsg)),
+              (cities) async {
             await getCachedCityAndBranch();
             getCarsBrandsByBranchId();
             if (selectedBrandIndex == -1) {

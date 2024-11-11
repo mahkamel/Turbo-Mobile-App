@@ -167,7 +167,6 @@ class CarRepository {
     required List<String> carTypes,
     required List<String> carBrands,
     required List<String> carCategories,
-    // required bool isWithUnlimited,
     required String branchId,
     num? priceFrom,
     num? priceTo,
