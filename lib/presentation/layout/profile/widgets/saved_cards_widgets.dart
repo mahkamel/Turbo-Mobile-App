@@ -81,6 +81,7 @@ class SavedPaymentCardItem extends StatelessWidget {
   final String cardId;
   final int index;
   final bool isExpired;
+
   @override
   Widget build(BuildContext context) {
     bool defaultCard =
@@ -138,6 +139,7 @@ class SavedPaymentCardItem extends StatelessWidget {
                                         cardType: cardType,
                                         expDate: expDate,
                                         isFromDelete: isFromDelete,
+                                        defaultCard: context.read<ProfileCubit>().savedPaymentCards[index].isCardDefault,
                                       )
                               ],
                             ),
@@ -202,6 +204,103 @@ class SavedPaymentCardItem extends StatelessWidget {
   }
 }
 
+class DialogCard extends StatelessWidget {
+  const DialogCard(
+      {super.key,
+      required this.cardNumbers,
+      required this.expDate,
+      this.isDefault = false,
+      required this.cardType,
+      required this.index,
+      required this.isExpired,
+      required this.defaultCard});
+
+  final String cardNumbers;
+  final String cardType;
+  final String expDate;
+  final bool isDefault;
+  final bool isExpired;
+  final int index;
+  final bool defaultCard;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 105,
+      width: AppConstants.screenWidth(context) - 32,
+      constraints: BoxConstraints(
+          maxWidth: AppConstants.screenWidth(context) > 760
+              ? (AppConstants.screenWidth(context) - 52) / 2
+              : 380),
+      decoration: BoxDecoration(
+          color: AppColors.grey500,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.subTextGrey)),
+      child: Stack(
+        children: [
+          savedCardBackground(),
+          Padding(
+            padding: const EdgeInsets.all(
+              10,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: AppConstants.screenWidth(context) - 52,
+                  child: Row(
+                    children: [
+                      getCardTypeIcon(cardType),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "**** $cardNumbers",
+                                  style: AppFonts.ibm12SubTextGrey600.copyWith(
+                                    color: AppColors.lightBlack,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Expires $expDate",
+                              style: AppFonts.ibm11Grey400.copyWith(
+                                color: AppColors.lightBlack,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                DefaultCardButton(
+                    isFromDelete: true,
+                    isExpired: isExpired,
+                    isLoading: false,
+                    isDefault: defaultCard,
+                    index: index)
+              ],
+            ),
+          ),
+          savedCardLinearBackground(),
+        ],
+      ),
+    );
+  }
+}
+
 class EditDeleteIcons extends StatelessWidget {
   final String cardNumbers;
   final String cardType;
@@ -210,6 +309,8 @@ class EditDeleteIcons extends StatelessWidget {
   final String cardId;
   final bool isExpired;
   final int index;
+  final bool defaultCard;
+
   const EditDeleteIcons(
       {super.key,
       required this.cardNumbers,
@@ -218,7 +319,8 @@ class EditDeleteIcons extends StatelessWidget {
       required this.isFromDelete,
       required this.cardId,
       required this.isExpired,
-      required this.index});
+      required this.index,
+      required this.defaultCard});
 
   @override
   Widget build(BuildContext context) {
@@ -254,6 +356,13 @@ class EditDeleteIcons extends StatelessWidget {
                 builder: (dialogContext) => BlocProvider.value(
                   value: context.read<ProfileCubit>()..clearPaymentFormData(),
                   child: BlocConsumer<ProfileCubit, ProfileState>(
+                    listenWhen: (previous, current) =>
+                        current is DeleteSavedCardsErrorState ||
+                        current is DeleteSavedCardsSuccessState,
+                    buildWhen: (previous, current) =>
+                        current is DeleteSavedCardsErrorState ||
+                        current is DeleteSavedCardsSuccessState ||
+                        current is DeleteSavedCardsLoadingState,
                     listener: (context, state) {
                       if (state is DeleteSavedCardsErrorState) {
                         defaultErrorSnackBar(
@@ -267,15 +376,13 @@ class EditDeleteIcons extends StatelessWidget {
                     builder: (context, state) {
                       return DefaultDialog(
                         title: "Are you sure you want to delete this card?",
-                        widgetCard: SavedPaymentCardItem(
-                          isExpired: isExpired,
-                          cardId: cardId,
-                          cardType: cardType,
-                          cardNumbers: cardNumbers,
-                          expDate: expDate,
-                          isFromDelete: true,
-                          index: index,
-                        ),
+                        widgetCard: DialogCard(
+                            cardNumbers: cardNumbers,
+                            expDate: expDate,
+                            cardType: cardType,
+                            index: index,
+                            isExpired: isExpired,
+                        defaultCard: defaultCard),
                         loading: state is DeleteSavedCardsLoadingState,
                         onSecondButtonTapped: () {
                           context
@@ -303,7 +410,7 @@ class EditDeleteIcons extends StatelessWidget {
 
 class DefaultCardButton extends StatelessWidget {
   final bool isDefault;
-  final String cardId;
+  final String? cardId;
   final int index;
   final bool isLoading;
   final bool isExpired;
@@ -312,7 +419,7 @@ class DefaultCardButton extends StatelessWidget {
   const DefaultCardButton(
       {super.key,
       required this.isDefault,
-      required this.cardId,
+      this.cardId,
       required this.index,
       required this.isLoading,
       required this.isExpired,
@@ -351,7 +458,7 @@ class DefaultCardButton extends StatelessWidget {
               width: 100,
               child: DefaultButton(
                 function: () {
-                  context.read<ProfileCubit>().setDefaultCard(cardId, index);
+                  context.read<ProfileCubit>().setDefaultCard(cardId!, index);
                 },
                 text: "Set as default",
                 textStyle:

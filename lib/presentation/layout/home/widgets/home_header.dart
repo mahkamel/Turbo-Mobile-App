@@ -42,67 +42,73 @@ class HomeHeader extends StatelessWidget {
                   const SizedBox(
                     width: 12,
                   ),
-                  InkWell(
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      context.read<HomeCubit>().toggleBranchSelector(-1);
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (bottomSheetContext) =>
-                            BlocProvider<HomeCubit>.value(
-                          value: context.read<HomeCubit>(),
-                          child: const SelectCityBottomSheet(),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "yourLocation".getLocale(context: context),
-                          style: AppFonts.ibm14LightBlack400,
-                        ),
-                        const SizedBox(
-                          height: 2,
-                        ),
-                        BlocBuilder<HomeCubit, HomeState>(
-                          buildWhen: (previous, current) =>
-                              current is ChangeSelectedCityIndexState ||
-                              current is GetCitiesSuccessState ||
-                              current is ChangeSelectedBranchIndexState,
-                          builder: (context, state) {
-                            if (context
-                                .watch<CitiesDistrictsRepository>()
-                                .cities
-                                .isNotEmpty) {
-                              return Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.location_on_sharp,
-                                    color: AppColors.grey400,
-                                    size: 20,
-                                  ),
-                                  Text(
-                                    context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName,
-                                    style: AppFonts.ibm14SubTextGold600,
-                                  ),
-                                  const Icon(
-                                    Icons.arrow_drop_down,
-                                    color: AppColors.secondary,
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
-                        ),
-                      ],
+                  Expanded(
+                    child: InkWell(
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        context.read<HomeCubit>().toggleBranchSelector(-1);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (bottomSheetContext) =>
+                              BlocProvider<HomeCubit>.value(
+                            value: context.read<HomeCubit>(),
+                            child: const SelectCityBottomSheet(),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "yourLocation".getLocale(context: context),
+                            style: AppFonts.ibm14LightBlack400,
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          BlocBuilder<HomeCubit, HomeState>(
+                            buildWhen: (previous, current) =>
+                                current is ChangeSelectedCityIndexState ||
+                                current is GetCitiesSuccessState ||
+                                current is ChangeSelectedBranchIndexState,
+                            builder: (context, state) {
+                              if (context
+                                  .watch<CitiesDistrictsRepository>()
+                                  .cities
+                                  .isNotEmpty) {
+                                return Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.location_on_sharp,
+                                      color: AppColors.grey400,
+                                      size: 20,
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName,
+                                        style: AppFonts.ibm14SubTextGold600,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+
+                                    const Icon(
+                                      Icons.arrow_drop_down,
+                                      color: AppColors.secondary,
+                                    ),
+                                    const SizedBox(width: 10,),
+                                  ],
+                                );
+                              } else {
+                                return const SizedBox();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  const Spacer(),
                   BlocBuilder<HomeCubit, HomeState>(
                     buildWhen: (previous, current) =>
                         current is GetNotificationsSuccessState,
