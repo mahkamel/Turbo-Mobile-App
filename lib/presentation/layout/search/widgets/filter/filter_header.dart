@@ -28,18 +28,20 @@ class FilterHeader extends StatelessWidget {
               const Icon(
                 Icons.location_on_sharp,
                 color: AppColors.gold,
-                size: 24,
+                size: 22,
               ),
               Text(
                 "yourLocation".getLocale(context: context),
                 style: AppFonts.ibm24HeaderBlue600
-                    .copyWith(color: AppColors.lightBlack),
+                    .copyWith(color: AppColors.lightBlack, fontSize: 22),
               ),
             ],
           ),
           Text(
             '  ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].cityName}, ${context.read<CitiesDistrictsRepository>().cities[context.watch<AuthRepository>().selectedCityIndex].branches[context.watch<AuthRepository>().selectedBranchIndex].branchName}',
-            style: AppFonts.ibm18HeaderBlue600,
+            style: AppFonts.ibm18HeaderBlue600.copyWith(
+              fontSize: 16,
+            ),
           ),
         ],
       ),

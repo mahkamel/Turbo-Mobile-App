@@ -90,12 +90,14 @@ class PaymentService {
     required String cardId,
   }) async {
     try {
-      Response response =
-          await DioHelper.postData(endpoint: 'visacard/deleteVisaCard', body: {
-        "visaCard": {
-          "_id": cardId,
-        }
-      });
+      Response response = await DioHelper.postData(
+        endpoint: 'visacard/deleteVisaCard',
+        body: {
+          "visaCard": {
+            "_id": cardId,
+          }
+        },
+      );
       return response;
     } catch (e) {
       throw e.toString();
