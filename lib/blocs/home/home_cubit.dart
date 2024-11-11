@@ -129,8 +129,8 @@ class HomeCubit extends Cubit<HomeState> {
       } else {
         final res = await _citiesDistrictsRepository.getCities();
         res.fold(
-              (errMsg) => emit(HomeState.getCitiesError(errMsg)),
-              (cities) async {
+          (errMsg) => emit(HomeState.getCitiesError(errMsg)),
+          (cities) async {
             await getCachedCityAndBranch();
             getCarsBrandsByBranchId();
             if (selectedBrandIndex == -1) {
