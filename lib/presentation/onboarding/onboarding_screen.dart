@@ -65,62 +65,81 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ];
     return Scaffold(
       backgroundColor: AppColors.black,
-      body: Container(
-        width: AppConstants.screenWidth(context),
-        height: AppConstants.screenHeight(context),
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              AppColors.lightBlack,
-              AppColors.onboardingBrown,
-            ])),
-        child: AppConstants.screenWidth(context) > 610
-            ? ListView(
-                children: [
-                  Image.asset(
-                    onboardingData[currentIndex].image,
-                    fit: BoxFit.cover,
-                  ),
-                  HeaderText(
-                      onboardingData: onboardingData,
-                      currentIndex: currentIndex),
-                  SubText(
-                      onboardingData: onboardingData,
-                      currentIndex: currentIndex),
-                  buildDots(),
-                  if (currentIndex != 3) buildSkip(context),
-                  if (currentIndex == 3) const GetStartedButton(),
-                  const SizedBox(
-                    height: 32,
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Spacer(),
-                  Image.asset(
-                    onboardingData[currentIndex].image,
-                    fit: BoxFit.cover,
-                  ),
-                  HeaderText(
-                      onboardingData: onboardingData,
-                      currentIndex: currentIndex),
-                  SubText(
-                      onboardingData: onboardingData,
-                      currentIndex: currentIndex),
-                  buildDots(),
-                  if (currentIndex != 3) buildSkip(context),
-                  if (currentIndex == 3) const GetStartedButton(),
-                  const SizedBox(
-                    height: 32,
-                  ),
-                ],
-              ),
+      body: GestureDetector(
+        onHorizontalDragEnd: (updatedValue){
+          if (updatedValue.velocity.pixelsPerSecond.dx < 0) {
+            if (currentIndex < 3) {
+              setState(() {
+                currentIndex++;
+              });
+            }
+          } else {
+            if (updatedValue.velocity.pixelsPerSecond.dx > 0) {
+              if (currentIndex > 0) {
+                setState(() {
+                  currentIndex--;
+                });
+              }
+            }
+          }
+        },
+        child: Container(
+          width: AppConstants.screenWidth(context),
+          height: AppConstants.screenHeight(context),
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                AppColors.lightBlack,
+                AppColors.onboardingBrown,
+              ])),
+          child: AppConstants.screenWidth(context) > 610
+              ? ListView(
+                  children: [
+                    Image.asset(
+                      onboardingData[currentIndex].image,
+                      fit: BoxFit.cover,
+                    ),
+                    HeaderText(
+                        onboardingData: onboardingData,
+                        currentIndex: currentIndex),
+                    SubText(
+                        onboardingData: onboardingData,
+                        currentIndex: currentIndex),
+                    buildDots(),
+                    if (currentIndex != 3) buildSkip(context),
+                    if (currentIndex == 3) const GetStartedButton(),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Spacer(),
+                    Image.asset(
+                      onboardingData[currentIndex].image,
+                      fit: BoxFit.cover,
+                    ),
+                    HeaderText(
+                        onboardingData: onboardingData,
+                        currentIndex: currentIndex),
+                    SubText(
+                        onboardingData: onboardingData,
+                        currentIndex: currentIndex),
+                    buildDots(),
+                    if (currentIndex != 3) buildSkip(context),
+                    if (currentIndex == 3) const GetStartedButton(),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }
