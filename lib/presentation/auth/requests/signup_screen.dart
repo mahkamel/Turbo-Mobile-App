@@ -38,6 +38,7 @@ class SignupScreen extends StatelessWidget {
               dailyPrice: blocRead.dailyPrice,
               weeklyPrice: blocRead.weeklyPrice,
               monthlyPrice: blocRead.monthlyPrice,
+              carColor: blocRead.carColors,
             ),
           );
         } else if (UserTokenService.currentUserToken.isEmpty &&
@@ -88,6 +89,7 @@ class SignupScreen extends StatelessWidget {
                           dailyPrice: blocRead.dailyPrice,
                           weeklyPrice: blocRead.weeklyPrice,
                           monthlyPrice: blocRead.monthlyPrice,
+                          carColor: blocRead.carColors,
                         ),
                       );
                     } else if (UserTokenService.currentUserToken.isEmpty &&

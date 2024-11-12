@@ -38,10 +38,10 @@ class SearchCubit extends Cubit<SearchState> {
   double maxDailyPrice = 2500;
 
   init() {
+    resetSearch();
     filteredCars = _carRepository.filteredCars;
     if (_carRepository.filteredCars.isNotEmpty) {
       isFilteredRes = true;
-
       emit(const SearchState.getFilteredCarsSuccess());
     }
     getCarsTypes();

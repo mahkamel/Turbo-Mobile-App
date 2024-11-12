@@ -150,8 +150,8 @@ class CarYearFilterHeader extends StatelessWidget {
                       child: YearPicker(
                         firstDate: DateTime(DateTime.now().year - 100, 1),
                         lastDate: DateTime.now(),
-                        selectYears: List<int>.from(
-                            context.watch<SearchCubit>().selectedCarYears),
+                        // selectYears: List<int>.from(
+                        //     context.watch<SearchCubit>().selectedCarYears),
                         selectedDate: selectedDate,
                         onChanged: (DateTime dateTime) {
                           searchCubitRead.carYearsSelection(

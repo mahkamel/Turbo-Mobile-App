@@ -16,12 +16,13 @@ class LoginScreenArguments {
   final num dailyPrice;
   final num weeklyPrice;
   final num monthlyPrice;
-
+  final List<CarColor> carColor;
   LoginScreenArguments({
     required this.carId,
     required this.dailyPrice,
     required this.weeklyPrice,
     required this.monthlyPrice,
+    required this.carColor,
   });
 }
 
@@ -51,7 +52,7 @@ class PaymentScreenArguments {
     required this.paymentAmount,
     required this.carRequestId,
     required this.carRequestCode,
-     this.orderCubit,
+    this.orderCubit,
   });
 }
 

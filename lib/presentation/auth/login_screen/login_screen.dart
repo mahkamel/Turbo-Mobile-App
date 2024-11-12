@@ -35,6 +35,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("login car color ${carColor.length}");
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(

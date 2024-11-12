@@ -154,6 +154,7 @@ class BookNowButton extends StatelessWidget {
                               dailyPrice: carDetailsData.carDailyPrice,
                               weeklyPrice: carDetailsData.carWeaklyPrice,
                               monthlyPrice: carDetailsData.carMothlyPrice,
+                              carColor: carDetailsData.carColor,
                             ),
                           );
                         },

@@ -38,6 +38,7 @@ class AppRouter {
                   dailyPrice: arguments.dailyPrice,
                   weeklyPrice: arguments.weeklyPrice,
                   monthlyPrice: arguments.monthlyPrice,
+                  carColor: arguments.carColor,
                 )
               : const LoginScreen(),
         ),
@@ -125,13 +126,10 @@ class AppRouter {
             ),
           ),
         ),
-
-    Routes.uploadFilesScreen: (context, arguments) =>
-      BlocProvider.value(
-        value: (arguments as SignupCubit),
-        child: const UploadFilesStep(),
-    ),
-    
+    Routes.uploadFilesScreen: (context, arguments) => BlocProvider.value(
+          value: (arguments as SignupCubit),
+          child: const UploadFilesStep(),
+        ),
   };
 
   Route? generateRoute(RouteSettings settings) {

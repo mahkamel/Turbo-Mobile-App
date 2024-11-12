@@ -142,6 +142,7 @@ class SignupSubmitButton extends StatelessWidget {
                         dailyPrice: blocRead.dailyPrice,
                         weeklyPrice: blocRead.weeklyPrice,
                         monthlyPrice: blocRead.monthlyPrice,
+                        carColor: blocRead.carColors,
                       ),
                     );
                     defaultSuccessSnackBar(
