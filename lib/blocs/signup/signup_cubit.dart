@@ -845,7 +845,3 @@ bool isFieldNotEmpty(TextEditingController controller) {
     return false;
   }
 }
-
-
-//66a634224324a028b7cc3007
-//https://turbo.advec.me:9112/api/homePage/getCarByBrandType?branch=66a634224324a028b7cc3007
